@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp /home/jvtrudel/git/noumanity-formation/intentional-doers-governance/scripts/dev.sh /home/jvtrudel/git/noumanity-consultation/commission-scolaire-de-la-capitale/scripts/dev.sh)",
+      "Bash(chmod +x /home/jvtrudel/git/noumanity-consultation/commission-scolaire-de-la-capitale/scripts/dev.sh)",
+      "Bash(chmod +x *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

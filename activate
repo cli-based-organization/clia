@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Usage : . activate
+# Ajoute scripts/ au PATH et exporte PRESENTATION_ROOT.
+# Stack (ADR-001) : texlua, lualatex, inkscape, convert (ImageMagick).
+
+export PRESENTATION_ROOT
+PRESENTATION_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PATH="$PRESENTATION_ROOT/scripts:$PATH"
+
+_missing=""
+command -v texlua   >/dev/null 2>&1 || _missing="$_missing texlua"
+command -v lualatex >/dev/null 2>&1 || _missing="$_missing lualatex"
+command -v inkscape >/dev/null 2>&1 || _missing="$_missing inkscape"
+command -v convert  >/dev/null 2>&1 || _missing="$_missing imagemagick(convert)"
+
+if [ -n "$_missing" ]; then
+    echo "[WARN] Dependances manquantes :$_missing" >&2
+fi
+
+echo "[OK] Environnement charge - PRESENTATION_ROOT=$PRESENTATION_ROOT"
