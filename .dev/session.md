@@ -167,3 +167,39 @@ Créer un skill spécialisé dans l'analyse d'un corpus de texte sur file systè
 Prendre en compte ces objections et réviser le plan en conséquence
 
 ## 11. exécuter le plan
+
+## 12. [plan] typologie des ressources livrables sur l'axes d'analyse "cycle de vie"
+
+Parmis les documents sous gestion de l'IA, il y a 3 catégories sur l'axe d'analyse du cycle de vie:
+
+- 1. document qui représentent un point fixe dans le temps: FND, ANL, @logs et autres documents publiés (dans @publications/*). Ces documents sont produit une fois et ne doivent pas être modifiés
+- 2. documents "vivant" qui sont appelés à évoluer et à prendre de la maturité sur un cycle long: ADR, REQ, skl, SPEC, code base. Ces documents sont versionnés avec semantic versionning.
+- 3. documents de travail: PLN. Modification sur un cycle court. pas de suivie de version
+
+Proposer un mécanisme pour le versionage atomique des ressources livrables.
+
+Exemple: l'ensemble des fichiers harness-files a une version. Et chaque fichier quelle contient (CLAUDE.md, CONSTITUTION.md, chaque skill...) ont également une version. 
+
+Produire un ADR sur les ressources livrables (ressources, livrables, documents).
+
+Produire un plan 
+
+## 13. [bogue] aucun log n'a été produit
+
+Le comportement attendu est le suivant: 
+- TOUTE tâche exécutée doit produire un log dans un mifhier markdown
+
+Or, l'exécution de la tâche précédente n'a pas produit de log
+
+Analyser le problème, faire un diagnostique.
+
+Corriger en ajustant les harness-files approprié.
+
+Ensuite:
+- produire un ADR à propos de la gestion des bogues.
+- décrire BUG, une ressource livrable de type "document vivant" qui permet de:
+  - rapporter les bogues,
+  - documenter le diagnostique
+  - documenter la solution appliquée
+- produire un skill qui produit la ressource BUG  
+- produire la ressource BUG pour ce bogue

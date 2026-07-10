@@ -89,7 +89,7 @@ Le système de travail du dépôt repose sur des fichiers markdown versionnés. 
 - **Source de vérité** : toujours le fichier (plan, log, fondation, ADR).
 - **Échanges textuels** (stdout/conversation) : secondaires, servent uniquement à orienter vers les fichiers.
 - **Plans** : vivent dans `.dev/plans/PLN-<SEQ>-<SLUG>.md`, pas en stdout.
-- **Logs** : vivent dans `logs/ia-output/<DATE>_task-<NN>.md`, pas en stdout.
+- **Logs** : vivent dans `logs/ia-output/<DATE>_task-<NN>.md`, pas en stdout. **Toute tâche traitée en produit un**, sans exception, y compris une tâche dont le seul livrable est un plan (voir `CLAUDE.md`, « Journalisation obligatoire »).
 
 Conséquence : l'humain consulte directement les fichiers plutôt que d'attendre un résumé conversationnel. La réponse textuelle de l'agent se limite à indiquer le fichier produit, son chemin, et un résumé d'une phrase.
 

@@ -17,6 +17,12 @@ Pour toute demande, tenir compte de :
 - Les objections de l'humain sont consignées dans `.dev/session.md` ; celles de l'agent, dans le plan concerné.
 - Les droits d'édition de chaque document sont fixés par la « Classification des documents » de `CONSTITUTION.md`. `INTENTION.md` et les fichiers de session sont en **édition humaine uniquement** : l'agent ne les modifie jamais.
 
+## Journalisation obligatoire
+
+**TOUTE tâche traitée produit un log**, sans exception, dans `logs/ia-output/<DATE>_task-<NN>.md` (voir `skl-008-log-ia-output`).
+
+Cela inclut explicitement les tâches dont le seul livrable est un plan : **produire ou réviser un plan est une tâche** et se termine donc par un log, au même titre qu'une tâche d'exécution. Une tâche n'est pas terminée tant que son log n'est pas écrit.
+
 ## Types de livrables
 
 | Livrable | Emplacement | Skill de production |
@@ -26,6 +32,7 @@ Pour toute demande, tenir compte de :
 | Harnais | `CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md` | `skl-004-harnais` |
 | Skill | `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` | `skl-001-skill-writer` |
 | ADR | `.dev/adr/ADR-<SEQ>-<SLUG>.md` | `skl-006-adr` |
+| Rapport de bogue | `.dev/bugs/BUG-<SEQ>-<SLUG>.md` | `skl-013-rapport-de-bogue` |
 | Analyse de corpus | `.dev/analyses/ANL-<SEQ>-<SLUG>.md` | `skl-012-analyse-corpus` |
 | Spécification | `.dev/specs/SPEC-<SEQ>-<SLUG>.md` | `skl-009-specification` |
 | Requis | `.dev/requis/REQ-<SEQ>-<SLUG>.md` | `skl-010-requis` |
@@ -39,7 +46,7 @@ Cas particulier : `skl-011-codage-cli-bash` encadre la production d'un **script 
 
 ## Nomenclature
 
-Les livrables de type « artefact-de-travail » (plans, fondations, ADR, analyses, spécifications, requis) suivent :
+Les livrables de type « artefact-de-travail » (plans, fondations, ADR, bugs, analyses, spécifications, requis) suivent :
 
 ```
 .dev/<type>/<TYPE_PREFIX>-<SEQ>-<SLUG>.md

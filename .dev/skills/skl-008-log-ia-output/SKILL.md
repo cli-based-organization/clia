@@ -11,7 +11,7 @@ metadata:
 
 ## Objet du livrable
 
-Chaque tâche exécutée par l'agent produit un fichier log markdown au format :
+**TOUTE tâche traitée par l'agent produit un fichier log, sans exception**, y compris la seule production ou révision d'un plan (produire un plan est une tâche). Une tâche n'est pas terminée tant que son log n'est pas écrit. Format :
 ```
 logs/ia-output/<SESSION_DATE>_task-<TASK_NUM>.md
 ```
