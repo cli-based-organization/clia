@@ -1,6 +1,6 @@
 # CONSTITUTION
 
-> Processus de gouvernance entre l'humain et l'agent IA dans ce dépôt. Fichier de harnais — vivant, sujet à évolution (voir `skl-004-harnais`).
+> Processus de gouvernance entre l'humain et l'agent IA dans ce dépôt. Fichier de harnais, vivant, sujet à évolution (voir `skl-004-harnais`).
 
 ## Principe
 
@@ -14,7 +14,7 @@ La gouvernance suit un modèle **objection-sociocratique** :
 ## Cycle de vie d'un plan
 
 ```
-proposé → objection → résolu → approuvé → exécuté
+proposé -> objection -> résolu -> approuvé -> exécuté
 ```
 
 - **proposé** : le plan existe, aucune objection n'a encore été traitée.
@@ -27,7 +27,7 @@ Le champ **Statut** en tête du fichier de plan reflète l'état courant du cycl
 
 ## Objection raisonnée
 
-Une objection est un **risque concret** identifié dans le plan proposé — pas une simple préférence esthétique. Elle doit pouvoir s'énoncer comme : « si ce plan est exécuté tel quel, [conséquence identifiable] va se produire ou est susceptible de se produire ».
+Une objection est un **risque concret** identifié dans le plan proposé, pas une simple préférence esthétique. Elle doit pouvoir s'énoncer comme : « si ce plan est exécuté tel quel, [conséquence identifiable] va se produire ou est susceptible de se produire ».
 
 Une objection est levée par :
 - un amendement du plan qui neutralise le risque identifié, ou
@@ -40,8 +40,65 @@ Une objection est levée par :
 | Humain | `.dev/session.md` |
 | Agent IA | le plan concerné (section « Objections de l'agent IA ») |
 
-L'agent a l'obligation de soulever ses propres objections dans le plan qu'il propose — il ne se contente pas d'exécuter une demande à la lettre s'il y voit un risque.
+L'agent a l'obligation de soulever ses propres objections dans le plan qu'il propose : il ne se contente pas d'exécuter une demande à la lettre s'il y voit un risque.
 
 ## Règle absolue
 
-Aucune exécution d'un plan tant qu'une objection — humaine ou agent — reste ouverte.
+Aucune exécution d'un plan tant qu'une objection (humaine ou agent) reste ouverte.
+
+## Classification des documents
+
+Tous les documents du dépôt appartiennent à l'une des trois catégories suivantes, qui régissent les droits d'édition :
+
+### Édition par humain uniquement
+
+L'agent IA peut lire, commenter et faire des suggestions, mais **ne doit jamais modifier** ces documents.
+
+- `INTENTION.md` : l'intention globale du dépôt (le « pourquoi » de haut niveau)
+- `.dev/session.md` : point d'entrée des demandes humaines
+- `.dev/sessions/*.md` : transcriptions des séances passées
+
+Ces documents sont le reflet de l'intention humaine et de la conversation. L'agent n'y a aucun droit d'écriture.
+
+### Édition par IA uniquement
+
+L'humain peut lire et commenter, mais ces documents sont produits et maintenus exclusivement par l'agent IA selon les spécifications du harnais.
+
+- `.dev/plans/PLN-*.md` : plans de travail proposés par l'agent
+- `.dev/fondations/FND-*.md` : recherches de fondation
+- `.dev/adr/ADR-*.md` : décisions d'architecture
+- `logs/ia-output/*.md` : logs des réponses de l'agent
+
+Cas particulier : les **objections de l'agent** (section dans les fichiers `PLN-*.md`) sont générées par l'agent, mais peuvent être discutées ou contestées par l'humain via `session.md`.
+
+### Co-édition humain et IA
+
+L'humain et l'agent peuvent tous deux modifier ces documents selon leur rôle dans le cycle.
+
+- `CLAUDE.md` : mode opératoire (peut évoluer suite à feedback)
+- `CONSTITUTION.md` : processus de gouvernance (peut évoluer suite à feedback)
+- `.dev/skills/skl-*/SKILL.md` : spécifications des skills
+- `doc/` : documentation utilisateur et de design
+
+**Principe général pour la co-édition :** l'humain propose des amendements via `session.md` ; l'agent amende le document puis demande validation si nécessaire.
+
+## Interface de travail : fichiers, pas conversation
+
+Le système de travail du dépôt repose sur des fichiers markdown versionnés. L'interface input/output **est** des fichiers, pas des échanges conversationnels éphémères.
+
+- **Source de vérité** : toujours le fichier (plan, log, fondation, ADR).
+- **Échanges textuels** (stdout/conversation) : secondaires, servent uniquement à orienter vers les fichiers.
+- **Plans** : vivent dans `.dev/plans/PLN-<SEQ>-<SLUG>.md`, pas en stdout.
+- **Logs** : vivent dans `logs/ia-output/<DATE>_task-<NN>.md`, pas en stdout.
+
+Conséquence : l'humain consulte directement les fichiers plutôt que d'attendre un résumé conversationnel. La réponse textuelle de l'agent se limite à indiquer le fichier produit, son chemin, et un résumé d'une phrase.
+
+## Git commit : responsabilité de l'humain
+
+L'agent IA n'a **jamais** le droit de :
+- exécuter une commande `git add`, `git commit`, `git push`, ou toute autre action git ;
+- proposer à l'humain d'exécuter un git commit ;
+- suggérer une stratégie de branche, de merge, ou de synchronisation avec un dépôt distant ;
+- discuter du moment ou de la façon de commiter.
+
+**Seule exception :** l'agent produit un fichier log markdown (`logs/ia-output/<DATE>_task-<NN>.md`) qui inclut une section « Commit message proposé » à titre informatif. Ce message est une suggestion documentaire, pas une directive d'exécution. L'humain reste seul responsable de décider s'il faut commiter, rejeter, ou modifier le message proposé.

@@ -1,20 +1,21 @@
 # CLAUDE.md
 
-> Mode opératoire de l'agent IA dans ce dépôt. Fichier de harnais — vivant, sujet à évolution (voir `skl-004-harnais`).
+> Mode opératoire de l'agent IA dans ce dépôt. Fichier de harnais, vivant, sujet à évolution (voir `skl-004-harnais`).
 
 ## Règle des 3 ingrédients
 
 Pour toute demande, tenir compte de :
 
-1. l'**intention** (le pourquoi) — voir `INTENTION.md` pour l'intention globale du dépôt ;
-2. le **contexte** (les contraintes, la façon de collaborer) — voir `CONSTITUTION.md` pour le processus de gouvernance ;
-3. la **spécification du livrable** (la forme attendue du résultat) — voir la table des livrables ci-dessous.
+1. l'**intention** (le pourquoi) : voir `INTENTION.md` pour l'intention globale du dépôt ;
+2. le **contexte** (les contraintes, la façon de collaborer) : voir `CONSTITUTION.md` pour le processus de gouvernance ;
+3. la **spécification du livrable** (la forme attendue du résultat) : voir la table des livrables ci-dessous.
 
 ## Gouvernance
 
 - L'humain n'a qu'**un seul point d'entrée** : `.dev/session.md`.
 - Le cycle de travail est **objection-sociocratique** : l'agent propose un plan avant d'exécuter, et ne peut exécuter tant qu'une objection reste ouverte. Détails complets dans `CONSTITUTION.md`.
 - Les objections de l'humain sont consignées dans `.dev/session.md` ; celles de l'agent, dans le plan concerné.
+- Les droits d'édition de chaque document sont fixés par la « Classification des documents » de `CONSTITUTION.md`. `INTENTION.md` et les fichiers de session sont en **édition humaine uniquement** : l'agent ne les modifie jamais.
 
 ## Types de livrables
 
@@ -25,16 +26,20 @@ Pour toute demande, tenir compte de :
 | Harnais | `CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md` | `skl-004-harnais` |
 | Skill | `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` | `skl-001-skill-writer` |
 | ADR | `.dev/adr/ADR-<SEQ>-<SLUG>.md` | `skl-006-adr` |
-| README de présentation | `README.md` (racine du dépôt de la présentation concernée) | `skl-005-readme-presentation` |
-| pdf de présentation | `dist/<SLUG>.pdf` (racine du dépôt de la présentation concernée ; généré par le CLI encadré par ce skill) | `skl-007-script-pdf-presentation` |
+| Analyse de corpus | `.dev/analyses/ANL-<SEQ>-<SLUG>.md` | `skl-012-analyse-corpus` |
+| Spécification | `.dev/specs/SPEC-<SEQ>-<SLUG>.md` | `skl-009-specification` |
+| Requis | `.dev/requis/REQ-<SEQ>-<SLUG>.md` | `skl-010-requis` |
+| Log de sortie IA | `logs/ia-output/<DATE>_task-<NN>.md` | `skl-008-log-ia-output` |
 
 Chaque type de livrable a un skill associé qui encadre sa production : une spécification/exigence vivante à consulter avant de produire ou modifier ce type de livrable.
 
-Cas particulier : le **rapport de recherche** demandé pour une présentation est une **recherche de fondation** au sens de la table ci-dessus — il n'a pas de type ni de skill distinct, il se produit avec `skl-002-recherche-de-fondation` (`.dev/fondations/FND-<SEQ>-<SLUG>.md`).
+Cas particulier : le **rapport de recherche** demandé pour une tâche est une **recherche de fondation** au sens de la table ci-dessus. Il n'a pas de type ni de skill distinct, il se produit avec `skl-002-recherche-de-fondation` (`.dev/fondations/FND-<SEQ>-<SLUG>.md`). À distinguer de l'**analyse de corpus** (`skl-012`), qui porte sur un existant matériel et non sur la littérature (voir `ADR-001-type-livrable-analyse`).
+
+Cas particulier : `skl-011-codage-cli-bash` encadre la production d'un **script bash exécutable** (pas un document markdown) conforme à `ADR-002`, `SPEC-001` et `REQ-001`.
 
 ## Nomenclature
 
-Les livrables de type « artefact-de-travail » (plans, fondations, ADR) suivent :
+Les livrables de type « artefact-de-travail » (plans, fondations, ADR, analyses, spécifications, requis) suivent :
 
 ```
 .dev/<type>/<TYPE_PREFIX>-<SEQ>-<SLUG>.md
@@ -42,10 +47,10 @@ Les livrables de type « artefact-de-travail » (plans, fondations, ADR) suivent
 
 Exceptions à contrainte fixe :
 - les **skills** suivent la convention Claude Code (`.dev/skills/skl-<SEQ>-<nom>/SKILL.md`) ;
-- le **harnais** utilise des noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md`) — pas de séquence, un fichier = un rôle ;
-- le **README de présentation** et le **pdf de présentation** sont des livrables *par dépôt de présentation*, sans séquence globale : `README.md` et `dist/<slug>.pdf` à la racine du dépôt de la présentation concernée.
+- le **harnais** utilise des noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md`) : pas de séquence, un fichier = un rôle ;
+- les **logs de sortie IA** suivent `logs/ia-output/<DATE>_task-<NN>.md` (voir `skl-008-log-ia-output`).
 
 ## Conventions transverses
 
-- Markdown strict : pas de filet `---` hors frontmatter, pas de tiret cadratin.
-- Le CLI de génération du pdf de présentation (`scripts/dev.sh`) impose une stack technologique exclusive, actée dans `ADR-001-cli-generation-pdf-presentation.md` — jamais Python, jamais pandoc, y compris pour un outillage ponctuel non commité (diagnostic, script d'analyse jetable) touchant ce périmètre. Voir `skl-007-script-pdf-presentation`.
+- Markdown strict : pas de filet `---` hors frontmatter, pas de tiret cadratin. Cette règle s'applique à tous les documents éditables par l'agent ; les fichiers en édition humaine uniquement en sont exclus.
+- L'agent ne réalise, ne propose et ne suggère **jamais** d'opération git (`add`, `commit`, `push`, stratégie de branche). La gestion de versions est la responsabilité exclusive de l'humain (voir `CONSTITUTION.md`, « Git commit : responsabilité de l'humain »).
