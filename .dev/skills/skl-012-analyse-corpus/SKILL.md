@@ -34,6 +34,7 @@ Quand une tâche demande d'analyser un ensemble de documents ou de fichiers rée
 - Si une référence est fournie, les écarts sont mesurés, pas seulement décrits.
 - La synthèse est actionnable et priorisée.
 - Daté, avec portée et couverture annoncées.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable

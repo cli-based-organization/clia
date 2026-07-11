@@ -32,6 +32,7 @@ Ne pas utiliser pour analyser un corpus concret de fichiers présents sur un sys
 - Daté et revalidable.
 - Neutre et factuel ; les opinions sont signalées.
 - Navigable : sections numérotées.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir CLAUDE.md).
 
 ## Structure du livrable

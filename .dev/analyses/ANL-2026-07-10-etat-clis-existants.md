@@ -1,16 +1,16 @@
-# ANL-001 - État des CLI et scripts bash existants
+# ANL-2026-07-10-etat-clis-existants - État des CLI et scripts bash existants
 
 - **Date** : 2026-07-10
 - **Périmètre** : arborescence `/home/jvtrudel/git/` (résolution de `../..` depuis ce dépôt), fichiers `*.sh` et entrypoints CLI sans extension. Exclusions : `.git/`, `node_modules/`, environnements virtuels (`ansible/.venv`, `.venv/lib/python*/site-packages`), exemples de dépendances tierces (leptos, cbomkit testdata).
-- **Référence** : `FND-001-conventions-cli`.
+- **Référence** : `FND-2026-07-10-conventions-cli`.
 
 ## Objet
 
-Dresser l'état des lieux des scripts bash et CLI présents dans les dépôts locaux, en dégager les patterns récurrents et les incohérences, et mesurer les écarts par rapport aux conventions établies dans FND-001, afin d'alimenter la convention de CLI bash du dépôt (ADR-002, SPEC-001, REQ-001).
+Dresser l'état des lieux des scripts bash et CLI présents dans les dépôts locaux, en dégager les patterns récurrents et les incohérences, et mesurer les écarts par rapport aux conventions établies dans FND-2026-07-10-conventions-cli, afin d'alimenter la convention de CLI bash du dépôt (ADR-002, SPEC-001, REQ-001).
 
 ## Périmètre et méthode
 
-Balayage récursif des `*.sh` et des entrypoints exécutables. Séparation du corpus **first-party** (scripts intentionnels des projets de l'auteur/organisation) du **bruit** (scripts vendored de dépendances). Grille d'analyse à six dimensions, dérivée de FND-001 :
+Balayage récursif des `*.sh` et des entrypoints exécutables. Séparation du corpus **first-party** (scripts intentionnels des projets de l'auteur/organisation) du **bruit** (scripts vendored de dépendances). Grille d'analyse à six dimensions, dérivée de FND-2026-07-10-conventions-cli :
 1. structure et robustesse (`set` flags, résolution de chemin, `trap`) ;
 2. gestion des arguments et options ;
 3. aide et version ;
@@ -65,9 +65,9 @@ Bruit exclu (volumineux) : `noumanity-infra/platform/ansible/.venv/**` (collecti
 - Le pattern `. activate` ajoutant `scripts/` au PATH est une bonne pratique de découvrabilité récurrente dans la famille presentation.
 - Observation transverse : plusieurs dépôts (`cli-based-organization/*`, `noumanity-dev/cli-convention`, `linux-inspect`) partagent une structure de gouvernance (`CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md`, `skills/`) proche de ce dépôt, signe d'une famille de conventions méthodologiques en cours de convergence. Le dépôt `noumanity-dev/cli-convention` est dédié au sujet mais ne contient encore que le harnais, pas de convention rédigée.
 
-## Confrontation à la référence (FND-001)
+## Confrontation à la référence (FND-2026-07-10-conventions-cli)
 
-| Dimension FND-001 | Meilleur exemple local | Écart dominant |
+| Dimension FND-2026-07-10-conventions-cli | Meilleur exemple local | Écart dominant |
 |---|---|---|
 | Options POSIX (groupage, `--`) | partiel (`dev.sh`) | groupage et `--` non gérés |
 | Options longues GNU | `--help`, quelques flags | rares hors help |

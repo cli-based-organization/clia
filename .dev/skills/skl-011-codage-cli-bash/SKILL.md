@@ -8,7 +8,7 @@ description: >-
 
 # Skill - Codage d'un CLI bash
 
-> Ce skill encadre l'écriture du code d'un CLI bash conforme à la convention du dépôt. Il part des livrables amont (décision `ADR-002`, spécification `SPEC-001`, requis `REQ-001`) et produit un script exécutable robuste, cohérent avec les conventions POSIX/GNU/clig.dev retenues (voir `FND-001`).
+> Ce skill encadre l'écriture du code d'un CLI bash conforme à la convention du dépôt. Il part des livrables amont (décision `ADR-002`, spécification `SPEC-001`, requis `REQ-001`) et produit un script exécutable robuste, cohérent avec les conventions POSIX/GNU/clig.dev retenues (voir `FND-2026-07-10-conventions-cli`).
 
 ## Quand l'utiliser
 
@@ -33,6 +33,7 @@ Quand une tâche demande d'implémenter ou de refondre un CLI bash. Ne pas utili
 - stdout ne contient que des données ; tous les diagnostics sur stderr.
 - L'aide est présente, à jour, et cohérente avec le comportement réel.
 - Idéalement vérifié par `shellcheck` sans avertissement bloquant.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict pour toute doc associée (voir `CLAUDE.md`).
 
 ## Structure du livrable

@@ -1,4 +1,4 @@
-# FND-001 - Conventions et interfaces des CLI
+# FND-2026-07-10-conventions-cli - Conventions et interfaces des CLI
 
 - **Statut** : actif
 - **Date** : 2026-07-10

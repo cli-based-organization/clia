@@ -4,7 +4,7 @@
 - **Version** : 0.1.0
 - **Date de rapport** : 2026-07-10
 - **Origine** : session.md tâche 13
-- **Tâche liée** : tâche 12 (production de PLN-005) ; log correctif : `logs/ia-output/2026-07-09_task-13.md`
+- **Tâche liée** : tâche 12 (production de PLN-005) ; log correctif : `logs/ia-output/LOG-2026-07-09-task-13.md`
 
 ## Rapport
 
@@ -26,7 +26,7 @@
 4. **Rattrapage** : production rétroactive des logs manquants `task-09`, `task-10`, `task-12`.
 5. **Infrastructure de gestion des bogues** : `ADR-003-gestion-des-bogues`, type BUG, `skl-013-rapport-de-bogue`, et ce présent BUG-001.
 
-Fichiers modifiés ou créés : `CLAUDE.md`, `CONSTITUTION.md`, `.dev/skills/skl-008-log-ia-output/SKILL.md`, `.dev/adr/ADR-003-gestion-des-bogues.md`, `.dev/skills/skl-013-rapport-de-bogue/SKILL.md`, `.dev/bugs/BUG-001-aucun-log-produit.md`, `logs/ia-output/2026-07-09_task-09.md`, `2026-07-09_task-10.md`, `2026-07-09_task-12.md`, `2026-07-09_task-13.md`.
+Fichiers modifiés ou créés : `CLAUDE.md`, `CONSTITUTION.md`, `.dev/skills/skl-008-log-ia-output/SKILL.md`, `.dev/adr/ADR-003-gestion-des-bogues.md`, `.dev/skills/skl-013-rapport-de-bogue/SKILL.md`, `.dev/bugs/BUG-001-aucun-log-produit.md`, `logs/ia-output/LOG-2026-07-09-task-09.md`, `LOG-2026-07-09-task-10.md`, `LOG-2026-07-09-task-12.md`, `LOG-2026-07-09-task-13.md`.
 
 ## Vérification
 

@@ -1,84 +1,118 @@
-# PLN-005 - Typologie des ressources livrables (axe cycle de vie) et versionnage atomique
+# PLN-005 - Typologie des ressources livrables et versionnage atomique
 
-**Statut : objection**
+**Statut : exécuté**
+
+## Changelog
+
+- **v1 (tâche-12)** : première proposition. Typologie par cycle de vie, mécanisme de versionnage, six objections.
+- **v2 (tâche-14)** : intégration des réponses aux six objections et de quatre objections humaines (ADR scope de CONSTITUTION, manifeste YAML, nommage daté des ressources point fixe, axes d'analyse multiples). Trois objections résiduelles (7, 8, 9).
+- **v3 (tâche-15)** : résolution des objections 7, 8, 9. Ajout d'un principe majeur : le **harnais doit être générique et réutilisable dans tout dépôt**, sans information de domaine ni spécifique au repo. `INTENTION.md` n'est pas un fichier de harnais. Ajout de livrables : règle de généricité dans tous les skills, audit de généricité du harnais, renommage des logs à la convention du système.
+- **v4 (tâche-16, exécution)** : plan exécuté. Voir « Travail effectué ».
 
 ## Intention
 
-Formaliser une **typologie des ressources livrables** selon l'axe du **cycle de vie** (distinct de l'axe des droits d'édition déjà en place dans `CONSTITUTION.md`), et proposer un **mécanisme de versionnage atomique** où un ensemble de ressources porte une version et où chaque ressource de l'ensemble porte aussi la sienne. Le tout est acté dans un ADR sur les ressources livrables, puis reflété dans le harnais.
+Formaliser une compréhension multi-axes des **ressources livrables**, un **mécanisme de versionnage atomique**, la **fonction et le scope du harnais** (y compris son principe de réutilisabilité inter-dépôts), et une **convention de nommage** cohérente. Le tout acté dans des ADR, un manifeste YAML, et des amendements de harnais, après une analyse de l'usage réel des ressources.
 
 ## Contexte
 
-Demande de la tâche 12 de `session.md`. L'humain distingue, parmi les documents sous gestion de l'IA, trois catégories sur l'axe du cycle de vie :
+Demande : tâche 12 de `session.md`. Précisions et objections : tâches 14 et 15.
 
-1. **Point fixe dans le temps** (produit une fois, non modifié) : `FND`, `ANL`, `logs/ia-output/*`, et documents publiés (`publications/*`).
-2. **Vivant** (évolue et mûrit sur un cycle long, versionné en *semantic versioning*) : `ADR`, `REQ`, `SPEC`, `skl` (skills), base de code.
-3. **Document de travail** (cycle court, sans suivi de version) : `PLN`.
+Typologie par cycle de vie (tâche 12) :
+1. **Point fixe** (produit une fois, non modifié) : `FND`, `ANL`, `logs/ia-output/*`, `publications/*`.
+2. **Vivant** (semver) : `ADR`, `REQ`, `SPEC`, `skl`, base de code, `BUG`.
+3. **Travail** (sans version) : `PLN`.
 
-Exemple de versionnage atomique donné par l'humain : l'ensemble des fichiers de harnais a une version, et chaque fichier qu'il contient (`CLAUDE.md`, `CONSTITUTION.md`, chaque skill, etc.) a aussi une version.
-
-Cet axe « cycle de vie » est **orthogonal** à la classification existante par droits d'édition (humain-only / IA-only / co-édition). Une même ressource relève des deux axes (ex. un skill est en co-édition ET vivant/semver).
+Décisions de l'humain (tâches 14 et 15) :
+- Un ADR définit la **fonction et le scope du harnais** (dont `CONSTITUTION.md`) (tâche 14, obj. 1).
+- Manifeste de versions au format **YAML** : `.dev/ressources.yaml` (tâche 14, obj. 2).
+- Ressources « point fixe » nommées **`<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>`** (sans séquence ; heure si plusieurs par jour) ; appliqué à tous les documents datés (tâche 14, obj. 3).
+- L'ADR présente les **axes d'analyse multiples** des ressources, identifiés par une analyse d'usage (tâche 14, obj. 4).
+- L'**ADR est un document vivant** ; trace décisionnelle préservée par historique et versionnage consistant (tâche 14, réponse agent-2).
+- **Deux ensembles versionnés** : `harness-files` et `documents-de-conception` (tâche 14, réponse agent-3).
+- Version initiale **`0.1.0`** (tâche 14, réponse agent-4).
+- Écart d'immuabilité (logs édités tâche 7) **toléré en phase de conception** (tâche 14, réponse agent-5).
+- Cas `publications/*` **documenté dans l'ADR** (tâche 14, réponse agent-6).
+- Les **skills font partie du harnais** (tâche 15, obj. 7).
+- `INTENTION.md` **ne fait pas partie du harnais**. Le harnais ne doit contenir **aucune information de domaine métier ni spécifique au repo**, afin d'être **réutilisable dans n'importe quel dépôt** (objectif central). À documenter dans l'ADR et à **forcer par une règle dans tous les skills**, pour toutes les ressources de harnais (tâche 15, obj. 8).
+- Les **logs respectent la convention de nommage du système** et les logs déjà produits sont **corrigés** (tâche 15, obj. 9).
 
 ## Spécification du livrable
 
 À produire après approbation :
 
-1. **ADR-004** - `.dev/adr/ADR-004-ressources-livrables.md` : définit les notions de ressource / livrable / document, la typologie par cycle de vie (les trois catégories), et le mécanisme de versionnage atomique retenu. Produit par `skl-006`.
-2. **Amendement `CONSTITUTION.md`** (`skl-004`) : ajouter une section « Classification par cycle de vie » complétant la « Classification des documents » existante (droits d'édition), en précisant leur orthogonalité.
-3. **Amendement `CLAUDE.md`** (`skl-004`) : renvoyer vers la typologie et la convention de versionnage ; indiquer où vit la version de chaque type.
-4. **Manifeste de versions** - `.dev/RESSOURCES.md` (ou format retenu en OBJECTION-1) : registre agrégateur listant chaque ressource vivante et sa version, et chaque ensemble et sa version.
+1. **Analyse d'usage** - `.dev/analyses/ANL-<DATE>-usage-ressources-livrables.md` (`skl-012`) : inventaire des types de ressources et identification des axes d'analyse.
+2. **ADR-004** - `.dev/adr/ADR-004-ressources-livrables.md` (`skl-006`) : ressource / livrable / document, axes d'analyse, typologie cycle de vie, convention de nommage datée, mécanisme de versionnage atomique, cas `publications/*`.
+3. **ADR-005** - `.dev/adr/ADR-005-fonction-scope-harnais.md` (`skl-006`) : fonction et scope du harnais (`CLAUDE.md`, `CONSTITUTION.md`, skills) ; **principe de réutilisabilité** (aucune information de domaine ou spécifique au repo dans le harnais) ; place respective de `CONSTITUTION.md`, `CLAUDE.md` et des ADR ; statut de `INTENTION.md` (hors harnais).
+4. **Manifeste** - `.dev/ressources.yaml` : deux ensembles (`harness-files` = `CLAUDE.md`, `CONSTITUTION.md`, `skl-*` ; `documents-de-conception` = `ADR-*`, `SPEC-*`, `REQ-*`), membres et versions à `0.1.0`. `INTENTION.md` exclu (hors harnais, édition humaine).
+5. **Convention de nommage** : amendement de la nomenclature de `CLAUDE.md` : ressources point fixe datées (`<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>`) vs ressources vivantes/travail séquencées (`<PREFIX>-<SEQ>-<SLUG>.md`). Les logs adoptent `LOG-<DATE>-task-<NN>.md`.
+6. **Règle de généricité dans les skills** : ajouter à chaque skill (et à `skl-004-harnais`, `skl-001-skill-writer`) une règle forçant qu'une ressource de harnais ne contienne aucune information de domaine ni spécifique au repo.
+7. **Audit et correction de généricité du harnais** : repérer et retirer toute information de domaine dans les ressources de harnais existantes. Cas connu : l'exemple de `skl-008` cite « Commission scolaire de la Capitale-Nationale » et doit être rendu générique.
+8. **Correction des ressources existantes** : renommer les ressources point fixe séquencées au format daté (`FND-2026-07-10-conventions-cli` -> `FND-<DATE>-conventions-cli` ; `ANL-2026-07-10-etat-clis-existants` -> `ANL-<DATE>-etat-clis-existants`) ; renommer les 12 logs existants au format `LOG-<DATE>-task-<NN>.md` ; mettre à jour toutes les références ; peupler `.dev/ressources.yaml`.
+9. **Amendements du harnais** (`skl-004`) : `CLAUDE.md` (nomenclature, renvois manifeste et ADR) ; `CONSTITUTION.md` selon ce que tranche `ADR-005`.
 
-## Proposition de mécanisme de versionnage atomique (à valider)
+## Axes candidats d'analyse des ressources (à confirmer par l'analyse)
 
-Conception proposée, sujette aux objections ci-dessous :
+- **Cycle de vie** : point fixe / vivant / travail.
+- **Droits d'édition (permissions et rôles)** : humain-only / IA-only / co-édition.
+- **Fonction / finalité** : gouvernance, conception, recherche, analyse, trace-audit (log), suivi de bogue, intention.
+- **Appartenance au harnais** : harnais (générique, réutilisable) vs ressource propre au repo (domaine).
+- **Nommage** : daté (point fixe) vs séquencé (vivant/travail).
+- **Granularité / composition** : fichier individuel vs ensemble versionné.
+- **Producteur** : humain / agent / co-production.
 
-- **Catégorie 1 (point fixe)** : pas de semver. Identité = préfixe + séquence + date. Une ressource fixe ne se modifie pas ; si son contenu doit changer, on produit une **nouvelle instance numérotée** qui supersède l'ancienne (ex. `ANL-002` supersède `ANL-001`), l'ancienne restant intacte comme trace.
-- **Catégorie 2 (vivant)** : **semver `MAJEUR.MINEUR.CORRECTIF`** porté par chaque ressource. Règles de déclenchement proposées :
-  - MAJEUR : changement incompatible du contrat/sens (un skill change son processus de façon rupturante ; un ADR renverse sa décision ; un REQ retire ou durcit une exigence existante).
-  - MINEUR : ajout rétrocompatible (nouvelle section, nouvelle règle, nouvelle exigence optionnelle).
-  - CORRECTIF : clarification sans effet sémantique (typo, reformulation, correction de lien).
-- **Catégorie 3 (travail)** : pas de version ; le `Changelog` en tête de plan suffit (déjà en usage).
-- **Versionnage composite (atomique)** :
-  - chaque ressource vivante porte sa version dans son **frontmatter** (`version: X.Y.Z`) ;
-  - chaque **ensemble** défini (ex. « harnais », « collection de skills », « base de code ») porte sa propre version dans le **manifeste** `.dev/RESSOURCES.md` ;
-  - **atomicité** : toute modification d'une ressource vivante bumpe, dans la même opération, (a) la version de la ressource et (b) la version de l'ensemble qui la contient, avec mise à jour du manifeste. Le manifeste est ainsi toujours cohérent avec l'état des membres.
-  - le versionnage est **piloté par fichiers** (frontmatter + manifeste), pas par tags git, conformément à l'interdiction faite à l'agent d'opérer git et au principe « interface = fichiers ».
+## Mécanisme de versionnage atomique
+
+- **Catégorie 1 (point fixe)** : pas de semver. Identité = `<PREFIX>-<DATE[-HEURE]>-<SLUG>`. Modification = nouvelle instance datée.
+- **Catégorie 2 (vivant)** : semver `MAJEUR.MINEUR.CORRECTIF`. MAJEUR = incompatible ; MINEUR = ajout rétrocompatible ; CORRECTIF = clarification. ADR vivant, trace préservée par historique.
+- **Catégorie 3 (travail)** : pas de version ; `Changelog` du plan.
+- **Deux ensembles versionnés** : `harness-files` (CLAUDE, CONSTITUTION, skills) et `documents-de-conception` (ADR, SPEC, REQ). `INTENTION.md` exclu.
+- **Manifeste** `.dev/ressources.yaml` : version de chaque ensemble et de chaque membre ; toute modification d'un membre vivant bumpe atomiquement le membre et son ensemble. Piloté par fichiers, pas par tags git.
 
 ## Plan proposé
 
-### 1. Rédiger ADR-004
-Définir ressource / livrable / document, la typologie par cycle de vie, et le mécanisme de versionnage (selon la proposition ci-dessus, amendée par les objections résolues).
+### 1. Produire l'analyse d'usage
+`ANL-<DATE>-usage-ressources-livrables` : inventaire et confirmation des axes.
 
-### 2. Définir les ensembles versionnés
-Lister les ensembles portant une version (au minimum : harnais ; à discuter : collection de skills, base de code, convention CLI comme ensemble ADR-002 + REQ-001 + SPEC-001).
+### 2. Rédiger ADR-005 (fonction, scope et réutilisabilité du harnais)
+Définir le harnais, le principe de généricité (aucune information de domaine), la place de `CONSTITUTION.md`/`CLAUDE.md`/ADR, le statut hors-harnais de `INTENTION.md`.
 
-### 3. Créer le manifeste `.dev/RESSOURCES.md`
-Registre initial : chaque ressource vivante et sa version de départ (`0.1.0` ou `1.0.0`, voir OBJECTION-4), chaque ensemble et sa version.
+### 3. Rédiger ADR-004 (ressources livrables)
+Définitions, axes, typologie, nommage daté, versionnage, `publications/*`.
 
-### 4. Amender le harnais
-Ajouter la « Classification par cycle de vie » dans `CONSTITUTION.md` et les renvois dans `CLAUDE.md` ; préciser où vit la version de chaque type (frontmatter, manifeste, ou en-tête pour les fichiers sans frontmatter comme `CLAUDE.md`).
+### 4. Créer `.dev/ressources.yaml`
+Deux ensembles, membres et versions à `0.1.0`.
 
-### 5. Cohérence croisée
-Vérifier l'articulation avec la classification par droits d'édition et avec les skills existants (ex. `skl-004` pour le harnais versionné).
+### 5. Généricité du harnais
+Ajouter la règle de généricité dans tous les skills ; auditer et corriger les ressources de harnais (dont l'exemple de `skl-008`).
+
+### 6. Convention de nommage et corrections
+Amender la nomenclature (`CLAUDE.md`) ; renommer `FND`/`ANL` au format daté et les logs au format `LOG-<DATE>-task-<NN>` ; mettre à jour les références ; peupler le manifeste.
+
+### 7. Amender CONSTITUTION.md selon ADR-005 et cohérence croisée
+Placer dans `CONSTITUTION.md` uniquement ce que son scope justifie ; vérifier la non-contradiction et la validité des références après renommage.
 
 ## Objections de l'agent IA
 
-### [OBJECTION-1] Où vit la version, pour les fichiers sans frontmatter ?
-**Risque :** `CLAUDE.md` et `CONSTITUTION.md` n'ont pas de frontmatter (forme source, PLN-003). Y ajouter un `version:` en frontmatter romprait cette forme ; ne rien y mettre laisse leur version seulement dans le manifeste, créant une asymétrie avec les skills (qui, eux, ont un frontmatter). **Décision requise :** version en frontmatter partout (au prix d'ajouter un frontmatter à `CLAUDE.md`/`CONSTITUTION.md`), ou version dans le manifeste seul, ou en-tête ligne dédiée.
+Toutes les objections (agent v1 et résiduelles 7, 8, 9) sont **résolues** par les réponses de l'humain (tâches 14 et 15) :
+- OBJECTION-7 (skills) : résolue, les skills font partie du harnais (ensemble `harness-files`).
+- OBJECTION-8 (INTENTION.md, versionnage) : résolue, `INTENTION.md` est hors harnais et hors versionnage géré par l'agent ; principe de généricité du harnais acté.
+- OBJECTION-9 (nommage des logs) : résolue, les logs suivent la convention du système et sont renommés.
 
-### [OBJECTION-2] Un ADR est conventionnellement immuable
-**Risque :** classer les `ADR` en catégorie « vivant/semver » entre en tension avec la pratique établie (un ADR accepté ne se modifie pas ; on le supersède par un nouvel ADR, cf. le champ « Remplacé par ADR-XXX » de `skl-006`). Versionner un ADR en semver pourrait brouiller sa fonction de trace décisionnelle. **Proposition :** conserver l'ADR immuable quant à la décision, et réserver le semver aux corrections éditoriales (CORRECTIF) et aux ajouts non décisionnels ; tout renversement de décision passe par un nouvel ADR. **Décision requise.**
+Aucune objection ouverte. Le plan est prêt à exécuter.
 
-### [OBJECTION-3] Périmètre des ensembles versionnés
-**Risque :** sans liste arrêtée des ensembles, le versionnage composite est ambigu (un fichier peut appartenir à plusieurs ensembles). **Décision requise :** quels ensembles portent une version, et un fichier peut-il appartenir à plusieurs ensembles versionnés à la fois ?
+## Travail effectué
 
-### [OBJECTION-4] Version initiale et statut de maturité
-**Risque :** démarrer les ressources existantes à `1.0.0` laisserait entendre une maturité non atteinte (premiers jets). **Proposition :** initialiser les ressources de premier jet à `0.1.0`. **Décision requise.**
+Exécuté à la tâche 16 :
 
-### [OBJECTION-5] Conséquence sur l'immuabilité déjà enfreinte
-**Signalement (non bloquant) :** à la tâche 7, des logs (catégorie 1, immuables) ont été édités pour retirer des tirets cadratins. Sous cette typologie, un tel cas devrait passer par une nouvelle instance ou une note de correction, pas par une édition en place. À intégrer comme règle prospective dans l'ADR.
+- `.dev/analyses/ANL-2026-07-10-usage-ressources-livrables.md` : analyse d'usage confirmant six axes.
+- `.dev/adr/ADR-005-fonction-scope-harnais.md` : fonction, scope et réutilisabilité du harnais ; `INTENTION.md` hors harnais.
+- `.dev/adr/ADR-004-ressources-livrables.md` : vocabulaire, six axes, typologie cycle de vie, nommage, versionnage atomique, cas `publications/*`.
+- `.dev/ressources.yaml` : manifeste YAML, deux ensembles (`harness-files`, `documents-de-conception`) et `BUG-001`, versions à `0.1.0`.
+- Généricité : règle ajoutée dans les onze skills ; exemple de `skl-008` rendu générique (retrait de la mention de domaine).
+- Nommage : `CLAUDE.md` amendé (nommage daté vs séquencé, renvois ADR et manifeste) ; `CONSTITUTION.md` et `skl-008` mis à jour pour le format des logs et les renvois ADR.
+- Renommages : `FND-001-conventions-cli` -> `FND-2026-07-10-conventions-cli` ; `ANL-001-etat-clis-existants` -> `ANL-2026-07-10-etat-clis-existants` ; 14 logs -> `LOG-2026-07-09-task-NN.md` ; toutes les références mises à jour (aucune résiduelle).
 
-### [OBJECTION-6] Répertoire `publications/` inexistant
-**Signalement (non bloquant) :** `publications/*` est cité en catégorie 1 mais n'existe pas encore. Il sera créé au premier document publié ; l'ADR peut le prévoir sans le matérialiser maintenant.
+Décision de nommage (heure) : les ressources datées produites le même jour sont distinguées par leur slug ; l'heure n'est ajoutée qu'en cas de collision date + slug. Choix documenté dans `ADR-004` (amendable).
 
 ## Note sur les objections humaines
 

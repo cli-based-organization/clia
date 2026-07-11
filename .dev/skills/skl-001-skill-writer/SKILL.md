@@ -34,6 +34,7 @@ Ne pas utiliser pour les skills utilitaires (scripts, automatisations) ni pour l
 - Le processus est numéroté, chaque étape est actionnable sans ambiguïté.
 - Les critères de qualité sont vérifiables (pas "le document est clair" mais "chaque section obligatoire est présente").
 - Le template inclut toutes les sections requises avec des placeholders explicites.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict respecté (pas de filet `---` hors frontmatter, pas de tiret cadratin).
 
 ## Structure du livrable

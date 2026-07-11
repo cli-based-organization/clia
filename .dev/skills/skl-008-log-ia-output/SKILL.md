@@ -13,7 +13,7 @@ metadata:
 
 **TOUTE tâche traitée par l'agent produit un fichier log, sans exception**, y compris la seule production ou révision d'un plan (produire un plan est une tâche). Une tâche n'est pas terminée tant que son log n'est pas écrit. Format :
 ```
-logs/ia-output/<SESSION_DATE>_task-<TASK_NUM>.md
+logs/ia-output/LOG-<SESSION_DATE>-task-<TASK_NUM>.md
 ```
 
 où :
@@ -95,6 +95,8 @@ Co-Authored-By: <modèle courant de l'agent> <noreply@anthropic.com>
 
 6. **Tonalité** : le log est factuel et technique, pas une narration conversationnelle.
 
+7. **Généricité (harnais)** : ce skill est une ressource de harnais ; il ne contient aucune information de domaine métier ni spécifique au repo (voir `ADR-005`). Les exemples emploient des placeholders neutres.
+
 ## Exemple
 
 ```markdown
@@ -107,7 +109,7 @@ duration: 15 min
 
 # Résumé de la tâche
 
-Correction d'un bug identifié : la tâche précédente a écrasé INTENTION.md avec du contenu générique. Restauration du vrai contenu (« Rédaction offre pour la Commission scolaire de la Capitale-Nationale ») et extension de CONSTITUTION.md pour clarifier les droits d'édition des documents.
+Correction d'un bug identifié : la tâche précédente a écrasé INTENTION.md avec du contenu générique. Restauration du contenu attendu (un intitulé de projet neutre) et extension de CONSTITUTION.md pour clarifier les droits d'édition des documents.
 
 ## Travail effectué
 

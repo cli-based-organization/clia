@@ -32,6 +32,7 @@ Quand une tâche demande de décrire précisément la forme et le comportement d
 - Chaque élément spécifié est traçable vers un requis (`REQ-*`) ou une décision (`ADR-*`).
 - Des exemples concrets illustrent l'usage.
 - La spécification décrit la solution sans dériver vers le code d'implémentation ligne à ligne.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable

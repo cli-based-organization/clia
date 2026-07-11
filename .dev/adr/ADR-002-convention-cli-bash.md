@@ -3,11 +3,11 @@
 - **Statut** : Accepté
 - **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
-- **Sources** : `FND-001-conventions-cli`, `ANL-001-etat-clis-existants`, `PLN-004`
+- **Sources** : `FND-2026-07-10-conventions-cli`, `ANL-2026-07-10-etat-clis-existants`, `PLN-004`
 
 ## Contexte
 
-Les dépôts locaux contiennent de nombreux scripts bash aux conventions hétérogènes (voir ANL-001) : robustesse inconstante, options longues rares, `--version` quasi absent, séparation stdout/stderr non systématique, codes de sortie minimalistes, deux styles de nommage. FND-001 établit les conventions de référence (POSIX, GNU, clig.dev). Il faut acter une convention unique pour tout nouveau CLI bash du dépôt, capitalisant sur les deux meilleures références locales : le pattern `activate` + `scripts/dev.sh` et le `script.sh.template`.
+Les dépôts locaux contiennent de nombreux scripts bash aux conventions hétérogènes (voir ANL-2026-07-10-etat-clis-existants) : robustesse inconstante, options longues rares, `--version` quasi absent, séparation stdout/stderr non systématique, codes de sortie minimalistes, deux styles de nommage. FND-2026-07-10-conventions-cli établit les conventions de référence (POSIX, GNU, clig.dev). Il faut acter une convention unique pour tout nouveau CLI bash du dépôt, capitalisant sur les deux meilleures références locales : le pattern `activate` + `scripts/dev.sh` et le `script.sh.template`.
 
 ## Décision (résumé)
 
@@ -50,8 +50,8 @@ Convention de premier jet. Elle sera affinée par l'usage et par les premiers CL
 
 ## Références
 
-- `FND-001-conventions-cli`
-- `ANL-001-etat-clis-existants`
+- `FND-2026-07-10-conventions-cli`
+- `ANL-2026-07-10-etat-clis-existants`
 - `REQ-001-convention-cli-bash` (requis)
 - `SPEC-001-convention-cli-bash` (spécification)
 - `skl-011-codage-cli-bash` (skill de codage)

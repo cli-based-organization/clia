@@ -203,3 +203,225 @@ Ensuite:
   - documenter la solution appliquée
 - produire un skill qui produit la ressource BUG  
 - produire la ressource BUG pour ce bogue
+
+## 14. Objections PL-005
+
+### Objections de l'humain
+
+#### objection 1
+
+Pourquoi doit-on mettre les informations du cyclede vie livrable dans CONSTITUTION?
+Produire un ADR qui décrit la fonction et le scope de CONSTITUTION.md
+
+#### objection 2
+
+RESSOURCES.md, l'agrégateur de versions ne devrait-il pas être au format yaml?
+
+#### objection 3
+
+nommage des ressource "point fixe".
+Ne pas utiliser de no de séquence: <PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>
+
+Restez cohérent avec les conventions de nommage existantes.
+
+Si plus d'un document par jour peuvent être produits, ajouter l'heure.
+
+Appliquer ce pattern à tous les documents datés.
+
+#### objection 4
+
+Analyser l'usage actuel des ressources livrables et identifier les autres axes d'analyse.
+Par exemple:
+  - permissions & rôles
+  - fonctionalités
+  - ???
+
+Inclure ces autres axes d'analyse dans l'ADR
+
+### réponses aux objections de l'agent IA
+
+#### objection 1
+
+corriger les ressources livrables existantes afin de respecter les nouvelles conventions
+
+#### objection 2
+
+Dans notre usage, l'ADR est un "document vivant".
+La trace décisionnelle est conservée sous condition d'un versionnage consistant et de la conservation de l'historique des modifications.
+
+#### objection 3
+
+Uniquement les 2 ensembles suivants: 
+
+- harness-files
+- documents de conception: ADR, SPEC, REQ, etc.
+
+#### objection 4
+
+oui. utilisez `0.1.0`
+
+#### objection 5
+
+Ça va. Ignorer. Nous sommes à l'étape de conception du système. Ce type d'Écart est acceptable ici.
+
+#### objection 6
+
+Effectivement. Mais documenter dans l'ADR car c'est un cas important dont nous aurons besoin bientôt
+
+### prendre en compte le info de cette tâche et ajuster le plan
+
+## 15. objections
+
+Incorporer les réponses ci-bas à PLN-005
+
+### objection 7
+
+oui. les skills font partie du harnais.
+
+### objection 8
+
+INTENTION.md ne fait pas partie du harnais. 
+
+Le harnais ne devrait contenir aucune information sur le domaine métier, sur le repo spécifique.
+
+Ce faisant, le harnais est réutilisable dans n'importe quel repo. Et c'est ce que nous cherchons à construire. Ce point est très important. Documenter dans l'ADR et ajouter une règle dans tous les skills pour que ceci soit forcé pour toutes ressources harnais.
+
+### objectoin 9
+
+Respecter la convention de nommage du système. Et corriger les logs déjà produits
+
+## 16. exécuter PLN-005
+
+## 17. Planifier le développement d'un cli bash 
+
+- permettant l'archivage de session dans "@.dev/sessions/SES-<DATE>-<HEURE_OUVERTURE>-<SLUG>.md
+- activable pour un usage in-repo sans modification du fichier avec `. setup.sh activate`
+
+Fournir les commandes suivantes:
+
+```sh
+# Généralités
+clia [-h|--help]  # affiche l'aide (format court)
+clia --man    # affiche l'aide au format manpage
+clia --version   # affiche la version du repo
+clia --version --long  # affiche toutes les versions des ensembles et des ressources livrables
+clia --config  # toute information spécifique à l'installation et à la customisation
+
+# Ressources livrables
+clia res ls    # affiche la liste des ressources livrables
+clia res ls --version  # liste des ressources + la version courante
+clia res ls RESOURCE_PRÉFIX [--version] [--long] # liste des instances de le ressource : ID | STATE | VERSION
+
+# Sessions
+clia ses status # dit si une session est ouverte ou non et combien de sessions sont archivées
+clia ses check # vérifie que le fichier session.md respecte le format markdown-clia-session 
+clia ses open [x<SEQ>] # ouvre une nouvelle session. Erreur si il y a déjà une session d'ouverte
+clia ses close # archive la session en cours
+clia ses new [x<SEQ>] # si une session existe, on la ferme. Et, on en ouvre une nouvelle
+clia ses plan # 
+
+
+```
+
+Les commandes sur les ressources peuvent être appellées par le nom court ou par le nom long. Exemple:
+
+```sh
+clia ses open
+clia session open
+```
+
+convention usage de la langue: 1. les commandes et autres éléments de code sont écrits en anglais. 2. la documentation est en français 
+
+Voici le template à utiliser pour un nouveau fichier session.md ou session-x<YZ>.md :
+
+```markdown
+# Intention
+
+<Décrire ce que vous voulez faire>
+
+# Contexte
+
+<Dire pourquoi vous faites cela et dans quel contexte se situe ce travail>
+
+# Tâches
+
+## 1. [<categorie de tâche>] <titre de la tâche>
+
+<Description de la tâche à accomplir>
+
+```
+
+TODO: produire un plan et soulever des objections au besoin
+
+## 18. Discussion des objections
+
+
+### objection 1
+
+simplement crée un squelette de session en cours de planification à partir du template.
+
+dans fichier => @.dev/session-x<YZ>.md (YZ=> 2 chiffres)
+YZ étant un numéro séquential incrémenté +1 à partir du plan en planification le plus élevé
+
+### objection 2
+
+non. les sessions `x<SEQ>` sont des sessions en planification. Il ne peut y avoir qu'une seule session active. Et une session peut seulement être fermée.
+
+voici le cycle de vie:
+
+- 1. sessions en planification. plusieurs permises, ex session-x01.md, session-x02.md
+- 2. session active session.md
+- 3. sessions terminées dans sessions/*
+
+à chaque transition, le fichier est déplacé et renommé
+
+`clia ses open x01` signifie que l'on utilise le plan en planification session-x01.md => session.md au lieu du template
+
+### objection 3
+
+clia n'est pas l'IA. c'est un cli 100% déterministe qui force le respect des tâches automatisable. clia est conçu justement pour gérer ce cas de figure.
+
+Todo: ajouter le clia dans la constitution et expliquer le rôle: prendre en charge les changements d'états du cycle de vie des fichiers afin d'assurer l'intégrité du système d'informaiton.
+
+### objection 4
+
+le repo et sont contenu "métier" est indépendant du harnais et de clia. Il a sa propre version.
+
+Lorsque le harnais ou le clia sont modifiés, la version du repo ne doit pas être incrémenté. Et inversement.
+
+mettre le no de version dans un fichier version.yaml
+
+### objection 5
+
+Effectivement. La date + heure d'ouverture est insctire dans le header de session à l'ouverture d'une session.
+
+Et pareillement pour la date+heure de fermeture
+
+
+### objection 6
+
+non. ce n'est pas une ressource de harnais.
+
+voir l'objection 3
+
+l'ADR-005 n'est pas suffisant. Le harnais est une composante d'un système d'augmentation par IA
+
+système DeepTech d'augmentation par IA:
+  - conception: FND, ANL, ANALYSE, ADR, SPEC, REQ, BUG
+  - harness-files: CLAUDE, CONSTITUTION, SKILLs
+  - clia
+
+Correction à apporter à ADR-005:
+
+- l'ADR ne fait pas partie du harnais. Le harnais est une implémentation de l'ADR et autres documents de conception
+
+### objection 7
+
+supprimer activate et le repo scripts.
+
+fournir setup.sh et src/{bin,lib,var,opt,...}  selon ce qui est nécessaire
+
+Utiliser les conventions des filesystem linux
+
+
+## 19. exécuter pln-006

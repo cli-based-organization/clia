@@ -1,0 +1,11 @@
+# Version du domaine metier (contenu du depot), independante du harnais,
+# des documents de conception et de clia (voir ADR-007, ADR-004).
+#
+# Regle de separation des domaines de version (ADR-007) :
+# - version.yaml (ce fichier)  : version du contenu metier ; lue par `clia --version`.
+# - .dev/ressources.yaml       : versions des ensembles vivants du systeme
+#                                d'augmentation (harness-files, documents-de-conception,
+#                                clia) ; lues par `clia --version --long`.
+# Modifier le harnais ou clia n'incremente pas cette version, et inversement.
+
+version: 0.1.0

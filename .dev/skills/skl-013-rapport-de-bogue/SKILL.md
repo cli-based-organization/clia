@@ -32,6 +32,7 @@ Quand un comportement incorrect est constaté (par l'humain via `session.md`, ou
 - La solution liste les fichiers réellement modifiés (chemins vérifiables).
 - La vérification est concrète et reproductible.
 - Le statut reflète l'état réel ; l'historique trace les évolutions (document vivant).
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable

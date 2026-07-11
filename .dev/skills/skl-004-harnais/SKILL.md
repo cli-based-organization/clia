@@ -32,6 +32,7 @@ Cas particulier : `INTENTION.md` et les fichiers de session (`.dev/session.md`, 
 - Toute référence croisée entre harnais (ex. `CLAUDE.md` renvoyant vers `CONSTITUTION.md`) reste exacte après modification.
 - Le contenu ajouté est placé dans le fichier dont le rôle correspond (pas de règle de gouvernance dans `INTENTION.md`, par exemple).
 - Aucun fichier en édition humaine uniquement n'est modifié par l'agent.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`). Vérifier cette généricité à chaque évolution du harnais.
 - Markdown strict (voir `CLAUDE.md`).
 - Aucune modification exécutée si une objection reste ouverte.
 

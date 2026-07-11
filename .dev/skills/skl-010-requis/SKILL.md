@@ -32,6 +32,7 @@ Quand une tâche demande de fixer les exigences d'un système, d'un outil ou d'u
 - Chaque exigence porte un identifiant stable et une priorité.
 - Chaque exigence a un critère d'acceptation ou une méthode de vérification.
 - Le document exprime le besoin, pas la solution (aucun choix d'implémentation imposé sans justification).
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable

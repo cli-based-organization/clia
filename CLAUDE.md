@@ -19,7 +19,7 @@ Pour toute demande, tenir compte de :
 
 ## Journalisation obligatoire
 
-**TOUTE tâche traitée produit un log**, sans exception, dans `logs/ia-output/<DATE>_task-<NN>.md` (voir `skl-008-log-ia-output`).
+**TOUTE tâche traitée produit un log**, sans exception, dans `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`).
 
 Cela inclut explicitement les tâches dont le seul livrable est un plan : **produire ou réviser un plan est une tâche** et se termine donc par un log, au même titre qu'une tâche d'exécution. Une tâche n'est pas terminée tant que son log n'est pas écrit.
 
@@ -36,7 +36,7 @@ Cela inclut explicitement les tâches dont le seul livrable est un plan : **prod
 | Analyse de corpus | `.dev/analyses/ANL-<SEQ>-<SLUG>.md` | `skl-012-analyse-corpus` |
 | Spécification | `.dev/specs/SPEC-<SEQ>-<SLUG>.md` | `skl-009-specification` |
 | Requis | `.dev/requis/REQ-<SEQ>-<SLUG>.md` | `skl-010-requis` |
-| Log de sortie IA | `logs/ia-output/<DATE>_task-<NN>.md` | `skl-008-log-ia-output` |
+| Log de sortie IA | `logs/ia-output/LOG-<DATE>-task-<NN>.md` | `skl-008-log-ia-output` |
 
 Chaque type de livrable a un skill associé qui encadre sa production : une spécification/exigence vivante à consulter avant de produire ou modifier ce type de livrable.
 
@@ -46,16 +46,29 @@ Cas particulier : `skl-011-codage-cli-bash` encadre la production d'un **script 
 
 ## Nomenclature
 
-Les livrables de type « artefact-de-travail » (plans, fondations, ADR, bugs, analyses, spécifications, requis) suivent :
+Le nommage dépend du cycle de vie de la ressource (voir `ADR-004-ressources-livrables`) :
 
-```
-.dev/<type>/<TYPE_PREFIX>-<SEQ>-<SLUG>.md
-```
+- ressources **vivantes** et **de travail** (séquencées) : `.dev/<type>/<PREFIX>-<SEQ>-<SLUG>.md` (plans, ADR, spécifications, requis, bugs) ;
+- ressources **point fixe** (datées) : `<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>` (fondations, analyses, publications) ; l'heure est ajoutée en cas de collision de date et de slug ;
+- **logs de sortie IA** : `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`) ;
+- **skills** : convention Claude Code `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` ;
+- **archives de session** (point fixe daté) : `.dev/sessions/SES-<DATE>-<HEURE_OUVERTURE>-<SLUG>.md` (voir `ADR-006-gestion-des-sessions`) ;
+- **harnais** : noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`) plus les skills ; le harnais est **générique et réutilisable** (voir `ADR-005-fonction-scope-harnais`). `INTENTION.md` n'est **pas** un fichier de harnais : c'est le fichier d'intention de domaine (édition humaine uniquement).
 
-Exceptions à contrainte fixe :
-- les **skills** suivent la convention Claude Code (`.dev/skills/skl-<SEQ>-<nom>/SKILL.md`) ;
-- le **harnais** utilise des noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md`) : pas de séquence, un fichier = un rôle ;
-- les **logs de sortie IA** suivent `logs/ia-output/<DATE>_task-<NN>.md` (voir `skl-008-log-ia-output`).
+## Versionnage à deux domaines
+
+Le versionnage sépare deux domaines indépendants (voir `ADR-007-architecture-systeme-augmentation`) :
+
+- **système d'augmentation** : les ensembles vivants (harness-files, documents-de-conception, `clia`) et leurs membres sont versionnés dans `.dev/ressources.yaml` (voir `ADR-004`). Toute modification d'un membre bumpe atomiquement le membre et son ensemble.
+- **domaine métier** : le contenu du dépôt a sa propre version dans `version.yaml` (racine). Modifier le harnais ou `clia` n'incrémente pas la version métier, et inversement.
+
+## Sessions et `clia`
+
+Le point d'entrée humain (`session.md`) suit un cycle de vie à trois états (planification `.dev/session-x<YZ>.md` / active `.dev/session.md` / archivée `.dev/sessions/SES-*`), défini dans `ADR-006` et vérifié via le format `markdown-clia-session` (`SPEC-003`). Ces transitions sont opérées exclusivement par `clia`, un CLI déterministe (`ADR-007`, `SPEC-002`, `REQ-002`) : **l'agent n'invoque jamais** `clia ses plan/open/close/new` ni n'édite les fichiers de session (voir `CONSTITUTION.md`). Le squelette de session vit dans `.dev/templates/session.template.md`.
+
+## Conventions transverses
+
+- **Langue** : les noms de commandes, de sous-commandes, d'options et les identifiants de code sont en **anglais** ; l'aide, les messages et la documentation sont en **français**.
 
 ## Conventions transverses
 

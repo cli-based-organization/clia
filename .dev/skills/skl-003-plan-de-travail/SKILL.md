@@ -32,6 +32,7 @@ Quand `session.md` demande de proposer, réviser ou étendre un plan, ou quand u
 - Une révision porte un Changelog qui explique ce qui a changé et pourquoi.
 - Chaque objection de l'agent est formulée comme un risque concret (« si ce plan est exécuté tel quel, [conséquence] »), pas une préférence.
 - Aucune objection humaine n'est dupliquée dans le plan ; le plan renvoie vers `session.md` pour celles-ci.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable

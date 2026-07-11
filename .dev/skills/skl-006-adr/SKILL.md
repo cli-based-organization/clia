@@ -30,6 +30,7 @@ Quand une décision d'architecture ou de stack technique significative doit êtr
 - Au moins une alternative écartée est mentionnée avec la raison de l'écartement, pas seulement la décision retenue.
 - Les conséquences négatives/risques sont explicites, pas seulement les bénéfices.
 - Un ADR documente une décision (ou un ensemble de décisions fortement couplées) ; pas un fourre-tout de plusieurs décisions indépendantes.
+- Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict (voir `CLAUDE.md`).
 
 ## Structure du livrable
