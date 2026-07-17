@@ -1,7 +1,7 @@
 # ADR-007 - Architecture du système d'augmentation par IA
 
 - **Statut** : Accepté
-- **Version** : 0.1.0
+- **Version** : 0.2.0
 - **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
 - **Sources** : `PLN-006`, tâche 18 de `session.md` (objections 3 et 6)
@@ -27,6 +27,16 @@ Le dépôt met en place un système de collaboration humain / agent IA. Jusqu'ic
 ### Le harnais implémente la conception
 
 - **Décision** : le harnais ne décide rien de nouveau ; il traduit en règles opératoires ce que la conception a acté. Un changement de décision passe d'abord par un document de conception, puis se répercute dans le harnais. Cette relation d'implémentation est la raison pour laquelle la conception n'appartient pas au harnais (précision reportée dans `ADR-005`).
+
+### Ordre séquentiel de travail
+
+- **Décision** : une capacité du système se construit selon quatre phases ordonnées, du plus abstrait au plus concret :
+  - **Phase 0 — Recherche et préconception** : `FND`, `ANL`. Établir les faits et l'existant avant de décider.
+  - **Phase 1 — Conception** : `ADR`, `SPEC`, `REQ`. Acter le quoi et le pourquoi, préciser le comportement attendu du système.
+  - **Phase 2 — Méthodologie** : fichiers de harnais, y compris les `SKILL`. Traduire la conception en mode opératoire pour l'agent.
+  - **Phase 3 — Implémentation** : `clia`. Réconcilier le CLI avec le comportement que la conception a précisé.
+  La conception précise d'abord comment le système doit se comporter ; l'implémentation est réconciliée ensuite. Il s'ensuit qu'un CLI peut être **temporairement non conforme** à une conception qui vient d'évoluer : cet écart est attendu et acceptable, car améliorer les capacités du système (conception) prime, et la réconciliation (phase 3) est une étape distincte et ultérieure. Généraliser la relation « conception avant harnais » énoncée ci-dessus : conception avant harnais avant implémentation.
+- *Alternatives écartées* : réconcilier le CLI en même temps qu'on fait évoluer la conception : rejeté, cela mêle décision et implémentation et empêche de raisonner sur le comportement cible indépendamment du code existant ; traiter la non-conformité comme un bogue bloquant : rejeté, elle est l'état normal entre une décision et sa réconciliation.
 
 ### Rôle et légitimité de `clia`
 

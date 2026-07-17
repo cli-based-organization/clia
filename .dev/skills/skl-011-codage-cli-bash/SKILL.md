@@ -21,8 +21,8 @@ Quand une tâche demande d'implémenter ou de refondre un CLI bash. Ne pas utili
 3. Implémenter le dispatch : `--help/-h` et `--version` d'abord, puis les sous-commandes par `case`, la branche par défaut renvoyant une erreur d'usage (exit 2).
 4. Pour chaque sous-commande : sortie utile sur stdout, diagnostics sur stderr via les helpers, codes de sortie conformes (0/1/2 ou codes documentés).
 5. Appliquer les garde-fous bash : quoting systématique, `${var:-defaut}` pour les variables optionnelles, `trap` de nettoyage des fichiers temporaires, aucune dépendance non vérifiée (tester par `command -v`).
-6. Rédiger l'aide (usage) en tête de fichier, réutilisée par `_usage` ; documenter chaque sous-commande.
-7. Vérifier la conformité aux requis (`REQ-001`) : dérouler la table de vérification ; corriger les écarts.
+6. Construire l'aide à partir d'une **table de commandes déclarative** (source de vérité unique), comme dans le squelette de `SPEC-001` : chaque commande, groupe et sous-commande figure dans une table `commande => description` qui pilote à la fois le dispatch et le rendu de l'aide via une fonction unique (`_render_help`). Ne jamais extraire l'aide par plage de numéros de ligne. S'assurer que `outil -h` énumère toutes les commandes/groupes, que `outil COMMANDE -h` énumère toutes les sous-commandes, et que le format d'aide est identique aux trois niveaux (REQ-001-F5/F7/F8).
+7. Vérifier la conformité aux requis (`REQ-001`) : dérouler la table de vérification ; corriger les écarts. Vérifier en particulier la découvrabilité (toute commande/sous-commande implémentée apparaît dans l'aide) et l'uniformité (ajouter une entrée met à jour l'aide sans toucher à une plage de lignes).
 8. Rendre le fichier exécutable et, si l'outil est destiné au PATH, le nommer sans extension.
 
 ## Critères de qualité
@@ -32,6 +32,8 @@ Quand une tâche demande d'implémenter ou de refondre un CLI bash. Ne pas utili
 - Aucune variable non quotée ; racine résolue via `BASH_SOURCE`.
 - stdout ne contient que des données ; tous les diagnostics sur stderr.
 - L'aide est présente, à jour, et cohérente avec le comportement réel.
+- Découvrabilité : toute commande, tout groupe et toute sous-commande implémentés apparaissent dans l'aide correspondante (`outil -h`, `outil COMMANDE -h`).
+- Auto-documentation et uniformité : aide alimentée par une table déclarative unique et un rendu unique, format identique aux trois niveaux, aucune extraction par plage de numéros de ligne (REQ-001-F5/F7/F8, fonctionnalités de cœur non négociables).
 - Idéalement vérifié par `shellcheck` sans avertissement bloquant.
 - Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict pour toute doc associée (voir `CLAUDE.md`).

@@ -51,3 +51,43 @@ Voici le procesuss d'amélioration attendu:
 - 1. adapter les documents de conception
 - 2. adapter les harness files appropriés, incluant les SKILLs
 
+## 2. [Traitement des objections] PLN-010
+
+Le plan est bon en général. Mais il dépasse le scope attendu. => en premier, on améliore uniquement le harnais.
+
+TODO: réviser le plan au regard des réponses aux objections
+
+### objection 1
+
+Ne pas inclure dans ce plan l'amélioration de `clia`
+
+### objection 2
+
+En quoi est-ce grave que les clis ne soient pas conforme ?
+Les documents de conceptions sont évolutifs afin d'améliorer les capadcités du système. C'est ce qui prime.
+
+L'étape de réconciliation du cli se fait après, une fois qu'on a préciser comment le système doit se comporter.
+
+Documenter cette idée et l'ordre séquentiel de travail:
+- 0. Recherches préliminaires et préconception => FND, ANL
+- 1. Conception => documents de conceptions
+- 2. Méthodologie => (harness files including SKILLs)
+- 3. Implémentation => cli
+
+### objection 3
+
+Nous ne concevons pas un système pour faire du code jetable.
+Nous construisons un système d'ingénierie logiciel professionnel et robuste.
+Ces spécifications et requis concernant la documentation font partie des fonctionnalités de coeur et il ne sont pas négociables.
+
+## 3. Exécution du plan PLN-010
+
+## 4. [Planification] Réconciliation du cli avec les spécifications
+
+### Contexte pertinent
+
+Les spécifications d'un cli concentionnel `clia` ont changé.
+
+### TODO
+
+Planifier la réconciliation du cli `clia` avec les nouvelles spécifications

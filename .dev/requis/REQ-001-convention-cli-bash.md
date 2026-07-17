@@ -18,10 +18,14 @@ Exigences que tout nouveau CLI bash du dépôt doit satisfaire. Hors périmètre
   - Vérification : chaque opération est invocable comme sous-commande ; une sous-commande inconnue produit une erreur d'usage.
 - **REQ-001-F4** (MUST) : une invocation invalide (commande inconnue, argument manquant) affiche un diagnostic sur stderr et sort avec le code 2.
   - Vérification : `outil commande-bidon` écrit sur stderr et retourne 2.
-- **REQ-001-F5** (SHOULD) : chaque sous-commande dispose de sa propre aide.
-  - Vérification : `outil COMMANDE --help` décrit la sous-commande.
+- **REQ-001-F5** (MUST) : chaque sous-commande dispose de sa propre aide.
+  - Vérification : `outil COMMANDE SOUS-COMMANDE --help` décrit la sous-commande.
 - **REQ-001-F6** (SHOULD) : le CLI supporte les options longues GNU en plus des courtes, et `--` termine les options.
   - Vérification : les options longues fonctionnent ; `--` fait traiter la suite comme opérandes.
+- **REQ-001-F7** (MUST) : le CLI est découvrable. L'aide de niveau supérieur (`outil -h`) énumère toutes les commandes et tous les groupes ; l'aide d'un groupe (`outil COMMANDE -h`) énumère toutes ses sous-commandes. Aucune commande ou sous-commande existante n'est absente de l'aide correspondante.
+  - Vérification : pour chaque commande/sous-commande implémentée, elle apparaît dans l'aide du niveau qui la contient.
+- **REQ-001-F8** (MUST) : la documentation est auto-documentée, uniforme et alimentée par une source de vérité unique. Une seule structure déclarative (table de commandes) pilote à la fois le dispatch et le rendu de l'aide à tous les niveaux ; l'aide n'est jamais extraite par plage de numéros de ligne. Le format d'aide est identique au niveau supérieur, au niveau des groupes et au niveau des sous-commandes.
+  - Vérification : ajouter une commande ou une sous-commande met à jour l'aide sans édition d'une plage de lignes codée en dur ; les trois niveaux d'aide partagent le même format.
 
 ## Exigences non fonctionnelles
 
@@ -42,4 +46,5 @@ Exigences que tout nouveau CLI bash du dépôt doit satisfaire. Hors périmètre
 
 - REQ-001-NF1 (`set -e`) impose de gérer explicitement les commandes dont l'échec est attendu (sinon arrêt prématuré).
 - REQ-001-F1/F2 (aide/version) dépendent du dispatch d'options ; les traiter avant toute autre logique.
+- REQ-001-F5/F7/F8 (aide par sous-commande, découvrabilité, uniformité et source unique) sont des exigences de cœur non négociables : elles caractérisent un CLI professionnel et robuste, et priment sur la simplicité d'un outil trivial. Elles se satisfont ensemble via la table de commandes déclarative de `SPEC-001` (une seule source pilote dispatch et aide), ce qui évite la dérive entre code et documentation.
 - REQ-001-NF6 (couleur) est optionnel au premier jet ; à promouvoir si les CLI produisent de la sortie riche.

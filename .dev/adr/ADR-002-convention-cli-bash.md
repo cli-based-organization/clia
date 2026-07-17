@@ -30,9 +30,18 @@ Les dépôts locaux contiennent de nombreux scripts bash aux conventions hétér
 - **Décision** : stdout réservé aux données exploitables, stderr à tous les diagnostics (info, avertissements, erreurs). Codes : `0` succès, `2` erreur d'usage, `1` erreur générique, codes spécifiques documentés au besoin.
 - *Alternatives écartées* : adoption complète de `sysexits.h` : écartée pour le premier jet (surcharge non justifiée) ; laissée comme extension possible.
 
-### Nommage et découvrabilité
+### Nommage et découvrabilité (PATH)
 
 - **Décision** : entrypoint destiné au PATH sans extension (ex. `outil`), scripts internes suffixés `.sh` ; découvrabilité via `. activate` ajoutant `scripts/` (ou `bin/`) au PATH quand pertinent.
+
+### Auto-documentation et découvrabilité des commandes
+
+- **Décision** : tout CLI produit par le harnais est **auto-documenté**, **découvrable** et **uniforme**, propriétés érigées en fonctionnalités de cœur non négociables :
+  - *auto-documenté* : le CLI porte ses propres commandes d'accès à la documentation (`-h`/`--help` à chaque niveau) ;
+  - *découvrable* : `outil -h` énumère toutes les commandes et tous les groupes ; `outil COMMANDE -h` énumère toutes les sous-commandes ; aucune commande implémentée n'est absente de l'aide ;
+  - *uniforme* : le format d'aide est identique aux trois niveaux (supérieur, groupe, sous-commande) ;
+  - *source de vérité unique* : une table de commandes déclarative pilote à la fois le dispatch et l'aide ; l'aide n'est jamais extraite par plage de numéros de ligne.
+- *Alternatives écartées* : aide extraite de l'en-tête par plage de lignes (patron du premier jet, ex. `sed -n 'A,Bp'`) : rejetée, elle couple l'aide à des numéros de ligne et dérive dès qu'une commande est ajoutée ; aide par sous-commande laissée facultative (SHOULD) : rejetée, un CLI professionnel doit documenter chacune de ses opérations ; exemption pour outils triviaux : rejetée, ces propriétés ne sont pas négociables (voir `REQ-001-F5/F7/F8`, `SPEC-001`).
 
 ## Conséquences
 
@@ -43,6 +52,7 @@ Les dépôts locaux contiennent de nombreux scripts bash aux conventions hétér
 **Négatives / risques**
 - Les scripts existants ne sont pas conformes ; la convention vaut pour le neuf et lors des refontes, pas de migration forcée.
 - `set -euo pipefail` exige une discipline de codage (gestion des cas où un échec est attendu).
+- Le durcissement des exigences de documentation (`REQ-001-F5` promu MUST, ajout de `REQ-001-F7/F8`) rend non conformes les CLI antérieurs, dont `clia`. C'est assumé : la conception évolue pour améliorer les capacités du système, et l'implémentation est réconciliée dans une phase ultérieure (voir l'ordre séquentiel de travail dans `ADR-007`). La non-conformité temporaire n'est pas un défaut mais l'état normal entre une décision de conception et sa réconciliation.
 
 ## Migration / porte de sortie
 
