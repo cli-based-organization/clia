@@ -146,3 +146,64 @@ ajouter yq aux dépendances
 Mécanisme générique pour la production de tous clis
 
 ## 7. [exécution du plan] PLN-011
+
+## 8. [Planification] Produire PLN-012
+
+Proposer un plan permettant de produire le plus rapidement les livrables attendus
+
+## 9. [conception] Plan pour la conception de la commande `clia setup`
+
+
+Le script `setup.sh` prend en charge toutes les opérations de gestion du script.
+
+Consultez `@../../noumanity-dev/ticket-driven-ai/setup.sh` pour s'inspirer cet exemple
+
+Voici la séquence
+- Écrire un adr d'écrivant setup (init, upgrade et downgrade)
+- Écrire les reqs pour setup
+- Écrire les specs pour setup
+- adapter le core clia
+  - ajouter la capacité d'extension à scripts externes
+  - ajouter un ADR sur les ressources livrables (incluant ce que c'est, cycle de vie, versionage, source de vérité, format variable, template et validation)
+  - faire une analyse (ANL) pour définir si on a besoin de reqs et specs pour les ressources livrables
+  - ajouter une ressource livable qui décrit une interface cli (ADR + SKILL + adapter les harness files)
+
+Ne pas inclure l'implémentation dans le plan
+
+
+## 10. [Résolution des objections] pour PLN-013
+
+Mettre à jour PLN-013 au regard des précisions ci-bas
+
+### Objection 1
+
+Le plan PLN-013 sera exécuté en premier.
+Il prend en charge complètement la phase de conception et fait autorité sur ce sujet sur PLN-012
+
+### Objection 2
+
+Intégrer tout les éléments des ressources livrables à ADR-004
+
+### objection 3 
+
+Effectuer l'analyse puis arrêter l'implémentation pour laisser à l'humain consulté l'analyse et prendre action en conséquence. (breakpoint)
+
+TODO: les documents de conception + harness-files pour introduire la notion de "breakpoint".
+
+
+### TODO: on se garde la résolution des objections 4 et 5 après le breakpoint
+
+
+## 11. [exécution] Exécute PLN-013 jusqu'au breakpoint
+
+## x. [Résolution des objections] Première passe PLN-012
+
+Mettre à jour PLN-012 au regard des précisions ci-bas
+
+### Objection 1
+
+Nous étendons les modes d'installation supporté
+
+TODO:
+
+- ajouter un ADR décrivant les commandes d'installations 

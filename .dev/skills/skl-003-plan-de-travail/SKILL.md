@@ -24,6 +24,7 @@ Quand `session.md` demande de proposer, réviser ou étendre un plan, ou quand u
 5. Soulever, dans une section **« Objections de l'agent IA »**, tout risque concret identifié dans la demande ou dans le plan lui-même ; ne pas trancher seul les questions ouvertes.
 6. Ne jamais inscrire d'objection humaine dans le plan : elles vivent dans `session.md` (rappeler ce fait en fin de plan).
 7. Fixer le champ **Statut** en tête de fichier selon l'état du cycle (`proposé` / `objection` / `résolu` / `approuvé` / `exécuté`, voir `CONSTITUTION.md`).
+8. Si le plan doit être exécuté en segments avec revue humaine intermédiaire, déclarer explicitement le ou les **breakpoints** : le point d'arrêt, le livrable qui le précède, et ce que l'humain doit décider à la reprise. Une objection peut être différée à un segment postérieur au breakpoint : elle reste ouverte et bloque son segment sans bloquer les segments déjà approuvés (voir `CONSTITUTION.md`, « Breakpoint et exécution segmentée »).
 
 ## Critères de qualité
 

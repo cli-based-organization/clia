@@ -15,6 +15,7 @@ Pour toute demande, tenir compte de :
 - L'humain n'a qu'**un seul point d'entrée** : `.dev/session.md`.
 - Le cycle de travail est **objection-sociocratique** : l'agent propose un plan avant d'exécuter, et ne peut exécuter tant qu'une objection reste ouverte. Détails complets dans `CONSTITUTION.md`.
 - Les objections de l'humain sont consignées dans `.dev/session.md` ; celles de l'agent, dans le plan concerné.
+- Un plan peut déclarer un **breakpoint** : un point d'arrêt qui découpe l'exécution en segments et permet une **approbation partielle** (un segment approuvé s'exécute même si un segment ultérieur porte une objection différée). Arrivé au breakpoint, l'agent s'arrête jusqu'à autorisation humaine de reprise. Voir `CONSTITUTION.md`, « Breakpoint et exécution segmentée ».
 - Les droits d'édition de chaque document sont fixés par la « Classification des documents » de `CONSTITUTION.md`. `INTENTION.md` et les fichiers de session sont en **édition humaine uniquement** : l'agent ne les modifie jamais.
 
 ## Journalisation obligatoire

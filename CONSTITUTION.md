@@ -46,6 +46,18 @@ L'agent a l'obligation de soulever ses propres objections dans le plan qu'il pro
 
 Aucune exécution d'un plan tant qu'une objection (humaine ou agent) reste ouverte.
 
+## Breakpoint et exécution segmentée
+
+Un plan peut prévoir un ou plusieurs **breakpoints** : des points d'arrêt déclarés qui suspendent l'exécution après un livrable donné, le temps que l'humain consulte le résultat et décide de la suite (poursuivre, amender, réorienter). Un breakpoint découpe le plan en **segments** exécutés successivement.
+
+L'exécution segmentée articule le breakpoint avec la règle absolue par une **approbation partielle** :
+
+- la règle « aucune exécution sous objection ouverte » s'applique **segment par segment** : un segment dont toutes les objections sont résolues est approuvé et exécutable ;
+- une objection peut être **différée** à un segment ultérieur ; elle reste alors **ouverte** et bloque **son** segment, mais **pas** les segments antérieurs déjà approuvés ;
+- arrivé au breakpoint, l'agent **s'arrête** et ne produit aucun livrable des segments suivants tant que l'humain n'a pas autorisé la reprise.
+
+Le breakpoint, le découpage en segments et le report éventuel d'objections sont consignés dans le plan ; les décisions de l'humain qui les motivent vivent dans `.dev/session.md`.
+
 ## Classification des documents
 
 Tous les documents du dépôt appartiennent à l'une des trois catégories suivantes, qui régissent les droits d'édition :
