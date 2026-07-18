@@ -113,6 +113,10 @@ cmd_ses_plan() {
   yz="$(printf '%02d' "$seq")"
   dest="$DEV_DIR/session-x$yz.md"
   [ -e "$dest" ] && _die "existe déjà : session-x$yz.md" 1
+  if [ "${DRY_RUN:-0}" = 1 ]; then
+    printf '[dry-run] créerait .dev/session-x%s.md depuis le template\n' "$yz"
+    return 0
+  fi
   cp "$TEMPLATE_FILE" "$dest"
   _info "créé : .dev/session-x$yz.md"
 }
@@ -133,6 +137,11 @@ cmd_ses_open() {
   fi
   local now body
   now="$(_now_iso)"
+  if [ "${DRY_RUN:-0}" = 1 ]; then
+    printf '[dry-run] ouvrirait .dev/session.md depuis %s (start-at=%s)\n' "$(basename "$src")" "$now"
+    [ "$remove_src" -eq 1 ] && printf '[dry-run] supprimerait %s\n' "$(basename "$src")"
+    return 0
+  fi
   # corps sans frontmatter éventuel du fichier source.
   body="$(awk 'NR==1 && $0=="---"{infm=1;next} infm && $0=="---"{infm=0;next} !infm{print}' "$src")"
   {
@@ -155,8 +164,12 @@ cmd_ses_close() {
   [ -n "$slug" ] || slug="session"
   date="$(_iso_date "$start")"
   hms="$(_iso_hms "$start")"
-  mkdir -p "$SESSIONS_DIR"
   dest="$SESSIONS_DIR/SES-$date-$hms-$slug.md"
+  if [ "${DRY_RUN:-0}" = 1 ]; then
+    printf '[dry-run] archiverait .dev/session.md vers .dev/sessions/%s (end-at=%s)\n' "$(basename "$dest")" "$now"
+    return 0
+  fi
+  mkdir -p "$SESSIONS_DIR"
   [ -e "$dest" ] && _die "archive déjà existante : $(basename "$dest")" 1
   # insère end-at dans le frontmatter puis écrit vers l'archive.
   awk -v end="$now" '
@@ -170,23 +183,36 @@ cmd_ses_close() {
 
 # cmd_ses_new [x<SEQ>] : ferme la session active si présente, puis ouvre.
 cmd_ses_new() {
+  if [ "${DRY_RUN:-0}" = 1 ]; then
+    [ -f "$SESSION_FILE" ] && printf '[dry-run] archiverait la session active\n'
+    printf '[dry-run] ouvrirait une nouvelle session\n'
+    return 0
+  fi
   [ -f "$SESSION_FILE" ] && cmd_ses_close
   cmd_ses_open "${1:-}"
 }
 
-# cmd_ses ARGS... : dispatch du groupe ses/session.
+# cmd_ses ARGS... : dispatch du groupe ses/session. Aide depuis clia.doc.yaml.
 cmd_ses() {
   local sub="${1:-}"
   case "$sub" in
-    -h|--help|"")
-      printf '%s\n' "Usage : clia ses <status|check|plan|open|close|new> [args]"
+    -h|--help|"") _doc_help_group ses; return 0 ;;
+  esac
+  shift
+  # Aide propre à la sous-commande : clia ses <sub> -h.
+  case "${1:-}" in
+    -h|--help)
+      if _doc_subcommands ses | grep -qx "$sub"; then _doc_help_sub ses "$sub"; return 0
+      else _die "sous-commande ses inconnue : $sub" 2; fi
       ;;
-    status) shift; cmd_ses_status "$@" ;;
-    check)  shift; cmd_ses_check "$@" ;;
-    plan)   shift; cmd_ses_plan "$@" ;;
-    open)   shift; cmd_ses_open "$@" ;;
-    close)  shift; cmd_ses_close "$@" ;;
-    new)    shift; cmd_ses_new "$@" ;;
+  esac
+  case "$sub" in
+    status) cmd_ses_status "$@" ;;
+    check)  cmd_ses_check "$@" ;;
+    plan)   cmd_ses_plan "$@" ;;
+    open)   cmd_ses_open "$@" ;;
+    close)  cmd_ses_close "$@" ;;
+    new)    cmd_ses_new "$@" ;;
     *)      _die "sous-commande ses inconnue : $sub" 2 ;;
   esac
 }

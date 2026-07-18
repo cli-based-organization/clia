@@ -12,6 +12,10 @@ Spécifie l'interface complète de `clia` : commandes, options, sorties (stdout/
 
 `clia` suit le squelette conforme de `SPEC-001` : shebang `#!/usr/bin/env bash`, `set -euo pipefail`, racine résolue via `BASH_SOURCE`, helpers `_info/_warn/_err` sur stderr, dispatch par `case`, `trap` de nettoyage.
 
+Grammaire : `clia [GLOBAL_OPTIONS] COMMAND|GROUP [OPTIONS]`. Les options globales sont traitées avant le dispatch. `clia` seul avec des options globales est une commande d'information système (`--version`, `--config`, `--help`, `--man`).
+
+Documentation : l'aide courte (`-h` à tous les niveaux) et l'aide longue (`--man`) sont générées à la volée depuis une source de vérité documentaire YAML compagnon (`clia.doc.yaml`, documentation atomique par commande et sous-commande), via `yq` (implémentation mikefarah, dépendance déclarée et vérifiée au runtime, `REQ-002-NF6`). Le dispatch valide chaque commande contre cette source (cohérence, `REQ-001-F9`).
+
 Convention de langue : commandes, sous-commandes et options en anglais ; aide et messages en français.
 
 Codes de sortie : `0` succès ; `2` erreur d'usage (commande inconnue, argument invalide) ; `1` erreur applicative (précondition non remplie, fichier manquant).
@@ -22,11 +26,13 @@ Codes de sortie : `0` succès ; `2` erreur d'usage (commande inconnue, argument 
 
 | Invocation | Effet | Sortie | Code |
 |---|---|---|---|
-| `clia`, `clia -h`, `clia --help` | aide courte | stdout | 0 |
-| `clia --man` | aide au format manpage | stdout | 0 |
+| `clia`, `clia -h`, `clia --help` | aide courte (générée depuis `clia.doc.yaml`) | stdout | 0 |
+| `clia --man` | aide longue, même source documentaire | stdout | 0 |
 | `clia --version` | version métier (`version.yaml`) | stdout | 0 |
 | `clia --version --long` | version métier + versions des ensembles (`.dev/ressources.yaml`) | stdout | 0 |
 | `clia --config` | racine détectée et chemins de travail | stdout | 0 |
+| `clia --debug COMMAND` | exécute COMMAND en émettant des traces sur stderr | stdout + stderr | 0 |
+| `clia --dry-run COMMAND` | affiche le plan d'exécution de COMMAND sans effet de bord | stdout | 0 |
 
 ### Groupe `res` (alias `resource`)
 
@@ -50,7 +56,7 @@ Codes de sortie : `0` succès ; `2` erreur d'usage (commande inconnue, argument 
 | `clia ses close [SLUG]` | écrit `end-at`, archive en `SES-<DATE>-<HEURE>-<SLUG>.md` | 0 / 1 si aucune session active |
 | `clia ses new [x<SEQ>]` | `close` (si actif) puis `open [x<SEQ>]` | 0 / 1 |
 
-Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. Chaque groupe accepte `--help`.
+Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. `clia -h` énumère tous les groupes (`res`, `ses`) ; `clia res -h` et `clia ses -h` énumèrent et décrivent toutes leurs sous-commandes ; chaque sous-commande dispose de sa propre aide (`clia ses status -h`, etc.), le tout généré depuis `clia.doc.yaml` (`REQ-001-F5/F7/F8`).
 
 ### Transitions de session (détail)
 
@@ -89,7 +95,11 @@ $ clia ses open
 
 | Élément spécifié | Requis satisfait |
 |---|---|
-| `--help/-h`, `--man` | REQ-001-F1, REQ-002-F3c |
+| `--help/-h`, `--man` (générés depuis `clia.doc.yaml`) | REQ-001-F1/F5/F7/F8, REQ-002-F3c |
+| cohérence dispatch/documentation | REQ-001-F9 |
+| grammaire `[GLOBAL_OPTIONS] COMMAND [OPTIONS]` | REQ-001-F10 |
+| `--debug`, `--dry-run` | REQ-002-F3d, REQ-002-F3e |
+| dépendance `yq` vérifiée au runtime | REQ-002-NF6 |
 | `--version`, `--version --long` | REQ-002-F2, REQ-002-F3 |
 | `--config` | REQ-002-F3b |
 | `res ls [PREFIX]` | REQ-002-F5 |

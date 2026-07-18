@@ -17,6 +17,11 @@ case "${1:-}" in
     else
       printf '[WARN] clia introuvable après activation\n' >&2
     fi
+    if command -v yq >/dev/null 2>&1; then
+      printf '[OK] yq présent (%s)\n' "$(command -v yq)" >&2
+    else
+      printf '[WARN] yq (mikefarah) absent : dépendance requise par clia pour aide et documentation (REQ-002-NF6).\n' >&2
+    fi
     ;;
   ""|-h|--help)
     printf 'Usage : . setup.sh activate\n' >&2

@@ -91,3 +91,58 @@ Les spécifications d'un cli concentionnel `clia` ont changé.
 ### TODO
 
 Planifier la réconciliation du cli `clia` avec les nouvelles spécifications
+
+## 5. [traitement des objections] Refactor du cli
+
+TODO: réévaluer le plan au regard des réponses suivantes.
+
+### objection 1
+
+La résilience par rapport à l'environnement d'exécution n'est pas un requis. 
+Optimiser pour un OS Debian 12
+
+### objection 2
+
+Conserver les requis demandés:
+  - doc short et long
+  - uniformité
+  - documente toutes les commandes
+
+Ça n'est pas un problème difficile. Voici comment il faut faire:
+- avoir une source de vérité documentaire avec documentation "atomique" au format yaml
+- fournir un template de documentation pour le format court et pour le format long
+- Générer la doc à la volée à partir de ces 2 ingrédients
+
+### objection 3
+
+L'appel de `clia OPTIONS` seul est une commande d'information système avec OPTIONS : 
+- --version => donne l'informaiton sur la version
+- --config => donne l'information sur la config
+- --help => information sur les commandes (format court)
+- --man => information sur les commandes (format long)
+
+Dans le cas où il y a une commande, l'interface est la suivante:
+
+`clia [GLOBAL_OPTIONS] COMMAND|GROUP [OPTIONS]`
+
+Ici, `GLOBAL_OPTIONS` sont des options qui doivent s'appliquer à toutes les `COMMAND|GROUP` et `OPTIONS` s'appliquent seulement pour la commande ou le groupe spécifique.
+
+TODO: pour vraiment 'activer' les options globales, ajouter aux documents de conception les 2 options globales suivantes:
+- --debug => affiche information de déboguage
+- --dry-run => affiche uniquement le plan d'exécution de la commande + options
+
+## 6. [traitement des objections] 
+
+### objection 1
+
+Intégrer explicitement à REQ-001
+
+### objection 2
+
+ajouter yq aux dépendances
+
+### objection 3
+
+Mécanisme générique pour la production de tous clis
+
+## 7. [exécution du plan] PLN-011

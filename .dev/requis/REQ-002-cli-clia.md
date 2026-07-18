@@ -12,16 +12,20 @@ Exigences du CLI `clia`, outil déterministe de gestion des sessions et d'inspec
 
 ### Généralités
 
-- **REQ-002-F1** (MUST) : `clia` hérite de toutes les exigences de `REQ-001` (aide `--help/-h`, `--version`, sous-commandes, stderr/stdout, codes de sortie, robustesse).
-  - Vérification : dérouler la table de `REQ-001` sur `clia`.
+- **REQ-002-F1** (MUST) : `clia` hérite de toutes les exigences de `REQ-001`, y compris la découvrabilité (F7), l'uniformité et la source de vérité documentaire YAML générée à la volée (F8), la cohérence dispatch/documentation (F9) et la grammaire des options globales (F10). Son aide provient d'une source YAML compagnon (`clia.doc.yaml`).
+  - Vérification : dérouler la table de `REQ-001` sur `clia` ; `clia -h` liste `res` et `ses`, `clia res -h`/`clia ses -h` décrivent leurs sous-commandes.
 - **REQ-002-F2** (MUST) : `clia --version` affiche la version du domaine métier (repo) lue dans `version.yaml`.
   - Vérification : `clia --version` imprime la valeur de `version:` de `version.yaml` et sort 0.
 - **REQ-002-F3** (MUST) : `clia --version --long` affiche la version métier et les versions de tous les ensembles vivants (`.dev/ressources.yaml`).
   - Vérification : la sortie liste métier + ensembles (harness-files, documents-de-conception, clia).
 - **REQ-002-F3b** (SHOULD) : `clia --config` affiche la racine détectée et les chemins de travail (`.dev/`, `logs/`, `.dev/sessions/`, template).
   - Vérification : `clia --config` imprime les chemins résolus.
-- **REQ-002-F3c** (MAY) : `clia --man` affiche l'aide au format manpage.
-  - Vérification : `clia --man` produit une sortie structurée en sections.
+- **REQ-002-F3c** (MUST) : `clia --man` affiche l'aide longue (format manpage), générée depuis la même source documentaire que l'aide courte.
+  - Vérification : `clia --man` produit une sortie structurée en sections, cohérente avec `clia -h`.
+- **REQ-002-F3d** (MUST) : `clia` reconnaît l'option globale `--debug`, qui émet des informations de débogage sur stderr sans altérer la sortie utile.
+  - Vérification : `clia --debug ses status` produit les mêmes données que `clia ses status`, plus des traces sur stderr.
+- **REQ-002-F3e** (MUST) : `clia` reconnaît l'option globale `--dry-run`, qui affiche le plan d'exécution d'une commande sans produire d'effet de bord ; elle s'applique notamment aux commandes mutantes de session.
+  - Vérification : `clia --dry-run ses open` décrit l'action sans créer, déplacer ni modifier aucun fichier.
 
 ### Ressources
 
@@ -57,6 +61,8 @@ Exigences du CLI `clia`, outil déterministe de gestion des sessions et d'inspec
   - Vérification : un `open` refusé ne laisse aucune trace ; un `close` produit exactement une archive.
 - **REQ-002-NF5** (SHOULD) : `clia` est générique et réutilisable (aucune information de domaine métier), activable par `. setup.sh activate`.
   - Vérification : `clia` ne contient aucun nom de client ni sujet ; `. setup.sh activate` ajoute `clia` au PATH.
+- **REQ-002-NF6** (MUST) : `clia` dépend de `yq` (implémentation mikefarah) pour lire sa source documentaire YAML ; la dépendance est vérifiée au runtime (`command -v yq`) avec un diagnostic clair si elle est absente, et déclarée à l'installation.
+  - Vérification : sans `yq`, une commande nécessitant l'aide générée échoue avec un diagnostic explicite ; avec `yq`, l'aide est produite.
 
 ## Tensions et dépendances
 

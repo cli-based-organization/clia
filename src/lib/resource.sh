@@ -89,32 +89,33 @@ _res_instances() {
   [ "$found" -eq 1 ] || _info "aucune instance $prefix dans $dir"
 }
 
-# cmd_res ARGS... : dispatch du groupe res/resource.
+# cmd_res_ls ARGS... : liste des types connus, ou instances d'un type (res ls).
+cmd_res_ls() {
+  case "${1:-}" in
+    -h|--help) _doc_help_sub res ls; return 0 ;;
+  esac
+  local prefix=""
+  # premier argument non-option = PREFIX
+  case "${1:-}" in
+    ""|--version|--long) prefix="" ;;
+    *) prefix="$1"; shift ;;
+  esac
+  if [ -z "$prefix" ]; then
+    _res_table_print
+    if [ "${1:-}" = "--version" ]; then
+      printf '\n'
+      cmd_version --long | sed -n '/Ensembles/,$p'
+    fi
+  else
+    _res_instances "$prefix"
+  fi
+}
+
+# cmd_res ARGS... : dispatch du groupe res/resource. Aide depuis clia.doc.yaml.
 cmd_res() {
   case "${1:-}" in
-    -h|--help|"")
-      printf '%s\n' "Usage : clia res ls [PREFIX] [--version|--long]"
-      ;;
-    ls)
-      shift
-      local prefix=""
-      # premier argument non-option = PREFIX
-      case "${1:-}" in
-        ""|--version|--long) prefix="" ;;
-        *) prefix="$1"; shift ;;
-      esac
-      if [ -z "$prefix" ]; then
-        _res_table_print
-        if [ "${1:-}" = "--version" ]; then
-          printf '\n'
-          cmd_version --long | sed -n '/Ensembles/,$p'
-        fi
-      else
-        _res_instances "$prefix"
-      fi
-      ;;
-    *)
-      _die "sous-commande res inconnue : ${1}" 2
-      ;;
+    -h|--help|"") _doc_help_group res; return 0 ;;
+    ls)           shift; cmd_res_ls "$@" ;;
+    *)            _die "sous-commande res inconnue : ${1}" 2 ;;
   esac
 }

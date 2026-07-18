@@ -21,8 +21,8 @@ Quand une tâche demande d'implémenter ou de refondre un CLI bash. Ne pas utili
 3. Implémenter le dispatch : `--help/-h` et `--version` d'abord, puis les sous-commandes par `case`, la branche par défaut renvoyant une erreur d'usage (exit 2).
 4. Pour chaque sous-commande : sortie utile sur stdout, diagnostics sur stderr via les helpers, codes de sortie conformes (0/1/2 ou codes documentés).
 5. Appliquer les garde-fous bash : quoting systématique, `${var:-defaut}` pour les variables optionnelles, `trap` de nettoyage des fichiers temporaires, aucune dépendance non vérifiée (tester par `command -v`).
-6. Construire l'aide à partir d'une **table de commandes déclarative** (source de vérité unique), comme dans le squelette de `SPEC-001` : chaque commande, groupe et sous-commande figure dans une table `commande => description` qui pilote à la fois le dispatch et le rendu de l'aide via une fonction unique (`_render_help`). Ne jamais extraire l'aide par plage de numéros de ligne. S'assurer que `outil -h` énumère toutes les commandes/groupes, que `outil COMMANDE -h` énumère toutes les sous-commandes, et que le format d'aide est identique aux trois niveaux (REQ-001-F5/F7/F8).
-7. Vérifier la conformité aux requis (`REQ-001`) : dérouler la table de vérification ; corriger les écarts. Vérifier en particulier la découvrabilité (toute commande/sous-commande implémentée apparaît dans l'aide) et l'uniformité (ajouter une entrée met à jour l'aide sans toucher à une plage de lignes).
+6. Documenter le CLI dans une **source de vérité documentaire YAML compagnon** (`<outil>.doc.yaml`, documentation atomique : une entrée par commande et sous-commande, avec nom, description courte, description longue, usage, options), comme dans le squelette de `SPEC-001`. Générer l'aide **à la volée** depuis ce YAML via deux templates (court pour `-h` à tous les niveaux, long pour `--man`), en lisant le YAML avec `yq` (implémentation mikefarah, vérifiée par `command -v yq`). Ne jamais extraire l'aide par plage de numéros de ligne. S'assurer que `outil -h` énumère commandes et groupes, que `outil COMMANDE -h` énumère les sous-commandes, et que le format est identique aux trois niveaux (REQ-001-F5/F7/F8). Implémenter la grammaire `outil [GLOBAL_OPTIONS] COMMAND|GROUP [OPTIONS]` avec traitement des options globales avant le dispatch (`--debug`, `--dry-run`, REQ-001-F10).
+7. Garantir la cohérence dispatch/documentation (REQ-001-F9) : valider chaque commande dispatchée contre la source YAML, et fournir un auto-test vérifiant que toute commande documentée possède un handler et inversement. Puis vérifier la conformité aux requis (`REQ-001`) : dérouler la table de vérification ; corriger les écarts.
 8. Rendre le fichier exécutable et, si l'outil est destiné au PATH, le nommer sans extension.
 
 ## Critères de qualité
@@ -33,7 +33,8 @@ Quand une tâche demande d'implémenter ou de refondre un CLI bash. Ne pas utili
 - stdout ne contient que des données ; tous les diagnostics sur stderr.
 - L'aide est présente, à jour, et cohérente avec le comportement réel.
 - Découvrabilité : toute commande, tout groupe et toute sous-commande implémentés apparaissent dans l'aide correspondante (`outil -h`, `outil COMMANDE -h`).
-- Auto-documentation et uniformité : aide alimentée par une table déclarative unique et un rendu unique, format identique aux trois niveaux, aucune extraction par plage de numéros de ligne (REQ-001-F5/F7/F8, fonctionnalités de cœur non négociables).
+- Auto-documentation et uniformité : aide générée à la volée depuis une source de vérité documentaire YAML unique via des templates, format identique aux trois niveaux, aucune extraction par plage de numéros de ligne (REQ-001-F5/F7/F8, fonctionnalités de cœur non négociables).
+- Cohérence dispatch/documentation vérifiée (REQ-001-F9) ; dépendance de lecture YAML (`yq`, mikefarah) déclarée et vérifiée au runtime.
 - Idéalement vérifié par `shellcheck` sans avertissement bloquant.
 - Ressource de harnais : aucune information de domaine métier ni spécifique au repo (généricité inter-dépôts, voir `ADR-005`).
 - Markdown strict pour toute doc associée (voir `CLAUDE.md`).

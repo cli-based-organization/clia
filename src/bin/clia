@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 # clia - gestion des sessions et inspection des ressources livrables.
-#
-# Usage :
-#   clia [-h|--help]              affiche cette aide
-#   clia --man                    aide au format manpage
-#   clia --version [--long]       version métier (--long : tous les ensembles)
-#   clia --config                 chemins de travail détectés
-#   clia res ls [PREFIX] [opts]   inspecte les ressources livrables
-#   clia ses <cmd> [args]         gère les sessions (status, check, plan, open, close, new)
+# Aide et documentation générées à la volée depuis src/clia.doc.yaml
+# (voir src/lib/doc.sh). Grammaire : clia [GLOBAL_OPTIONS] COMMAND|GROUP
+# [OPTIONS]. Voir SPEC-002, REQ-002.
 set -euo pipefail
 
 CLIA_BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,6 +18,11 @@ SESSION_FILE="$DEV_DIR/session.md"
 TEMPLATE_FILE="$DEV_DIR/templates/session.template.md"
 RESSOURCES_FILE="$DEV_DIR/ressources.yaml"
 VERSION_FILE="$REPO_ROOT/version.yaml"
+DOC_FILE="$CLIA_SRC/clia.doc.yaml"
+
+# Options globales (grammaire clia [GLOBAL_OPTIONS] COMMAND [OPTIONS]).
+DEBUG=0
+DRY_RUN=0
 
 # shellcheck source=../lib/common.sh
 . "$CLIA_LIB/common.sh"
@@ -32,48 +32,11 @@ VERSION_FILE="$REPO_ROOT/version.yaml"
 . "$CLIA_LIB/resource.sh"
 # shellcheck source=../lib/session.sh
 . "$CLIA_LIB/session.sh"
+# shellcheck source=../lib/doc.sh
+. "$CLIA_LIB/doc.sh"
 
 _cleanup() { :; }
 trap '_cleanup' EXIT
-
-# _usage : imprime l'aide courte (extraite de l'en-tête du fichier).
-_usage() {
-  sed -n '2,9p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
-}
-
-# _man : aide au format manpage minimal.
-_man() {
-  cat <<'MAN'
-NOM
-    clia - gestion des sessions et inspection des ressources livrables
-
-SYNOPSIS
-    clia [-h|--help] [--man] [--version [--long]] [--config]
-    clia res ls [PREFIX] [--version|--long]
-    clia ses <status|check|plan|open|close|new> [args]
-
-DESCRIPTION
-    clia est un CLI déterministe qui prend en charge les transitions
-    d'état du cycle de vie des sessions et l'inspection des ressources
-    livrables et de leurs versions (voir ADR-006, ADR-007).
-
-COMMANDES
-    --version [--long]  version du domaine métier ; --long ajoute les
-                        versions des ensembles vivants.
-    --config            racine détectée et chemins de travail.
-    res ls [PREFIX]     types de ressources connus, ou instances d'un
-                        type (ID | STATE | VERSION).
-    ses status          session active ? nombre d'archives.
-    ses check           valide session.md contre SPEC-003.
-    ses plan [x<SEQ>]   crée une session en planification.
-    ses open [x<SEQ>]   ouvre une session (erreur si déjà active).
-    ses close [SLUG]    archive la session active.
-    ses new [x<SEQ>]    ferme puis ouvre une session.
-
-CODES DE SORTIE
-    0  succès   1  erreur applicative   2  erreur d'usage
-MAN
-}
 
 # cmd_config : chemins de travail résolus.
 cmd_config() {
@@ -88,14 +51,31 @@ cmd_config() {
 }
 
 main() {
-  case "${1:-}" in
-    -h|--help|"") _usage; exit 0 ;;
-    --man)        _man; exit 0 ;;
-    --version)    shift; cmd_version "${1:-}"; exit 0 ;;
-    --config)     cmd_config; exit 0 ;;
-    res|resource) shift; cmd_res "$@" ;;
-    ses|session)  shift; cmd_ses "$@" ;;
-    *)            _err "commande inconnue : ${1}"; _usage >&2; exit 2 ;;
+  # 1) Options globales, traitées avant le dispatch (REQ-001-F10).
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -h|--help|"") _doc_help; exit 0 ;;
+      --man)        _doc_man;  exit 0 ;;
+      --version)    shift; cmd_version "${1:-}"; exit 0 ;;
+      --config)     cmd_config; exit 0 ;;
+      --debug)      DEBUG=1; shift ;;
+      --dry-run)    DRY_RUN=1; shift ;;
+      --)           shift; break ;;
+      -*)           _err "option globale inconnue : $1"; _doc_help >&2; exit 2 ;;
+      *)            break ;;
+    esac
+  done
+  [ $# -gt 0 ] || { _doc_help; exit 0; }
+
+  # 2) Dispatch validé contre la source documentaire (cohérence, REQ-001-F9).
+  local raw="$1"; shift
+  local cmd; cmd="$(_doc_canon "$raw")"
+  _doc_commands | grep -qx "$cmd" || { _err "commande inconnue : $raw"; _doc_help >&2; exit 2; }
+  _dbg "dispatch cmd=$cmd dry_run=$DRY_RUN args=$*"
+  case "$cmd" in
+    res) cmd_res "$@" ;;
+    ses) cmd_ses "$@" ;;
+    *)   _die "commande sans handler : $cmd" 2 ;;
   esac
 }
 

@@ -1,0 +1,41 @@
+# clia.doc.yaml - source de vérité documentaire de clia (documentation atomique).
+# Lue par src/lib/doc.sh via yq (mikefarah). Voir SPEC-001, SPEC-002, REQ-002.
+# C'est la SEULE source à éditer pour documenter une commande ou une option.
+tool: clia
+short: gestion des sessions et inspection des ressources livrables
+long: >-
+  clia est un CLI déterministe qui prend en charge les transitions d'état du
+  cycle de vie des sessions et l'inspection des ressources livrables et de
+  leurs versions (voir ADR-006, ADR-007).
+global_options:
+  - { flag: "-h, --help", short: "affiche l'aide courte" }
+  - { flag: "--man", short: "affiche l'aide longue (manpage)" }
+  - { flag: "--version [--long]", short: "version métier ; --long ajoute les ensembles vivants" }
+  - { flag: "--config", short: "racine détectée et chemins de travail" }
+  - { flag: "--debug", short: "émet des informations de débogage sur stderr" }
+  - { flag: "--dry-run", short: "affiche le plan d'exécution sans effet de bord" }
+commands:
+  - name: res
+    alias: resource
+    short: inspecte les ressources livrables et leurs versions
+    usage: "clia res ls [PREFIX] [--version|--long]"
+    long: "Inspecte les types de ressources livrables connus et leurs instances."
+    subcommands:
+      - name: ls
+        short: "liste les types, ou les instances d'un type"
+        usage: "clia res ls [PREFIX] [--version|--long]"
+        long: >-
+          Sans PREFIX, liste les types de ressources connus. Avec PREFIX, liste
+          les instances du type sous la forme ID | STATE | VERSION.
+  - name: ses
+    alias: session
+    short: gère le cycle de vie des sessions
+    usage: "clia ses <status|check|plan|open|close|new> [args]"
+    long: "Transitions d'état du cycle de vie des sessions (voir ADR-006, SPEC-003)."
+    subcommands:
+      - { name: status, short: "session active ? nombre d'archives", usage: "clia ses status" }
+      - { name: check,  short: "valide session.md contre SPEC-003", usage: "clia ses check [FILE]" }
+      - { name: plan,   short: "crée une session en planification", usage: "clia ses plan [x<SEQ>]" }
+      - { name: open,   short: "ouvre une session (erreur si déjà active)", usage: "clia ses open [x<SEQ>]" }
+      - { name: close,  short: "archive la session active", usage: "clia ses close [SLUG]" }
+      - { name: new,    short: "ferme puis ouvre une session", usage: "clia ses new [x<SEQ>]" }

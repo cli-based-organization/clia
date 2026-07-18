@@ -10,6 +10,9 @@ _err()  { printf '[ERR] %s\n' "$*" >&2; }
 # _die MESSAGE [CODE] : diagnostic + sortie (CODE défaut 1).
 _die() { _err "$1"; exit "${2:-1}"; }
 
+# _dbg MESSAGE : trace de débogage sur stderr si l'option globale --debug est active.
+_dbg() { if [ "${DEBUG:-0}" = 1 ]; then printf '[DBG] %s\n' "$*" >&2; fi; }
+
 # _now_iso : horodatage ISO 8601 avec fuseau (ex. 2026-07-10T08:00:00-04:00).
 _now_iso() { date +%Y-%m-%dT%H:%M:%S%z | sed -E 's/([0-9]{2})([0-9]{2})$/\1:\2/'; }
 
