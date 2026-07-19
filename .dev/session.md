@@ -309,9 +309,41 @@ Et plus généralement, mobiliser le savoir portant sur la gestion et l'utilisai
 Puis faire une analyse critique de clia, notamment en lien avec les ressources livrables documentaires. Dire si c'est une bonne idée d'utiliser le OKF de google et quel impact cela aurait sur clia (modification nécessaire).
 Et terminer avec des recommendations.
 
-## x. [Recadrage humain] CONSTITUTION.md, PROCESSUS.md et CLAUDE.md
 
-Suivre les recommendations des analyses précédentes afin de séparer les responsabilités:
+## 21. [conception]
+
+Générer les principes de conceptions Tel que recommandé par ANL-2026-07-18-principes-de-conception-du-repo
+
+Puis, pour tout écart au principe, générer un bogue.
+
+## 22. [conception] recherche à propos de l'Architecture système
+
+Faire une recherche de fondation à propos de l'architecture de système complexe.
+
+Quelles sont les principales méthodes, techniques et méthodologie d'architecture?
+
+Quelles sont les principales méthodes de visualisation des architectures?
+
+Quelles sont les principaux artefacts documentaires de l'achitecture?
+
+En général, quelles sont les bonnes pratiques et les anti-pattern à éviter?
+
+De quelle manière les méthodologies de travail avec l'IA traite-t-il des notions d'architecture? 
+
+Quels sont les conventions dans les harnais IA concernant l'Architecture?
+
+
+
+
+Terminer en faisant une analyse critique du repo ici au regard du savoir mobilisé.
+Quels sont les constats à propos de l'architecture effective? Faire des recommendations sur la meilleur achitecture à adopter et comment y parvenir et pourquoi l'implémentation actuelle est sous-optimale.
+
+Générer un nouveau type de ressource livrable => le harnais IA ARCHITECTURE.md
+Produire un ADR le décrivant, le skill pour sa production et ajuster les autres harnais IA au besoin.
+
+
+
+## x. [recadrage] Précision de l'intention et de l'architecture
 
 
 
