@@ -13,13 +13,13 @@ description: >-
 
 ## Quand l'utiliser
 
-Quand un comportement incorrect est constaté (par l'humain via `session.md`, ou par l'agent) et doit être tracé, diagnostiqué et résolu. Utiliser aussi pour **faire évoluer** un BUG existant : le passer de `ouvert` à `diagnostiqué`, `résolu`, puis `fermé`. Ne pas utiliser pour journaliser une tâche (`skl-008`) ni pour cadrer une intervention complexe (`skl-003`).
+Quand un comportement incorrect est constaté (par l'humain via `session.md`, ou par l'agent) et doit être tracé, diagnostiqué et résolu. Cela inclut explicitement le **non-respect d'un principe de conception** (ressource `PDC`, voir `ADR-008`) : un écart d'un élément du système à un principe est un bogue (voir `ADR-003`). Utiliser aussi pour **faire évoluer** un BUG existant : le passer de `ouvert` à `diagnostiqué`, `résolu`, puis `fermé`. Ne pas utiliser pour journaliser une tâche (`skl-008`) ni pour cadrer une intervention complexe (`skl-003`).
 
 ## Processus
 
 1. Créer ou rouvrir le fichier `.dev/bugs/BUG-<SEQ>-<SLUG>.md` (séquence globale incrémentale).
 2. **Rapport** : décrire le symptôme, le comportement attendu et le comportement observé, la tâche ou le contexte où le bogue est apparu.
-3. **Diagnostic** : analyser la cause racine (pas seulement le symptôme) ; distinguer cause immédiate et cause systémique (ex. lacune du harnais).
+3. **Diagnostic** : analyser la cause racine (pas seulement le symptôme) ; distinguer cause immédiate et cause systémique (ex. lacune du harnais). Si le bogue est un non-respect d'un principe de conception, référencer le `PDC` enfreint et le critère de conformité violé (`ADR-008`).
 4. **Solution appliquée** : décrire le correctif, lister les fichiers modifiés (chemins), et si le harnais est en cause, l'amendement apporté.
 5. **Vérification** : indiquer comment on sait que le bogue est résolu (test, observation reproductible).
 6. Mettre à jour le **statut** (`ouvert -> diagnostiqué -> résolu -> fermé`) et l'**historique** (le BUG est vivant : consigner chaque évolution).

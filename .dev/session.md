@@ -196,6 +196,136 @@ TODO: les documents de conception + harness-files pour introduire la notion de "
 
 ## 11. [exécution] Exécute PLN-013 jusqu'au breakpoint
 
+
+## 12. [recherche et analyse]
+
+### Problématique
+
+Le documents CONSTITUTION.md semble mélanger 2 types d'information de nature différentes:
+
+- domaine de responsabilité/intervention des acteurs (humain ou automatismes (cli) ou agent IA)
+- le processus et son orchestration
+
+### Recherche de fondation
+
+Mobiliser le savoir disponible en matière de documents harness IA dans la litératture en faisant 
+
+Se demander quelles sont les grandes classes de méthodologie de travail avec IA. 
+
+Passer en revue les principaux outils/framework IA
+
+Faire une liste de tous les documents harness connus et dire leur rôle.
+
+Terminer en faisant une analyse critique des harness de 1. gouvernance et 2. orchestration de processus.
+
+
+### Analyse
+
+Au regard de la recherche de fondation, faire une analyse critique du fichier CONSTITUTION.md
+
+Et faire des recommendation de refactor de ce fichier
+
+## 13. [recherche et analyse] Pour quoi utiliser l'IA
+
+Mobiliser le savoir accessible concernant les capacités des modèles.
+
+Identifier clairement ce que peuvent faire les modèles (en particulier haiku, sonnet et opus).
+
+Identifier les capacités spécifiques des IA par rapport aux méthodes pré-IA. Que peut faire un modèle que ne peut pas faire un programme sans IA.
+
+Identifier les capacités de l'IA qui l'on rendu si productive et autant indispensable
+
+Produire une Recherche de fondation sur ces sujets.
+
+Puis, faire une analyse critique du projet actuel par rapport à l'usage qui est fait de l'IA. Nous avons le principe suivant: n'utiliser l'IA que lorsque c'est absolument nécessaire. Le reste => automatiser. Et permettre à l'humain d'exécuter à la demande ou d'inspecter n'importe quel étape d'un processus.
+
+Produire un document d'analyse ANL
+
+## 14. [analyse documentaire]
+
+Consulter tout les documents CONSTITUTION.md trouvés à partir de @../..
+
+Faire une analyse de leur contenu sur l'axe gov vs orchestration vs hybide
+
+## 15. [analyse documentaire]
+
+Consulter tout les documents .dev/fondations/*.md trouvés à partir de @../..
+
+Identifier ceux qui traitent des harness files et les rapatrier dans les FND de ce projet-ci.
+
+## 16. [analyse documentaire]
+
+Consulter tout les documents .dev/fondations/*.md trouvés à partir de @../..
+
+Identifier ceux qui traitent de l'intention, de la gouvernance et constitution et les rapatrier dans les FND de ce projet-ci.
+
+Et rapatrier également le FND: FND-002-ingenierie-livrables-qualite.md 
+
+## 17. [importation savoir]
+
+Rapatrier les 2 documents écartés
+  - FND-002-intention-affaire-et-succes-entrepreneurial
+  - FND-005-prise-de-decision-et-influence
+
+Puis faire une analyse critique des ADR de @../../noumanity-dev/ticket-driven-ia
+Et comparer avec les besoins et la notion de livrable dans ce repo.
+Également, les specs et les reqs de ticket-driven-ia ne semblent pas être les même définitions que ce qui est dans ce repo ici.
+
+Faire une recherche de fondation exhaustive à propos des notions de requis et de spécification.
+
+Puis inclure une analyse critique et des recommendations au regard de ce savoir dans le document d'analyse. Et émettre des recommendations.
+
+## 18. [recherche de fondation + analyse]
+
+Qu'est-ce qu'un MCP et comment en mettre en place dans l'environnement Claude et avec des clis?
+Produire une recherche exhaustive.
+
+Avec ce savoir mobilisé, faire une analyse critique de l'intérêt de leur utilisation dans `clia`?
+
+## 19. [conception] Ajout d'une nouvelle ressource => principe de conception
+
+Créer un nouveau type de ressource => principe de conception
+
+Le principe de conception guide à haut niveau le design du système. Ainsi, tout élément du système doit respecter ces principes et être cohérent avec eux.
+
+TODO: analyse le repo ici et identifier les principes de conceptions. Les expliquer, dire quel en est la portée et les conséquences. Dire également si l'implémentation actuelle respecte les principes. Inclure dans l'analyse un tableau récapitulatif.
+
+TODO: Produire une recherche de fondation sur le design de systèmes complexe, sur les principe de conception et sur la place que joue le principe de conception dans le design de systèmes complexes.
+
+TODO: Produire un ADR définissant la ressource "principe de conception"
+
+TODO: produire un SKILL (et ajuster les harness) encadrant la production d'un principe de conception
+
+TODO: adapter les bogues pour dire explicitement que le non respect d'un principe de conception est un bogue.
+
+20. [conception] 
+
+Faire une recherche de fondation sur les LLM wiki et sur google Open Knowledge Format.
+
+Utiliser également le source-material poe.com/post-rag-llm-wiki.md
+
+Et plus généralement, mobiliser le savoir portant sur la gestion et l'utilisaiton de la connaissance, les systèmes sémantiques et ontologiques.
+
+Puis faire une analyse critique de clia, notamment en lien avec les ressources livrables documentaires. Dire si c'est une bonne idée d'utiliser le OKF de google et quel impact cela aurait sur clia (modification nécessaire).
+Et terminer avec des recommendations.
+
+## x. [Recadrage humain] CONSTITUTION.md, PROCESSUS.md et CLAUDE.md
+
+Suivre les recommendations des analyses précédentes afin de séparer les responsabilités:
+
+
+
+
+
+## x. [Recadrage humain]
+
+Ressources livrables
+
+Nous allons réécrice l'ADR-004
+
+
+
+
 ## x. [Résolution des objections] Première passe PLN-012
 
 Mettre à jour PLN-012 au regard des précisions ci-bas

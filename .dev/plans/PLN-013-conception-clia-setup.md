@@ -1,8 +1,14 @@
 # PLN-013 - Conception de la commande `clia setup` (init / upgrade / downgrade)
 
-**Statut : objection (segmenté : Phase A approuvée pour exécution, Phase B suspendue au breakpoint)**
+**Statut : objection (Phase A exécutée, au breakpoint ; Phase B suspendue en attente de revue humaine et des objections 4 et 5)**
 
 ## Changelog
+
+Exécution de la Phase A jusqu'au breakpoint (tâche 11 de `.dev/session.md`, « [exécution] Exécute PLN-013 jusqu'au breakpoint »).
+
+- **A.1 exécutée** : notion de « breakpoint » introduite dans le harnais (`CONSTITUTION.md` section « Breakpoint et exécution segmentée », mention dans `CLAUDE.md`, étape ajoutée à `skl-003`) ; bumps atomiques dans `.dev/ressources.yaml`.
+- **A.2 exécutée** : `ANL-2026-07-18-besoin-req-spec-ressources-livrables` produite.
+- **Breakpoint atteint** : l'exécution s'arrête. La Phase B (B.1 résolution des objections 4 et 5, puis B.2 à B.6) reste suspendue jusqu'à la revue de l'ANL par l'humain et son autorisation de reprise.
 
 Révision suite aux réponses de l'humain à mes cinq objections (tâche 10 de `.dev/session.md`, « [Résolution des objections] pour PLN-013 »).
 

@@ -17,21 +17,21 @@
 #   version.yaml (racine), lue par `clia --version`. Elle evolue independamment
 #   des ensembles ci-dessous.
 
-version-manifeste: 0.3.0
+version-manifeste: 0.5.0
 
 ensembles:
 
   harness-files:
-    version: 0.3.0
+    version: 0.5.0
     description: >-
       Apparatus methodologique generique et reutilisable (aucune information
       de domaine). Voir ADR-005.
     membres:
-      CLAUDE.md: 0.2.0
-      CONSTITUTION.md: 0.2.0
+      CLAUDE.md: 0.4.0
+      CONSTITUTION.md: 0.3.0
       skl-001-skill-writer: 0.1.0
       skl-002-recherche-de-fondation: 0.1.0
-      skl-003-plan-de-travail: 0.1.0
+      skl-003-plan-de-travail: 0.2.0
       skl-004-harnais: 0.1.0
       skl-006-adr: 0.1.0
       skl-008-log-ia-output: 0.1.0
@@ -39,19 +39,21 @@ ensembles:
       skl-010-requis: 0.1.0
       skl-011-codage-cli-bash: 0.2.0
       skl-012-analyse-corpus: 0.1.0
-      skl-013-rapport-de-bogue: 0.1.0
+      skl-013-rapport-de-bogue: 0.2.0
+      skl-014-principe-de-conception: 0.1.0
 
   documents-de-conception:
-    version: 0.3.0
+    version: 0.4.0
     description: Decisions, specifications et requis (documents vivants).
     membres:
       ADR-001-type-livrable-analyse: 0.1.0
       ADR-002-convention-cli-bash: 0.2.0
-      ADR-003-gestion-des-bogues: 0.1.0
+      ADR-003-gestion-des-bogues: 0.2.0
       ADR-004-ressources-livrables: 0.1.0
       ADR-005-fonction-scope-harnais: 0.2.0
       ADR-006-gestion-des-sessions: 0.1.0
       ADR-007-architecture-systeme-augmentation: 0.2.0
+      ADR-008-ressource-principe-de-conception: 0.1.0
       SPEC-001-convention-cli-bash: 0.2.0
       SPEC-002-cli-clia: 0.1.0
       SPEC-003-format-markdown-clia-session: 0.1.0

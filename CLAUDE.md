@@ -33,6 +33,7 @@ Cela inclut explicitement les tâches dont le seul livrable est un plan : **prod
 | Harnais | `CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md` | `skl-004-harnais` |
 | Skill | `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` | `skl-001-skill-writer` |
 | ADR | `.dev/adr/ADR-<SEQ>-<SLUG>.md` | `skl-006-adr` |
+| Principe de conception | `.dev/principes/PDC-<SEQ>-<SLUG>.md` | `skl-014-principe-de-conception` |
 | Rapport de bogue | `.dev/bugs/BUG-<SEQ>-<SLUG>.md` | `skl-013-rapport-de-bogue` |
 | Analyse de corpus | `.dev/analyses/ANL-<SEQ>-<SLUG>.md` | `skl-012-analyse-corpus` |
 | Spécification | `.dev/specs/SPEC-<SEQ>-<SLUG>.md` | `skl-009-specification` |
@@ -45,11 +46,13 @@ Cas particulier : le **rapport de recherche** demandé pour une tâche est une *
 
 Cas particulier : `skl-011-codage-cli-bash` encadre la production d'un **script bash exécutable** (pas un document markdown) conforme à `ADR-002`, `SPEC-001` et `REQ-001`.
 
+Cas particulier : un **principe de conception** (`skl-014-principe-de-conception`, `.dev/principes/PDC-<SEQ>-<SLUG>.md`, voir `ADR-008`) est une ressource **transverse et durable** qui guide le design de haut niveau du système : tout élément (harnais, `clia`, documents de conception, livrables) doit lui être conforme. Le **non-respect d'un principe de conception est un bogue** (voir `ADR-003` et `skl-013`).
+
 ## Nomenclature
 
 Le nommage dépend du cycle de vie de la ressource (voir `ADR-004-ressources-livrables`) :
 
-- ressources **vivantes** et **de travail** (séquencées) : `.dev/<type>/<PREFIX>-<SEQ>-<SLUG>.md` (plans, ADR, spécifications, requis, bugs) ;
+- ressources **vivantes** et **de travail** (séquencées) : `.dev/<type>/<PREFIX>-<SEQ>-<SLUG>.md` (plans, ADR, principes de conception, spécifications, requis, bugs) ;
 - ressources **point fixe** (datées) : `<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>` (fondations, analyses, publications) ; l'heure est ajoutée en cas de collision de date et de slug ;
 - **logs de sortie IA** : `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`) ;
 - **skills** : convention Claude Code `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` ;

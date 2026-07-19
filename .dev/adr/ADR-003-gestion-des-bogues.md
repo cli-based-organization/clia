@@ -34,6 +34,10 @@ Des comportements incorrects de l'agent surviennent (ex. tâche 13 : aucun log p
 
 - **Décision** : quand un bogue révèle une lacune du harnais (comme BUG-001), la solution inclut l'amendement des fichiers de harnais concernés, tracé dans la section « Solution appliquée » du BUG.
 
+### Non-respect d'un principe de conception (amendement, tâche 19)
+
+- **Décision** : le **non-respect d'un principe de conception** (ressource `PDC`, voir `ADR-008-ressource-principe-de-conception`) **est un bogue** au sens de cette ADR. Les **critères de conformité** d'un `PDC` définissent ce qu'est un respect ; un écart avéré d'un élément du système (harnais, `clia`, document de conception, livrable) à un principe se consigne, se diagnostique et se corrige via une ressource `BUG` (`skl-013`). Justification : un principe de conception ne vaut que s'il est respecté universellement ; un écart érode l'intégrité conceptuelle du système (voir `FND-2026-07-18-principes-de-conception-systemes-complexes`), c'est donc un défaut à traiter comme tel. Le rapport du `BUG` référence le `PDC` enfreint et le critère de conformité violé.
+
 ## Conséquences
 
 **Positives**
