@@ -333,14 +333,119 @@ De quelle manière les méthodologies de travail avec l'IA traite-t-il des notio
 Quels sont les conventions dans les harnais IA concernant l'Architecture?
 
 
-
-
 Terminer en faisant une analyse critique du repo ici au regard du savoir mobilisé.
 Quels sont les constats à propos de l'architecture effective? Faire des recommendations sur la meilleur achitecture à adopter et comment y parvenir et pourquoi l'implémentation actuelle est sous-optimale.
 
 Générer un nouveau type de ressource livrable => le harnais IA ARCHITECTURE.md
 Produire un ADR le décrivant, le skill pour sa production et ajuster les autres harnais IA au besoin.
 
+## 23. [analyse documentaire]
+
+
+
+
+Scanner récursivement les repos à partir de  @../../
+
+Récupérer les FND qui parlent d'ontologie et de sémantique.
+faire une recherche de fondation à propos de l'ontologie et de la sémantique.
+
+
+Scanner récursivement les repos à partir de  @../../
+
+Y rechercher les usages de la sémantique et de l'ontologie.
+
+Produire un rapport d'analyse où l'on dit pour chaque repo:
+
+- si la notion de sémantique est utilisé. Si oui, de quelle façon
+- si la notion d'ontologie est utilisée. Si oui, de quelle façon
+- Quel usage est fait des notions de sémantique et d'ontologie
+
+Classifier les repos qui font usage de sémantique/ontologie en catégories d'usage.
+
+Analyser le repo ici au regard du savoir mobilisé et des catégories d'usages identifiés dans les autres repos.
+
+Faire des recommendations à propos de:
+- des principes en lien avec sémentique/ontologie qui pourraient/devraient être retenus dans ce repo ici
+- l'amélioration/extention des notion de sémantique / ontologie dans ce repo ici
+
+## 24. [conception] Adoption des conventions clefs de la spec Open Knowledge Format (OKF)
+
+On définit les zones (répertoires) suivantes:
+
+- 1. zone de contenu repo (défaut: `@.`). Contient les artefacts livrés d'intérêt pour le projet 
+- 2. zone de développment (défaut: `@.dev`). Contient les éléments 
+- 3. zone de base de connaissance (défaut: `@.knowledge`)
+
+On ajoute les éléments de la spec OKF:
+
+- 1. Tous les fichiers markdown ont un header yaml avec le champ "type"
+- 2. Toutes les références croisés entre documents 
+
+
+
+## X. Ressources
+
+Actuellement, il y a plusieurs types de ressources: ressources "vivantes" et ressources "point fixes".
+
+TODO: abolir cette distinction => toutes les ressources sont des ressources vivantes.
+
+
+## X. [conception] la notion de harnais
+
+[ADR] Nous adoptons la notion de harnais définit comme "tout mécanisme qui aide à encadrer le comportement du système complexe afin qui se comporte de la manière atendue"
+
+[RESSOURCE + SKILL] Harnais-documentaire. Fichier texte
+
+
+
+## X. [conception] harnais STACK.md
+
+Ajoute une ressource de type harnais-documentaire qui décrit la pile technologique du repo
+
+## X. [conception] revoir le choix de bash comme lanquage
+
+- Remplacer bash par rust
+- embeder un engin en go pour permettre l'usage de documents/schemas/validations en cuelang
+
+Documenter cette décision dans un ADR, mais ne pas l'implémenter
+
+
+## X. [objections humain] 
+
+### ADR vs ressources ontologiques
+
+Actuellement, les ADR servent à 2 usages =>
+
+- 1. documenter les décisions
+- 2. définir des ressources
+
+TODO: Ajouter la ressource "ressource"
+
+Pour toute ressource:
+
+- la décision d'avoir cette ressource est documenté dans un ADR
+- la ressource est décrite par une instance de ressource "ressource"
+- un skill décrivant comment 
+
+
+### Ressources
+
+Actuellement, il y a plusieurs types de ressources: ressources "vivantes" et ressources "point fixes".
+
+TODO: abolir cette distinction => toutes les ressources sont des ressources vivantes.
+
+
+### Principes
+
+Ajouter les principes fondamentaux suivaint
+
+- la notion de contextualité (au sens de la théorie quantum-like). Il n'y a pas un seul point de vue valide, mais une multiplicité de points de vues relatives au contexte + intention
+- La notion de focus. on doit limiter le nombre d'éléments/concepts actifs ou exposées simultannément. 
+- "interne/externe". on doit traiter de manière différente ce qui est interne à un contexte/focus/etc et ce qui y est extérieur.
+
+Il y a un lien important entre focus et contextualité.
+
+Par rapport
 
 
 ## x. [recadrage] Précision de l'intention et de l'architecture

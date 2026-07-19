@@ -31,6 +31,7 @@ Cela inclut explicitement les tâches dont le seul livrable est un plan : **prod
 | Plan de travail | `.dev/plans/PLN-<SEQ>-<SLUG>.md` | `skl-003-plan-de-travail` |
 | Recherche de fondation | `.dev/fondations/FND-<SEQ>-<SLUG>.md` | `skl-002-recherche-de-fondation` |
 | Harnais | `CLAUDE.md`, `CONSTITUTION.md`, `INTENTION.md` | `skl-004-harnais` |
+| Harnais ARCHITECTURE.md | `ARCHITECTURE.md` | `skl-015-architecture-harnais` |
 | Skill | `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` | `skl-001-skill-writer` |
 | ADR | `.dev/adr/ADR-<SEQ>-<SLUG>.md` | `skl-006-adr` |
 | Principe de conception | `.dev/principes/PDC-<SEQ>-<SLUG>.md` | `skl-014-principe-de-conception` |
@@ -48,6 +49,8 @@ Cas particulier : `skl-011-codage-cli-bash` encadre la production d'un **script 
 
 Cas particulier : un **principe de conception** (`skl-014-principe-de-conception`, `.dev/principes/PDC-<SEQ>-<SLUG>.md`, voir `ADR-008`) est une ressource **transverse et durable** qui guide le design de haut niveau du système : tout élément (harnais, `clia`, documents de conception, livrables) doit lui être conforme. Le **non-respect d'un principe de conception est un bogue** (voir `ADR-003` et `skl-013`).
 
+Cas particulier : `ARCHITECTURE.md` (`skl-015-architecture-harnais`, voir `ADR-009`) est le **fichier de harnais** qui donne la **carte de haut niveau** de la structure du système (composants, acteurs, flux, cartographie du code). Court et stable, il consolide les vues éparses sans décider (les décisions restent aux ADR) ni recopier les invariants (renvoi aux PDC). Il complète la triade `INTENTION.md` (pourquoi) / `CONSTITUTION.md` (gouvernance/orchestration) / `CLAUDE.md` (mode opératoire) par la **structure**.
+
 ## Nomenclature
 
 Le nommage dépend du cycle de vie de la ressource (voir `ADR-004-ressources-livrables`) :
@@ -57,7 +60,7 @@ Le nommage dépend du cycle de vie de la ressource (voir `ADR-004-ressources-liv
 - **logs de sortie IA** : `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`) ;
 - **skills** : convention Claude Code `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` ;
 - **archives de session** (point fixe daté) : `.dev/sessions/SES-<DATE>-<HEURE_OUVERTURE>-<SLUG>.md` (voir `ADR-006-gestion-des-sessions`) ;
-- **harnais** : noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`) plus les skills ; le harnais est **générique et réutilisable** (voir `ADR-005-fonction-scope-harnais`). `INTENTION.md` n'est **pas** un fichier de harnais : c'est le fichier d'intention de domaine (édition humaine uniquement).
+- **harnais** : noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`) plus les skills ; le harnais est **générique et réutilisable** (voir `ADR-005-fonction-scope-harnais`). `INTENTION.md` n'est **pas** un fichier de harnais : c'est le fichier d'intention de domaine (édition humaine uniquement).
 
 ## Versionnage à deux domaines
 

@@ -17,18 +17,19 @@
 #   version.yaml (racine), lue par `clia --version`. Elle evolue independamment
 #   des ensembles ci-dessous.
 
-version-manifeste: 0.6.0
+version-manifeste: 0.7.0
 
 ensembles:
 
   harness-files:
-    version: 0.5.0
+    version: 0.6.0
     description: >-
       Apparatus methodologique generique et reutilisable (aucune information
       de domaine). Voir ADR-005.
     membres:
-      CLAUDE.md: 0.4.0
+      CLAUDE.md: 0.5.0
       CONSTITUTION.md: 0.3.0
+      ARCHITECTURE.md: 0.1.0
       skl-001-skill-writer: 0.1.0
       skl-002-recherche-de-fondation: 0.1.0
       skl-003-plan-de-travail: 0.2.0
@@ -41,9 +42,10 @@ ensembles:
       skl-012-analyse-corpus: 0.1.0
       skl-013-rapport-de-bogue: 0.2.0
       skl-014-principe-de-conception: 0.1.0
+      skl-015-architecture-harnais: 0.1.0
 
   documents-de-conception:
-    version: 0.5.0
+    version: 0.6.0
     description: Decisions, specifications et requis (documents vivants).
     membres:
       ADR-001-type-livrable-analyse: 0.1.0
@@ -54,6 +56,7 @@ ensembles:
       ADR-006-gestion-des-sessions: 0.1.0
       ADR-007-architecture-systeme-augmentation: 0.2.0
       ADR-008-ressource-principe-de-conception: 0.1.0
+      ADR-009-harnais-architecture-md: 0.1.0
       SPEC-001-convention-cli-bash: 0.2.0
       SPEC-002-cli-clia: 0.1.0
       SPEC-003-format-markdown-clia-session: 0.1.0
