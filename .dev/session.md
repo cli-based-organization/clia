@@ -391,7 +391,112 @@ TODO: abolir cette distinction => toutes les ressources sont des ressources viva
 
 réfactorer les fichiers nécessaites.
 
-## X. [conception] la notion de harnais
+S'il y a des objections, ajoutez les à PLN-014
+
+## 26. [résolution des objections] PLN-014
+
+### Résolution 1
+
+oui, respecter la règle. Ne pas modifier les fichiers humains 
+
+### Résolution 2
+
+C'est ça le propos de la tâche 25: on abolie la notion de ressources immuables. Toutes les ressources peuvent maintenant évoluer. Il faut donc modifier leur structure en conséquence.
+
+### Résolution 3
+
+Faire une première réécriture de ADR-004.
+
+### Résolution 4
+
+on laisse tombé le knowledge pour l'instant. On met tout dans .dev.
+
+On rapatrie aussi dans .dev => logs
+
+doc n'as rien à voir et on le laisse où il est inchangé
+
+### Résolution 5
+
+Remplacer les puces d'entête.
+
+Et abolir le fichier ressources.yaml
+
+### Résolution 6
+
+oui, ok... je vois pas l'objection ici
+
+### Résolution 7
+
+oui. Renommer et réparer les références
+
+### Résolution 8
+
+Oui, on ajoute la version. Mais on n'a plus de manifeste. 
+
+### Résolution 9
+
+Effectivement. les logs ne sont pas des livrables, mais des traces/metadata. Elles demeures immutable.
+
+### Résolution 10
+
+oui, ils évoluent. Donc ce sont des documents vivant et on abolie la catégorie "travail"
+
+### Résolution 11
+
+
+non. ne pas toucher à session .
+
+
+## 27 ajouter un commande de passage à la nouvelle version
+
+```
+clia version update (major|minor|patch)
+```
+
+## 28. [résolution des objections]
+
+### objection 1
+
+oui. utiliser version.yaml
+
+### objection 2
+
+effectivement...
+
+remplacer la commande `version`  par release
+
+```
+clia release (major|minor|patch)
+```
+
+
+### objection 3
+
+oui. abolir ressources.yaml et cibler version.yaml
+
+
+### objection 4
+
+Ce qui est interdit, c'est l'agent qui utilise git. git est autorisé via horizon IA
+
+### objection 5
+
+amendé tout ce qui doit être amandé
+
+## 29. [planification]
+
+à la lumière des travaux de conception, réévalué ce qui est pertinent pour PLN-012 et PLN-013.
+
+Proposer un autre plan combinant les 2
+
+## 30. [exécution du plan]
+
+Exécuter PLN-014 et PLN-015
+
+Puis réviser PLN-016
+
+
+## x. [conception] la notion de harnais
 
 [ADR] Nous adoptons la notion de harnais définit comme "tout mécanisme qui aide à encadrer le comportement du système complexe afin qui se comporte de la manière atendue"
 
@@ -399,9 +504,11 @@ réfactorer les fichiers nécessaites.
 
 
 
-## X. [conception] harnais STACK.md
+## x. [conception] harnais STACK.md
 
 Ajoute une ressource de type harnais-documentaire qui décrit la pile technologique du repo
+
+
 
 ## X. [conception] revoir le choix de bash comme lanquage
 

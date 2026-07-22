@@ -1,6 +1,8 @@
 # PLN-013 - Conception de la commande `clia setup` (init / upgrade / downgrade)
 
-**Statut : objection (Phase A exécutée, au breakpoint ; Phase B suspendue en attente de revue humaine et des objections 4 et 5)**
+**Statut : remplacé par PLN-016 (Phase A acquise)**
+
+> Ce plan est remplacé par `PLN-016-installation-cycle-de-vie-clia` (tâche 29), qui combine `PLN-012` et `PLN-013`. La **Phase A reste acquise** (breakpoint introduit dans le harnais ; `ANL-2026-07-18-besoin-req-spec-ressources-livrables` produite). La Phase B non exécutée est reprise et refondée dans `PLN-016`. Conservé pour traçabilité.
 
 ## Changelog
 

@@ -1,6 +1,8 @@
 # PLN-012 - Livrables d'installation : `init` d'un nouveau repo et `update`/`rollback` des ressources `clia`
 
-**Statut : objection**
+**Statut : remplacé par PLN-016**
+
+> Ce plan est remplacé par `PLN-016-installation-cycle-de-vie-clia` (tâche 29), qui combine `PLN-012` et `PLN-013` et refond leur contenu sur le nouveau modèle de ressources (`PLN-014`). Conservé pour traçabilité ; ne pas exécuter tel quel.
 
 ## Intention
 
