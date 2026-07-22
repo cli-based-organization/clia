@@ -383,12 +383,13 @@ On ajoute les éléments de la spec OKF:
 
 
 
-## X. Ressources
+## 25. Ressources
 
 Actuellement, il y a plusieurs types de ressources: ressources "vivantes" et ressources "point fixes".
 
 TODO: abolir cette distinction => toutes les ressources sont des ressources vivantes.
 
+réfactorer les fichiers nécessaites.
 
 ## X. [conception] la notion de harnais
 
