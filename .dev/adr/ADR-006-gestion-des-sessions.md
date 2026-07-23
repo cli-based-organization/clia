@@ -1,8 +1,13 @@
+---
+type: adr
+version: 0.1.0
+title: "Gestion du cycle de vie des sessions"
+status: Accepté
+date: 2026-07-10
+---
+
 # ADR-006 - Gestion du cycle de vie des sessions
 
-- **Statut** : Accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
 - **Sources** : `PLN-006`, tâche 18 de `session.md` (objections 1, 2, 5)
 

@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-002-recherche-de-fondation
 description: >-
   Produire un document de fondation (`.dev/fondations/FND-<XYZ>-<slug>.md`) : recherche en profondeur,
@@ -37,11 +39,11 @@ Ne pas utiliser pour analyser un corpus concret de fichiers présents sur un sys
 
 ## Structure du livrable
 
-- **Emplacement** : `.dev/fondations/FND-<XYZ>-<slug>.md`.
+- **Emplacement** : `.dev/fondations/FND-<SEQ>-<slug>.md` (nommage séquencé, voir `ADR-004`).
 
 **Cadre invariant (dans cet ordre)** :
 
-1. En-tête - titre + statut, date, objectif.
+1. Frontmatter YAML (`type: fondation`, `version`, `title`, `status`, `date`), puis titre H1 et objectif.
 2. Note de rigueur - qualité des sources, niveau d'exigence.
 3. Cadrage / Thèse - question, périmètre, définitions.
 4. Corps (voir menu ci-dessous).

@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Séparation méthode / domaine et généricité du harnais"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-003 - Séparation méthode / domaine et généricité du harnais
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -33,4 +38,4 @@ Les fichiers de harnais (`CLAUDE.md`, `CONSTITUTION.md`, skills) et `clia`. Ne s
 ## Références
 
 - `ADR-005-fonction-scope-harnais`
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P3)
+- `ANL-010-principes-de-conception-du-repo` (P3)

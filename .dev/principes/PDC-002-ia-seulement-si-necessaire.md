@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "N'employer l'IA que lorsque c'est nécessaire ; automatiser le reste"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-002 - N'employer l'IA que lorsque c'est nécessaire ; automatiser le reste
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -10,7 +15,7 @@ L'IA n'est employée que pour les tâches exigeant jugement, langage naturel ou 
 
 ## Justification
 
-L'IA est variable, coûteuse et faillible ; le déterministe est reproductible, gratuit et sûr (`FND-2026-07-18-capacites-modeles-ia-usage`). Réserver l'IA à ce qui l'exige maximise fiabilité et intégrité, et minimise coût et surface d'erreur.
+L'IA est variable, coûteuse et faillible ; le déterministe est reproductible, gratuit et sûr (`FND-010-capacites-modeles-ia-usage`). Réserver l'IA à ce qui l'exige maximise fiabilité et intégrité, et minimise coût et surface d'erreur.
 
 ## Portée
 
@@ -35,5 +40,5 @@ La répartition des tâches entre l'humain, `clia` (déterministe) et l'agent IA
 
 ## Références
 
-- `ADR-007-architecture-systeme-augmentation`, `FND-2026-07-18-capacites-modeles-ia-usage`
-- `ANL-2026-07-18-usage-ia-projet`, `ANL-2026-07-18-principes-de-conception-du-repo` (P2)
+- `ADR-007-architecture-systeme-augmentation`, `FND-010-capacites-modeles-ia-usage`
+- `ANL-012-usage-ia-projet`, `ANL-010-principes-de-conception-du-repo` (P2)

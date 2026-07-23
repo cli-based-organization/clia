@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-009-specification
 description: >-
   Produire une spécification (`.dev/specs/SPEC-<SEQ>-<SLUG>.md`) : la description concrète de la
@@ -40,9 +42,15 @@ Quand une tâche demande de décrire précisément la forme et le comportement d
 - **Emplacement** : `.dev/specs/SPEC-<SEQ>-<SLUG>.md`
 
 ```markdown
+---
+type: specification
+version: <X.Y.Z>
+title: "<Titre>"
+date: <AAAA-MM-JJ>
+---
+
 # SPEC-<SEQ> - <Titre>
 
-- **Date** : <AAAA-MM-JJ>
 - **Requis couverts** : <REQ-XXX>
 - **Décisions applicables** : <ADR-XXX>
 

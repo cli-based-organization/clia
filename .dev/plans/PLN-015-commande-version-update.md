@@ -1,8 +1,16 @@
+---
+type: plan
+version: 0.1.0
+title: "Commande `clia release (major|minor|patch)`"
+status: exécuté
+---
+
 # PLN-015 - Commande `clia release (major|minor|patch)`
 
-**Statut : approuvé**
 
 ## Changelog
+
+- **Exécution (2026-07-21, tâche 30)** : commande `clia release (major|minor|patch)` implémentée. `cmd_release` ajouté à `src/lib/version.sh` (bump semver de `version.yaml`, réécriture atomique, `--dry-run`, codes 0/1/2, aucune opération git) ; dispatch `release` dans `src/bin/clia` ; entrée dans `src/clia.doc.yaml` (découvrable, `clia -h` et `clia release -h`) ; `SPEC-002` (0.2.0) et `REQ-002` (0.2.0, `REQ-002-F-release`) amendés ; premier test du dépôt `test/test_clia.sh` (8 cas, verts). Statut approuvé -> exécuté.
 
 - **Révision 2 (2026-07-21)** : incorporation de la **tâche 28** de `session.md` (« [résolution des objections] »). Les cinq objections sont résolues. Décisions : (1) cible confirmée `version.yaml` (métier) ; (2) la commande n'est **plus** un groupe `version` avec sous-commande `update`, mais une **commande de premier niveau `clia release (major|minor|patch)`**, ce qui lève la confusion avec l'option globale de lecture `--version` ; (3) `ressources.yaml` est aboli (cohérent avec `PLN-014`) et la commande cible `version.yaml` ; (4) l'interdiction git vise **l'agent IA**, pas `clia` (déterministe, opéré par l'humain) ni le canal horizon IA, donc la contrainte « ne jamais toucher git » du plan initial est corrigée ; (5) amender tous les documents de conception nécessaires. Statut passé à **approuvé**. Le nom de fichier du plan est conservé (`...-commande-version-update.md`) pour ne pas orpheliner la référence du log de la tâche 27, trace immuable.
 - **Révision 1 (2026-07-21)** : création (tâche 27), commande initialement nommée `clia version update`, statut objection.

@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-010-requis
 description: >-
   Produire un document de requis (`.dev/requis/REQ-<SEQ>-<SLUG>.md`) : les exigences vérifiables
@@ -40,9 +42,15 @@ Quand une tâche demande de fixer les exigences d'un système, d'un outil ou d'u
 - **Emplacement** : `.dev/requis/REQ-<SEQ>-<SLUG>.md`
 
 ```markdown
+---
+type: requis
+version: <X.Y.Z>
+title: "<Titre>"
+date: <AAAA-MM-JJ>
+---
+
 # REQ-<SEQ> - <Titre>
 
-- **Date** : <AAAA-MM-JJ>
 - **Sources** : <intention/fondation/analyse ayant motivé ces requis>
 - **Convention de priorité** : MUST | SHOULD | MAY
 

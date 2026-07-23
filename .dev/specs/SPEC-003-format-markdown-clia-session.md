@@ -1,6 +1,12 @@
+---
+type: specification
+version: 0.1.0
+title: "Format markdown-clia-session"
+date: 2026-07-10
+---
+
 # SPEC-003 - Format markdown-clia-session
 
-- **Date** : 2026-07-10
 - **Requis couverts** : `REQ-002-cli-clia` (F pour `ses check`)
 - **Décisions applicables** : `ADR-006-gestion-des-sessions`, `ADR-004-ressources-livrables`
 

@@ -1,37 +1,42 @@
-# PDC-009 - Traçabilité et versionnage atomique
+---
+type: principe
+version: 0.2.0
+title: "Traçabilité et versionnage des ressources"
+status: accepté
+date: 2026-07-18
+---
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
+# PDC-009 - Traçabilité et versionnage des ressources
 
 ## Énoncé
 
-Chaque ressource vivante est versionnée ; modifier un membre bumpe atomiquement, dans la même opération, la version du membre et celle de son ensemble.
+Chaque ressource livrable vivante porte sa version dans son **frontmatter** ; toute modification incrémente cette version selon la règle semver.
 
 ## Justification
 
-Le versionnage atomique garantit qu'à tout instant l'état des versions est cohérent et traçable : impossible d'avoir un membre modifié sans que son ensemble le reflète. C'est la condition d'une traçabilité fiable des ressources vivantes (`ADR-004`).
+Le versionnage porté par le fichier lui-même rend l'état des versions **localement traçable et vérifiable**, sans dépendre d'un manifeste central : la version d'une ressource se lit là où vit la ressource. C'est la condition d'une traçabilité fiable et déterministe des ressources vivantes (`ADR-004`).
 
 ## Portée
 
-Les ressources vivantes (ADR, SPEC, REQ, PDC, skills, harnais, BUG) et leurs ensembles, suivis dans `.dev/ressources.yaml`.
+Toutes les ressources livrables vivantes (FND, ANL, ADR, SPEC, REQ, PDC, skills, harnais, BUG, PLN). Les traces (logs, sessions) ne sont pas versionnées.
 
 ## Implications
 
-- Impose de mettre à jour `.dev/ressources.yaml` à chaque modification d'une ressource vivante (membre + ensemble + manifeste).
-- Interdit un bump de membre sans bump de son ensemble, et inversement.
-- Impose que la version initiale soit `0.1.0` (phase de conception).
+- Chaque ressource vivante déclare `type` et `version` dans son frontmatter (voir `.dev/resource-types.yaml`).
+- Une modification incrémente la version selon semver (MAJEUR = changement incompatible ; MINEUR = ajout rétrocompatible ; CORRECTIF = clarification).
+- Version initiale `0.1.0` (phase de conception).
+- Il n'y a **plus de manifeste central ni d'ensembles composites** (`ressources.yaml` est aboli, voir `ADR-004`).
 
 ## Critères de conformité
 
-- Toute modification d'un membre vivant s'accompagne du bump du membre et de son ensemble dans `.dev/ressources.yaml`.
-- L'état du manifeste est cohérent (aucun membre modifié non reflété).
+- Toute ressource vivante possède un frontmatter avec `type` et `version`.
+- Toute modification d'une ressource s'accompagne d'un bump de sa version.
 
 ## Tensions
 
-- Avec `PDC-002` : ce versionnage est aujourd'hui réalisé **manuellement par l'agent**, alors qu'il est spécifiable et vérifiable et devrait être automatisé par `clia` (respecté mais fragile ; voir `ANL-2026-07-18-usage-ia-projet`).
+- Avec `PDC-002` : ce versionnage est aujourd'hui réalisé **manuellement par l'agent**, alors qu'il est spécifiable et vérifiable et devrait être automatisé par `clia` (respecté mais fragile ; voir `ANL-012-usage-ia-projet`).
 
 ## Références
 
-- `ADR-004-ressources-livrables`, `ADR-007-architecture-systeme-augmentation`
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P9)
+- `ADR-004-ressources-livrables`, `PDC-002-ia-seulement-si-necessaire`
+- `ANL-010-principes-de-conception-du-repo` (P9)

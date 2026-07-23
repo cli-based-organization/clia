@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Forcer l'écriture des plans dans des fichiers, pas en stdout"
+status: exécuté
+---
+
 # PLN-002 - Forcer l'écriture des plans dans des fichiers, pas en stdout
 
-**Statut : exécuté**
 
 ## Changelog
 

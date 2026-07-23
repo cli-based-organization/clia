@@ -1,0 +1,127 @@
+# resource-types.yaml - Couche type des ressources (ontologie legere explicite).
+#
+# Source de verite machine-lisible du modele de ressources decide par PLN-014
+# et grave dans ADR-004 (reecriture 0.2.0). Remplace l'ancien manifeste
+# ressources.yaml (aboli). Ce fichier decrit les TYPES (la classe) ; les
+# instances (les documents concrets) portent leur type et leur version dans
+# leur frontmatter. La table des livrables de CLAUDE.md est une VUE de ce
+# fichier, pas une source parallele (PDC-006).
+#
+# Produit au Segment 1 de PLN-014. La migration de l'existant (frontmatter,
+# renommage, suppression de ressources.yaml) releve du Segment 2 (apres
+# breakpoint). Voir ADR-004, ANL-2026-07-21-usage-semantique-ontologie-repos.
+
+version: 0.1.0
+
+# Schema de frontmatter attendu par categorie.
+frontmatter_schema:
+  ressource_livrable:
+    obligatoires: [type, version, title]
+    optionnels: [status, description, tags]
+  trace:
+    obligatoires: [type]
+    optionnels: [session-date, task, status, duration, timestamp]
+
+# Zones du depot (defauts parametrables, generiques - ADR-005).
+zones:
+  contenu: "."          # artefacts de domaine du projet
+  developpement: ".dev" # ressources d'augmentation et de methode, et traces
+  doc: "doc"            # documentation utilisateur, inchangee
+
+# Types de ressources livrables (vivantes, versionnees en frontmatter).
+types_livrables:
+  fondation:
+    prefix: FND
+    emplacement: ".dev/fondations"
+    nommage: sequence          # <PREFIX>-<SEQ>-<SLUG>.md (migration depuis date au Segment 2)
+    skill: skl-002-recherche-de-fondation
+    edition: ia
+  analyse:
+    prefix: ANL
+    emplacement: ".dev/analyses"
+    nommage: sequence
+    skill: skl-012-analyse-corpus
+    edition: ia
+  adr:
+    prefix: ADR
+    emplacement: ".dev/adr"
+    nommage: sequence
+    skill: skl-006-adr
+    edition: co
+  principe:
+    prefix: PDC
+    emplacement: ".dev/principes"
+    nommage: sequence
+    skill: skl-014-principe-de-conception
+    edition: co
+  specification:
+    prefix: SPEC
+    emplacement: ".dev/specs"
+    nommage: sequence
+    skill: skl-009-specification
+    edition: co
+  requis:
+    prefix: REQ
+    emplacement: ".dev/requis"
+    nommage: sequence
+    skill: skl-010-requis
+    edition: co
+  bug:
+    prefix: BUG
+    emplacement: ".dev/bugs"
+    nommage: sequence
+    skill: skl-013-rapport-de-bogue
+    edition: co
+  plan:
+    prefix: PLN
+    emplacement: ".dev/plans"
+    nommage: sequence
+    skill: skl-003-plan-de-travail
+    edition: ia
+  skill:
+    prefix: skl
+    emplacement: ".dev/skills"
+    nommage: sequence
+    skill: skl-001-skill-writer
+    edition: co
+  harnais:
+    prefix: ~                  # noms fixes a la racine
+    emplacement: "."
+    nommage: fixe              # CLAUDE.md, CONSTITUTION.md, ARCHITECTURE.md
+    skill: skl-004-harnais
+    edition: co
+
+# Traces (metadonnees horodatees immuables, NON versionnees, NON livrables).
+types_traces:
+  log:
+    prefix: LOG
+    emplacement: ".dev/logs/ia-output"   # rapatrie depuis logs/ au Segment 2
+    nommage: horodate                    # LOG-<DATE>-task-<NN>.md
+    skill: skl-008-log-ia-output
+    edition: ia
+    immuable: true
+  session:
+    prefix: SES
+    emplacement: ".dev/sessions"
+    nommage: horodate                    # SES-<DATE>-<HEURE>-<SLUG>.md
+    skill: ~
+    edition: humain                      # jamais editee par l'agent (mute par clia/humain)
+    immuable: true
+
+# Fichiers exemptes de la regle de frontmatter appliquee par l'agent
+# (edition humaine uniquement, voir CONSTITUTION.md).
+exemptes:
+  - INTENTION.md
+  - .dev/session.md
+  - .dev/session-x*.md
+  - .dev/sessions/*
+
+# Vocabulaire de relations entre ressources (references croisees typees).
+# Une reference pendante est un bogue (ADR-003). Validation par clia (a venir).
+relations:
+  - specifie      # une SPEC specifie un REQ ; un skill specifie un type
+  - derive-de     # une ressource derive d'une autre
+  - remplace      # un plan/ADR remplace un anterieur
+  - reference     # renvoi simple
+  - produit-par   # une instance est produite par un skill
+  - viole         # un bug signale la violation d'un PDC/SPEC/REQ

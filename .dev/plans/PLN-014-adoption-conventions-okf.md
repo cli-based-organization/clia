@@ -1,9 +1,16 @@
+---
+type: plan
+version: 0.1.0
+title: "Refonte des ressources livrables : conventions OKF et cycle de vie unifié"
+status: approuvé (Segment 1 exécuté, au breakpoint ; Segment 2 en attente de revue humaine)
+---
+
 # PLN-014 - Refonte des ressources livrables : conventions OKF et cycle de vie unifié
 
-**Statut : approuvé**
 
 ## Changelog
 
+- **Exécution du Segment 1 (2026-07-21, tâche 30)** : livrables 1 et 2 produits. `ADR-004` réécrit (version 0.2.0, format frontmatter, modèle unifié : une catégorie de ressources livrables vivantes versionnées en frontmatter ; traces immuables ; zones ; abolition de `ressources.yaml` ; nommage séquencé ; références en liens). Schéma de la couche type créé : `.dev/resource-types.yaml` (ontologie légère explicite, vocabulaire de `type` et de relations). **Breakpoint atteint** : l'exécution s'arrête. Le Segment 2 (migration mécanique de masse : frontmatter partout, renommage `FND`/`ANL`, réparation des références, rapatriement des `logs`, suppression de `ressources.yaml`, amendement des skills et harnais) reste suspendu jusqu'à la revue du nouveau modèle par l'humain et l'autorisation de reprise.
 - **Révision 3 (2026-07-21)** : incorporation de la **tâche 26** de `session.md` (« [résolution des objections] PLN-014 »). L'humain a répondu aux onze objections. Toutes sont **résolues** ; aucune n'est ouverte. Le modèle cible est désormais tranché (voir « Modèle décidé » ci-dessous) : abolition de l'immuabilité et du triple cycle de vie au profit d'une seule catégorie de **ressources livrables vivantes** versionnées, plus des **traces immuables** (logs, sessions) qui ne sont pas des ressources livrables ; zones simplifiées (`.knowledge` abandonné, tout dans `.dev`, `logs` rapatriés dans `.dev`, `doc` inchangé) ; frontmatter remplaçant les puces ; abolition de `ressources.yaml` (version portée par le frontmatter) ; renommage daté vers séquencé avec réparation des références ; première réécriture d'`ADR-004`. Statut passé à **approuvé**. Le breakpoint après le segment 1 est conservé (revue humaine du nouveau modèle avant la migration mécanique de masse).
 - **Révision 2 (2026-07-21)** : incorporation de la **tâche 25** (abolir la distinction vivant / point fixe). Élargissement du plan au cycle de vie, ajout des objections 7 à 11.
 - **Révision 1 (2026-07-21)** : création (tâche 24, adoption sélective d'OKF).
@@ -15,7 +22,7 @@ Refondre le modèle des ressources livrables de `clia`, en réunissant trois dem
 ## Contexte
 
 - **Tâches 24, 25, 26 (`session.md`)** : voir l'historique du Changelog. La tâche 26 fournit les décisions humaines qui lèvent toutes les objections et fixent le modèle cible.
-- **Analyses de référence** : `ANL-2026-07-18-clia-et-open-knowledge-format` (adoption OKF sélective, remplacement des puces, arbitrage du manifeste) et `ANL-2026-07-21-usage-semantique-ontologie-repos` (expliciter l'ontologie légère tacite : couche type, relations typées et validées, rester léger sans RDF/OWL).
+- **Analyses de référence** : `ANL-006-clia-et-open-knowledge-format` (adoption OKF sélective, remplacement des puces, arbitrage du manifeste) et `ANL-013-usage-semantique-ontologie-repos` (expliciter l'ontologie légère tacite : couche type, relations typées et validées, rester léger sans RDF/OWL).
 - **État courant du dépôt (2026-07-21)** : environ 140 fichiers markdown (91 `.dev`, 43 `logs`, 2 `doc`, 4 racine) ; seuls les `logs` portent un frontmatter ; les autres ressources portent leurs métadonnées en **puces d'en-tête**. `ADR-004` définit aujourd'hui **trois** cycles (point fixe daté non versionné ; vivant séquencé semver ; travail non versionné), le cycle commandant le nommage et le versionnage, avec un manifeste `.dev/ressources.yaml` et deux ensembles composites atomiques.
 - **Chantier humain** : ce plan porte la **première réécriture d'`ADR-004`** (résolution 3).
 - **Contraintes de gouvernance** : généricité du harnais (`ADR-005`), interface fichiers (`PDC-004`), source de vérité unique (`PDC-006`), déterminisme de `clia` (`PDC-001`), traçabilité (`PDC-009`) ; l'agent n'édite jamais les fichiers en édition humaine uniquement et n'opère aucune action git.
@@ -23,7 +30,7 @@ Refondre le modèle des ressources livrables de `clia`, en réunissant trois dem
 ## Modèle décidé (résolutions de la tâche 26)
 
 - **Cycle de vie unifié.** On abolit la notion de ressource immuable et le triple cycle de vie. Il reste **une seule catégorie de ressources livrables : vivantes** (elles évoluent et portent une version). Concernées : `FND`, `ANL`, `ADR`, `SPEC`, `REQ`, `PDC`, `skl`, `BUG`, `PLN`, et les harnais (`CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`). La catégorie « travail » est abolie (`PLN` devient vivant, résolution 10). (Résolutions 2, 10.)
-- **Traces immuables, hors ressources livrables.** Les `logs/ia-output` (traces d'audit horodatées) et les `.dev/sessions/*` (archives de séance) **ne sont pas des ressources livrables** mais des **traces / métadonnées** : elles **demeurent immuables**. (Résolutions 9, 11.)
+- **Traces immuables, hors ressources livrables.** Les `.dev/logs/ia-output` (traces d'audit horodatées) et les `.dev/sessions/*` (archives de séance) **ne sont pas des ressources livrables** mais des **traces / métadonnées** : elles **demeurent immuables**. (Résolutions 9, 11.)
 - **Fichiers en édition humaine uniquement : exemptés.** L'agent ne modifie pas `INTENTION.md`, `.dev/session.md`, `.dev/session-x*.md`, `.dev/sessions/*`. La règle de frontmatter ne leur est pas appliquée par l'agent. (Résolution 1.)
 - **Zones.** On abandonne `.knowledge` pour l'instant. Tout va dans `.dev`. Les `logs` sont **rapatriés dans `.dev`**. `doc/` reste à la racine, inchangé. Zones effectives : contenu (`@.`) et développement (`@.dev`). (Résolution 4.)
 - **Métadonnées.** Le frontmatter YAML **remplace** les puces d'en-tête (pas de duplication, `PDC-006`). Chaque ressource livrable porte au minimum `type` et `version`. (Résolutions 5, 8.)
@@ -62,7 +69,7 @@ Formaliser les références croisées en liens markdown avec un petit vocabulair
 
 #### 5. Migration de l'existant
 
-Appliquer le Modèle décidé aux fichiers existants : ajouter le frontmatter (en remplaçant les puces) à toutes les ressources livrables ; **renommer** les `FND`/`ANL` datées en séquencées et **réparer toutes les références** ; **rapatrier** `logs/ia-output` sous `.dev` ; **supprimer** `.dev/ressources.yaml` ; ajouter le frontmatter `type: log` aux traces sans altérer leur contenu ni leur immuabilité. Exemptions : fichiers en édition humaine uniquement (`INTENTION.md`, sessions) non touchés. Migration vérifiable par la commande du livrable 4.
+Appliquer le Modèle décidé aux fichiers existants : ajouter le frontmatter (en remplaçant les puces) à toutes les ressources livrables ; **renommer** les `FND`/`ANL` datées en séquencées et **réparer toutes les références** ; **rapatrier** `.dev/logs/ia-output` sous `.dev` ; **supprimer** `.dev/ressources.yaml` ; ajouter le frontmatter `type: log` aux traces sans altérer leur contenu ni leur immuabilité. Exemptions : fichiers en édition humaine uniquement (`INTENTION.md`, sessions) non touchés. Migration vérifiable par la commande du livrable 4.
 
 #### 6. Ajustement des harnais
 

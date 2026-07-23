@@ -1,13 +1,19 @@
+---
+type: adr
+version: 0.1.0
+title: "Harnais ARCHITECTURE.md"
+status: Accepté
+date: 2026-07-18
+---
+
 # ADR-009 - Harnais ARCHITECTURE.md
 
-- **Statut** : Accepté
-- **Date** : 2026-07-18
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
-- **Sources** : tâche 22 de `.dev/session.md`, `FND-2026-07-18-architecture-systemes-complexes`, `ANL-2026-07-18-architecture-effective-du-repo`
+- **Sources** : tâche 22 de `.dev/session.md`, `FND-009-architecture-systemes-complexes`, `ANL-004-architecture-effective-du-repo`
 
 ## Contexte
 
-L'architecture du système d'augmentation est saine mais **tacite** : elle est dispersée entre `ADR-007`, `ADR-004`, `CONSTITUTION.md`, `CLAUDE.md` et les PDC, sans **description consolidée** en un seul endroit (`ANL-2026-07-18-architecture-effective-du-repo`). Il en résulte un **coût d'orientation récurrent** et un **risque de dérive**, d'autant plus critiques que le premier lecteur du dépôt est un **agent IA**, « architecturalement ignorant tant qu'on ne lui dit pas » (`FND-2026-07-18-architecture-systemes-complexes`, §5-6).
+L'architecture du système d'augmentation est saine mais **tacite** : elle est dispersée entre `ADR-007`, `ADR-004`, `CONSTITUTION.md`, `CLAUDE.md` et les PDC, sans **description consolidée** en un seul endroit (`ANL-004-architecture-effective-du-repo`). Il en résulte un **coût d'orientation récurrent** et un **risque de dérive**, d'autant plus critiques que le premier lecteur du dépôt est un **agent IA**, « architecturalement ignorant tant qu'on ne lui dit pas » (`FND-009-architecture-systemes-complexes`, §5-6).
 
 La convention `ARCHITECTURE.md` (matklad) répond exactement à ce besoin : une carte de haut niveau, courte et stable, placée à l'endroit que l'agent lit toujours, le dépôt. Le dépôt possède déjà les **ADR** (décisions, le *pourquoi*) et les **PDC** (invariants) ; il lui manque l'artefact de **description d'architecture** (le *quoi structurel*, la carte).
 
@@ -59,8 +65,8 @@ Premier jet. `ARCHITECTURE.md` de ce dépôt est produit dans la foulée (tâche
 
 ## Références
 
-- `FND-2026-07-18-architecture-systemes-complexes` (frameworks, artefacts, ARCHITECTURE.md, anti-patterns)
-- `ANL-2026-07-18-architecture-effective-du-repo` (constats, recommandations)
+- `FND-009-architecture-systemes-complexes` (frameworks, artefacts, ARCHITECTURE.md, anti-patterns)
+- `ANL-004-architecture-effective-du-repo` (constats, recommandations)
 - `skl-015-architecture-harnais` (skill de production)
 - `ADR-004-ressources-livrables` (versionnage), `ADR-005-fonction-scope-harnais` (généricité), `ADR-007-architecture-systeme-augmentation` (les trois composants)
 - `PDC-003`, `PDC-005`, `PDC-006`, `PDC-009` ; `ADR-003-gestion-des-bogues` (dérive = bogue)

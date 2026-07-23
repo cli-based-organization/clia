@@ -12,7 +12,7 @@ REPO_ROOT="$(dirname "$CLIA_SRC")"
 
 # Chemins de travail (structure de méthode, sans information de domaine).
 DEV_DIR="$REPO_ROOT/.dev"
-LOGS_DIR="$REPO_ROOT/logs/ia-output"
+LOGS_DIR="$DEV_DIR/logs/ia-output"
 SESSIONS_DIR="$DEV_DIR/sessions"
 SESSION_FILE="$DEV_DIR/session.md"
 TEMPLATE_FILE="$DEV_DIR/templates/session.template.md"
@@ -73,8 +73,9 @@ main() {
   _doc_commands | grep -qx "$cmd" || { _err "commande inconnue : $raw"; _doc_help >&2; exit 2; }
   _dbg "dispatch cmd=$cmd dry_run=$DRY_RUN args=$*"
   case "$cmd" in
-    res) cmd_res "$@" ;;
-    ses) cmd_ses "$@" ;;
+    res)     cmd_res "$@" ;;
+    ses)     cmd_ses "$@" ;;
+    release) cmd_release "$@" ;;
     *)   _die "commande sans handler : $cmd" 2 ;;
   esac
 }

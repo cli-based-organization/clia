@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Modifier le harnais pour forcer la production de plans avant exécution"
+status: exécuté
+---
+
 # PLN-001 - Modifier le harnais pour forcer la production de plans avant exécution
 
-**Statut : exécuté**
 
 ## Changelog
 

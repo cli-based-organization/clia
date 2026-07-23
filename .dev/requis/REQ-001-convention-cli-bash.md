@@ -1,7 +1,13 @@
+---
+type: requis
+version: 0.2.0
+title: "Requis d'un CLI bash conforme"
+date: 2026-07-10
+---
+
 # REQ-001 - Requis d'un CLI bash conforme
 
-- **Date** : 2026-07-10
-- **Sources** : `FND-2026-07-10-conventions-cli`, `ANL-2026-07-10-etat-clis-existants`, `ADR-002-convention-cli-bash`
+- **Sources** : `FND-007-conventions-cli`, `ANL-001-etat-clis-existants`, `ADR-002-convention-cli-bash`
 - **Convention de priorité** : MUST | SHOULD | MAY
 
 ## Objet et périmètre

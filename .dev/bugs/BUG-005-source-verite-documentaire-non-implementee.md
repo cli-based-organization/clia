@@ -1,17 +1,22 @@
+---
+type: bug
+version: 0.1.0
+title: "Source de vérité documentaire unique non entièrement implémentée (écart à PDC-006)"
+status: diagnostiqué
+---
+
 # BUG-005 - Source de vérité documentaire unique non entièrement implémentée (écart à PDC-006)
 
-- **Statut** : diagnostiqué
-- **Version** : 0.1.0
 - **Date de rapport** : 2026-07-18
-- **Origine** : session.md tâche 21 (généré depuis `ANL-2026-07-18-principes-de-conception-du-repo`, P6)
-- **Tâche liée** : `logs/ia-output/LOG-2026-07-17-task-21.md`
+- **Origine** : session.md tâche 21 (généré depuis `ANL-010-principes-de-conception-du-repo`, P6)
+- **Tâche liée** : `.dev/logs/ia-output/LOG-2026-07-17-task-21.md`
 
 ## Rapport
 
 Symptôme : le mécanisme de source de vérité documentaire unique de `clia` (source YAML `clia.doc.yaml` + templates + génération à la volée) est **spécifié** (`REQ-001-F8`, `SPEC-001`) mais son implémentation complète (réconciliation de `clia`, `PLN-011`) n'est pas achevée.
 Attendu (PDC-006) : la documentation provient d'une source unique générée à la volée ; aucune duplication non synchronisée.
 Observé : la conception est correcte, mais l'écart entre la spécification et le code de `clia` subsiste tant que `PLN-011` n'est pas exécuté.
-Contexte : identifié par `ANL-2026-07-18-principes-de-conception-du-repo` (P6, partiel).
+Contexte : identifié par `ANL-010-principes-de-conception-du-repo` (P6, partiel).
 
 ## Diagnostic
 

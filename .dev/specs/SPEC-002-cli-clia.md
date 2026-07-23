@@ -1,6 +1,12 @@
+---
+type: specification
+version: 0.2.0
+title: "Interface du CLI `clia`"
+date: 2026-07-10
+---
+
 # SPEC-002 - Interface du CLI `clia`
 
-- **Date** : 2026-07-10
 - **Requis couverts** : `REQ-002-cli-clia`, `REQ-001-convention-cli-bash`
 - **Décisions applicables** : `ADR-002`, `ADR-006`, `ADR-007`, `SPEC-001`, `SPEC-003`
 
@@ -56,7 +62,19 @@ Codes de sortie : `0` succès ; `2` erreur d'usage (commande inconnue, argument 
 | `clia ses close [SLUG]` | écrit `end-at`, archive en `SES-<DATE>-<HEURE>-<SLUG>.md` | 0 / 1 si aucune session active |
 | `clia ses new [x<SEQ>]` | `close` (si actif) puis `open [x<SEQ>]` | 0 / 1 |
 
-Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. `clia -h` énumère tous les groupes (`res`, `ses`) ; `clia res -h` et `clia ses -h` énumèrent et décrivent toutes leurs sous-commandes ; chaque sous-commande dispose de sa propre aide (`clia ses status -h`, etc.), le tout généré depuis `clia.doc.yaml` (`REQ-001-F5/F7/F8`).
+Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. `clia -h` énumère tous les groupes (`res`, `ses`) et commandes (`release`) ; `clia res -h` et `clia ses -h` énumèrent et décrivent toutes leurs sous-commandes ; chaque sous-commande dispose de sa propre aide (`clia ses status -h`, etc.), le tout généré depuis `clia.doc.yaml` (`REQ-001-F5/F7/F8`).
+
+### Commande `release`
+
+| Invocation | Effet | Sortie | Code |
+|---|---|---|---|
+| `clia release major` | version métier `X.Y.Z` -> `X+1.0.0` dans `version.yaml` | nouvelle version (stdout) | 0 |
+| `clia release minor` | version métier -> `X.Y+1.0` | nouvelle version | 0 |
+| `clia release patch` | version métier -> `X.Y.Z+1` | nouvelle version | 0 |
+| `clia --dry-run release <lvl>` | affiche `ancienne -> nouvelle` sans écrire | plan (stdout) | 0 |
+| `clia release` / `clia release <autre>` | argument manquant ou hors `{major,minor,patch}` | diagnostic (stderr) | 2 |
+
+`release` cible **uniquement** la version métier (`version.yaml`, `ADR-007`) ; elle ne touche pas les versions des ressources (portées par leur frontmatter). Réécriture atomique (`tmpfile` + `mv`). Elle **n'effectue aucune opération git** : le tag ou le commit éventuel du bump relève de l'humain (l'interdiction git vise l'agent IA, pas `clia` opéré par l'humain ; voir `CONSTITUTION.md`).
 
 ### Transitions de session (détail)
 

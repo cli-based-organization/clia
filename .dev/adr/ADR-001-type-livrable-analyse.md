@@ -1,7 +1,13 @@
+---
+type: adr
+version: 0.1.0
+title: "Définition du type de livrable « analyse »"
+status: Accepté
+date: 2026-07-10
+---
+
 # ADR-001 - Définition du type de livrable « analyse »
 
-- **Statut** : Accepté
-- **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
 - **Sources** : PLN-004 (tâche 9 et 10 de `session.md`)
 

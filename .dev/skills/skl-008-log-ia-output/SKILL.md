@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-008-log-ia-output
 description: Spécification pour la production des logs de réponses de l'agent IA
 metadata:
@@ -13,7 +15,7 @@ metadata:
 
 **TOUTE tâche traitée par l'agent produit un fichier log, sans exception**, y compris la seule production ou révision d'un plan (produire un plan est une tâche). Une tâche n'est pas terminée tant que son log n'est pas écrit. Format :
 ```
-logs/ia-output/LOG-<SESSION_DATE>-task-<TASK_NUM>.md
+.dev/logs/ia-output/LOG-<SESSION_DATE>-task-<TASK_NUM>.md
 ```
 
 où :
@@ -26,6 +28,7 @@ Chaque log suit la structure suivante (obligatoire) :
 
 ```markdown
 ---
+type: log
 task: <TASK_NUM>
 session-date: <YYYY-MM-DD>
 status: completed|failed|partial
@@ -101,6 +104,7 @@ Co-Authored-By: <modèle courant de l'agent> <noreply@anthropic.com>
 
 ```markdown
 ---
+type: log
 task: 01
 session-date: 2026-07-09
 status: completed

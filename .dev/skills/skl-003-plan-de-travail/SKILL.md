@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.2.0
 name: skl-003-plan-de-travail
 description: >-
   Produire ou réviser un plan de travail (`.dev/plans/PLN-<SEQ>-<SLUG>.md`) proposant une
@@ -41,9 +43,14 @@ Quand `session.md` demande de proposer, réviser ou étendre un plan, ou quand u
 - **Emplacement** : `.dev/plans/PLN-<SEQ>-<SLUG>.md`
 
 ```markdown
-# PLN-<SEQ> - <Titre>
+---
+type: plan
+version: <X.Y.Z>
+title: "<Titre>"
+status: <proposé|objection|résolu|approuvé|exécuté>
+---
 
-**Statut : <proposé|objection|résolu|approuvé|exécuté>**
+# PLN-<SEQ> - <Titre>
 
 ## Changelog
 <uniquement si révision ; sinon omettre cette section>

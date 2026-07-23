@@ -13,7 +13,7 @@ _RES_TABLE=(
   "FND|.dev/fondations|pointfixe"
   "ANL|.dev/analyses|pointfixe"
   "SES|.dev/sessions|pointfixe"
-  "LOG|logs/ia-output|pointfixe"
+  "LOG|.dev/logs/ia-output|trace"
 )
 
 # _res_lookup PREFIX : imprime "dir|kind" ou rien.

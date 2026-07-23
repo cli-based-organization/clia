@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Gouvernance objection-sociocratique"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-008 - Gouvernance objection-sociocratique
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -34,4 +39,4 @@ Tout le cycle de travail entre l'humain et l'agent (proposition, objection, exé
 ## Références
 
 - `CONSTITUTION.md` (« Principe », « Règle absolue », « Breakpoint et exécution segmentée »)
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P8)
+- `ANL-010-principes-de-conception-du-repo` (P8)

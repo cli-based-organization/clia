@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Point d'entrée humain unique et autorité humaine sur l'irréversible"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-010 - Point d'entrée humain unique et autorité humaine sur l'irréversible
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -34,4 +39,4 @@ La gouvernance des acteurs (humain / `clia` / agent IA) et les opérations à ef
 ## Références
 
 - `CONSTITUTION.md` (« clia : gardien déterministe », « Git commit : responsabilité de l'humain »), `ADR-006-gestion-des-sessions`, `ADR-007-architecture-systeme-augmentation`
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P10)
+- `ANL-010-principes-de-conception-du-repo` (P10)

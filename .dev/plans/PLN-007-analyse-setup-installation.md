@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Analyse du setup et de l'installation d'un CLI de référence"
+status: exécuté
+---
+
 # PLN-007 - Analyse du setup et de l'installation d'un CLI de référence
 
-**Statut : exécuté**
 
 ## Intention
 
@@ -12,7 +18,7 @@ Demande de la tâche 1 de `session.md`. Contexte de session : les tests d'instal
 
 ## Spécification du livrable
 
-- **ANL-2026-07-10-setup-installation** - `.dev/analyses/ANL-2026-07-10-setup-installation.md` : analyse descriptive et critique de `setup.sh` (dépôt `ticket-driven-ai`), centrée sur l'installation, produite par `skl-012`. Périmètre : `setup.sh` et le rôle de `bin/tda`. Référence : aucune formellement fournie par la tâche ; la synthèse orientera les constats vers l'installation de `clia`.
+- **ANL-002-setup-installation** - `.dev/analyses/ANL-002-setup-installation.md` : analyse descriptive et critique de `setup.sh` (dépôt `ticket-driven-ai`), centrée sur l'installation, produite par `skl-012`. Périmètre : `setup.sh` et le rôle de `bin/tda`. Référence : aucune formellement fournie par la tâche ; la synthèse orientera les constats vers l'installation de `clia`.
 
 ## Plan proposé
 

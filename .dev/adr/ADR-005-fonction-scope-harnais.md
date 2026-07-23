@@ -1,10 +1,15 @@
+---
+type: adr
+version: 0.2.0
+title: "Fonction, scope et réutilisabilité du harnais"
+status: Accepté
+date: 2026-07-10
+---
+
 # ADR-005 - Fonction, scope et réutilisabilité du harnais
 
-- **Statut** : Accepté
-- **Version** : 0.2.0
-- **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
-- **Sources** : `PLN-005`, `PLN-006`, `ANL-2026-07-10-usage-ressources-livrables`, tâches 14, 15 et 18 de `session.md`
+- **Sources** : `PLN-005`, `PLN-006`, `ANL-003-usage-ressources-livrables`, tâches 14, 15 et 18 de `session.md`
 
 ## Contexte
 
@@ -60,7 +65,7 @@ Correctif immédiat : l'exemple de `skl-008` cite un nom de domaine (« Commissi
 
 ## Références
 
-- `ANL-2026-07-10-usage-ressources-livrables`
+- `ANL-003-usage-ressources-livrables`
 - `ADR-004-ressources-livrables` (typologie et versionnage)
 - `ADR-007-architecture-systeme-augmentation` (les trois composants du système)
 - `PLN-005-typologie-versionnage-ressources`

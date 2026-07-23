@@ -1,7 +1,13 @@
+---
+type: adr
+version: 0.2.0
+title: "Gestion des bogues et ressource BUG"
+status: Accepté
+date: 2026-07-10
+---
+
 # ADR-003 - Gestion des bogues et ressource BUG
 
-- **Statut** : Accepté
-- **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
 - **Sources** : tâche 13 de `session.md`, `BUG-001-aucun-log-produit`
 
@@ -28,7 +34,7 @@ Des comportements incorrects de l'agent surviennent (ex. tâche 13 : aucun log p
 
 ### Articulation avec la journalisation
 
-- **Décision** : rapporter, diagnostiquer et résoudre un bogue reste **une tâche** : elle produit donc un log dans `logs/ia-output/` comme toute tâche (voir `skl-008`). Le BUG documente le fond du bogue ; le log documente l'intervention de la tâche.
+- **Décision** : rapporter, diagnostiquer et résoudre un bogue reste **une tâche** : elle produit donc un log dans `.dev/logs/ia-output/` comme toute tâche (voir `skl-008`). Le BUG documente le fond du bogue ; le log documente l'intervention de la tâche.
 
 ### Lien avec la correction du harnais
 
@@ -36,7 +42,7 @@ Des comportements incorrects de l'agent surviennent (ex. tâche 13 : aucun log p
 
 ### Non-respect d'un principe de conception (amendement, tâche 19)
 
-- **Décision** : le **non-respect d'un principe de conception** (ressource `PDC`, voir `ADR-008-ressource-principe-de-conception`) **est un bogue** au sens de cette ADR. Les **critères de conformité** d'un `PDC` définissent ce qu'est un respect ; un écart avéré d'un élément du système (harnais, `clia`, document de conception, livrable) à un principe se consigne, se diagnostique et se corrige via une ressource `BUG` (`skl-013`). Justification : un principe de conception ne vaut que s'il est respecté universellement ; un écart érode l'intégrité conceptuelle du système (voir `FND-2026-07-18-principes-de-conception-systemes-complexes`), c'est donc un défaut à traiter comme tel. Le rapport du `BUG` référence le `PDC` enfreint et le critère de conformité violé.
+- **Décision** : le **non-respect d'un principe de conception** (ressource `PDC`, voir `ADR-008-ressource-principe-de-conception`) **est un bogue** au sens de cette ADR. Les **critères de conformité** d'un `PDC` définissent ce qu'est un respect ; un écart avéré d'un élément du système (harnais, `clia`, document de conception, livrable) à un principe se consigne, se diagnostique et se corrige via une ressource `BUG` (`skl-013`). Justification : un principe de conception ne vaut que s'il est respecté universellement ; un écart érode l'intégrité conceptuelle du système (voir `FND-014-principes-de-conception-systemes-complexes`), c'est donc un défaut à traiter comme tel. Le rapport du `BUG` référence le `PDC` enfreint et le critère de conformité violé.
 
 ## Conséquences
 

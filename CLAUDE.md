@@ -1,3 +1,9 @@
+---
+type: harnais
+version: 0.1.0
+title: "CLAUDE.md"
+---
+
 # CLAUDE.md
 
 > Mode opératoire de l'agent IA dans ce dépôt. Fichier de harnais, vivant, sujet à évolution (voir `skl-004-harnais`).
@@ -20,7 +26,7 @@ Pour toute demande, tenir compte de :
 
 ## Journalisation obligatoire
 
-**TOUTE tâche traitée produit un log**, sans exception, dans `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`).
+**TOUTE tâche traitée produit un log**, sans exception, dans `.dev/logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`).
 
 Cela inclut explicitement les tâches dont le seul livrable est un plan : **produire ou réviser un plan est une tâche** et se termine donc par un log, au même titre qu'une tâche d'exécution. Une tâche n'est pas terminée tant que son log n'est pas écrit.
 
@@ -39,7 +45,7 @@ Cela inclut explicitement les tâches dont le seul livrable est un plan : **prod
 | Analyse de corpus | `.dev/analyses/ANL-<SEQ>-<SLUG>.md` | `skl-012-analyse-corpus` |
 | Spécification | `.dev/specs/SPEC-<SEQ>-<SLUG>.md` | `skl-009-specification` |
 | Requis | `.dev/requis/REQ-<SEQ>-<SLUG>.md` | `skl-010-requis` |
-| Log de sortie IA | `logs/ia-output/LOG-<DATE>-task-<NN>.md` | `skl-008-log-ia-output` |
+| Log de sortie IA | `.dev/logs/ia-output/LOG-<DATE>-task-<NN>.md` | `skl-008-log-ia-output` |
 
 Chaque type de livrable a un skill associé qui encadre sa production : une spécification/exigence vivante à consulter avant de produire ou modifier ce type de livrable.
 
@@ -53,21 +59,21 @@ Cas particulier : `ARCHITECTURE.md` (`skl-015-architecture-harnais`, voir `ADR-0
 
 ## Nomenclature
 
-Le nommage dépend du cycle de vie de la ressource (voir `ADR-004-ressources-livrables`) :
+Le nommage suit le modèle unifié d'`ADR-004-ressources-livrables` (voir aussi `.dev/resource-types.yaml`, la couche type machine-lisible) :
 
-- ressources **vivantes** et **de travail** (séquencées) : `.dev/<type>/<PREFIX>-<SEQ>-<SLUG>.md` (plans, ADR, principes de conception, spécifications, requis, bugs) ;
-- ressources **point fixe** (datées) : `<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>` (fondations, analyses, publications) ; l'heure est ajoutée en cas de collision de date et de slug ;
-- **logs de sortie IA** : `logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`) ;
+- **ressources livrables** (toutes vivantes, séquencées) : `.dev/<type>/<PREFIX>-<SEQ>-<SLUG>.md` (fondations `FND`, analyses `ANL`, ADR, spécifications `SPEC`, requis `REQ`, principes `PDC`, bugs `BUG`, plans `PLN`) ;
 - **skills** : convention Claude Code `.dev/skills/skl-<SEQ>-<nom>/SKILL.md` ;
-- **archives de session** (point fixe daté) : `.dev/sessions/SES-<DATE>-<HEURE_OUVERTURE>-<SLUG>.md` (voir `ADR-006-gestion-des-sessions`) ;
+- **traces** (immuables, horodatées) : logs de sortie IA `.dev/logs/ia-output/LOG-<DATE>-task-<NN>.md` (voir `skl-008-log-ia-output`) et archives de session `.dev/sessions/SES-<DATE>-<HEURE_OUVERTURE>-<SLUG>.md` (voir `ADR-006-gestion-des-sessions`) ;
 - **harnais** : noms de fichiers fixes à la racine (`CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`) plus les skills ; le harnais est **générique et réutilisable** (voir `ADR-005-fonction-scope-harnais`). `INTENTION.md` n'est **pas** un fichier de harnais : c'est le fichier d'intention de domaine (édition humaine uniquement).
+
+Chaque ressource livrable porte ses métadonnées dans un **frontmatter YAML** (champs `type` et `version` au minimum), qui remplace les puces d'en-tête. Le champ `type` rattache l'instance à sa classe (couche type). Les fichiers en édition humaine uniquement (`INTENTION.md`, fichiers de session) en sont exemptés.
 
 ## Versionnage à deux domaines
 
 Le versionnage sépare deux domaines indépendants (voir `ADR-007-architecture-systeme-augmentation`) :
 
-- **système d'augmentation** : les ensembles vivants (harness-files, documents-de-conception, `clia`) et leurs membres sont versionnés dans `.dev/ressources.yaml` (voir `ADR-004`). Toute modification d'un membre bumpe atomiquement le membre et son ensemble.
-- **domaine métier** : le contenu du dépôt a sa propre version dans `version.yaml` (racine). Modifier le harnais ou `clia` n'incrémente pas la version métier, et inversement.
+- **système d'augmentation** : chaque ressource livrable vivante porte sa `version` (semver) dans son **frontmatter** (voir `ADR-004`). Il n'y a **plus de manifeste central** (`ressources.yaml` est aboli) : la version vit dans chaque fichier. Une modification d'une ressource incrémente sa version selon la règle semver.
+- **domaine métier** : le contenu du dépôt a sa propre version dans `version.yaml` (racine), incrémentée par `clia release`. Modifier le harnais ou `clia` n'incrémente pas la version métier, et inversement.
 
 ## Sessions et `clia`
 

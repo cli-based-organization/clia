@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-001-skill-writer
 description: >-
   Produire un fichier SKILL.md (`.dev/skills/skl-<SEQ>-<nom>/SKILL.md`) encadrant la production

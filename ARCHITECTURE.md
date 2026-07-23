@@ -1,8 +1,13 @@
+---
+type: harnais
+version: 0.1.0
+title: "ARCHITECTURE"
+status: accepté
+date: 2026-07-18
+---
+
 # ARCHITECTURE
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 > Carte de haut niveau du système d'augmentation par IA de ce dépôt. Court et stable : ne décrit que le durable, ne se synchronise pas ligne à ligne avec le code (voir `ADR-009`). Renvoie aux ADR (décisions) et aux PDC (invariants), sans les dupliquer.
 
@@ -12,14 +17,15 @@ Faire travailler un humain et un agent IA sur un dépôt de façon **gouvernée,
 
 ## Vue d'ensemble des composants
 
-Le système d'augmentation se compose de **trois ensembles vivants** (versionnés dans `.dev/ressources.yaml`, voir `ADR-007`) et de **ressources point-fixe** (savoir et traces) :
+Le système d'augmentation se compose de **ressources livrables vivantes** (versionnées dans leur frontmatter, voir `ADR-004`) regroupées par fonction, et de **traces immuables** :
 
 - **harness-files** (méthode) : `INTENTION.md` (pourquoi), `CONSTITUTION.md` (gouvernance/orchestration), `ARCHITECTURE.md` (structure, ce fichier), `CLAUDE.md` (mode opératoire), et les **skills** (`.dev/skills/skl-*`). Générique, sans information de domaine (`ADR-005`, `PDC-003`).
 - **documents-de-conception** (conception) : `ADR-*` (décisions), `SPEC-*` (spécifications d'interface), `REQ-*` (exigences), `PDC-*` (principes de conception / invariants).
+- **savoir et travail** : `FND-*` (fondations), `ANL-*` (analyses), `BUG-*` (bogues), `PLN-*` (plans). Vivants et versionnés comme les autres livrables.
 - **clia** (automatisme déterministe) : un CLI bash 100 % déterministe (`src/`), gardien de l'intégrité (`ADR-007`, `PDC-001`).
-- **ressources point-fixe** : `FND-*` (fondations), `ANL-*` (analyses), `logs/ia-output/LOG-*` (traces de tâches), `.dev/sessions/SES-*` (sessions archivées), `.dev/bugs/BUG-*` (vivant, hors ensemble).
+- **traces immuables** (hors ressources livrables) : `.dev/logs/ia-output/LOG-*` (traces de tâches) et `.dev/sessions/SES-*` (sessions archivées).
 
-Relation : les **harness-files** gouvernent le comportement de l'agent ; les **documents-de-conception** cadrent le système ; **clia** exécute les opérations déterministes ; les **ressources point-fixe** accumulent savoir et traces.
+Relation : les **harness-files** gouvernent le comportement de l'agent ; les **documents-de-conception** cadrent le système ; **clia** exécute les opérations déterministes ; **fondations et analyses** accumulent le savoir ; les **traces** documentent l'activité.
 
 ## Acteurs et rôles
 
@@ -31,7 +37,7 @@ Relation : les **harness-files** gouvernent le comportement de l'agent ; les **d
 
 1. L'humain soumet un problème via `.dev/session.md` (point d'entrée unique).
 2. L'agent propose un **plan** (`PLN-*`) ; le cycle **objection-sociocratique** s'applique (aucune exécution sous objection ouverte ; breakpoints possibles). Voir `PDC-008`, `CONSTITUTION.md`.
-3. Une fois approuvé, l'agent exécute et produit les livrables (fichiers) et un **log** par tâche (`logs/ia-output/`).
+3. Une fois approuvé, l'agent exécute et produit les livrables (fichiers) et un **log** par tâche (`.dev/logs/ia-output/`).
 4. L'humain opère les transitions de session (`clia ses plan/open/close/new`) et le versionnage du domaine ; `clia` garantit l'intégrité.
 
 ## Cartographie du code (« où est la chose qui fait X ? »)
@@ -42,7 +48,7 @@ Relation : les **harness-files** gouvernent le comportement de l'agent ; les **d
 - Version (métier et ensembles) : `src/lib/version.sh`.
 - Aide générée à la volée (documentation) : `src/lib/doc.sh` + source `src/clia.doc.yaml`.
 - Utilitaires communs (helpers, flux, codes de sortie) : `src/lib/common.sh`.
-- Manifeste des versions des ressources vivantes : `.dev/ressources.yaml`.
+- Couche type des ressources (schéma machine-lisible) : `.dev/resource-types.yaml` ; versions portées par le frontmatter de chaque ressource.
 - Squelette de session : `.dev/templates/session.template.md`.
 
 ## Invariants et décisions
@@ -59,5 +65,5 @@ Relation : les **harness-files** gouvernent le comportement de l'agent ; les **d
 ## Références
 
 - `ADR-009-harnais-architecture-md` (ce type de harnais), `ADR-007-architecture-systeme-augmentation`, `ADR-004-ressources-livrables`, `ADR-005-fonction-scope-harnais`
-- `FND-2026-07-18-architecture-systemes-complexes`, `ANL-2026-07-18-architecture-effective-du-repo`
+- `FND-009-architecture-systemes-complexes`, `ANL-004-architecture-effective-du-repo`
 - `.dev/principes/PDC-001..010`, `CONSTITUTION.md`, `INTENTION.md`, `CLAUDE.md`

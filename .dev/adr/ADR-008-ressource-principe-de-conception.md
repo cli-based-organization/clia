@@ -1,15 +1,21 @@
+---
+type: adr
+version: 0.1.0
+title: "Ressource « principe de conception »"
+status: Accepté
+date: 2026-07-18
+---
+
 # ADR-008 - Ressource « principe de conception »
 
-- **Statut** : Accepté
-- **Date** : 2026-07-18
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
-- **Sources** : tâche 19 de `.dev/session.md`, `FND-2026-07-18-principes-de-conception-systemes-complexes`, `ANL-2026-07-18-principes-de-conception-du-repo`
+- **Sources** : tâche 19 de `.dev/session.md`, `FND-014-principes-de-conception-systemes-complexes`, `ANL-010-principes-de-conception-du-repo`
 
 ## Contexte
 
-Le système est gouverné par une dizaine de principes de conception (déterminisme, séparation méthode/domaine, séparation des préoccupations, interface fichiers, source de vérité unique, etc.), identifiés dans `ANL-2026-07-18-principes-de-conception-du-repo`. Jusqu'ici, ces principes vivaient **dispersés et implicites** dans le harnais et les ADR : impossible de les consulter comme un corpus, de vérifier qu'un élément les respecte, ou de qualifier précisément une violation.
+Le système est gouverné par une dizaine de principes de conception (déterminisme, séparation méthode/domaine, séparation des préoccupations, interface fichiers, source de vérité unique, etc.), identifiés dans `ANL-010-principes-de-conception-du-repo`. Jusqu'ici, ces principes vivaient **dispersés et implicites** dans le harnais et les ADR : impossible de les consulter comme un corpus, de vérifier qu'un élément les respecte, ou de qualifier précisément une violation.
 
-Or, selon `FND-2026-07-18-principes-de-conception-systemes-complexes`, un principe de conception est un **énoncé normatif durable et transverse** qui guide le design de haut niveau et auquel **tout élément du système doit se conformer** pour préserver l'intégrité conceptuelle (Brooks). Un principe se distingue d'une décision (ADR, ponctuelle) et d'une exigence (REQ, propre à un système donné) : il est au-dessus d'elles et sert de critère pour juger leur cohérence.
+Or, selon `FND-014-principes-de-conception-systemes-complexes`, un principe de conception est un **énoncé normatif durable et transverse** qui guide le design de haut niveau et auquel **tout élément du système doit se conformer** pour préserver l'intégrité conceptuelle (Brooks). Un principe se distingue d'une décision (ADR, ponctuelle) et d'une exigence (REQ, propre à un système donné) : il est au-dessus d'elles et sert de critère pour juger leur cohérence.
 
 Il faut donc un **type de ressource dédié** pour matérialiser chaque principe, l'encadrer par un skill, et articuler son non-respect avec la gestion des bogues.
 
@@ -25,7 +31,7 @@ Il faut donc un **type de ressource dédié** pour matérialiser chaque principe
 - **Distinction** (d'après `FND` §3) :
   - vs **ADR** : un ADR tranche une décision ponctuelle ; un PDC énonce un principe durable qui **cadre** les décisions (un ADR doit respecter les PDC).
   - vs **REQ/SPEC** : un requis/une spécification portent sur un système donné ; un PDC s'applique à **tout** le système et sert de critère de cohérence pour les requis et spécifications eux-mêmes.
-- *Alternatives écartées* : consigner les principes dans `CONSTITUTION.md` (rejeté : mêlerait principes de conception et gouvernance, contraire à la séparation des préoccupations — voir `ANL-2026-07-18-critique-constitution`) ; les laisser implicites dans les ADR (rejeté : non consultables, non vérifiables, cause de l'absence de qualification des violations).
+- *Alternatives écartées* : consigner les principes dans `CONSTITUTION.md` (rejeté : mêlerait principes de conception et gouvernance, contraire à la séparation des préoccupations — voir `ANL-008-critique-constitution`) ; les laisser implicites dans les ADR (rejeté : non consultables, non vérifiables, cause de l'absence de qualification des violations).
 
 ### Cycle de vie, nomenclature, versionnage
 
@@ -63,12 +69,12 @@ Il faut donc un **type de ressource dédié** pour matérialiser chaque principe
 
 ## Migration / porte de sortie
 
-Premier jet. Les principes déjà identifiés (`ANL-2026-07-18-principes-de-conception-du-repo`, P1..P10) seront matérialisés en PDC dans une exécution ultérieure. Si l'usage montre un recouvrement excessif PDC/ADR ou PDC/CONSTITUTION, un ADR ultérieur affinera la frontière.
+Premier jet. Les principes déjà identifiés (`ANL-010-principes-de-conception-du-repo`, P1..P10) seront matérialisés en PDC dans une exécution ultérieure. Si l'usage montre un recouvrement excessif PDC/ADR ou PDC/CONSTITUTION, un ADR ultérieur affinera la frontière.
 
 ## Références
 
-- `FND-2026-07-18-principes-de-conception-systemes-complexes` (nature d'un principe, intégrité conceptuelle)
-- `ANL-2026-07-18-principes-de-conception-du-repo` (principes du dépôt, P1..P10)
+- `FND-014-principes-de-conception-systemes-complexes` (nature d'un principe, intégrité conceptuelle)
+- `ANL-010-principes-de-conception-du-repo` (principes du dépôt, P1..P10)
 - `skl-014-principe-de-conception` (skill de production)
 - `ADR-004-ressources-livrables` (typologie, cycle de vie, versionnage)
 - `ADR-003-gestion-des-bogues` (amendé : violation d'un principe = bogue)

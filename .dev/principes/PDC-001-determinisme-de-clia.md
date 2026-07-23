@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Déterminisme de clia"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-001 - Déterminisme de clia
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -35,4 +40,4 @@ Tout le code de `clia` (`src/bin/clia`, `src/lib/*`, `setup.sh`). Exclut l'agent
 ## Références
 
 - `ADR-007-architecture-systeme-augmentation`, `REQ-002-cli-clia` (NF1), `CONSTITUTION.md`
-- `FND-2026-07-18-principes-de-conception-systemes-complexes`, `ANL-2026-07-18-principes-de-conception-du-repo` (P1)
+- `FND-014-principes-de-conception-systemes-complexes`, `ANL-010-principes-de-conception-du-repo` (P1)

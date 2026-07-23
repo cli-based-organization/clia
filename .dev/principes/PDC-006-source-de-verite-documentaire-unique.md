@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Source de vérité documentaire unique (anti-duplication)"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-006 - Source de vérité documentaire unique (anti-duplication)
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -14,7 +19,7 @@ La duplication est la première cause de dérive : deux copies d'une même infor
 
 ## Portée
 
-Toute information susceptible d'être dupliquée : documentation de `clia` (source YAML unique), métadonnées de ressources, versions (`.dev/ressources.yaml`), et toute future couche d'échange (ex. export OKF).
+Toute information susceptible d'être dupliquée : documentation de `clia` (source YAML unique), métadonnées de ressources (frontmatter), versions (frontmatter de chaque ressource ; couche type dans `.dev/resource-types.yaml`), et toute future couche d'échange (ex. export OKF).
 
 ## Implications
 
@@ -30,9 +35,9 @@ Toute information susceptible d'être dupliquée : documentation de `clia` (sour
 ## Tensions
 
 - L'exécution complète de la source de vérité documentaire (`PLN-011`) n'est pas achevée : écart partiel entre le principe et l'implémentation (voir bogue associé).
-- Avec une éventuelle adoption OKF (`index.md`/`log.md`) : risque de duplication avec `.dev/ressources.yaml` et les logs, à arbitrer (`ANL-2026-07-18-clia-et-open-knowledge-format`).
+- Avec une éventuelle adoption OKF (`index.md`/`log.md`) : risque de duplication avec `.dev/ressources.yaml` et les logs, à arbitrer (`ANL-006-clia-et-open-knowledge-format`).
 
 ## Références
 
 - `REQ-001-convention-cli-bash` (F8), `SPEC-001-convention-cli-bash`, `ADR-004-ressources-livrables`
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P6)
+- `ANL-010-principes-de-conception-du-repo` (P6)

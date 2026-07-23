@@ -1,6 +1,12 @@
+---
+type: specification
+version: 0.2.0
+title: "Spécification d'un CLI bash conforme"
+date: 2026-07-10
+---
+
 # SPEC-001 - Spécification d'un CLI bash conforme
 
-- **Date** : 2026-07-10
 - **Requis couverts** : `REQ-001-convention-cli-bash`
 - **Décisions applicables** : `ADR-002-convention-cli-bash`
 

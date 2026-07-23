@@ -1,10 +1,16 @@
+---
+type: plan
+version: 0.1.0
+title: "Recherche de fondation sur les installateurs et le packaging"
+status: exécuté
+---
+
 # PLN-009 - Recherche de fondation sur les installateurs et le packaging
 
-**Statut : exécuté**
 
 ## Intention
 
-Établir une base factuelle sourcée et réutilisable sur les **installateurs** et les **outils de packaging**, en complément direct de `FND-2026-07-10-conventions-cli` (qui excluait explicitement le packaging et la distribution de son périmètre). Sert de socle à la conception d'une installation de CLI (voir `PLN-008`).
+Établir une base factuelle sourcée et réutilisable sur les **installateurs** et les **outils de packaging**, en complément direct de `FND-007-conventions-cli` (qui excluait explicitement le packaging et la distribution de son périmètre). Sert de socle à la conception d'une installation de CLI (voir `PLN-008`).
 
 ## Contexte
 
@@ -12,12 +18,12 @@ Demande de la tâche 3 de `session.md` (« Recherche de fondation sur les instal
 
 ## Spécification du livrable
 
-- **FND-2026-07-10-installateurs-packaging** - `.dev/fondations/FND-2026-07-10-installateurs-packaging.md` : recherche sourcée couvrant le vocabulaire, les standards de localisation (FHS, XDG), la taxonomie des modèles d'installation et des outils de packaging, les propriétés transverses d'un bon installateur, la sécurité/intégrité, le versionnage, et une application générique à l'installation d'un CLI. Produit par `skl-002`.
+- **FND-008-installateurs-packaging** - `.dev/fondations/FND-008-installateurs-packaging.md` : recherche sourcée couvrant le vocabulaire, les standards de localisation (FHS, XDG), la taxonomie des modèles d'installation et des outils de packaging, les propriétés transverses d'un bon installateur, la sécurité/intégrité, le versionnage, et une application générique à l'installation d'un CLI. Produit par `skl-002`.
 
 ## Plan proposé
 
 ### 1. Cadrer le périmètre
-Distinguer packaging (produire un artefact distribuable), distribution (l'acheminer) et installation (le poser et l'activer chez l'utilisateur). Dans le périmètre : modèles et outils indépendants d'un projet donné. Hors périmètre : convention d'interface CLI (déjà couverte par `FND-2026-07-10-conventions-cli`).
+Distinguer packaging (produire un artefact distribuable), distribution (l'acheminer) et installation (le poser et l'activer chez l'utilisateur). Dans le périmètre : modèles et outils indépendants d'un projet donné. Hors périmètre : convention d'interface CLI (déjà couverte par `FND-007-conventions-cli`).
 
 ### 2. Rassembler les sources primaires
 FHS 3.0, XDG Base Directory, GNU Coding Standards (`make install`, `DESTDIR`), Semantic Versioning, docs des gestionnaires de paquets (dpkg/rpm/apk, Homebrew, Nix, PyPA, npm, Cargo, Go), formats universels (Flatpak, Snap, AppImage), OCI image spec ; sources secondaires sur la critique de `curl|bash`.

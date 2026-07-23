@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-006-adr
 description: >-
   Produire un Architecture Decision Record (`.dev/adr/ADR-<SEQ>-<SLUG>.md`) documentant une
@@ -38,10 +40,16 @@ Quand une décision d'architecture ou de stack technique significative doit êtr
 - **Emplacement** : `.dev/adr/ADR-<SEQ>-<SLUG>.md`
 
 ```markdown
+---
+type: adr
+version: <X.Y.Z>
+title: "<Titre de la décision>"
+status: <Proposé|Accepté|Déprécié|Remplacé par ADR-XXX>
+date: <AAAA-MM-JJ>
+---
+
 # ADR-<SEQ> - <Titre de la décision>
 
-- **Statut** : <Proposé|Accepté|Déprécié|Remplacé par ADR-XXX>
-- **Date** : <AAAA-MM-JJ>
 - **Décideurs** : <Nom(s)>
 - **Sources** : <plans/fondations/tickets ayant motivé la décision>
 

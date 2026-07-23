@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Aligner le dépôt sur la source `intentional-doers-governance`"
+status: exécuté
+---
+
 # PLN-003 - Aligner le dépôt sur la source `intentional-doers-governance`
 
-**Statut : exécuté**
 
 ## Changelog
 
@@ -47,7 +53,7 @@ Aucune objection ouverte : exécution autorisée.
 
 **B1.** Conserver la « Classification des documents » (tâche 1) et la protection de `INTENTION.md` dans `CONSTITUTION.md`.
 
-**B2.** Conserver le système de logs (`logs/ia-output/`, `skl-008`) et l'interdiction des commits git (tâche 2). Neutraliser le modèle codé en dur dans `skl-008` et y appliquer la règle des tirets.
+**B2.** Conserver le système de logs (`.dev/logs/ia-output/`, `skl-008`) et l'interdiction des commits git (tâche 2). Neutraliser le modèle codé en dur dans `skl-008` et y appliquer la règle des tirets.
 
 **B3.** Appliquer la règle des tirets cadratins et filets `---` à tous les fichiers éditables par l'agent (OBJECTION-4).
 

@@ -1,17 +1,23 @@
+---
+type: plan
+version: 0.1.0
+title: "Implémentation des fonctionnalités d'installation de `clia`"
+status: proposé
+---
+
 # PLN-008 - Implémentation des fonctionnalités d'installation de `clia`
 
-**Statut : proposé**
 
 ## Intention
 
-Doter `clia` de véritables fonctionnalités d'installation, pour tenir l'intention de session « fournir un CLI installable pour un utilisateur ». Aujourd'hui `clia` n'a qu'un activateur in-repo (`. setup.sh activate`, PATH du shell courant, non persistant) ; ce plan prépare le passage à une installation **locale, permanente et réversible**, en reprenant le socle éprouvé analysé en tâche 1 (`ANL-2026-07-10-setup-installation`) et en corrigeant ses fragilités.
+Doter `clia` de véritables fonctionnalités d'installation, pour tenir l'intention de session « fournir un CLI installable pour un utilisateur ». Aujourd'hui `clia` n'a qu'un activateur in-repo (`. setup.sh activate`, PATH du shell courant, non persistant) ; ce plan prépare le passage à une installation **locale, permanente et réversible**, en reprenant le socle éprouvé analysé en tâche 1 (`ANL-002-setup-installation`) et en corrigeant ses fragilités.
 
 ## Contexte
 
 Demande de la tâche 2 (`[préparer]`) de `session.md`. Le contexte de session signale que les tests d'installation sont « fragmentés et ne se cumulent pas » : le plan intègre donc un **harnais de test d'installation reproductible et cumulatif**, pas seulement le code.
 
 Références mobilisées :
-- `ANL-2026-07-10-setup-installation` : socle « dev + permanent + local » de `tda` et ses 5 recommandations.
+- `ANL-002-setup-installation` : socle « dev + permanent + local » de `tda` et ses 5 recommandations.
 - `SPEC-001`/`REQ-001` : convention de CLI bash (le `setup.sh` de `clia` est lui-même un CLI bash à mettre en conformité).
 - `SPEC-002`/`REQ-002` : `clia`. En particulier `REQ-002-NF2` (racine via `BASH_SOURCE`) et `REQ-002-NF5` (activation `. setup.sh activate`), que ce plan fait évoluer.
 - `ADR-004`/`ADR-007` : `setup.sh` appartient à l'ensemble vivant `clia` ; toute modification bumpe `clia` dans `.dev/ressources.yaml`.

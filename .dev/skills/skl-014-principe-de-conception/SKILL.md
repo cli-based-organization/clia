@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-014-principe-de-conception
 description: >-
   Produire ou faire évoluer un principe de conception (`.dev/principes/PDC-<SEQ>-<SLUG>.md`) :
@@ -9,7 +11,7 @@ description: >-
 
 # Skill - Rédaction d'un principe de conception
 
-> Un principe de conception (PDC) est un énoncé normatif durable et de haut niveau auquel **tout élément du système doit se conformer** pour préserver l'intégrité conceptuelle (voir `FND-2026-07-18-principes-de-conception-systemes-complexes`). Il se distingue d'une décision (ADR, ponctuelle) et d'une exigence (REQ, propre à un système donné) : il est transverse et cadre les décisions et exigences elles-mêmes. Type défini dans `ADR-008`.
+> Un principe de conception (PDC) est un énoncé normatif durable et de haut niveau auquel **tout élément du système doit se conformer** pour préserver l'intégrité conceptuelle (voir `FND-014-principes-de-conception-systemes-complexes`). Il se distingue d'une décision (ADR, ponctuelle) et d'une exigence (REQ, propre à un système donné) : il est transverse et cadre les décisions et exigences elles-mêmes. Type défini dans `ADR-008`.
 
 ## Quand l'utiliser
 
@@ -28,7 +30,7 @@ Quand une règle de conception **transcende** un choix ponctuel et doit gouverne
 6. Expliciter les **implications** : ce que le principe impose et interdit concrètement.
 7. Définir des **critères de conformité** vérifiables : comment constater qu'un élément respecte (ou enfreint) le principe. Ces critères servent à qualifier un non-respect comme **bogue** (`ADR-003`, `skl-013`).
 8. Recenser les **tensions** avec d'autres principes (aucun principe ne prime absolument sans arbitrage).
-9. Fixer le **statut** (`proposé` / `accepté` / `déprécié` / `remplacé par PDC-XXX`) et la **version** ; bumper atomiquement le membre et l'ensemble `documents-de-conception` dans `.dev/ressources.yaml` (`ADR-004`).
+9. Fixer le **statut** (`proposé` / `accepté` / `déprécié` / `remplacé par PDC-XXX`) et la **version** dans le frontmatter ; incrémenter la version selon semver à chaque modification (`ADR-004`, `PDC-009`).
 
 ## Critères de qualité
 
@@ -48,11 +50,15 @@ Quand une règle de conception **transcende** un choix ponctuel et doit gouverne
 - **Emplacement** : `.dev/principes/PDC-<SEQ>-<SLUG>.md`
 
 ```markdown
-# PDC-<SEQ> - <Titre du principe>
+---
+type: principe
+version: <X.Y.Z>
+title: "<Titre du principe>"
+status: <proposé|accepté|déprécié|remplacé par PDC-XXX>
+date: <AAAA-MM-JJ>
+---
 
-- **Statut** : <proposé|accepté|déprécié|remplacé par PDC-XXX>
-- **Version** : <X.Y.Z>
-- **Date** : <AAAA-MM-JJ>
+# PDC-<SEQ> - <Titre du principe>
 
 ## Énoncé
 

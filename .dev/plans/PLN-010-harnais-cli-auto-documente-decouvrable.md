@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Harnais : CLI auto-documentés et découvrables"
+status: exécuté
+---
+
 # PLN-010 - Harnais : CLI auto-documentés et découvrables
 
-**Statut : exécuté**
 
 ## Changelog
 

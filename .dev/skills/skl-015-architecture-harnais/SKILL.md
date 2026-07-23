@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-015-architecture-harnais
 description: >-
   Produire ou faire évoluer le fichier de harnais `ARCHITECTURE.md` (racine du dépôt) : une
@@ -26,7 +28,7 @@ Quand la structure du système doit être **décrite pour la première fois** ou
 4. Décrire les **acteurs** et leur répartition de rôles, et le **flux principal** (scénario nominal de bout en bout).
 5. Fournir une **cartographie du code** : « où est la chose qui fait X ? » vers les fichiers/répertoires clés (sans synchroniser ligne à ligne).
 6. Renvoyer aux **invariants** (PDC) et aux **décisions** (ADR) plutôt que de les recopier ; nommer explicitement ce qui est **hors périmètre**.
-7. Fixer un **statut** et une **version** ; bumper atomiquement le membre et l'ensemble `harness-files` dans `.dev/ressources.yaml` (`ADR-004`, `PDC-009`).
+7. Fixer un **statut** et une **version** dans le frontmatter ; incrémenter la version selon semver à chaque modification (`ADR-004`, `PDC-009`).
 8. Vérifier la **stabilité** : ne conserver que ce qui change peu ; déplacer les détails volatils hors du document.
 
 ## Critères de qualité
@@ -46,11 +48,15 @@ Quand la structure du système doit être **décrite pour la première fois** ou
 - **Emplacement** : `ARCHITECTURE.md` (racine du dépôt, nom fixe)
 
 ```markdown
-# ARCHITECTURE
+---
+type: harnais
+version: <X.Y.Z>
+title: "ARCHITECTURE"
+status: <proposé|accepté>
+date: <AAAA-MM-JJ>
+---
 
-- **Statut** : <proposé|accepté>
-- **Version** : <X.Y.Z>
-- **Date** : <AAAA-MM-JJ>
+# ARCHITECTURE
 
 > Carte de haut niveau du système. Court et stable : ne décrit que le durable, ne se synchronise pas ligne à ligne avec le code (voir `ADR-009`). Renvoie aux ADR (décisions) et aux PDC (invariants).
 

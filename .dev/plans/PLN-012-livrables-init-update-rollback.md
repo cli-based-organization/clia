@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Livrables d'installation : `init` d'un nouveau repo et `update`/`rollback` des ressources `clia`"
+status: remplacé par PLN-016
+---
+
 # PLN-012 - Livrables d'installation : `init` d'un nouveau repo et `update`/`rollback` des ressources `clia`
 
-**Statut : remplacé par PLN-016**
 
 > Ce plan est remplacé par `PLN-016-installation-cycle-de-vie-clia` (tâche 29), qui combine `PLN-012` et `PLN-013` et refond leur contenu sur le nouveau modèle de ressources (`PLN-014`). Conservé pour traçabilité ; ne pas exécuter tel quel.
 
@@ -29,7 +35,7 @@ Contraintes de gouvernance mobilisées :
 - `.dev/ressources.yaml` versionne déjà les trois **ensembles vivants** du système d'augmentation (`harness-files`, `documents-de-conception`, `clia`) et leurs membres (`ADR-004`, `ADR-007`). C'est le socle naturel du versionnage d'`update`/`rollback`.
 - `PLN-008` (installeur `setup.sh`, non exécuté) prépare l'installation **de `clia` lui-même** ; sa décision ouverte (OBJECTION A : mono-dépôt vs outil global) est directement engagée par le présent plan (voir objections).
 
-Acquis de recherche **suffisant** (gain de vitesse) : `FND-2026-07-10-installateurs-packaging` (idempotence, réversibilité, mise à jour réconciliante, effets de bord bornés, semver), `FND-2026-07-10-conventions-cli`, `ANL-2026-07-10-setup-installation`, `ANL-2026-07-10-usage-ressources-livrables`, `ANL-2026-07-10-etat-clis-existants`. **Aucune nouvelle fondation n'est requise** ; la phase 0 est considérée close.
+Acquis de recherche **suffisant** (gain de vitesse) : `FND-008-installateurs-packaging` (idempotence, réversibilité, mise à jour réconciliante, effets de bord bornés, semver), `FND-007-conventions-cli`, `ANL-002-setup-installation`, `ANL-003-usage-ressources-livrables`, `ANL-001-etat-clis-existants`. **Aucune nouvelle fondation n'est requise** ; la phase 0 est considérée close.
 
 ## Spécification du livrable
 

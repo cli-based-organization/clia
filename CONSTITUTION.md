@@ -1,3 +1,9 @@
+---
+type: harnais
+version: 0.1.0
+title: "CONSTITUTION"
+---
+
 # CONSTITUTION
 
 > Processus de gouvernance entre l'humain et l'agent IA dans ce dépôt. Fichier de harnais, vivant, sujet à évolution (voir `skl-004-harnais`).
@@ -81,7 +87,7 @@ L'humain peut lire et commenter, mais ces documents sont produits et maintenus e
 - `.dev/plans/PLN-*.md` : plans de travail proposés par l'agent
 - `.dev/fondations/FND-*.md` : recherches de fondation
 - `.dev/adr/ADR-*.md` : décisions d'architecture
-- `logs/ia-output/*.md` : logs des réponses de l'agent
+- `.dev/logs/ia-output/*.md` : logs des réponses de l'agent
 
 Cas particulier : les **objections de l'agent** (section dans les fichiers `PLN-*.md`) sont générées par l'agent, mais peuvent être discutées ou contestées par l'humain via `session.md`.
 
@@ -103,7 +109,7 @@ Le système de travail du dépôt repose sur des fichiers markdown versionnés. 
 - **Source de vérité** : toujours le fichier (plan, log, fondation, ADR).
 - **Échanges textuels** (stdout/conversation) : secondaires, servent uniquement à orienter vers les fichiers.
 - **Plans** : vivent dans `.dev/plans/PLN-<SEQ>-<SLUG>.md`, pas en stdout.
-- **Logs** : vivent dans `logs/ia-output/LOG-<DATE>-task-<NN>.md`, pas en stdout. **Toute tâche traitée en produit un**, sans exception, y compris une tâche dont le seul livrable est un plan (voir `CLAUDE.md`, « Journalisation obligatoire »).
+- **Logs** : vivent dans `.dev/logs/ia-output/LOG-<DATE>-task-<NN>.md`, pas en stdout. **Toute tâche traitée en produit un**, sans exception, y compris une tâche dont le seul livrable est un plan (voir `CLAUDE.md`, « Journalisation obligatoire »).
 
 Conséquence : l'humain consulte directement les fichiers plutôt que d'attendre un résumé conversationnel. La réponse textuelle de l'agent se limite à indiquer le fichier produit, son chemin, et un résumé d'une phrase.
 
@@ -126,4 +132,4 @@ L'agent IA n'a **jamais** le droit de :
 - suggérer une stratégie de branche, de merge, ou de synchronisation avec un dépôt distant ;
 - discuter du moment ou de la façon de commiter.
 
-**Seule exception :** l'agent produit un fichier log markdown (`logs/ia-output/LOG-<DATE>-task-<NN>.md`) qui inclut une section « Commit message proposé » à titre informatif. Ce message est une suggestion documentaire, pas une directive d'exécution. L'humain reste seul responsable de décider s'il faut commiter, rejeter, ou modifier le message proposé.
+**Seule exception :** l'agent produit un fichier log markdown (`.dev/logs/ia-output/LOG-<DATE>-task-<NN>.md`) qui inclut une section « Commit message proposé » à titre informatif. Ce message est une suggestion documentaire, pas une directive d'exécution. L'humain reste seul responsable de décider s'il faut commiter, rejeter, ou modifier le message proposé.

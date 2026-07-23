@@ -1,6 +1,12 @@
+---
+type: requis
+version: 0.2.0
+title: "Requis du CLI `clia`"
+date: 2026-07-10
+---
+
 # REQ-002 - Requis du CLI `clia`
 
-- **Date** : 2026-07-10
 - **Sources** : `PLN-006`, tâches 17 et 18 de `session.md`, `ADR-006`, `ADR-007`
 - **Convention de priorité** : MUST | SHOULD | MAY
 
@@ -23,6 +29,8 @@ Exigences du CLI `clia`, outil déterministe de gestion des sessions et d'inspec
 - **REQ-002-F3c** (MUST) : `clia --man` affiche l'aide longue (format manpage), générée depuis la même source documentaire que l'aide courte.
   - Vérification : `clia --man` produit une sortie structurée en sections, cohérente avec `clia -h`.
 - **REQ-002-F3d** (MUST) : `clia` reconnaît l'option globale `--debug`, qui émet des informations de débogage sur stderr sans altérer la sortie utile.
+
+- **REQ-002-F-release** (MUST) : `clia release (major|minor|patch)` incrémente la version métier (`version.yaml`) selon semver et affiche la nouvelle version ; `--dry-run` affiche le changement sans écrire ; un argument manquant ou invalide sort en code 2 ; l'écriture est atomique ; aucune opération git n'est effectuée (l'humain gère tout tag/commit).
   - Vérification : `clia --debug ses status` produit les mêmes données que `clia ses status`, plus des traces sur stderr.
 - **REQ-002-F3e** (MUST) : `clia` reconnaît l'option globale `--dry-run`, qui affiche le plan d'exécution d'une commande sans produire d'effet de bord ; elle s'applique notamment aux commandes mutantes de session.
   - Vérification : `clia --dry-run ses open` décrit l'action sans créer, déplacer ni modifier aucun fichier.

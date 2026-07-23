@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "Découvrabilité et uniformité"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-007 - Découvrabilité et uniformité
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -36,4 +41,4 @@ L'interface de `clia` et de tout CLI produit par le harnais (`REQ-001`).
 ## Références
 
 - `REQ-001-convention-cli-bash` (F7/F8/F9), `SPEC-001-convention-cli-bash`, `SPEC-002-cli-clia`
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P7)
+- `ANL-010-principes-de-conception-du-repo` (P7)

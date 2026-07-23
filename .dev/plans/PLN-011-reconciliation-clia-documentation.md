@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Réconciliation de `clia` avec la convention de documentation"
+status: résolu
+---
+
 # PLN-011 - Réconciliation de `clia` avec la convention de documentation
 
-**Statut : résolu**
 
 ## Changelog
 

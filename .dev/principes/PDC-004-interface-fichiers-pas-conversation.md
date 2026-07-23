@@ -1,8 +1,13 @@
+---
+type: principe
+version: 0.1.0
+title: "L'interface de travail est des fichiers, pas la conversation"
+status: accepté
+date: 2026-07-18
+---
+
 # PDC-004 - L'interface de travail est des fichiers, pas la conversation
 
-- **Statut** : accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-18
 
 ## Énoncé
 
@@ -29,9 +34,9 @@ Toute production de l'agent (plans, logs, fondations, analyses, ADR, principes, 
 
 ## Tensions
 
-- Aucune majeure ; principe très stable, aligné avec le pattern LLM Wiki (`FND-2026-07-18-llm-wiki-okf-gestion-connaissance`).
+- Aucune majeure ; principe très stable, aligné avec le pattern LLM Wiki (`FND-012-llm-wiki-okf-gestion-connaissance`).
 
 ## Références
 
 - `CONSTITUTION.md` (« Interface de travail : fichiers, pas conversation »)
-- `ANL-2026-07-18-principes-de-conception-du-repo` (P4)
+- `ANL-010-principes-de-conception-du-repo` (P4)

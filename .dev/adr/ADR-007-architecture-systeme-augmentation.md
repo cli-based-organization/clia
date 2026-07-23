@@ -1,8 +1,13 @@
+---
+type: adr
+version: 0.2.0
+title: "Architecture du système d'augmentation par IA"
+status: Accepté
+date: 2026-07-10
+---
+
 # ADR-007 - Architecture du système d'augmentation par IA
 
-- **Statut** : Accepté
-- **Version** : 0.2.0
-- **Date** : 2026-07-10
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
 - **Sources** : `PLN-006`, tâche 18 de `session.md` (objections 3 et 6)
 

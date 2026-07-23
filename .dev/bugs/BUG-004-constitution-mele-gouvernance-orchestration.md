@@ -1,17 +1,22 @@
+---
+type: bug
+version: 0.1.0
+title: "CONSTITUTION.md mêle gouvernance et orchestration (écart à PDC-005)"
+status: diagnostiqué
+---
+
 # BUG-004 - CONSTITUTION.md mêle gouvernance et orchestration (écart à PDC-005)
 
-- **Statut** : diagnostiqué
-- **Version** : 0.1.0
 - **Date de rapport** : 2026-07-18
-- **Origine** : session.md tâche 21 (généré depuis `ANL-2026-07-18-principes-de-conception-du-repo`, P5)
-- **Tâche liée** : `logs/ia-output/LOG-2026-07-17-task-21.md`
+- **Origine** : session.md tâche 21 (généré depuis `ANL-010-principes-de-conception-du-repo`, P5)
+- **Tâche liée** : `.dev/logs/ia-output/LOG-2026-07-17-task-21.md`
 
 ## Rapport
 
 Symptôme : `CONSTITUTION.md` mêle deux couches de natures différentes : le **domaine de responsabilité des acteurs** (gouvernance : droits d'édition, rôle de `clia`, responsabilité git) et le **processus et son orchestration** (cycle de vie d'un plan, objection, règle absolue, breakpoint).
 Attendu (PDC-005) : chaque document traite une préoccupation cohérente unique ; gouvernance et orchestration ne sont pas mêlées.
 Observé : sur dix sections, environ 40 % de gouvernance pure, 30 % d'orchestration pure, 30 % hybrides, entrelacées sans frontière.
-Contexte : diagnostiqué par `ANL-2026-07-18-critique-constitution` et confirmé à l'échelle de l'écosystème par `ANL-2026-07-18-corpus-constitutions-gov-orchestration` (mélange concentré dans la lignée `clia`).
+Contexte : diagnostiqué par `ANL-008-critique-constitution` et confirmé à l'échelle de l'écosystème par `ANL-007-corpus-constitutions-gov-orchestration` (mélange concentré dans la lignée `clia`).
 
 ## Diagnostic
 
@@ -21,7 +26,7 @@ Cause systémique : absence, jusqu'ici, d'un document de processus distinct ; le
 
 ## Solution appliquée
 
-Correctif non encore appliqué. Correctif prévu : scinder `CONSTITUTION.md` en un document de **gouvernance/responsabilités** et un document de **processus/orchestration** (recommandé par `ANL-2026-07-18-critique-constitution`, exemplaire de séparation : `personal-journal`). Objet d'un recadrage humain à venir (« [Recadrage humain] CONSTITUTION.md, PROCESSUS.md et CLAUDE.md »). Nécessite la mise à jour des renvois croisés (`CLAUDE.md`, `skl-003`, `skl-004`) et un versionnage atomique.
+Correctif non encore appliqué. Correctif prévu : scinder `CONSTITUTION.md` en un document de **gouvernance/responsabilités** et un document de **processus/orchestration** (recommandé par `ANL-008-critique-constitution`, exemplaire de séparation : `personal-journal`). Objet d'un recadrage humain à venir (« [Recadrage humain] CONSTITUTION.md, PROCESSUS.md et CLAUDE.md »). Nécessite la mise à jour des renvois croisés (`CLAUDE.md`, `skl-003`, `skl-004`) et un versionnage atomique.
 
 ## Vérification
 

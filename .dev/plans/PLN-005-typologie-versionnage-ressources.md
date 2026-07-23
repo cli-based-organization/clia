@@ -1,6 +1,12 @@
+---
+type: plan
+version: 0.1.0
+title: "Typologie des ressources livrables et versionnage atomique"
+status: exécuté
+---
+
 # PLN-005 - Typologie des ressources livrables et versionnage atomique
 
-**Statut : exécuté**
 
 ## Changelog
 
@@ -18,7 +24,7 @@ Formaliser une compréhension multi-axes des **ressources livrables**, un **méc
 Demande : tâche 12 de `session.md`. Précisions et objections : tâches 14 et 15.
 
 Typologie par cycle de vie (tâche 12) :
-1. **Point fixe** (produit une fois, non modifié) : `FND`, `ANL`, `logs/ia-output/*`, `publications/*`.
+1. **Point fixe** (produit une fois, non modifié) : `FND`, `ANL`, `.dev/logs/ia-output/*`, `publications/*`.
 2. **Vivant** (semver) : `ADR`, `REQ`, `SPEC`, `skl`, base de code, `BUG`.
 3. **Travail** (sans version) : `PLN`.
 
@@ -47,7 +53,7 @@ Décisions de l'humain (tâches 14 et 15) :
 5. **Convention de nommage** : amendement de la nomenclature de `CLAUDE.md` : ressources point fixe datées (`<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>`) vs ressources vivantes/travail séquencées (`<PREFIX>-<SEQ>-<SLUG>.md`). Les logs adoptent `LOG-<DATE>-task-<NN>.md`.
 6. **Règle de généricité dans les skills** : ajouter à chaque skill (et à `skl-004-harnais`, `skl-001-skill-writer`) une règle forçant qu'une ressource de harnais ne contienne aucune information de domaine ni spécifique au repo.
 7. **Audit et correction de généricité du harnais** : repérer et retirer toute information de domaine dans les ressources de harnais existantes. Cas connu : l'exemple de `skl-008` cite « Commission scolaire de la Capitale-Nationale » et doit être rendu générique.
-8. **Correction des ressources existantes** : renommer les ressources point fixe séquencées au format daté (`FND-2026-07-10-conventions-cli` -> `FND-<DATE>-conventions-cli` ; `ANL-2026-07-10-etat-clis-existants` -> `ANL-<DATE>-etat-clis-existants`) ; renommer les 12 logs existants au format `LOG-<DATE>-task-<NN>.md` ; mettre à jour toutes les références ; peupler `.dev/ressources.yaml`.
+8. **Correction des ressources existantes** : renommer les ressources point fixe séquencées au format daté (`FND-007-conventions-cli` -> `FND-<DATE>-conventions-cli` ; `ANL-001-etat-clis-existants` -> `ANL-<DATE>-etat-clis-existants`) ; renommer les 12 logs existants au format `LOG-<DATE>-task-<NN>.md` ; mettre à jour toutes les références ; peupler `.dev/ressources.yaml`.
 9. **Amendements du harnais** (`skl-004`) : `CLAUDE.md` (nomenclature, renvois manifeste et ADR) ; `CONSTITUTION.md` selon ce que tranche `ADR-005`.
 
 ## Axes candidats d'analyse des ressources (à confirmer par l'analyse)
@@ -104,13 +110,13 @@ Aucune objection ouverte. Le plan est prêt à exécuter.
 
 Exécuté à la tâche 16 :
 
-- `.dev/analyses/ANL-2026-07-10-usage-ressources-livrables.md` : analyse d'usage confirmant six axes.
+- `.dev/analyses/ANL-003-usage-ressources-livrables.md` : analyse d'usage confirmant six axes.
 - `.dev/adr/ADR-005-fonction-scope-harnais.md` : fonction, scope et réutilisabilité du harnais ; `INTENTION.md` hors harnais.
 - `.dev/adr/ADR-004-ressources-livrables.md` : vocabulaire, six axes, typologie cycle de vie, nommage, versionnage atomique, cas `publications/*`.
 - `.dev/ressources.yaml` : manifeste YAML, deux ensembles (`harness-files`, `documents-de-conception`) et `BUG-001`, versions à `0.1.0`.
 - Généricité : règle ajoutée dans les onze skills ; exemple de `skl-008` rendu générique (retrait de la mention de domaine).
 - Nommage : `CLAUDE.md` amendé (nommage daté vs séquencé, renvois ADR et manifeste) ; `CONSTITUTION.md` et `skl-008` mis à jour pour le format des logs et les renvois ADR.
-- Renommages : `FND-001-conventions-cli` -> `FND-2026-07-10-conventions-cli` ; `ANL-001-etat-clis-existants` -> `ANL-2026-07-10-etat-clis-existants` ; 14 logs -> `LOG-2026-07-09-task-NN.md` ; toutes les références mises à jour (aucune résiduelle).
+- Renommages : `FND-001-conventions-cli` -> `FND-007-conventions-cli` ; `ANL-001-etat-clis-existants` -> `ANL-001-etat-clis-existants` ; 14 logs -> `LOG-2026-07-09-task-NN.md` ; toutes les références mises à jour (aucune résiduelle).
 
 Décision de nommage (heure) : les ressources datées produites le même jour sont distinguées par leur slug ; l'heure n'est ajoutée qu'en cas de collision date + slug. Choix documenté dans `ADR-004` (amendable).
 

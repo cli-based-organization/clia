@@ -1,14 +1,19 @@
+---
+type: bug
+version: 0.1.0
+title: "Fondations de contenu business rapatriées : frontière méthode/domaine sous tension (écart à PDC-003)"
+status: diagnostiqué
+---
+
 # BUG-003 - Fondations de contenu business rapatriées : frontière méthode/domaine sous tension (écart à PDC-003)
 
-- **Statut** : diagnostiqué
-- **Version** : 0.1.0
 - **Date de rapport** : 2026-07-18
-- **Origine** : session.md tâche 21 (généré depuis `ANL-2026-07-18-principes-de-conception-du-repo`, P3)
-- **Tâche liée** : `logs/ia-output/LOG-2026-07-17-task-21.md`
+- **Origine** : session.md tâche 21 (généré depuis `ANL-010-principes-de-conception-du-repo`, P3)
+- **Tâche liée** : `.dev/logs/ia-output/LOG-2026-07-17-task-21.md`
 
 ## Rapport
 
-Symptôme : des fondations de contenu **business** (CryptoSecOps) ont été rapatriées dans `.dev/fondations/` (tâches 16-17 : `FND-2026-06-19-intention-affaire-et-succes-entrepreneurial`, `FND-2026-06-24-prise-de-decision-et-influence`).
+Symptôme : des fondations de contenu **business** (CryptoSecOps) ont été rapatriées dans `.dev/fondations/` (tâches 16-17 : `FND-001-intention-affaire-et-succes-entrepreneurial`, `FND-004-prise-de-decision-et-influence`).
 Attendu (PDC-003) : le harnais est générique, sans information de domaine ; toute ressource de contenu spécifique importée est signalée comme non générique.
 Observé : les fondations sont bien signalées (ligne Provenance, « savoir importé »), mais leur présence dans le corpus de fondations met la frontière méthode/domaine sous tension si elles étaient traitées comme des ressources génériques du harnais.
 Contexte : rapatriement demandé explicitement par l'humain (tâches 16-17), avec objection non bloquante consignée dans les logs.

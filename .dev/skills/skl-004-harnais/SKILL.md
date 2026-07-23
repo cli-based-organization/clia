@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-004-harnais
 description: >-
   Produire ou faire évoluer un fichier de harnais (`CLAUDE.md`, `CONSTITUTION.md` ou

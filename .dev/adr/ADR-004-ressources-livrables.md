@@ -1,84 +1,95 @@
-# ADR-004 - Ressources livrables : axes, typologie et versionnage
+---
+type: adr
+version: 0.2.0
+title: "Ressources livrables : modèle unifié, zones, métadonnées et versionnage"
+status: accepté
+date: 2026-07-21
+---
 
-- **Statut** : Accepté
-- **Version** : 0.1.0
-- **Date** : 2026-07-10
+# ADR-004 - Ressources livrables : modèle unifié, zones, métadonnées et versionnage
+
 - **Décideurs** : Jérémy Viau-Trudel (humain), agent IA
-- **Sources** : `PLN-005`, `ANL-2026-07-10-usage-ressources-livrables`, tâches 12, 14, 15 de `session.md`
+- **Sources** : `PLN-014-adoption-conventions-okf` (tâches 24, 25, 26 de `.dev/session.md`), `ANL-006-clia-et-open-knowledge-format`, `ANL-013-usage-semantique-ontologie-repos`, `FND-012-llm-wiki-okf-gestion-connaissance`, `FND-016-ontologie-et-semantique`. Remplace la version 0.1.0 (typologie à triple cycle de vie et manifeste `ressources.yaml`).
+
+> Réécriture (première passe) décidée par `PLN-014`. Ce document est produit au **Segment 1** de `PLN-014` ; la migration mécanique de l'existant conforme à ce modèle (frontmatter partout, renommage, suppression du manifeste) relève du **Segment 2**, après le breakpoint. Durant cet intervalle, l'existant peut ne pas encore refléter le présent modèle.
 
 ## Contexte
 
-Le dépôt produit divers documents (plans, ADR, fondations, analyses, logs, skills, spécifications, requis, bogues). Il faut une compréhension partagée de ce qu'est une ressource livrable, selon quels axes on la classe, et comment on la versionne, y compris de façon atomique pour les ensembles.
+La version 0.1.0 classait les ressources selon **trois cycles de vie** (point fixe immuable et daté ; vivant versionné et séquencé ; travail non versionné) et suivait les versions dans un **manifeste central** `.dev/ressources.yaml` avec deux ensembles composites atomiques. Les tâches 24 à 26 de `session.md` ont décidé de **simplifier et unifier** ce modèle : abolir l'immuabilité comme catégorie de ressource livrable, adopter sélectivement les conventions de l'Open Knowledge Format (frontmatter `type`, références croisées formalisées), et clarifier les zones du dépôt. Le savoir mobilisé (`ANL-013-usage-semantique-ontologie-repos`) établit que la typologie de ressources de `clia` est une **ontologie légère de facto** : ce document l'explicite en restant léger (pas de RDF/OWL).
 
 ## Décision (résumé)
 
-> Une **ressource livrable** est un document ou fichier versionné produit dans le dépôt, source de vérité (par opposition aux échanges conversationnels). On la classe selon **six axes** (dont le cycle de vie). Le **cycle de vie** commande le nommage et le versionnage : les ressources « point fixe » sont datées et non versionnées, les ressources « vivantes » sont séquencées et versionnées en semver, les ressources « de travail » ne sont pas versionnées. Deux ensembles portent une version composite atomique, suivie dans `.dev/ressources.yaml`.
+> Il existe désormais **une seule catégorie de ressources livrables : vivantes**, chacune portant sa `version` (semver) et ses métadonnées dans un **frontmatter YAML** (qui remplace les puces d'en-tête), typée par un champ `type`. Les **traces** (logs, archives de session) ne sont **pas** des ressources livrables : ce sont des métadonnées horodatées **immuables**. Le **manifeste `ressources.yaml` est aboli** ; la version vit dans le frontmatter de chaque ressource. Le dépôt s'organise en **zones** (`@.` contenu de domaine, `@.dev` développement et augmentation, `doc/` inchangé) ; il n'y a pas de zone `.knowledge` pour l'instant. Les ressources livrables sont **nommées de façon séquencée** ; les traces conservent un nommage horodaté. Les références croisées sont des **liens** appartenant à un petit vocabulaire de relations, validables par `clia`.
 
 ## Décisions détaillées
 
 ### Vocabulaire
 
-- **Décision** : *ressource* = tout fichier livrable versionné du dépôt ; *livrable* = ressource produite en réponse à une demande ; *document* = livrable au format texte/markdown. Termes employés comme synonymes usuels, la ressource étant le terme générique.
+- **Ressource livrable** : document ou fichier **vivant** et **versionné**, produit en réponse à une demande, source de vérité (par opposition aux échanges conversationnels). Concernées : `FND`, `ANL`, `ADR`, `SPEC`, `REQ`, `PDC`, `skl`, `BUG`, `PLN`, et les harnais (`CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`).
+- **Trace** : métadonnée horodatée **immuable**, qui documente l'activité sans être un livrable. Concernées : `.dev/logs/ia-output/*` (traces d'audit par tâche) et `.dev/sessions/*` (archives de séance). Une trace ne se révise pas ; sa valeur est probante (`PDC-009`).
 
-### Axes d'analyse
+### Cycle de vie unifié
 
-- **Décision** : six axes (voir `ANL-2026-07-10-usage-ressources-livrables`) :
-  1. cycle de vie (point fixe / vivant / travail) ;
-  2. droits d'édition / permissions et rôles (humain-only / IA-only / co-édition) ;
-  3. fonction (gouvernance, conception, recherche, analyse, trace-audit, suivi de bogue, intention, diffusion) ;
-  4. appartenance au harnais (harnais générique vs propre au repo) ;
-  5. nommage (fixe / séquencé / daté) ;
-  6. producteur (humain / agent / co).
+- La distinction point fixe / vivant / travail est **abolie**. Toute ressource livrable est **vivante** : elle évolue et porte une version. La catégorie « travail » est supprimée (les `PLN` sont vivants).
+- Les **traces** restent **immuables** : elles ne sont pas des ressources livrables et ne sont pas versionnées en semver.
 
-### Typologie par cycle de vie
+### Zones
 
-- **Point fixe** : produit une fois, non modifié. `FND`, `ANL`, `logs`, `publications/*`, `sessions/*`. Pas de semver.
-- **Vivant** : évolue et mûrit ; versionné en semver. `ADR`, `SPEC`, `REQ`, `skl`, `BUG`, base de code, `CLAUDE.md`, `CONSTITUTION.md`.
-- **Travail** : cycle court, sans version. `PLN` (un `Changelog` en tête suffit).
+- `@.` (racine) : **zone de contenu**, artefacts de domaine du projet.
+- `@.dev` : **zone de développement et d'augmentation**, qui héberge toutes les ressources livrables de méthode et les traces. Les `logs` y sont rapatriés (`.dev/logs/ia-output/`).
+- `doc/` : documentation utilisateur, **inchangée**, laissée à la racine.
+- Pas de zone `.knowledge` pour l'instant.
+
+### Métadonnées : frontmatter
+
+- Chaque ressource livrable porte un **frontmatter YAML** qui **remplace** les puces d'en-tête (pas de duplication, `PDC-006`). Champs : `type` (obligatoire), `version` (obligatoire), `title`, `status` le cas échéant, plus champs réservés utiles (`description`, `tags`). Les traces portent `type` et un horodatage, sans `version` semver.
+- Le champ `type` rattache l'instance à sa classe : c'est la **couche type** (ontologie légère). Le vocabulaire contrôlé des `type` et le schéma sont la source de vérité machine-lisible (voir `.dev/resource-types.yaml`) ; la table des livrables de `CLAUDE.md` en est une **vue**, non une source parallèle (`PDC-006`).
+
+### Versionnage
+
+- Chaque ressource vivante porte sa `version` (semver) **dans son frontmatter**. Règles : MAJEUR = changement incompatible du sens/contrat ; MINEUR = ajout rétrocompatible ; CORRECTIF = clarification sans effet sémantique. Version initiale `0.1.0` (phase de conception).
+- Le **manifeste `.dev/ressources.yaml` est aboli**, ainsi que les ensembles composites et le bump atomique par manifeste. Il n'y a plus de source de version centrale ; `clia` lit les versions depuis les frontmatters.
+- Le versionnage reste **piloté par fichiers**, jamais par tags git.
+- La version du **domaine métier** (`version.yaml`, racine) demeure séparée (`ADR-007`) et est incrémentée par `clia release` (`PLN-015`).
 
 ### Nommage
 
-- **Décision** :
-  - ressources **point fixe** (datées) : `<PREFIX>-<DATE[-HEURE]>-<SLUG>.<EXT>` ; l'heure (`HHMMSS`) est ajoutée uniquement si un même préfixe, une même date et un même slug risquent de collisionner. Exemple : `FND-2026-07-10-conventions-cli.md`. Les logs suivent `LOG-<DATE>-task-<NN>.md`.
-  - ressources **vivantes** et **de travail** (séquencées) : `<PREFIX>-<SEQ>-<SLUG>.md`.
-  - **harnais** : noms fixes (`CLAUDE.md`, `CONSTITUTION.md`) ; skills en `.dev/skills/skl-<SEQ>-<nom>/SKILL.md`.
+- Ressources livrables : **séquencées**, `<PREFIX>-<SEQ>-<SLUG>.md` (ex. `ADR-004`, `FND-<SEQ>-<SLUG>`). Le nommage est **découplé** du cycle de vie (il ne dépend plus d'une catégorie point fixe).
+- Traces : nommage **horodaté** conservé, `LOG-<DATE>-task-<NN>.md` pour les logs ; archives de session `SES-<DATE>-<HEURE>-<SLUG>.md`.
+- Harnais : noms fixes (`CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`) ; skills en `.dev/skills/skl-<SEQ>-<nom>/SKILL.md`.
 
-### Versionnage atomique
+### Références croisées et relations
 
-- **Décision** :
-  - chaque ressource vivante porte sa version (`version: X.Y.Z`) ; règles semver : MAJEUR = changement incompatible du sens/contrat, MINEUR = ajout rétrocompatible, CORRECTIF = clarification sans effet sémantique.
-  - **deux ensembles** portent une version composite : `harness-files` (`CLAUDE.md`, `CONSTITUTION.md`, `skl-*`) et `documents-de-conception` (`ADR-*`, `SPEC-*`, `REQ-*`).
-  - **atomicité** : modifier un membre vivant bumpe, dans la même opération, la version du membre et celle de son ensemble, avec mise à jour de `.dev/ressources.yaml`.
-  - `BUG-*` est vivant mais hors des deux ensembles : versionné individuellement dans le manifeste.
-  - `INTENTION.md` est hors harnais et hors versionnage géré par l'agent (édition humaine).
-  - versionnage **piloté par fichiers** (frontmatter + manifeste), jamais par tags git.
-  - version initiale : **`0.1.0`** (phase de conception).
-- *Alternatives écartées* : versionnage par tags git (rejeté : l'agent n'opère pas git, l'interface est fichiers) ; plus de deux ensembles (rejeté par l'humain, tâche 14).
+- Les références entre ressources sont des **liens** (formalisés en liens markdown lors du Segment 2) appartenant à un **vocabulaire de relations** explicite : `specifie`, `derive-de`, `remplace`, `reference`, `produit-par`, `viole`. Ce vocabulaire vit dans `.dev/resource-types.yaml`.
+- `clia` peut valider l'**intégrité référentielle** (référence pendante = bogue, `ADR-003`) et la cohérence des `type`. L'implémentation de cette validation relève de la réconciliation ultérieure de `clia`.
 
-### Cas `publications/*`
+### Droits d'édition et exemptions
 
-- **Décision** : `publications/*` (documents diffusés) sont des ressources **point fixe** datées, produites une fois. Le répertoire sera créé au premier document publié. Documenté ici car attendu prochainement (tâche 14, réponse agent-6).
+- Les droits d'édition restent définis par la « Classification des documents » de `CONSTITUTION.md`. L'abolition de l'immuabilité **ne change pas** les droits d'édition : les fichiers en édition humaine uniquement (`INTENTION.md`, `.dev/session.md`, `.dev/session-x*.md`, `.dev/sessions/*`) ne sont **jamais** modifiés par l'agent et sont **exemptés** de la règle de frontmatter appliquée par l'agent.
+- `INTENTION.md` reste hors harnais et hors versionnage géré par l'agent.
 
-### Immuabilité et écarts de conception
+### Généricité
 
-- **Décision** : une ressource point fixe ne se modifie pas ; un changement produit une nouvelle instance datée. Exception ponctuelle : en **phase de conception**, des corrections en place de ressources point fixe (ex. renommage des logs et fondations existants, retrait des tirets cadratins à la tâche 7) sont **tolérées** le temps d'établir les conventions (tâche 14, réponse agent-5). Passé cette phase, la règle d'immuabilité s'applique strictement.
+- Le modèle, les zones (défauts paramétrables) et le vocabulaire de `type` sont **génériques** (aucune information de domaine, `ADR-005`).
 
 ## Conséquences
 
 **Positives**
-- Classement multi-axes clair ; nommage et versionnage déterministes ; état des versions centralisé dans un manifeste.
+- Modèle unifié plus simple (une catégorie de ressource livrable) ; métadonnées uniformes et machine-lisibles (frontmatter `type` + `version`) ; couche type explicite (ontologie légère) ; graphe de références validable ; suppression du couplage au manifeste.
 
 **Négatives / risques**
-- Discipline requise pour bumper atomiquement membre + ensemble à chaque modification.
-- Migration ponctuelle des ressources existantes (renommages, manifeste).
+- Migration mécanique de masse à mener (frontmatter partout, renommage daté vers séquencé, réparation des références, rapatriement des `logs`, suppression du manifeste) : couplage fort et difficilement réversible, gérée au Segment 2 de `PLN-014` sous revue humaine (breakpoint).
+- Impact sur `clia` : la lecture des versions passe du manifeste au frontmatter (`clia --version --long`, `clia res ls`) ; réconciliation à mener lors d'un chantier `clia` distinct.
+- Interim : tant que le Segment 2 n'est pas exécuté, l'existant coexiste en deux formats.
 
 ## Migration / porte de sortie
 
-Migration exécutée avec ce plan (PLN-005) : renommage des `FND`, `ANL` et logs, création de `.dev/ressources.yaml`. Un ADR ultérieur pourra affiner les axes ou les ensembles si l'usage l'exige.
+Migration exécutée au **Segment 2 de `PLN-014`** (après breakpoint) : frontmatter en remplacement des puces sur toutes les ressources livrables, renommage des `FND`/`ANL` en séquencé avec réparation des références, `type: log` sur les traces sans altérer leur immuabilité, rapatriement de `logs` sous `.dev`, suppression de `.dev/ressources.yaml`, amendement des skills et harnais. Un ADR ultérieur pourra affiner le vocabulaire de `type` et de relations si l'usage l'exige.
 
 ## Références
 
-- `ANL-2026-07-10-usage-ressources-livrables`
-- `ADR-005-fonction-scope-harnais`
-- `.dev/ressources.yaml`
-- `PLN-005-typologie-versionnage-ressources`
+- `PLN-014-adoption-conventions-okf`
+- `.dev/resource-types.yaml` (schéma de la couche type)
+- `ADR-005-fonction-scope-harnais`, `ADR-007-architecture-systeme-augmentation`
+- `PDC-006-source-de-verite-documentaire-unique`, `PDC-009-tracabilite-et-versionnage-atomique`
+- `ANL-013-usage-semantique-ontologie-repos`, `FND-016-ontologie-et-semantique`

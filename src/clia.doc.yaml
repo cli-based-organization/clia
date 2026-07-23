@@ -39,3 +39,11 @@ commands:
       - { name: open,   short: "ouvre une session (erreur si déjà active)", usage: "clia ses open [x<SEQ>]" }
       - { name: close,  short: "archive la session active", usage: "clia ses close [SLUG]" }
       - { name: new,    short: "ferme puis ouvre une session", usage: "clia ses new [x<SEQ>]" }
+  - name: release
+    short: incrémente la version métier (version.yaml) selon semver
+    usage: "clia release (major|minor|patch)"
+    long: >-
+      Incrémente la version métier lue dans version.yaml : major -> X+1.0.0,
+      minor -> X.Y+1.0, patch -> X.Y.Z+1. Réécrit version.yaml de façon atomique
+      et affiche la nouvelle version. Avec --dry-run, affiche le changement sans
+      écrire. N'effectue aucune opération git.

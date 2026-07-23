@@ -1,17 +1,22 @@
+---
+type: bug
+version: 0.1.0
+title: "Découvrabilité et uniformité non entièrement implémentées (écart à PDC-007)"
+status: diagnostiqué
+---
+
 # BUG-006 - Découvrabilité et uniformité non entièrement implémentées (écart à PDC-007)
 
-- **Statut** : diagnostiqué
-- **Version** : 0.1.0
 - **Date de rapport** : 2026-07-18
-- **Origine** : session.md tâche 21 (généré depuis `ANL-2026-07-18-principes-de-conception-du-repo`, P7)
-- **Tâche liée** : `logs/ia-output/LOG-2026-07-17-task-21.md`
+- **Origine** : session.md tâche 21 (généré depuis `ANL-010-principes-de-conception-du-repo`, P7)
+- **Tâche liée** : `.dev/logs/ia-output/LOG-2026-07-17-task-21.md`
 
 ## Rapport
 
 Symptôme : la découvrabilité et l'uniformité de l'aide de `clia` sont **spécifiées** (`REQ-001-F7/F8/F9`, `SPEC-002`) mais leur implémentation complète n'est pas achevée ; un bogue historique (le groupe `ses`/`session` absent de `clia -h`) a motivé la réconciliation (`PLN-011`), non entièrement exécutée.
 Attendu (PDC-007) : toute commande/sous-commande est découvrable et documentée uniformément ; l'inventaire dispatché est identique à l'inventaire documenté.
 Observé : conception correcte, implémentation partielle tant que `PLN-011` n'est pas exécuté.
-Contexte : identifié par `ANL-2026-07-18-principes-de-conception-du-repo` (P7, partiel).
+Contexte : identifié par `ANL-010-principes-de-conception-du-repo` (P7, partiel).
 
 ## Diagnostic
 

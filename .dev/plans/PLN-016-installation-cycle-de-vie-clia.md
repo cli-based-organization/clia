@@ -1,6 +1,16 @@
+---
+type: plan
+version: 0.1.0
+title: "Installation et cycle de vie de `clia` : plan combiné (remplace PLN-012 et PLN-013)"
+status: objection
+---
+
 # PLN-016 - Installation et cycle de vie de `clia` : plan combiné (remplace PLN-012 et PLN-013)
 
-**Statut : objection**
+## Changelog
+
+- **Révision 2 (2026-07-21, tâche 30)** : `PLN-014` (refonte des ressources) et `PLN-015` (`clia release`) sont désormais **exécutés**. Conséquences pour ce plan : le modèle de ressources est **stabilisé** (versions en frontmatter, plus de manifeste, zones `.dev`) ; l'**objection 1** (dépendance à l'exécution de `PLN-014`) est **résolue** ; le moteur de matérialisation/réconciliation se conçoit désormais directement sur le modèle frontmatter ; `clia release` fournit déjà la gestion de la version métier. Restent ouvertes les objections 2 à 6 (surface de commandes, modes d'installation, rollback, source de distribution, scripts externes). Statut maintenu à **objection** (ces cinq objections bloquent encore).
+- **Révision 1 (2026-07-21, tâche 29)** : création (combine et remplace `PLN-012` et `PLN-013`).
 
 ## Intention
 
@@ -9,7 +19,7 @@ Réévaluer, à la lumière des travaux de conception réalisés depuis (tâches
 ## Contexte
 
 - **`PLN-012`** (statut objection, jamais exécuté) : squelette fonctionnel `init` / `update` / `rollback`, où `clia` agit sur un repo cible distinct de son arbre d'installation, en matérialisant / réconciliant des ressources versionnées. Son moteur de versionnage reposait sur le manifeste `.dev/ressources.yaml` et sur la comparaison de versions par ensembles.
-- **`PLN-013`** (statut objection, Phase A exécutée au breakpoint) : conception seule de `clia setup` (init / upgrade / downgrade), inspirée du `setup.sh` de `ticket-driven-ai`. Phase A produite : introduction de la notion de **breakpoint** dans le harnais et `ANL-2026-07-18-besoin-req-spec-ressources-livrables`. Phase B suspendue ; objections 4 (frontière `setup.sh` / `clia setup`, deux couches) et 5 (extension à des scripts externes) restées ouvertes. `PLN-013` fait autorité sur `PLN-012` pour la conception (objection 1 résolue).
+- **`PLN-013`** (statut objection, Phase A exécutée au breakpoint) : conception seule de `clia setup` (init / upgrade / downgrade), inspirée du `setup.sh` de `ticket-driven-ai`. Phase A produite : introduction de la notion de **breakpoint** dans le harnais et `ANL-005-besoin-req-spec-ressources-livrables`. Phase B suspendue ; objections 4 (frontière `setup.sh` / `clia setup`, deux couches) et 5 (extension à des scripts externes) restées ouvertes. `PLN-013` fait autorité sur `PLN-012` pour la conception (objection 1 résolue).
 - **Travaux de conception intervenus depuis, qui changent la donne** :
   - **`PLN-014` (approuvé)** refond le modèle des ressources : abolition de la distinction vivant / point fixe (une seule catégorie de ressources livrables vivantes versionnées, plus des traces immuables), **abolition de `.dev/ressources.yaml`**, **version portée par le frontmatter** de chaque ressource, zones simplifiées (tout dans `.dev`, `logs` rapatriés dans `.dev`, pas de `.knowledge`, `doc` inchangé), frontmatter `type` et références croisées en liens, renommage daté vers séquencé, **première réécriture d'`ADR-004`**.
   - **`PLN-015` (approuvé)** ajoute `clia release (major|minor|patch)` (bump de `version.yaml` métier), et clarifie que l'interdiction git vise **l'agent IA**, pas `clia` (déterministe, opéré par l'humain) : `clia` peut donc légitimement faire du git.
@@ -28,7 +38,7 @@ Réévaluer, à la lumière des travaux de conception réalisés depuis (tâches
 | PLN-012 : frontière méthode / domaine (objection 2) | **Conservé, clarifié** | Les zones de `PLN-014` donnent une frontière nette (`.dev` vs `.` vs `doc`) |
 | PLN-012 : rollback via git vs instantanés (objection 3) | **Rouvert, simplifié** | `PLN-015` clarifie que `clia` (opéré par l'humain) peut faire du git : rollback via historique git redevient viable |
 | PLN-013 : notion de breakpoint (A.1) | **Fait** | Exécuté en Phase A, intégré au harnais |
-| PLN-013 : ANL besoin REQ/SPEC ressources (A.2) | **Fait** | `ANL-2026-07-18-besoin-req-spec-ressources-livrables` produite |
+| PLN-013 : ANL besoin REQ/SPEC ressources (A.2) | **Fait** | `ANL-005-besoin-req-spec-ressources-livrables` produite |
 | PLN-013 : amender `ADR-004` (B.2) | **Absorbé** | Repris par la réécriture d'`ADR-004` de `PLN-014` |
 | PLN-013 : ADR modèle `setup`, deux couches (B.3, objection 4) | **Conservé, priorisé** | Devient l'« ADR des commandes d'installation » demandé par l'humain |
 | PLN-013 : extension à des scripts externes (B.4, objection 5) | **Conservé** | Toujours ouvert, à concevoir |
@@ -40,11 +50,11 @@ Réévaluer, à la lumière des travaux de conception réalisés depuis (tâches
 
 Le livrable **de la tâche 29** est ce plan combiné. Il **remplace** `PLN-012` et `PLN-013` (dont la Phase A reste acquise). L'exécution est une (ou plusieurs) tâche(s) ultérieure(s). Livrables d'exécution : un ADR des commandes et modes d'installation, l'ADR/REQ/SPEC de l'extension à des scripts externes, les REQ/SPEC des commandes d'installation, le nouveau type de ressource « interface CLI » (ADR + skill + harnais), l'amendement de `SPEC-002`/`REQ-002`, les entrées `clia.doc.yaml`, l'implémentation `clia` (résolution de cible, moteur de matérialisation/réconciliation sur le nouveau modèle, commandes, dispatch), et un harnais de test cumulatif en bac à sable.
 
-## Plan proposé (dépend de l'exécution de PLN-014)
+## Plan proposé (PLN-014 et PLN-015 désormais exécutés)
 
 ### Segment 1 : Conception (avant breakpoint)
 
-**1.1 ADR des commandes et modes d'installation** (`skl-006`, demandé par l'humain). Décider et documenter : les **deux couches** (installer l'outil `clia` pour l'utilisateur, à la `setup.sh` de `tda` ; puis gérer le système d'augmentation dans un repo cible), les **modes d'installation étendus** (par exemple dev / permanent / local, mono-repo vs outil global), la **surface de commandes** unifiée (trancher init/update/rollback vs `setup` init/upgrade/downgrade), la résolution de la **racine cible** (`-C <dir>` ou racine git du cwd) distincte de `BASH_SOURCE`, et les propriétés d'installateur robuste (idempotence, réversibilité, effets de bord bornés, atomicité, `FND-2026-07-10-installateurs-packaging`). Résout les objections 4 de `PLN-013` et 1 de `PLN-012`.
+**1.1 ADR des commandes et modes d'installation** (`skl-006`, demandé par l'humain). Décider et documenter : les **deux couches** (installer l'outil `clia` pour l'utilisateur, à la `setup.sh` de `tda` ; puis gérer le système d'augmentation dans un repo cible), les **modes d'installation étendus** (par exemple dev / permanent / local, mono-repo vs outil global), la **surface de commandes** unifiée (trancher init/update/rollback vs `setup` init/upgrade/downgrade), la résolution de la **racine cible** (`-C <dir>` ou racine git du cwd) distincte de `BASH_SOURCE`, et les propriétés d'installateur robuste (idempotence, réversibilité, effets de bord bornés, atomicité, `FND-008-installateurs-packaging`). Résout les objections 4 de `PLN-013` et 1 de `PLN-012`.
 
 **1.2 Définition du paquet distribuable sur le nouveau modèle.** Sur la base des **zones** (`.dev` = système d'augmentation, `.` = contenu de domaine, `doc` inchangé) et du **frontmatter** (`type`, `version`), définir ce qui appartient au paquet `clia` et comment comparer les versions **sans manifeste** (lecture des `version:` de frontmatter). Remplace le socle `ressources.yaml` de `PLN-012`.
 
@@ -58,7 +68,7 @@ Le livrable **de la tâche 29** est ce plan combiné. Il **remplace** `PLN-012` 
 
 **2.1 Méthodologie** : étendre `skl-011` au patron d'une commande agissant sur un repo cible (résolution de cible, frontière méthode/domaine, idempotence réconciliante, atomicité) ; ajuster `CLAUDE.md` si le comportement de l'agent en dépend.
 
-**2.2 Documents de conception d'interface** : amender `SPEC-002`/`REQ-002` et produire les REQ/SPEC des commandes d'installation (selon le verdict de `ANL-2026-07-18-besoin-req-spec-ressources-livrables`).
+**2.2 Documents de conception d'interface** : amender `SPEC-002`/`REQ-002` et produire les REQ/SPEC des commandes d'installation (selon le verdict de `ANL-005-besoin-req-spec-ressources-livrables`).
 
 **2.3 Implémentation `clia`** : résolution de racine cible ; moteur de matérialisation / réconciliation lisant les versions en frontmatter (nouveau modèle, pas de manifeste) ; commandes d'installation (init d'abord comme squelette le plus mince, puis upgrade/downgrade) ; rollback selon le mécanisme retenu en 1.1 ; dispatch + `clia.doc.yaml` (découvrabilité, `REQ-001-F9`).
 
@@ -66,11 +76,11 @@ Le livrable **de la tâche 29** est ce plan combiné. Il **remplace** `PLN-012` 
 
 ## Objections de l'agent IA
 
-1. **Dépendance à l'exécution de `PLN-014`.** Le moteur d'update/upgrade/downgrade réconcilie des ressources dont le **versionnage est redéfini par `PLN-014`** (frontmatter, sans manifeste). Concevoir et surtout implémenter ce moteur avant que `PLN-014` ne soit exécuté ferait travailler sur un modèle instable. Neutralisation : séquencer ce plan **après** (ou en aval de) l'exécution de `PLN-014` ; le Segment 1 (conception) peut avancer en parallèle, mais l'implémentation (Segment 2) attend le modèle stabilisé.
+1. **Dépendance à l'exécution de `PLN-014`. RÉSOLUE (tâche 30).** `PLN-014` est exécuté : le modèle de ressources est stabilisé (versions en frontmatter, plus de manifeste, zones `.dev`). Le moteur de matérialisation/réconciliation se conçoit et s'implémente désormais directement sur ce modèle. Conséquence pratique : la comparaison de versions lit les frontmatters (et non un manifeste), et le « paquet distribuable » se définit par les zones et le champ `type` (`.dev/resource-types.yaml`).
 
 2. **Surface de commandes et vocabulaire à unifier.** `PLN-012` disait `init`/`update`/`rollback` ; `PLN-013` disait `setup init/upgrade/downgrade`. Sans décision, l'implémentation serait incohérente. Neutralisation : trancher dans l'ADR 1.1 (défaut proposé : un groupe `clia setup <init|upgrade|downgrade>` cohérent avec l'inspiration `tda`, à confirmer face à l'option de commandes de premier niveau).
 
-3. **Modes d'installation étendus (sous-spécifiés).** La directive « étendre les modes d'installation » ne précise pas lesquels. Neutralisation : énumérer et trancher les modes dans l'ADR 1.1 (par exemple dev / permanent / local, mono-repo / outil global), en s'appuyant sur `ANL-2026-07-10-setup-installation` et `FND-2026-07-10-installateurs-packaging`.
+3. **Modes d'installation étendus (sous-spécifiés).** La directive « étendre les modes d'installation » ne précise pas lesquels. Neutralisation : énumérer et trancher les modes dans l'ADR 1.1 (par exemple dev / permanent / local, mono-repo / outil global), en s'appuyant sur `ANL-002-setup-installation` et `FND-008-installateurs-packaging`.
 
 4. **Mécanisme de rollback.** Depuis la clarification git (`PLN-015`, tâche 28), `clia` (opéré par l'humain) peut utiliser l'historique git, ce qui simplifie le rollback ; l'alternative (instantanés gérés par `clia`) reste possible. Neutralisation : trancher en 1.1 (défaut proposé : rollback via git de la cible, `clia` agissant comme outil de l'humain, avec repli sur instantané si la cible n'est pas propre).
 

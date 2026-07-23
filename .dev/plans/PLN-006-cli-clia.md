@@ -1,3 +1,9 @@
+---
+type: plan
+version: 0.1.0
+title: "Développement du CLI bash `clia`"
+---
+
 # PLN-006 - Développement du CLI bash `clia`
 
 **Statut : exécuté** (tâche 19 ; objections bloquantes résolues en tâche 18 ; objections résiduelles non bloquantes tranchées par défaut)

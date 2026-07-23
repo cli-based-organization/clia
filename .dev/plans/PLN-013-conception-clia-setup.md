@@ -1,15 +1,21 @@
+---
+type: plan
+version: 0.1.0
+title: "Conception de la commande `clia setup` (init / upgrade / downgrade)"
+status: remplacé par PLN-016 (Phase A acquise)
+---
+
 # PLN-013 - Conception de la commande `clia setup` (init / upgrade / downgrade)
 
-**Statut : remplacé par PLN-016 (Phase A acquise)**
 
-> Ce plan est remplacé par `PLN-016-installation-cycle-de-vie-clia` (tâche 29), qui combine `PLN-012` et `PLN-013`. La **Phase A reste acquise** (breakpoint introduit dans le harnais ; `ANL-2026-07-18-besoin-req-spec-ressources-livrables` produite). La Phase B non exécutée est reprise et refondée dans `PLN-016`. Conservé pour traçabilité.
+> Ce plan est remplacé par `PLN-016-installation-cycle-de-vie-clia` (tâche 29), qui combine `PLN-012` et `PLN-013`. La **Phase A reste acquise** (breakpoint introduit dans le harnais ; `ANL-005-besoin-req-spec-ressources-livrables` produite). La Phase B non exécutée est reprise et refondée dans `PLN-016`. Conservé pour traçabilité.
 
 ## Changelog
 
 Exécution de la Phase A jusqu'au breakpoint (tâche 11 de `.dev/session.md`, « [exécution] Exécute PLN-013 jusqu'au breakpoint »).
 
 - **A.1 exécutée** : notion de « breakpoint » introduite dans le harnais (`CONSTITUTION.md` section « Breakpoint et exécution segmentée », mention dans `CLAUDE.md`, étape ajoutée à `skl-003`) ; bumps atomiques dans `.dev/ressources.yaml`.
-- **A.2 exécutée** : `ANL-2026-07-18-besoin-req-spec-ressources-livrables` produite.
+- **A.2 exécutée** : `ANL-005-besoin-req-spec-ressources-livrables` produite.
 - **Breakpoint atteint** : l'exécution s'arrête. La Phase B (B.1 résolution des objections 4 et 5, puis B.2 à B.6) reste suspendue jusqu'à la revue de l'ANL par l'humain et son autorisation de reprise.
 
 Révision suite aux réponses de l'humain à mes cinq objections (tâche 10 de `.dev/session.md`, « [Résolution des objections] pour PLN-013 »).
@@ -75,7 +81,7 @@ Après l'`ANL`, **l'exécution s'arrête**. L'humain consulte l'analyse et déci
 
 **B.2 Amender `ADR-004`** (objection 2) : y intégrer source de vérité, format variable, template et validation des ressources livrables, en cohérence avec le verdict de l'`ANL`.
 
-**B.3 `ADR` du modèle `setup`** (`skl-006`) : deux couches (installer l'outil `clia` pour l'utilisateur vs gérer le système d'augmentation dans un repo cible), résolution de la racine cible (`-C <dir>` ou racine git du cwd) distincte de `BASH_SOURCE`, sémantique de `init`/`upgrade`/`downgrade`, propriétés d'installateur robuste (idempotence, réversibilité, effets de bord bornés, atomicité, moindre privilège, `FND-2026-07-10-installateurs-packaging`), frontière méthode / domaine. Dépend de B.1 (objection 4).
+**B.3 `ADR` du modèle `setup`** (`skl-006`) : deux couches (installer l'outil `clia` pour l'utilisateur vs gérer le système d'augmentation dans un repo cible), résolution de la racine cible (`-C <dir>` ou racine git du cwd) distincte de `BASH_SOURCE`, sémantique de `init`/`upgrade`/`downgrade`, propriétés d'installateur robuste (idempotence, réversibilité, effets de bord bornés, atomicité, moindre privilège, `FND-008-installateurs-packaging`), frontière méthode / domaine. Dépend de B.1 (objection 4).
 
 **B.4 Conception de la capacité d'extension à des scripts externes** : `ADR` dédié (plus `REQ`/`SPEC` selon B.2/l'`ANL`) décrivant la découverte des commandes externes, le contrat d'interface (conformité `REQ-001`, entrées/sorties/codes), l'intégration à `clia.doc.yaml` et au dispatch validé (`REQ-001-F9`), et les garde-fous de déterminisme (`REQ-002-NF1`) et de sécurité. Dépend de B.1 (objection 5).
 

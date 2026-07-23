@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.1.0
 name: skl-012-analyse-corpus
 description: >-
   Produire une analyse (`.dev/analyses/ANL-<SEQ>-<SLUG>.md`) : examen structuré d'un corpus de
@@ -42,9 +44,15 @@ Quand une tâche demande d'analyser un ensemble de documents ou de fichiers rée
 - **Emplacement** : `.dev/analyses/ANL-<SEQ>-<SLUG>.md`
 
 ```markdown
+---
+type: analyse
+version: <X.Y.Z>
+title: "<Titre>"
+date: <AAAA-MM-JJ>
+---
+
 # ANL-<SEQ> - <Titre>
 
-- **Date** : <AAAA-MM-JJ>
 - **Périmètre** : <racines, filtres d'inclusion/exclusion>
 - **Référence** : <fondation/convention/standard confronté, ou "aucune">
 

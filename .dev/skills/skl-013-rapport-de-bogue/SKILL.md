@@ -1,4 +1,6 @@
 ---
+type: skill
+version: 0.2.0
 name: skl-013-rapport-de-bogue
 description: >-
   Produire et faire évoluer une ressource BUG (`.dev/bugs/BUG-<SEQ>-<SLUG>.md`) : un document
@@ -40,11 +42,16 @@ Quand un comportement incorrect est constaté (par l'humain via `session.md`, ou
 - **Emplacement** : `.dev/bugs/BUG-<SEQ>-<SLUG>.md`
 
 ```markdown
+---
+type: bug
+version: <X.Y.Z>
+title: "<Titre>"
+status: <ouvert|diagnostiqué|résolu|fermé>
+date: <AAAA-MM-JJ>
+---
+
 # BUG-<SEQ> - <Titre>
 
-- **Statut** : <ouvert|diagnostiqué|résolu|fermé>
-- **Version** : <X.Y.Z>
-- **Date de rapport** : <AAAA-MM-JJ>
 - **Origine** : <session.md tâche N | agent>
 - **Tâche liée** : <référence de tâche/log>
 
