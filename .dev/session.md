@@ -496,3 +496,108 @@ Exécuter PLN-014 et PLN-015
 Puis réviser PLN-016
 
 
+## 31. [traitement des objections]
+
+### objection 2
+
+utiliser upgrade/downgrade
+
+### objection 3
+
+Reproduire ce qui est fait dans tda en corrigeant les problèmes en suivant les recommandations dans ANL-002
+
+### objection 4
+
+Ne pas utiliser git. `clia setup` doit seulement motifiers les harness files
+
+### objection 5
+
+Oui. Mettre en place un contrat strict et versionné d'interface
+
+## 31. [implémentation] Exécuter le plan PLN-016
+
+## 32. [fondation] Améliorer la compréhension des systèmes Linux
+
+Scanner récursivement les repos à partir de  @../../
+
+Récupérer les FND, les ANL et les ADR qui parlent des systèmes linux. En particulier, des convention du FileSystem, des path et des variables d'environnement.
+
+Définir des questions de recherches pertinentes pour l'installation d'application, de gestion de données et de leur cycle de vie respectif.
+
+Pour chaque question, identifier les axes d'analyse pertinent.
+
+Mobiliser le savoir en lien avec ces axes d'analyse et produire recherche de fondation à ce propos.
+
+## 33. [conception] Cas d'usage
+
+Faire une recherche de fondation sur les "use cases", "user stories" et autres méthodes pour collecter et renseigner les besoins des utilisateurs dans cadre d'un dévelopement de système d'information (SI) et d'application.
+
+Mobiliser les savoirs disponibles à ce sujet et produire une recherche de fondation. Couvrir également le sujet des méthodologies de développement logiciel et les bonnes pratiques d'ingénierie, la gestion de projet informatique, la gestion de backlog, la gestion de produits logiciels et la gestion des fonctionnalités.
+
+Puis faire une analyse critique du SI `clia` par rapport à la description des cas d'utilisation par les utilisateurs finaux. Faire une typologie des utilisateurs et autres StakeHolders. 
+
+Actuellement, il n'y a aucun mécanisme de description et de test explicite des Cas d'usages principaux. Mon avis est que les use cases devrait être au coeur du développement des fonctionnalités.
+
+Produire un documment ANL, et des émettre des recommendations pour la création de ressources adaptés pour le développement logiciel comme une ressource USE (use case).
+
+
+## 34. [planification] produire un plan d'implémentation pour les recommendations émises dans ANL-014
+
+
+En tenant compte des objections suivantes:
+
+- objection A  => on est à l'étape de conception et de mise en place minimal des fonctionnalités permettant de tester `clia` en situation réelle (init, upgrade/downgrade), donc on remet à plus tard tout ce qui est aval (tests, etc.)
+
+- objection B => il est important de de respecter les références croisés entre document et de le faire selon une méthode compatible à OKF. Notamment: TOUTE CITATION RÉFÉRENT À UN AUTRE DOCUMENT DOIT CONTENIT UN LIEN MARKDOWN VERS LA SECTION CONTENANT L'INFO OU (à minima) VERS CET AUTRE DOCUMENT.
+
+- objection C => expliciter les relations entre ressources pertinentes, notamment, mais non s'y limitant: <ACTEUR|AGENT> utilise <USE> pour <BUT>; <FONCTIONALITÉ> permet de satisfaire <USE> de <ACTEUR|AGENT>
+
+## 35. [traitement des objections] pour PLN-017
+
+Prendre en compte les réponses aux objections ci-dessous pour raffiner le plan PLN-017
+
+
+### Objection de l'Humain
+
+Exclure les tests de la portée de ce document
+
+### objection 1 => suivre la recommendantion: ouvrir un BUG et continuer sans autre modification
+
+
+### objection 2 
+
+On a que besoin d'une forme provisoire. on est en mode conception rapide, il faut avancer. Pour le reste, on remets à plus tard... la priorité c'est init + upgrade/downgrade
+
+### objection 3 
+
+on traite en priorité PLN-017. Ajuster PLN-016 en conséquense.
+
+### objection 4 
+
+Il ne devrait pas y avoir de dépendence de USE sur le cli clia. C'est une ressource. Les ressources sont indépendantes des outils et instruments qui les utilisent/manipulent
+
+### objection 5 
+
+Ne pas mettre les acteurs/agents dans ARCHITECTURE.md
+
+Créer des resources indépendantes ACTOR
+
+### objection 6 
+
+ceci est off scope. ne pas toucher à ARCHITECTURE.md
+
+## x. [conception] Description de l'usage et des contextes
+
+
+
+
+## x. [review] breakpoint pour validation de ADR-010
+
+Continuer l'exécution de PLN-016 en intégrant les objections de l'humain
+
+### objections
+
+#### objection 1
+
+Ne 
+

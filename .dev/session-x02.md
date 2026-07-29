@@ -8,6 +8,7 @@
 
 # Tâches
 
+
 ## x. [conception] la notion de harnais
 
 [ADR] Nous adoptons la notion de harnais définit comme "tout mécanisme qui aide à encadrer le comportement du système complexe afin qui se comporte de la manière atendue"
