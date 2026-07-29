@@ -1,126 +1,148 @@
 ---
 type: plan
-version: 0.1.0
-title: "Cas d'usage, catalogue d'acteurs et fermeture de la traçabilité (mise en oeuvre d'ANL-014)"
-status: objection
+version: 0.2.0
+title: "Cas d'usage, acteurs et traçabilité amont (mise en oeuvre d'ANL-014)"
+status: résolu
 ---
 
-# PLN-017 - Cas d'usage, catalogue d'acteurs et fermeture de la traçabilité
+# PLN-017 - Cas d'usage, acteurs et traçabilité amont
+
+## Changelog
+
+- **Révision 2 (2026-07-29, tâche 35)** : traitement des objections humaines consignées à la tâche 35 de `.dev/session.md`. Les six objections de l'agent sont **résolues** et la portée du plan est resserrée :
+  - **portée** : les tests et la mesure de couverture sortent du plan (objection humaine générale). R5 est retirée, R4 est réduite à son volet amont. Le plan s'arrête à la conception, à la méthodologie et aux catalogues ;
+  - **objection 1** : [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md) est ouvert pour l'écart de `src/lib/resource.sh` au modèle de ressources, et le plan continue sans autre modification. L'ancienne étape 4.0 (réconciliation du module) est **supprimée** ;
+  - **objection 2** : forme **provisoire** assumée pour les relations, avec dette nommée. L'inauguration de la couche relations pour tout le corpus n'est pas entreprise ici ;
+  - **objection 3** : `PLN-017` est traité en priorité et fait autorité sur le modèle ; [`PLN-016`](PLN-016-installation-cycle-de-vie-clia.md) est ajusté en conséquence (nouvelle étape 3.3). La collision disparaît par ailleurs d'elle-même, les tests sortant de ce plan ;
+  - **objection 4** : une ressource est **indépendante des outils qui la manipulent**. Un `USE` ne dépend donc pas de `clia`, et le cas d'usage du parcours d'installation **réintègre** le catalogue initial : il décrit un but d'acteur, pas des commandes. La dépendance à [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) tombe. Le gabarit est purgé de ses éléments liés à l'outil (codes de retour) ;
+  - **objection 5** : les acteurs ne vont pas dans `ARCHITECTURE.md` mais dans un **nouveau type de ressource indépendant** `ACT`. Le plan produit donc deux types (`ACT` et `USE`), deux ADR et deux skills ;
+  - **objection 6** : `ARCHITECTURE.md` est **hors portée**. Toutes les étapes qui le touchaient sont supprimées.
+  - **forme** : application de la convention de références croisées de la tâche 34 (toute citation d'un autre document porte un lien markdown vers ce document, section quand elle est identifiable).
+- **Révision 1 (2026-07-28, tâche 34)** : création, en mise en oeuvre des sept recommandations d'[`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md).
 
 ## Intention
 
-Mettre en oeuvre les sept recommandations d'`ANL-014-cas-usage-et-acteurs-de-clia` (tâche 34 de `.dev/session.md`). L'analyse établit que la chaîne de conception du dépôt est rigoureuse en son milieu (`ADR` vers `REQ` vers `SPEC` vers code) mais **amputée à ses deux extrémités** : rien en amont ne dit qui veut quoi et pourquoi, rien en aval ne démontre que le système le permet effectivement. Ces deux manques n'en font qu'un : sans usage nommé on ne sait pas quoi tester, et sans test rattaché l'usage nommé ne prouve rien. La conséquence mesurée est que le coeur fonctionnel du CLI (le cycle de vie des sessions) n'est couvert par aucun test.
+Mettre en oeuvre les recommandations d'[`ANL-014-cas-usage-et-acteurs-de-clia`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md) retenues par l'humain. L'analyse établit que la chaîne de conception du dépôt est rigoureuse en son milieu (`ADR` vers `REQ` vers `SPEC` vers code) mais **amputée en amont** : rien ne dit qui veut quoi et pourquoi. Le besoin n'entre aujourd'hui dans le système que par `.dev/session.md`, fichier éphémère archivé sans index d'usages, si bien que l'énoncé du besoin se perd à la clôture de session (constat [C8](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats)).
 
-Le but de ce plan est donc d'ajouter le **maillon manquant de la couche type** (la ressource `USE`), de nommer les **acteurs** qui en sont les sujets, et de **refermer la chaîne** aux deux bouts jusqu'au test exécutable.
+Le but de ce plan est d'ajouter les **deux maillons manquants de la couche type**, l'acteur (`ACT`) et le cas d'usage (`USE`), de constituer leurs catalogues initiaux depuis l'existant, et de **rattacher l'amont** de la chaîne de conception à ces maillons. Le volet aval (tests d'acceptation, mesure de couverture) est explicitement remis à plus tard.
 
 ## Contexte
 
-- **Source de la demande** : tâche 34 de `.dev/session.md`, qui demande un plan d'implémentation pour les recommandations d'`ANL-014` (produite en tâche 33).
-- **Recommandations à couvrir** : R1 (créer le type `USE`), R2 (gabarit « but utilisateur » de Cockburn, format court), R3 (catalogue d'acteurs et de parties prenantes), R4 (fermer la traçabilité aux deux extrémités), R5 (dériver les tests d'acceptation des `USE`, en commençant par le cycle de vie des sessions), R6 (constituer le catalogue initial depuis l'existant), R7 (expliciter que le plan réalise un ou plusieurs `USE`).
-- **Ordre de travail imposé** (tâche 2 de `session.md`, `ADR-007`) : recherche et préconception, puis conception, puis méthodologie (harnais et skills), puis implémentation. Ce plan respecte cet ordre, segment par segment.
-- **État du chantier voisin** : `PLN-016` (installation et cycle de vie, statut `résolu`) est en attente d'approbation humaine ; son segment 1 a déjà produit `ADR-010` (statut `Proposé`), et `.dev/session.md` porte un breakpoint de validation de cet ADR. `PLN-016` prévoit en 2.4 un harnais de test cumulatif qui recoupe R5 (voir objection 3).
-- **État vérifié de la couche relations** (constaté le 2026-07-28) : `.dev/resource-types.yaml` déclare un vocabulaire de six relations, mais aucun frontmatter du dépôt ne porte de champ de relation, et les références croisées sont écrites en texte (backticks), donc non résolvables par un programme. La couche relations d'`ADR-004` est **déclarée mais non instanciée** (voir objection 2).
-- **État vérifié de `src/lib/resource.sh`** (constaté le 2026-07-28) : le module code en dur la table de la version 0.1.0 d'`ADR-004`, abolie par la version 0.2.0 (voir objection 1).
-- **Contraintes de gouvernance** : généricité du harnais et absence d'information de domaine (`ADR-005`, `PDC-003`) ; source de vérité documentaire unique (`PDC-006`) ; déterminisme de `clia` (`PDC-001`) ; automatiser ce qui n'exige pas de jugement (`PDC-002`) ; traçabilité et versionnage atomique (`PDC-009`) ; l'agent n'édite jamais les fichiers en édition humaine uniquement et n'opère aucune action git.
-- **Hors périmètre explicite** : la correction de `doc/cli/` (constat C7 d'`ANL-014`, contenu étranger au dépôt) relève d'un rapport de bogue distinct (`skl-013`, `ADR-003`) et n'est pas traitée ici.
+- **Source de la demande** : tâches 34 et 35 de `.dev/session.md`. La tâche 34 demande un plan de mise en oeuvre d'[`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md) ; la tâche 35 en résout les objections et resserre la portée.
+- **Recommandations couvertes** : [R1](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#recommandations-priorisées) (créer le type `USE`), R2 (gabarit « but utilisateur », format court), R3 (catalogue d'acteurs, ici sous forme de type de ressource autonome), R4 **volet amont uniquement** (chaque `REQ` déclare le ou les `USE` qu'il sert), R6 (catalogue initial dérivé de l'existant), R7 (un plan déclare les `USE` qu'il réalise).
+- **Recommandations écartées de ce plan** : R5 (tests d'acceptation dérivés des `USE`) et le volet aval de R4 (rattachement usage vers test, mesure de couverture). Motif : décision humaine de la tâche 35, cohérente avec l'objection A de la tâche 34 (« on est à l'étape de conception et de mise en place minimale des fonctionnalités permettant de tester `clia` en situation réelle, donc on remet à plus tard tout ce qui est aval »).
+- **Priorité déclarée** : `init` et `upgrade`/`downgrade`, portés par [`PLN-016`](PLN-016-installation-cycle-de-vie-clia.md). Ce plan reste donc volontairement court et ne prescrit aucune modification de code.
+- **Ordre de travail imposé** ([`ADR-007`](../adr/ADR-007-architecture-systeme-augmentation.md)) : recherche et préconception, puis conception, puis méthodologie (harnais et skills), puis implémentation. La segmentation ci-dessous respecte cet ordre.
+- **Règle d'indépendance des ressources** (résolution humaine, objection 4 de la tâche 35) : une ressource est **indépendante des outils et des instruments qui la produisent, la manipulent ou l'exploitent**. Un `USE` décrit un but d'acteur et l'état du monde avant et après, jamais une invocation de `clia`. Cette règle est gravée en 1.2 et conditionne le gabarit.
+- **État de la couche relations** (constaté le 2026-07-29) : [`.dev/resource-types.yaml`](../resource-types.yaml) déclare six relations, mais aucun frontmatter du dépôt n'en porte, et les références croisées sont écrites en texte. La résolution humaine retient une **forme provisoire** : les relations s'écrivent en clair dans les documents, sous forme de liens markdown, et l'instanciation d'une couche de relations lisible par un programme reste une **dette nommée**, hors portée de ce plan.
+- **Dette assumée sur `ARCHITECTURE.md`** : ce harnais porte une section « Acteurs et rôles » qui range `clia` parmi les acteurs alors qu'il est le système décrit (constat [C2](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats)). Sa correction et sa réconciliation avec le catalogue `ACT` sont **hors portée** par décision humaine (objection 6). Conséquence acceptée : deux descriptions d'acteurs coexisteront temporairement, l'une de gouvernance dans le harnais, l'autre de conception dans `.dev/acteurs`.
+- **Contraintes de gouvernance** : généricité du harnais et absence d'information de domaine ([`ADR-005`](../adr/ADR-005-fonction-scope-harnais.md), [`PDC-003`](../principes/PDC-003-separation-methode-domaine-genericite-harnais.md)) ; source de vérité documentaire unique ([`PDC-006`](../principes/PDC-006-source-de-verite-documentaire-unique.md)) ; traçabilité et versionnage atomique ([`PDC-009`](../principes/PDC-009-tracabilite-et-versionnage-atomique.md)) ; l'agent n'édite jamais les fichiers en édition humaine uniquement et n'opère aucune action git.
+- **Hors périmètre explicite** : correction de `doc/cli/` (constat [C7](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats), relève d'un rapport de bogue distinct) ; correction de `src/lib/resource.sh` (tracée par [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md)) ; toute modification de `ARCHITECTURE.md`, de `clia` et de `test/`.
 
 ## Spécification du livrable
 
-Le livrable **de la tâche 34** est le présent plan. Son exécution relèvera d'une ou plusieurs tâches ultérieures et produira :
+L'exécution de ce plan produira :
 
-- un **ADR** (`ADR-011`) définissant le type de ressource `USE`, sa place dans la chaîne de conception, son gabarit, ses règles d'altitude et le catalogue d'acteurs ;
-- l'entrée `usage` dans `.dev/resource-types.yaml` et les relations typées associées ;
-- un **skill** (`skl-016-cas-d-usage`) encadrant la production d'un `USE` ;
-- l'amendement des harnais (`CLAUDE.md`, `ARCHITECTURE.md`) et des skills producteurs concernés ;
-- un **catalogue initial de `USE`** dans `.dev/usages/`, dérivé de l'existant ;
-- l'extension de `test/` en tests d'acceptation rattachés aux `USE` ;
-- une capacité d'inspection de couverture dans `clia`.
+- deux **ADR** : `ADR-011` définissant le type de ressource `ACT` (acteur), `ADR-012` définissant le type de ressource `USE` (cas d'usage), son gabarit et sa place dans la chaîne de conception ;
+- deux entrées dans [`.dev/resource-types.yaml`](../resource-types.yaml) (`acteur` et `usage`) et les relations correspondantes ;
+- deux **skills** : `skl-016-acteur` et `skl-017-cas-d-usage` ;
+- l'amendement de [`CLAUDE.md`](../../CLAUDE.md) (table des livrables) et des skills producteurs concernés ([`skl-003`](../skills/skl-003-plan-de-travail/SKILL.md), [`skl-010`](../skills/skl-010-requis/SKILL.md), [`skl-009`](../skills/skl-009-specification/SKILL.md)) ;
+- un **catalogue d'acteurs** dans `.dev/acteurs/` ;
+- un **catalogue initial de cas d'usage** dans `.dev/usages/`, dérivé de l'existant ;
+- le **rattachement amont** des exigences existantes aux cas d'usage qu'elles servent.
+
+Aucun code n'est modifié par ce plan.
 
 ## Plan proposé
 
 ### Segment 1 : Conception (R1, R2, R3, R7)
 
-#### 1.1 ADR du type de ressource `USE`
+#### 1.1 `ADR-011` : le type de ressource `ACT` (acteur)
 
-Produire `ADR-011` (`skl-006`) actant :
+Produire l'ADR ([`skl-006`](../skills/skl-006-adr/SKILL.md)) actant :
 
-- **le type** : un `USE` décrit un **but d'acteur atteint de bout en bout**, à la question *qui veut quoi et pourquoi* ; il ne se confond pas avec le `REQ` (*ce que le système doit garantir*) ni avec le `SPEC` (*comment l'interface se comporte*). Motiver le refus de la fusion dans `REQ` par `FND-015`, `FND-018` (section 10.6) et le contre-exemple relevé par `ANL-011` ;
-- **sa place dans la chaîne** : `USE` en amont de `REQ`, correspondant au niveau des exigences de parties prenantes de la norme 29148, aujourd'hui absent ;
-- **le gabarit** (R2), au format court par défaut : frontmatter (`type: usage`, `version`, `title`, `status`, `date`) ; en-tête (acteur principal, niveau, portée, parties prenantes et intérêts, préconditions, garantie de succès, garantie minimale) ; flux nominal numéroté ; flux alternatifs et d'échec avec issue et code de retour attendu ; critères d'acceptation directement scriptables ; traçabilité ;
-- **les deux règles d'altitude** : titre en verbe à l'infinitif orienté but de l'acteur (« Ouvrir une session de travail », jamais « Commande `ses open` ») ; interdiction du niveau sous-fonction comme unité de fichier, pour prévenir l'anti-motif de décomposition fonctionnelle (constat C3) ;
-- **le catalogue d'acteurs** (R3), à partir de la typologie proposée par `ANL-014` (A1 à A6, P1 à P4), avec la **règle de séparation** entre acteurs de méthode (génériques, propres au système d'augmentation) et acteurs de domaine (propres au dépôt hôte). Voir objection 5 ;
-- **la relation plan vers usage** (R7) : un `PLN` déclare le ou les `USE` qu'il réalise, de sorte que le besoin cesse de se perdre à la clôture de session (constat C8) ;
-- **les conséquences** sur `ARCHITECTURE.md`, dont la section « Acteurs et rôles » range `clia` parmi les acteurs alors qu'il est le système décrit (constat C2). Voir objection 6 ;
-- **les non-décisions** reprises d'`ANL-014` : pas de user stories, pas de Gherkin ni de cadre BDD complet, pas de fusion dans `REQ`.
+- **le type** : un `ACT` décrit **un rôle**, pas une personne : sa responsabilité, ses buts, ses préconditions d'accès, ses modes d'échec caractéristiques et ses intérêts. Une même personne peut tenir plusieurs rôles, ce que le dépôt vérifie déjà (constat [C2](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats) et note de la [typologie d'`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#typologie-des-utilisateurs-et-des-parties-prenantes) : opérateur, installateur et mainteneur sont aujourd'hui la même personne, et se sépareront) ;
+- **pourquoi un type autonome** plutôt qu'une section d'ADR ou de harnais : l'acteur est cité par les `USE`, les `REQ` et les `PLN` ; en faire une ressource adressable et versionnée lui donne un identifiant stable et une seule source de vérité ([`PDC-006`](../principes/PDC-006-source-de-verite-documentaire-unique.md)) ;
+- **les catégories** : acteur primaire, acteur secondaire, partie prenante hors scène, reprises de la [typologie d'`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#typologie-des-utilisateurs-et-des-parties-prenantes) ;
+- **la règle de séparation méthode / domaine** : les acteurs du **système d'augmentation** (opérateur, agent, installateur, mainteneur) sont génériques et transposables ; les acteurs **de domaine** d'un dépôt hôte sont propres à ce dépôt. La règle dit lesquels le harnais fournit et comment un dépôt hôte ajoute les siens sans les mélanger ([`ADR-005`](../adr/ADR-005-fonction-scope-harnais.md), [`PDC-003`](../principes/PDC-003-separation-methode-domaine-genericite-harnais.md), risque déjà consigné par [`BUG-003`](../bugs/BUG-003-frontiere-methode-domaine-sous-tension.md)) ;
+- **le gabarit** : frontmatter (`type: acteur`, `version`, `title`, `status`, `date`) ; catégorie ; portée (méthode ou domaine) ; responsabilité ; buts poursuivis ; intérêts ; ce que l'acteur ne fait pas ; relations.
 
-#### 1.2 Couche type et relations
+#### 1.2 `ADR-012` : le type de ressource `USE` (cas d'usage)
 
-Ajouter à `.dev/resource-types.yaml` l'entrée `usage` (prefix `USE`, emplacement `.dev/usages`, nommage séquencé, skill `skl-016-cas-d-usage`, édition `co`) et les relations nécessaires à R4 (`sert` ou réemploi de `derive-de` pour l'amont, `demontre` pour l'aval usage vers test). Trancher ici, conformément à la décision prise en 1.1, la **forme d'écriture** des relations dans le frontmatter, afin de ne pas créer un mécanisme propre au `USE` en concurrence du mécanisme général (`PDC-006`). Voir objection 2.
+Produire l'ADR ([`skl-006`](../skills/skl-006-adr/SKILL.md)) actant :
 
-**BREAKPOINT 1.** Arrêt après 1.1 et 1.2. L'humain valide le modèle (le type, le gabarit, le catalogue d'acteurs, la règle de séparation méthode/domaine et la forme des relations) avant toute production de masse. Ce qui suit crée un répertoire, un skill, une dizaine de fichiers et modifie les harnais : ces effets sont coûteux à défaire si le modèle change.
+- **le type** : un `USE` décrit un **but d'acteur atteint de bout en bout**, à la question *qui veut quoi et pourquoi*. Il ne se confond ni avec le `REQ` (*ce que le système doit garantir*) ni avec la `SPEC` (*comment l'interface se comporte*). Motiver le refus de la fusion dans `REQ` par [`FND-015`](../fondations/FND-015-requis-et-specification.md), [`FND-018`](../fondations/FND-018-cas-usage-besoins-utilisateurs.md) et le contre-exemple relevé par [`ANL-011`](../analyses/ANL-011-specs-reqs-livrables-tda-vs-clia.md) ;
+- **sa place dans la chaîne** : `USE` en amont de `REQ`, au niveau des exigences de parties prenantes, aujourd'hui absent (constat [C1](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats)) ;
+- **la règle d'indépendance aux outils** (résolution humaine de la tâche 35) : un `USE` nomme le système comme boîte noire et l'état du monde avant et après ; il ne nomme **aucune commande, aucun script, aucun code de retour**. Conséquence directe : un `USE` reste valide quand l'outil change, et il peut être écrit avant que l'outil existe ;
+- **le gabarit** (R2), format court par défaut : frontmatter (`type: usage`, `version`, `title`, `status`, `date`, acteur principal) ; en-tête (niveau, portée, parties prenantes et intérêts, préconditions, garantie de succès, garantie minimale) ; flux nominal numéroté ; flux alternatifs et d'échec avec issue observable pour l'acteur ; critères d'acceptation exprimés en état observable ; relations ;
+- **les deux règles d'altitude** : titre en verbe à l'infinitif orienté but de l'acteur (« Ouvrir une session de travail », jamais « Commande `ses open` ») ; interdiction du niveau sous-fonction comme unité de fichier, pour prévenir l'anti-motif de décomposition fonctionnelle (constat [C3](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats)) ;
+- **la relation plan vers usage** (R7) : un `PLN` déclare le ou les `USE` qu'il réalise, de sorte que le besoin cesse de se perdre à la clôture de session (constat [C8](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#constats)) ;
+- **les non-décisions** reprises d'[`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#ce-que-la-présente-analyse-ne-recommande-pas) : pas de user stories, pas de Gherkin ni de cadre BDD, pas de fusion dans `REQ`.
 
-### Segment 2 : Méthodologie (R2, R7)
+#### 1.3 Couche type et forme provisoire des relations
 
-#### 2.1 Skill de production
+Ajouter à [`.dev/resource-types.yaml`](../resource-types.yaml) :
 
-Produire `skl-016-cas-d-usage` (`skl-001` comme méta-skill) : quand l'utiliser et quand ne pas l'utiliser, processus, critères de qualité, structure du livrable avec le gabarit décidé en 1.1. Graver les deux règles d'altitude et la liste des acteurs valides comme critère vérifiable. Skill générique, sans information de domaine (`ADR-005`, `PDC-003`).
+- l'entrée `acteur` (prefix `ACT`, emplacement `.dev/acteurs`, nommage `sequence`, skill `skl-016-acteur`, édition `co`) ;
+- l'entrée `usage` (prefix `USE`, emplacement `.dev/usages`, nommage `sequence`, skill `skl-017-cas-d-usage`, édition `co`) ;
+- les deux relations manquantes au vocabulaire : `utilise` (un `ACT` utilise un `USE` pour atteindre un but) et `satisfait` (un `REQ` satisfait un `USE` d'un `ACT`). Ces deux relations transcrivent littéralement les deux énoncés demandés à la tâche 34 (objection C). Aucun type `FONCTIONNALITÉ` n'est créé : la fonctionnalité est déjà portée par le `REQ`, qui énonce ce que le système doit garantir.
 
-#### 2.2 Amendement des harnais et des skills producteurs
+**Forme provisoire retenue** (résolution humaine, objection 2) : les relations s'écrivent **dans le corps des documents**, en liens markdown, dans une section `## Relations` normalisée par les deux skills du segment 2, avec les deux tournures ci-dessus. Le frontmatter ne porte que l'acteur principal d'un `USE`. **Dette nommée** : la couche relations lisible par un programme (relations typées en frontmatter pour tout le corpus, validation des références pendantes) reste à instancier ; elle n'est ni conçue ni implémentée ici. Ce choix est un compromis assumé de vitesse de conception, à revoir quand la priorité `init` et `upgrade`/`downgrade` sera livrée.
 
-- `CLAUDE.md` : ligne `USE` dans la table des livrables (qui est une **vue** de `.dev/resource-types.yaml`, `PDC-006`), et mention du maillon dans la chaîne de conception.
-- `ARCHITECTURE.md` : renvoi vers le catalogue d'acteurs de `ADR-011` plutôt que duplication, et correction de la modélisation relevée au constat C2.
-- `skl-003-plan-de-travail` : champ de frontmatter déclarant le ou les `USE` réalisés (R7).
-- `skl-010-requis` : chaque `REQ` déclare le ou les `USE` qu'il sert (R4, amont).
-- `skl-009-specification` : rappel que la table de traçabilité existante se prolonge désormais vers l'amont.
+**BREAKPOINT 1.** Arrêt après 1.3. L'humain valide le modèle (les deux types, les gabarits, la règle de séparation méthode / domaine, la règle d'indépendance aux outils et la forme provisoire des relations) avant toute production de masse. Ce qui suit crée deux répertoires, deux skills et une quinzaine de fichiers : ces effets sont coûteux à défaire si le modèle change.
 
-### Segment 3 : Catalogue initial (R6)
+### Segment 2 : Méthodologie (R2, R3, R7)
 
-#### 3.1 Constituer les `USE` depuis l'existant
+#### 2.1 `skl-016-acteur`
 
-Six à dix `USE` de niveau « but utilisateur » suffisent à couvrir le système actuel. La matière existe déjà et n'attend qu'à être réorganisée par but : le « Flux principal » d'`ARCHITECTURE.md`, les transitions d'`ADR-006`, les conditions d'échec déjà spécifiées dans `SPEC-002` et `REQ-002-NF4`, et les deux capacités attendues énoncées dans `.dev/session.md`. Ordre de production, par valeur décroissante :
+Produire le skill ([`skl-001`](../skills/skl-001-skill-writer/SKILL.md) comme méta-skill) : quand l'utiliser et quand ne pas l'utiliser, processus, critères de qualité, structure du livrable avec le gabarit décidé en 1.1. Graver comme critères vérifiables la règle de séparation méthode / domaine et l'interdiction de nommer une personne à la place d'un rôle. Skill générique, sans information de domaine ([`ADR-005`](../adr/ADR-005-fonction-scope-harnais.md)).
 
-1. **parcours de session** (acteur A1) : ouvrir une session de travail, clore une session de travail, inspecter l'état courant ;
-2. **parcours de gouvernance** (acteurs A1 et A2) : soumettre un problème et obtenir un plan, objecter à un plan, reprendre après un breakpoint ;
-3. **parcours d'inspection** (acteurs A1 et A4) : inspecter les ressources et leurs versions, publier une version métier ;
-4. **parcours d'installation** (acteur A3) : **exclu de ce segment**, voir objection 4.
+#### 2.2 `skl-017-cas-d-usage`
 
-Chaque `USE` produit porte ses flux d'échec et ses critères d'acceptation, sans quoi le segment 4 n'a pas de matière.
+Produire le skill ([`skl-001`](../skills/skl-001-skill-writer/SKILL.md) comme méta-skill) avec le gabarit décidé en 1.2. Graver comme critères vérifiables : les deux règles d'altitude, la règle d'indépendance aux outils (aucun nom de commande dans un `USE`), l'obligation d'un acteur principal existant dans `.dev/acteurs`, et la forme de la section `## Relations`.
 
-**BREAKPOINT 2.** Arrêt après 3.1. L'humain valide le catalogue avant que les tests et les liens de traçabilité ne s'y accrochent : un `USE` mal découpé propage son défaut dans les tests qui en dérivent.
+#### 2.3 Amendement des harnais et des skills producteurs
 
-### Segment 4 : Traçabilité et vérification (R4, R5)
+- [`CLAUDE.md`](../../CLAUDE.md) : deux lignes dans la table des livrables (`ACT` et `USE`), qui est une **vue** de [`.dev/resource-types.yaml`](../resource-types.yaml) et non une source parallèle ([`PDC-006`](../principes/PDC-006-source-de-verite-documentaire-unique.md)), et mention du maillon amont dans la chaîne de conception.
+- [`skl-003-plan-de-travail`](../skills/skl-003-plan-de-travail/SKILL.md) : un plan déclare le ou les `USE` qu'il réalise (R7).
+- [`skl-010-requis`](../skills/skl-010-requis/SKILL.md) : un `REQ` déclare le ou les `USE` qu'il satisfait, et pour quel acteur (R4 amont).
+- [`skl-009-specification`](../skills/skl-009-specification/SKILL.md) : rappel que la table de traçabilité existante se prolonge désormais vers l'amont, via le `REQ`.
+- `ARCHITECTURE.md` : **non modifié** (objection 6).
 
-#### 4.0 Prérequis : réconcilier `src/lib/resource.sh` avec `ADR-004` v0.2.0
+### Segment 3 : Catalogues initiaux (R3, R6)
 
-Étape ajoutée par ce plan, non prévue par `ANL-014`, rendue nécessaire par l'objection 1. Le module d'inspection des ressources est resté sur le modèle aboli ; toute capacité de mesure ajoutée par-dessus hériterait de ses erreurs.
+#### 3.1 Catalogue d'acteurs
 
-#### 4.1 Rattachement amont et aval
+Produire les `ACT` du système d'augmentation, à partir de la [typologie d'`ANL-014`](../analyses/ANL-014-cas-usage-et-acteurs-de-clia.md#typologie-des-utilisateurs-et-des-parties-prenantes) : opérateur du dépôt, agent IA, installateur, mainteneur du système d'augmentation (acteurs primaires) ; système de fichiers et dépendances externes (acteurs secondaires) ; destinataire des livrables, collaborateur futur, éditeur du modèle d'agent, entreprise (parties prenantes). Chacun porte sa catégorie et sa portée (méthode ou domaine). `clia` n'est **pas** un acteur : c'est le système décrit.
 
-Renseigner les relations décidées en 1.2 : chaque `REQ` déclare le ou les `USE` qu'il sert ; chaque `USE` déclare les tests qui le démontrent ; chaque test nomme le `USE` couvert.
+#### 3.2 Catalogue de cas d'usage
 
-#### 4.2 Tests d'acceptation dérivés des `USE`
+Six à dix `USE` de niveau « but utilisateur » couvrent le système actuel. La matière existe déjà et n'attend qu'à être réorganisée par but : le flux principal d'`ARCHITECTURE.md` (lu, non modifié), les transitions d'[`ADR-006`](../adr/ADR-006-gestion-des-sessions.md), les conditions d'échec de [`SPEC-002`](../specs/SPEC-002-cli-clia.md) et de [`REQ-002`](../requis/REQ-002-cli-clia.md), et les deux capacités attendues énoncées dans `.dev/session.md`. Ordre de production, par valeur décroissante :
 
-Étendre `test/` en commençant par le cycle de vie des sessions, aujourd'hui couvert par zéro assertion alors qu'il est la fonction déclarée du système. Le motif de bac à sable isolé existe déjà dans `test/test_clia.sh` (`mktemp -d`, copie de `src/`, `trap` de nettoyage) et le contrat observable d'un CLI (arguments, sortie standard, sortie d'erreur, code de retour, effets sur le système de fichiers) est directement scriptable. Chaque critère d'acceptation d'un `USE` devient une assertion nommée par ce `USE`.
+1. **parcours de session** (acteur : opérateur du dépôt) : ouvrir une session de travail, clore une session de travail, inspecter l'état courant ;
+2. **parcours d'installation** (acteur : installateur) : équiper un dépôt du système d'augmentation, faire évoluer un dépôt équipé, revenir à l'état antérieur. Ces trois `USE` sont **réintégrés** au catalogue par la résolution humaine de l'objection 4 : décrits comme buts d'acteur, ils ne dépendent d'aucune décision de [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) et couvrent les deux livrables attendus de la session ;
+3. **parcours de gouvernance** (acteurs : opérateur, agent IA) : soumettre un problème et obtenir un plan, objecter à un plan, reprendre après un breakpoint ;
+4. **parcours d'inspection** (acteurs : opérateur, mainteneur) : inspecter les ressources et leurs versions, publier une version métier.
 
-Sur l'outillage : ne pas ajouter `bats-core` ni `shellspec` à ce stade (la sobriété actuelle du dépôt se limite à `bash` et `yq`) ; le script maison suffit. Appliquer en revanche la technique du fichier de référence aux sorties d'aide (`clia -h`, `--man`), volumineuses et devant rester stables.
+Chaque `USE` porte ses flux d'échec et ses critères d'acceptation en état observable, sans quoi le segment 4 n'a pas de matière.
 
-#### 4.3 Mesure de couverture dans `clia`
+#### 3.3 Conséquence sur `PLN-016`
 
-Ajouter une commande d'inspection déterministe et en lecture seule mesurant les deux indicateurs de `FND-018` : usage sans test (couverture avant) et test sans usage (couverture arrière). Cohérent avec `PDC-001` et `PDC-002` ; une référence pendante étant déjà un bogue par `ADR-003`, le contrôle prolonge l'existant. Documenter la commande dans `src/clia.doc.yaml` pour satisfaire la cohérence dispatch/documentation (`REQ-001-F9`).
+`PLN-017` faisant autorité sur le modèle (résolution humaine, objection 3), réviser [`PLN-016`](PLN-016-installation-cycle-de-vie-clia.md) pour qu'il **déclare les `USE` du parcours d'installation qu'il réalise** (R7), sans changer sa portée ni ses décisions. La collision relevée à la révision 1 (deux harnais de test pour le même parcours) est **caduque** : les tests sont hors portée de `PLN-017`, et `PLN-016` conserve donc entièrement son segment de vérification.
+
+**BREAKPOINT 2.** Arrêt après 3.3. L'humain valide les deux catalogues avant que les rattachements amont ne s'y accrochent : un `USE` mal découpé propage son défaut dans tout ce qui le cite.
+
+### Segment 4 : Traçabilité amont (R4, volet amont)
+
+#### 4.1 Rattachement amont des exigences
+
+Renseigner, dans la forme décidée en 1.3, les relations des ressources existantes : chaque `REQ` déclare le ou les `USE` qu'il satisfait et pour quel acteur ; chaque `USE` déclare son acteur principal et les parties prenantes concernées. Périmètre : [`REQ-001`](../requis/REQ-001-convention-cli-bash.md) et [`REQ-002`](../requis/REQ-002-cli-clia.md).
+
+Le volet aval (chaque `USE` déclare les tests qui le démontrent, chaque test nomme le `USE` couvert, mesure des deux couvertures) est **hors portée** et reste à planifier ultérieurement.
 
 ## Objections de l'agent IA
 
-1. **`src/lib/resource.sh` n'est plus conforme au modèle qu'il est censé exposer.** Constat vérifié : le module code en dur la table d'`ADR-004` v0.1.0, avec les cycles `pointfixe` et `travail` **abolis** par la v0.2.0 ; `PDC` et `skl` y sont inconnus (`clia res ls PDC` retourne « type de ressource inconnu ») ; la version des `FND`/`ANL` est extraite d'une date de nom de fichier qui n'existe plus depuis le renommage séquencé (colonne vide) ; l'état des `PLN` est lu par un `grep` qui capture du texte d'objection ; et `clia --version --long` cherche encore `.dev/ressources.yaml`, aboli. Si ce plan est exécuté tel quel, la mesure de couverture de 4.3 s'ajoute à un module qui rapporte des données fausses sur quatre des neuf types qu'il connaît, et le contrôle de traçabilité hérite de cette fausseté sans que rien ne le signale. Suggestion : ouvrir un `BUG-007` pour cet écart, et conserver l'étape 4.0 comme prérequis bloquant du segment 4.
-
-2. **La couche relations d'`ADR-004` est déclarée mais non instanciée.** `.dev/resource-types.yaml` déclare six relations (`specifie`, `derive-de`, `remplace`, `reference`, `produit-par`, `viole`), mais aucun frontmatter du dépôt ne porte de champ de relation, et les références croisées sont écrites en texte non résolvable. R4 suppose pourtant une traçabilité lisible par un programme. Si ce plan est exécuté tel quel, on invente un mécanisme de relations pour le seul `USE` alors que le mécanisme général reste à instancier : deux mécanismes concurrents pour la même fonction, en violation directe de `PDC-006`. Suggestion : trancher explicitement en 1.1 et 1.2 entre (a) `USE` inaugure la couche relations pour tout le corpus, ce qui élargit le plan, et (b) `USE` adopte une forme provisoire assumée, avec une dette nommée. L'agent ne tranche pas seul.
-
-3. **Collision avec le segment 2.4 de `PLN-016`.** `PLN-016` prévoit un « harnais de test cumulatif en bac à sable » couvrant `init`, `upgrade` et `downgrade` ; R5 prévoit des tests d'acceptation dérivés des `USE`, dont le parcours d'installation. Si les deux plans s'exécutent sans arbitrage, le dépôt se retrouve avec deux harnais de test d'origine et de forme différentes pour le même parcours, ce que le contexte de session dénonce précisément (« nous faisons beaucoup de tests, mais ceux-ci sont fragmentés et ne se cumulent pas »). Suggestion : décider que `PLN-017` fixe la **forme** (tout test dérive d'un `USE` et le nomme) et que `PLN-016` fournit le **contenu** du parcours d'installation dans cette forme.
-
-4. **Le `USE` du parcours d'installation dépend d'un ADR non validé.** `ADR-010` est au statut « Proposé », porte une question de conception explicitement non tranchée (qui exécute le `git init` que suppose le livrable « créer un nouveau repo », puisque `clia setup` ne fait pas de git), et `.dev/session.md` porte un breakpoint de validation de cet ADR dont l'énoncé d'objection est inachevé. Si ce plan est exécuté tel quel, on grave un parcours d'acteur qui changera avec la décision, et les tests qui en dérivent seront à réécrire. Suggestion : exclure ce `USE` du segment 3 (déjà fait au point 3.1) et le produire après validation d'`ADR-010`.
-
-5. **Tension de généricité sur le catalogue d'acteurs.** `ARCHITECTURE.md` est un fichier de harnais, tenu par `ADR-005` et `PDC-003` à ne porter aucune information de domaine, et il porte déjà une section « Acteurs et rôles ». Les acteurs A1 à A4 d'`ANL-014` (opérateur, agent, installateur, mainteneur) sont des rôles du **système d'augmentation**, donc génériques et réutilisables ; mais dans un dépôt hôte équipé, les `USE` porteront des acteurs **de domaine**. Si ce plan est exécuté sans expliciter cette distinction, `skl-016` produira des `USE` de méthode et des `USE` de domaine dans le même répertoire sans règle de séparation, et le harnais cessera d'être transposable, ce qui est exactement le risque déjà consigné par `BUG-003`. Suggestion : graver la séparation en 1.1 (catalogue de méthode générique fourni par le harnais, catalogue de domaine propre au dépôt hôte).
-
-6. **La correction d'`ARCHITECTURE.md` doit être qualifiée avant d'être faite.** `ARCHITECTURE.md` range `clia` parmi les acteurs alors qu'il est le système décrit (constat C2). Si ce plan est exécuté tel quel, le segment 2 modifie un harnais au statut accepté sans qu'aucune décision tracée ne motive le changement, ce qui affaiblit la traçabilité que ce même plan cherche à renforcer (`PDC-009`). Suggestion : rattacher explicitement la correction aux conséquences d'`ADR-011` plutôt que de la traiter comme une retouche éditoriale ; l'ouverture d'un `BUG-*` distinct reste possible si l'humain préfère qualifier l'écart comme tel.
+Aucune objection ouverte actuellement. Les six objections de la révision 1 sont résolues par la tâche 35 de `.dev/session.md` ; leur traitement est détaillé au Changelog ci-dessus. Deux points restent tracés hors de ce plan, par décision humaine et non par objection : [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md) (écart de `src/lib/resource.sh` au modèle de ressources) et la dette nommée sur la couche relations (voir 1.3).
 
 ## Note sur les objections humaines
 

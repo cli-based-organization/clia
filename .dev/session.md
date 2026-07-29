@@ -586,6 +586,9 @@ Créer des resources indépendantes ACTOR
 
 ceci est off scope. ne pas toucher à ARCHITECTURE.md
 
+## 36. [implementation] Exécuter le plan PLN-017
+
+
 ## x. [conception] Description de l'usage et des contextes
 
 
