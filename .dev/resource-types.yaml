@@ -11,7 +11,7 @@
 # renommage, suppression de ressources.yaml) releve du Segment 2 (apres
 # breakpoint). Voir ADR-004, ANL-2026-07-21-usage-semantique-ontologie-repos.
 
-version: 0.1.0
+version: 0.2.0
 
 # Schema de frontmatter attendu par categorie.
 frontmatter_schema:
@@ -54,6 +54,22 @@ types_livrables:
     nommage: sequence
     skill: skl-014-principe-de-conception
     edition: co
+  acteur:
+    prefix: ACT
+    emplacement: ".dev/acteurs"
+    nommage: sequence
+    skill: skl-016-acteur
+    edition: co
+    # Champs de frontmatter propres au type (voir ADR-011) :
+    # categorie (primaire|secondaire|partie-prenante), portee (methode|domaine).
+  usage:
+    prefix: USE
+    emplacement: ".dev/usages"
+    nommage: sequence
+    skill: skl-017-cas-d-usage
+    edition: co
+    # Champs de frontmatter propres au type (voir ADR-012) :
+    # acteur-principal (ACT-<SEQ>), niveau (but-utilisateur).
   specification:
     prefix: SPEC
     emplacement: ".dev/specs"
@@ -125,3 +141,13 @@ relations:
   - reference     # renvoi simple
   - produit-par   # une instance est produite par un skill
   - viole         # un bug signale la violation d'un PDC/SPEC/REQ
+  - utilise       # un ACT utilise un USE pour atteindre un but (ADR-011)
+  - satisfait     # un REQ satisfait un USE d'un acteur (ADR-012)
+  - realise       # un PLN realise un ou plusieurs USE (ADR-012)
+
+# Forme d'ecriture des relations : PROVISOIRE (PLN-017, resolution tache 35).
+# Les relations s'ecrivent en liens markdown dans une section "## Relations" du
+# corps des documents, pas en champs de frontmatter typees. La couche relations
+# machine-lisible prevue par ADR-004 reste a instancier pour tout le corpus :
+# dette nommee, hors portee de PLN-017. Tant qu'elle n'existe pas, aucune
+# validation mecanique des references pendantes n'est possible.

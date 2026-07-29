@@ -589,6 +589,40 @@ ceci est off scope. ne pas toucher à ARCHITECTURE.md
 ## 36. [implementation] Exécuter le plan PLN-017
 
 
+## 37. [informed guess implementation] Produire les acteurs pour ce projet
+
+
+## 38. [conception] Analyse des use cases
+
+L'objectif ultime de cette session est de produire la commande d'installation du clia`./setup.sh init`, la commande d'installation du  et les commandes de changement de version des harness `clia downgrade/upgrade [VERSION]`
+
+On souhaite couvrir les use case suivants:
+
+**Use case 1** => l'installateur utilise la commande `./setup.sh install --dev [--users=USER1,USER2,...]` pour installer `clia`. Sans l'option `--users`, l'installation est faite uniquement en local pour l'utilisateur-installateur. Dans ce mode, l'exécution de clia fait référence (alias ou path) aux scripts dans le repo source.  
+
+**Use Case 2** => un utilisateur crée un nouveau repo git contenant tout les harnais de clia installés. Il utilise la commande `clia init [-C REPO_ROOT] [.|REPO_NAME]`. Cette commande se comporte comme `git init`' mais ajoute les harness et autres fichiers et répertoires nécessaires dans le repo.
+
+**Use Case 3** => L'utilisateur vérifie les versions disponibles avec la commande `clia version ls`. Hints: utiliser des tags git pour exposer "facilement" les versions.
+
+**Use Case 4** => L'utilisateur/mainteneur de clia augmente la version: `clia upgrade VERSION`. La target version doit être supérieur à la version actuelle.
+
+**Use Case 5** => L'utilisateur/mainteneur de clia diminue la version: `clia upgrade VERSION`. La target version doit être inférieur à la version actuelle.
+
+TODO  => Écrire les use cases. Et faire une analyse critique de la faisabilité/difficulté d'implémentation. Faire des recommendations par rapport à l'implémentation et aux décisions à prendre
+
+
+
+## 39. [planification]
+
+Vérifier tous les plans et vérifier ce qui reste à faire avant de pouvoir implémente les fonctionnalités demandés. Prendre en compte tous les travaux de conception et d'analyse. Et qui suit les recommendaitons de ANL-015
+
+Restreindre le scope du plan aux USE-001 à USE-002
+
+Au regard de tout cela, produire un nouveau plan de préparation avant l'implémentation et un second plan d'implantation
+
+
+
+
 ## x. [conception] Description de l'usage et des contextes
 
 

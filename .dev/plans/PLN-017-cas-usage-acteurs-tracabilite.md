@@ -1,13 +1,19 @@
 ---
 type: plan
-version: 0.2.0
+version: 0.2.3
 title: "Cas d'usage, acteurs et traçabilité amont (mise en oeuvre d'ANL-014)"
-status: résolu
+status: approuvé
 ---
 
 # PLN-017 - Cas d'usage, acteurs et traçabilité amont
 
 ## Changelog
+
+- **Révision 5 (2026-07-29, tâche 38)** : **étape 3.2 partiellement exécutée**. Cinq `USE` produits dans `.dev/usages/`, couvrant le **parcours d'installation et de gestion des versions** énoncé par la tâche 38 de `.dev/session.md`. Deux écarts au plan sont consignés : (a) l'ordre de production de l'étape 3.2 plaçait le parcours de session en premier ; la tâche 38 impose l'installation, qui est la priorité déclarée de la session. Les parcours de session, de gouvernance et d'inspection restent à produire ; (b) le catalogue s'accompagne d'une analyse de faisabilité, [`ANL-015`](../analyses/ANL-015-faisabilite-installation-et-versions.md), non prévue par le plan et demandée par la tâche. Le BREAKPOINT 2 n'est pas atteint : il suit l'étape 3.3.
+
+- **Révision 4 (2026-07-29, tâche 37)** : **reprise après le BREAKPOINT 1** et **étape 3.1 exécutée** (catalogue d'acteurs : dix `ACT` dans `.dev/acteurs/`), sur demande directe de l'humain. Deux écarts d'ordonnancement sont consignés : (a) le segment 2 (skills et amendement des harnais) n'est **pas** exécuté, si bien que les dix `ACT` sont produits sous l'autorité du gabarit d'[`ADR-011`](../adr/ADR-011-ressource-acteur.md) et non sous celle de `skl-016-acteur`, qui n'existe pas encore ; (b) l'étape 3.2 (catalogue de cas d'usage) n'est pas exécutée, si bien qu'aucun `ACT` ne porte encore de relation `utilise`. Le BREAKPOINT 2 reste devant, en aval de l'étape 3.2.
+
+- **Révision 3 (2026-07-29, tâche 36)** : exécution autorisée par la tâche 36 de `.dev/session.md`, statut `résolu` vers **`approuvé`**. **Segment 1 exécuté** : [`ADR-011`](../adr/ADR-011-ressource-acteur.md) (type `ACT`), [`ADR-012`](../adr/ADR-012-ressource-cas-d-usage.md) (type `USE`) et les entrées `acteur` et `usage` de [`.dev/resource-types.yaml`](../resource-types.yaml) v0.2.0. **Arrêt au BREAKPOINT 1** : aucun livrable des segments 2 à 4 n'est produit tant que l'humain n'a pas autorisé la reprise. Un écart d'exécution est consigné : l'étape 1.3 prévoyait deux relations (`utilise`, `satisfait`) ; une troisième, `realise`, a été ajoutée, la relation plan vers usage exigée par R7 (étape 1.2) n'ayant pas de porteur dans le vocabulaire existant.
 
 - **Révision 2 (2026-07-29, tâche 35)** : traitement des objections humaines consignées à la tâche 35 de `.dev/session.md`. Les six objections de l'agent sont **résolues** et la portée du plan est resserrée :
   - **portée** : les tests et la mesure de couverture sortent du plan (objection humaine générale). R5 est retirée, R4 est réduite à son volet amont. Le plan s'arrête à la conception, à la méthodologie et aux catalogues ;
@@ -85,7 +91,7 @@ Ajouter à [`.dev/resource-types.yaml`](../resource-types.yaml) :
 
 - l'entrée `acteur` (prefix `ACT`, emplacement `.dev/acteurs`, nommage `sequence`, skill `skl-016-acteur`, édition `co`) ;
 - l'entrée `usage` (prefix `USE`, emplacement `.dev/usages`, nommage `sequence`, skill `skl-017-cas-d-usage`, édition `co`) ;
-- les deux relations manquantes au vocabulaire : `utilise` (un `ACT` utilise un `USE` pour atteindre un but) et `satisfait` (un `REQ` satisfait un `USE` d'un `ACT`). Ces deux relations transcrivent littéralement les deux énoncés demandés à la tâche 34 (objection C). Aucun type `FONCTIONNALITÉ` n'est créé : la fonctionnalité est déjà portée par le `REQ`, qui énonce ce que le système doit garantir.
+- les relations manquantes au vocabulaire : `utilise` (un `ACT` utilise un `USE` pour atteindre un but), `satisfait` (un `REQ` satisfait un `USE` d'un `ACT`) et `realise` (un `PLN` réalise un ou plusieurs `USE`, exigée par R7). Les deux premières transcrivent littéralement les énoncés demandés à la tâche 34 (objection C). Aucun type `FONCTIONNALITÉ` n'est créé : la fonctionnalité est déjà portée par le `REQ`, qui énonce ce que le système doit garantir.
 
 **Forme provisoire retenue** (résolution humaine, objection 2) : les relations s'écrivent **dans le corps des documents**, en liens markdown, dans une section `## Relations` normalisée par les deux skills du segment 2, avec les deux tournures ci-dessus. Le frontmatter ne porte que l'acteur principal d'un `USE`. **Dette nommée** : la couche relations lisible par un programme (relations typées en frontmatter pour tout le corpus, validation des références pendantes) reste à instancier ; elle n'est ni conçue ni implémentée ici. Ce choix est un compromis assumé de vitesse de conception, à revoir quand la priorité `init` et `upgrade`/`downgrade` sera livrée.
 
