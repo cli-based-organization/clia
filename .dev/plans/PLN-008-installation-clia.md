@@ -1,8 +1,8 @@
 ---
 type: plan
-version: 0.1.0
+version: 0.1.1
 title: "Implémentation des fonctionnalités d'installation de `clia`"
-status: proposé
+status: remplacé par PLN-018 et PLN-019
 ---
 
 # PLN-008 - Implémentation des fonctionnalités d'installation de `clia`

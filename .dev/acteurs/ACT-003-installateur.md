@@ -1,6 +1,6 @@
 ---
 type: acteur
-version: 0.1.0
+version: 0.1.1
 title: "Installateur"
 status: proposé
 date: 2026-07-29
@@ -12,7 +12,9 @@ portee: methode
 
 ## Définition
 
-L'humain qui **équipe un dépôt** du système d'augmentation, le **fait évoluer** vers une version plus récente, ou le **ramène** à une version antérieure. Son travail porte sur le système d'augmentation d'un dépôt, jamais sur le contenu de ce dépôt.
+L'humain qui **rend l'outil d'augmentation disponible sur un poste**, puis qui **équipe un dépôt**, le **fait évoluer** vers une version plus récente, ou le **ramène** à une version antérieure. Son travail porte sur le système d'augmentation, jamais sur le contenu de domaine.
+
+L'équipement du poste est la **précondition** de l'équipement d'un dépôt : l'outil n'étant pas distribué avec le contenu ([`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md), décision D6), il faut l'avoir installé séparément pour pouvoir s'en servir.
 
 C'est le rôle le moins documenté du corpus alors qu'il porte les deux capacités attendues de la session courante. Il se distingue de [`ACT-004`](ACT-004-mainteneur-du-systeme-augmentation.md) : l'installateur **déploie** ce que le mainteneur **produit**.
 

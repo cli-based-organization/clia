@@ -1,6 +1,6 @@
 ---
 type: adr
-version: 0.2.0
+version: 0.3.0
 title: "Architecture du système d'augmentation par IA"
 status: Accepté
 date: 2026-07-10
@@ -52,6 +52,9 @@ Le dépôt met en place un système de collaboration humain / agent IA. Jusqu'ic
 
 - **Décision** : chaque composant a sa version propre, incrémentée indépendamment (voir `ADR-004`). Le contenu **métier** du dépôt a lui aussi sa version, distincte des trois composants. Modifier `clia` ou le harnais n'incrémente pas la version métier, et inversement.
 
+- **Amendement (v0.3.0, 2026-07-29, décision D1 de `ADR-013-version-augmentation-et-marque-installation`)** : dans **ce dépôt-ci**, la version du **domaine métier** (`version.yaml`) **est** la version du **système d'augmentation**, parce que le domaine de ce dépôt est ce système : il ne produit rien d'autre. La séparation énoncée ci-dessus reste vraie en général et **fausse ici** : les deux versions y coïncident.
+  **Limite stricte** : cette coïncidence vaut pour le dépôt source et pour lui seul. Dans un dépôt hôte équipé, `version.yaml` porte la version du contenu métier de ce dépôt, sans aucun rapport avec la version du système d'augmentation qui y est installée ; celle-ci est enregistrée dans la marque d'installation (`ADR-013`, décision D3). Confondre les deux ferait qu'une publication de contenu métier semblerait déplacer la version du harnais.
+
 ## Conséquences
 
 **Positives**
@@ -59,7 +62,8 @@ Le dépôt met en place un système de collaboration humain / agent IA. Jusqu'ic
 - `clia` peut opérer sur les fichiers humains sans violer la gouvernance, car déterministe et opéré par l'humain.
 
 **Négatives / risques**
-- Trois domaines de version à tenir cohérents (`ADR-004`, `.dev/ressources.yaml`, `version.yaml`).
+- Plusieurs domaines de version à tenir cohérents : la version de chaque ressource dans son frontmatter (`ADR-004`) et la version du domaine métier (`version.yaml`). La formulation d'origine citait `.dev/ressources.yaml`, manifeste central **aboli** par `ADR-004` v0.2.0 ; corrigée à la v0.3.0.
+- La coïncidence énoncée à l'amendement ci-dessus est **contextuelle** : vraie dans ce dépôt, fausse dans un dépôt hôte. Une règle dont la valeur de vérité dépend du dépôt est une règle qu'on applique mal un jour ; sa limite doit être répétée partout où elle est citée.
 - Discipline requise : une décision doit passer par la conception avant le harnais.
 
 ## Migration / porte de sortie

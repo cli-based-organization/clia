@@ -34,6 +34,8 @@ DRY_RUN=0
 . "$CLIA_LIB/session.sh"
 # shellcheck source=../lib/doc.sh
 . "$CLIA_LIB/doc.sh"
+# shellcheck source=../lib/setup.sh
+. "$CLIA_LIB/setup.sh"
 
 _cleanup() { :; }
 trap '_cleanup' EXIT
@@ -74,6 +76,7 @@ main() {
   _dbg "dispatch cmd=$cmd dry_run=$DRY_RUN args=$*"
   case "$cmd" in
     res)     cmd_res "$@" ;;
+    setup)   cmd_setup "$@" ;;
     ses)     cmd_ses "$@" ;;
     release) cmd_release "$@" ;;
     *)   _die "commande sans handler : $cmd" 2 ;;

@@ -45,6 +45,7 @@ rc=0
   DOC_FILE="$SB/src/clia.doc.yaml"
   . "$SB/src/lib/doc.sh"; . "$SB/src/lib/version.sh"
   . "$SB/src/lib/resource.sh"; . "$SB/src/lib/session.sh"
+  REPO_ROOT="$SB"; . "$SB/src/lib/setup.sh"
   _doc_selfcheck
 ) || rc=$?
 check "cohérence dispatch/documentation" "$rc" "0"

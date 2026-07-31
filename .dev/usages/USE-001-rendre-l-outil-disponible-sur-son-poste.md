@@ -1,6 +1,6 @@
 ---
 type: usage
-version: 0.1.0
+version: 0.1.1
 title: "Rendre l'outil d'augmentation disponible sur son poste"
 status: proposé
 date: 2026-07-29
@@ -48,5 +48,5 @@ niveau: but-utilisateur
 
 - **Acteur** : [`ACT-003`](../acteurs/ACT-003-installateur.md) utilise ce parcours pour disposer de l'outil sur son poste. Note : la définition d'`ACT-003` porte sur l'équipement d'un dépôt ; ce parcours porte sur l'équipement d'un poste, qui en est la précondition (voir [`ANL-015`](../analyses/ANL-015-faisabilite-installation-et-versions.md)).
 - **Précède** : [`USE-002`](USE-002-creer-un-depot-neuf-deja-equipe.md), [`USE-003`](USE-003-connaitre-les-versions-disponibles.md), [`USE-004`](USE-004-elever-un-depot-a-une-version-plus-recente.md), [`USE-005`](USE-005-ramener-un-depot-a-une-version-anterieure.md), qui supposent tous l'outil disponible.
-- **Satisfait par** : aucune exigence à ce jour. La couche 1 d'[`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) en fixe le cadre ; les exigences restent à écrire.
+- **Satisfait par** : [`REQ-003`](../requis/REQ-003-installation-et-extension.md) (F1 à F9, NF1 à NF5), spécifié par [`SPEC-004`](../specs/SPEC-004-script-amorcage-et-extension.md). Cadre décidé par [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) (D1, D2).
 - **Source** : cas d'usage 1 de la tâche 38 de `.dev/session.md`.

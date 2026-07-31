@@ -1,8 +1,8 @@
 ---
 type: plan
-version: 0.1.0
+version: 0.1.1
 title: "Refonte des ressources livrables : conventions OKF et cycle de vie unifié"
-status: approuvé (Segment 1 exécuté, au breakpoint ; Segment 2 en attente de revue humaine)
+status: exécuté
 ---
 
 # PLN-014 - Refonte des ressources livrables : conventions OKF et cycle de vie unifié

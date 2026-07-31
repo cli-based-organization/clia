@@ -1,13 +1,15 @@
 ---
 type: plan
-version: 0.2.0
+version: 0.3.0
 title: "Installation et cycle de vie de `clia` : plan combiné (remplace PLN-012 et PLN-013)"
-status: résolu
+status: partiellement exécuté ; portée réduite par PLN-018 et PLN-019
 ---
 
 # PLN-016 - Installation et cycle de vie de `clia` : plan combiné (remplace PLN-012 et PLN-013)
 
 ## Changelog
+
+- **Révision 4 (2026-07-29, tâche 43, étape 3.2 de `PLN-018`)** : mise à jour de statut, sans modification du plan lui-même. État réel : l'étape 1.1 est **exécutée** (elle a produit `ADR-010`) et l'étape 1.2 y est absorbée (décision D6). L'étape 1.3 (extension à des scripts externes) est **reprise** par `PLN-018` et a produit `ADR-014`. Les parcours `USE-001` à `USE-003` passent sous l'autorité de `PLN-018` et `PLN-019`. **Reste à ce plan** : l'étape 1.4 (type de ressource « interface CLI ») et le segment 2 pour les seuls parcours de mise à niveau et de retour en arrière.
 
 - **Révision 3 (2026-07-23, tâche 31)** : traitement des objections humaines (tâche 31 de `session.md`). Les objections 2 à 6 sont **résolues** : surface de commandes unifiée sur `clia setup <init|upgrade|downgrade>` (objection 2) ; modes d'installation calqués sur le `setup.sh` de `tda` (dev / permanent / local) en corrigeant ses fragilités selon `ANL-002` (objection 3) ; **pas de git** — `clia setup` ne modifie que les fichiers du système d'augmentation, et le `downgrade` re-matérialise depuis l'arbre `clia` local (objection 4) ; source de distribution = arbre local uniquement, par conséquence (objection 5) ; contrat d'interface strict et versionné pour l'extension à des scripts externes (objection 6). Aucune objection de l'agent ne reste ouverte : statut passé de **objection** à **résolu** (l'approbation revient à l'humain).
 - **Révision 2 (2026-07-21, tâche 30)** : `PLN-014` (refonte des ressources) et `PLN-015` (`clia release`) sont désormais **exécutés**. Conséquences pour ce plan : le modèle de ressources est **stabilisé** (versions en frontmatter, plus de manifeste, zones `.dev`) ; l'**objection 1** (dépendance à l'exécution de `PLN-014`) est **résolue** ; le moteur de matérialisation/réconciliation se conçoit désormais directement sur le modèle frontmatter ; `clia release` fournit déjà la gestion de la version métier. Restent ouvertes les objections 2 à 6 (surface de commandes, modes d'installation, rollback, source de distribution, scripts externes). Statut maintenu à **objection** (ces cinq objections bloquent encore).

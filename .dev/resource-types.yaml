@@ -11,7 +11,7 @@
 # renommage, suppression de ressources.yaml) releve du Segment 2 (apres
 # breakpoint). Voir ADR-004, ANL-2026-07-21-usage-semantique-ontologie-repos.
 
-version: 0.2.0
+version: 0.3.0
 
 # Schema de frontmatter attendu par categorie.
 frontmatter_schema:
@@ -123,6 +123,19 @@ types_traces:
     skill: ~
     edition: humain                      # jamais editee par l'agent (mute par clia/humain)
     immuable: true
+
+# Fichiers d'etat (ecrits et lus par clia ; ni ressources livrables, ni traces).
+# Non versionnes en semver, sans frontmatter markdown, sans skill de production.
+types_etats:
+  installation:
+    emplacement: ".dev/installation.yaml"
+    ecrit_par: clia
+    contenu: [version, revision-source, date, mode-de-pose, empreintes]
+    role: >-
+      Marque d'installation d'un depot equipe : dit quelle version du systeme
+      d'augmentation y est posee, et sert de marqueur de reconnaissance d'un
+      depot compatible. Voir ADR-013 (decisions D3 et D5) et ADR-010 (D9).
+      Present uniquement dans un depot equipe, jamais dans le depot source.
 
 # Fichiers exemptes de la regle de frontmatter appliquee par l'agent
 # (edition humaine uniquement, voir CONSTITUTION.md).

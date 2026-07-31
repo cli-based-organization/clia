@@ -1,6 +1,6 @@
 ---
 type: requis
-version: 0.2.0
+version: 0.3.0
 title: "Requis du CLI `clia`"
 date: 2026-07-10
 ---
@@ -56,6 +56,23 @@ Exigences du CLI `clia`, outil déterministe de gestion des sessions et d'inspec
   - Vérification : après `close`, `session.md` n'existe plus et l'archive datée existe.
 - **REQ-002-F12** (SHOULD) : `clia ses new [x<SEQ>]` ferme la session active si elle existe, puis en ouvre une.
   - Vérification : `new` sur un dépôt avec session active produit une archive et une nouvelle session active.
+
+### Installation (groupe `setup`)
+
+Ajouté en v0.3.0 (`PLN-018` étape 2.1). Usages satisfaits : [`USE-002`](../usages/USE-002-creer-un-depot-neuf-deja-equipe.md) et [`USE-003`](../usages/USE-003-connaitre-les-versions-disponibles.md). Décisions applicables : [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md), [`ADR-013`](../adr/ADR-013-version-augmentation-et-marque-installation.md), [`ADR-014`](../adr/ADR-014-contrat-extension-outil.md).
+
+- **REQ-002-F13** (MUST) : `clia setup init [-C CIBLE] [NOM]` matérialise le système d'augmentation dans un dépôt cible et crée ce dépôt s'il n'existe pas. La commande **n'implémente pas** l'opération : elle **invoque** le script d'amorçage déclaré comme extension ([`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) D8, [`REQ-003`](REQ-003-installation-et-extension.md)).
+  - Vérification : l'effet produit et le code de retour sont identiques à ceux de l'invocation directe du script.
+- **REQ-002-F14** (MUST) : `clia setup versions` énumère les versions disponibles du système d'augmentation et indique laquelle est installée dans la cible. Commande en **lecture seule**.
+  - Vérification : deux exécutions successives sans changement d'état produisent la même sortie ; aucun fichier n'est modifié.
+- **REQ-002-F15** (MUST) : `clia` **résout la cible** dans l'ordre : option explicite `-C`, puis racine du dépôt versionné contenant le répertoire courant, puis répertoire courant. La cible ne se confond jamais avec la racine de l'outil ([`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) D4).
+  - Vérification : `clia --config` depuis un sous-répertoire d'un dépôt cible rapporte la racine de ce dépôt, non celle de l'outil.
+- **REQ-002-F16** (MUST) : `clia` **reconnaît l'état** de la cible avant d'agir et distingue quatre cas : équipé et marqué, équipé sans marque, non équipé, hors de tout dépôt ([`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) D9, [`ADR-013`](../adr/ADR-013-version-augmentation-et-marque-installation.md) D5). Une commande qui exige un dépôt équipé refuse sur les deux derniers cas et **oriente** vers le parcours approprié.
+  - Vérification : chacun des quatre états produit un diagnostic distinct et un code de retour conforme.
+- **REQ-002-F17** (MUST) : `clia` **propage tel quel** le code de retour d'une extension, sans le réinterpréter, et lui transmet les options globales dont elle doit tenir compte ([`ADR-014`](../adr/ADR-014-contrat-extension-outil.md) D3).
+- **REQ-002-F18** (MUST) : `clia` **refuse d'invoquer** une extension dont la version majeure de contrat diffère de la sienne, et le dit explicitement plutôt que de tenter l'appel ([`ADR-014`](../adr/ADR-014-contrat-extension-outil.md) D5).
+- **REQ-002-F19** (MUST) : les sous-commandes du groupe `setup`, extensions comprises, sont soumises au même contrôle de cohérence dispatch et documentation que les commandes internes ([`REQ-001-F9`](REQ-001-convention-cli-bash.md)). Une extension non déclarée dans la source documentaire n'est pas exposée.
+  - Vérification : `clia setup -h` énumère toutes les sous-commandes réellement dispatchées, et rien d'autre.
 
 ## Exigences non fonctionnelles
 

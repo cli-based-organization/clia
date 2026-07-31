@@ -1,6 +1,6 @@
 ---
 type: usage
-version: 0.1.0
+version: 0.1.1
 title: "Créer un dépôt neuf déjà équipé du système d'augmentation"
 status: proposé
 date: 2026-07-29
@@ -23,7 +23,7 @@ niveau: but-utilisateur
 1. L'acteur désigne l'emplacement du dépôt à créer, soit par son nom, soit en désignant le répertoire courant.
 2. Le système vérifie que l'emplacement est utilisable et qu'aucun dépôt équipé ne s'y trouve déjà.
 3. Le système crée le dépôt versionné à cet emplacement.
-4. Le système y matérialise le système d'augmentation générique : fichiers de harnais, compétences, gabarits, couche type, outil, et les répertoires de ressources vides prêts à recevoir la conception propre au nouveau dépôt.
+4. Le système y matérialise le système d'augmentation générique : fichiers de harnais, compétences, gabarits, couche type, et les répertoires de ressources vides prêts à recevoir la conception propre au nouveau dépôt.
 5. Le système enregistre dans le dépôt la **version du système d'augmentation** qui vient d'y être posée.
 6. Le système rend compte de ce qui a été créé.
 7. L'acteur ouvre sa première séance de travail dans le dépôt.
@@ -49,5 +49,5 @@ niveau: but-utilisateur
 
 - **Acteur** : [`ACT-003`](../acteurs/ACT-003-installateur.md) utilise ce parcours pour équiper un dépôt neuf.
 - **Suppose** : [`USE-001`](USE-001-rendre-l-outil-disponible-sur-son-poste.md).
-- **Satisfait par** : aucune exigence à ce jour. Le périmètre du paquet distribuable est fixé par [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) (décision D6) ; la création du dépôt versionné est une **question laissée ouverte** par ce même ADR et tranchée par ce parcours (voir [`ANL-015`](../analyses/ANL-015-faisabilite-installation-et-versions.md)).
+- **Satisfait par** : [`REQ-003`](../requis/REQ-003-installation-et-extension.md) (F10 à F17) pour la matérialisation, et [`REQ-002`](../requis/REQ-002-cli-clia.md) (F13, F15, F16) pour la commande qui l'expose. Spécifié par [`SPEC-004`](../specs/SPEC-004-script-amorcage-et-extension.md) et [`SPEC-002`](../specs/SPEC-002-cli-clia.md), groupe `setup`. Cadre décidé par [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) (D5, D6, D8, D9) et [`ADR-013`](../adr/ADR-013-version-augmentation-et-marque-installation.md) (D3).
 - **Source** : cas d'usage 2 de la tâche 38 de `.dev/session.md`.

@@ -1,7 +1,8 @@
 ---
 type: plan
-version: 0.1.0
+version: 0.1.1
 title: "Développement du CLI bash `clia`"
+status: exécuté
 ---
 
 # PLN-006 - Développement du CLI bash `clia`

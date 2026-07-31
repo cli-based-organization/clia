@@ -1,6 +1,6 @@
 ---
 type: specification
-version: 0.2.0
+version: 0.3.0
 title: "Interface du CLI `clia`"
 date: 2026-07-10
 ---
@@ -62,7 +62,37 @@ Codes de sortie : `0` succès ; `2` erreur d'usage (commande inconnue, argument 
 | `clia ses close [SLUG]` | écrit `end-at`, archive en `SES-<DATE>-<HEURE>-<SLUG>.md` | 0 / 1 si aucune session active |
 | `clia ses new [x<SEQ>]` | `close` (si actif) puis `open [x<SEQ>]` | 0 / 1 |
 
-Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. `clia -h` énumère tous les groupes (`res`, `ses`) et commandes (`release`) ; `clia res -h` et `clia ses -h` énumèrent et décrivent toutes leurs sous-commandes ; chaque sous-commande dispose de sa propre aide (`clia ses status -h`, etc.), le tout généré depuis `clia.doc.yaml` (`REQ-001-F5/F7/F8`).
+Toute sous-commande inconnue d'un groupe, ou un groupe inconnu, produit un diagnostic sur stderr et sort 2. `clia -h` énumère tous les groupes (`res`, `ses`, `setup`) et commandes (`release`) ; `clia res -h` et `clia ses -h` énumèrent et décrivent toutes leurs sous-commandes ; chaque sous-commande dispose de sa propre aide (`clia ses status -h`, etc.), le tout généré depuis `clia.doc.yaml` (`REQ-001-F5/F7/F8`).
+
+### Groupe `setup`
+
+Ajouté en v0.3.0 (`PLN-018` étape 2.2). Couvre `REQ-002-F13` à `F19`. Décisions applicables : `ADR-010` (D3, D4, D5, D6, D8, D9), `ADR-013`, `ADR-014`.
+
+| Invocation | Effet | Sortie | Code |
+|---|---|---|---|
+| `clia setup init [-C CIBLE] [NOM]` | crée le dépôt si absent, matérialise le harnais et ses actifs, écrit la marque d'installation | compte rendu (stdout) | 0 |
+| `clia setup init` sur cible déjà équipée | refus, orientation vers la mise à niveau | diagnostic (stderr) | 1 |
+| `clia setup init` sur emplacement non vide | refus sauf demande explicite | diagnostic (stderr) | 1 |
+| `clia --dry-run setup init` | affiche ce qui serait posé, sans écrire | plan (stdout) | 0 |
+| `clia setup versions` | versions disponibles, marquage de l'installée et de la plus récente | table (stdout) | 0 |
+| `clia setup versions` hors dépôt équipé | énumère les disponibles, signale qu'aucune n'est installée ici | table + note (stdout) | 0 |
+| `clia setup versions` sur dépôt équipé sans marque | signale un état à régulariser | table + diagnostic (stderr) | 1 |
+| `clia setup <inconnue>` | sous-commande inconnue | diagnostic (stderr) | 2 |
+
+`upgrade` et `downgrade` sont **réservées** et non implémentées à ce stade ; leur invocation sort en 2 comme toute sous-commande inconnue.
+
+**Résolution de la cible** : option `-C CIBLE`, à défaut racine du dépôt versionné contenant le répertoire courant, à défaut répertoire courant. Jamais confondue avec la racine de l'outil (`BASH_SOURCE`).
+
+**Reconnaissance de la cible**, préalable à toute action (`ADR-010` D9) :
+
+| État | Détection | Traitement |
+|---|---|---|
+| équipé et marqué | `.dev/installation.yaml` présent et lisible | nominal |
+| équipé sans marque | fichiers de harnais présents, marque absente | signalé comme à régulariser, ni refusé ni accepté en silence |
+| non équipé | dépôt sans fichiers de harnais | `init` procède ; les autres orientent |
+| hors de tout dépôt | aucune racine résolue | `init` avec un nom explicite procède ; les autres refusent |
+
+**Délégation** (`ADR-010` D8, `ADR-014`) : `setup init` **n'implémente pas** la matérialisation. Il invoque le script d'amorçage déclaré comme extension, lui transmet les options globales dont il doit tenir compte (`--debug`, `--dry-run`), et **propage son code de retour tel quel**. Une extension dont la version majeure de contrat diffère n'est pas invoquée : refus explicite, code 1.
 
 ### Commande `release`
 
@@ -118,6 +148,10 @@ $ clia ses open
 | grammaire `[GLOBAL_OPTIONS] COMMAND [OPTIONS]` | REQ-001-F10 |
 | `--debug`, `--dry-run` | REQ-002-F3d, REQ-002-F3e |
 | dépendance `yq` vérifiée au runtime | REQ-002-NF6 |
+| groupe `setup` (`init`, `versions`) | REQ-002-F13, F14 |
+| résolution et reconnaissance de la cible | REQ-002-F15, F16 |
+| délégation à l'extension et propagation du code de retour | REQ-002-F17, F18 |
+| cohérence dispatch/documentation étendue aux extensions | REQ-002-F19, REQ-001-F9 |
 | `--version`, `--version --long` | REQ-002-F2, REQ-002-F3 |
 | `--config` | REQ-002-F3b |
 | `res ls [PREFIX]` | REQ-002-F5 |

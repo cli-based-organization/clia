@@ -39,6 +39,33 @@ commands:
       - { name: open,   short: "ouvre une session (erreur si déjà active)", usage: "clia ses open [x<SEQ>]" }
       - { name: close,  short: "archive la session active", usage: "clia ses close [SLUG]" }
       - { name: new,    short: "ferme puis ouvre une session", usage: "clia ses new [x<SEQ>]" }
+  - name: setup
+    short: installe et met a jour le systeme d'augmentation dans un depot
+    usage: "clia setup <init|versions> [-C CIBLE] [NOM]"
+    long: >-
+      Pose le harnais et ses actifs dans un depot cible, et renseigne les
+      versions disponibles. L'outil lui-meme n'est jamais copie dans la cible :
+      il est installe une fois sur le poste (voir setup.sh) et s'utilise depuis
+      n'importe ou. Ce groupe n'implemente pas l'operation : il invoque le
+      script d'amorcage declare comme extension (voir ADR-010, ADR-014).
+    subcommands:
+      - name: init
+        short: "cree le depot si absent et y pose le harnais"
+        usage: "clia setup init [-C CIBLE] [NOM] [--force]"
+        long: >-
+          Cree le depot versionne a l'emplacement vise s'il n'en existe pas,
+          y materialise le harnais et ses actifs (fichiers de harnais, gabarit
+          d'intention, competences, gabarits, couche type, squelette de version,
+          repertoires de ressources vides) et y ecrit la marque d'installation.
+          Refuse sur un depot deja equipe, et sur un emplacement non vide sauf
+          --force. Avec --dry-run, enumere ce qui serait pose sans rien ecrire.
+      - name: versions
+        short: "versions disponibles et version installee"
+        usage: "clia setup versions [-C CIBLE]"
+        long: >-
+          Enumere les versions publiees du systeme d'augmentation (etiquettes de
+          l'arbre source, triees selon l'ordre semver) et indique laquelle est
+          installee dans la cible. Lecture seule : n'ecrit jamais.
   - name: release
     short: incrémente la version métier (version.yaml) selon semver
     usage: "clia release (major|minor|patch)"

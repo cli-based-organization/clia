@@ -1,6 +1,6 @@
 ---
 type: usage
-version: 0.1.0
+version: 0.1.1
 title: "Connaître les versions disponibles du système d'augmentation"
 status: proposé
 date: 2026-07-29
@@ -45,5 +45,5 @@ niveau: but-utilisateur
 - **Acteur** : [`ACT-003`](../acteurs/ACT-003-installateur.md) utilise ce parcours pour choisir une cible avant de faire évoluer un dépôt.
 - **Suppose** : [`USE-001`](USE-001-rendre-l-outil-disponible-sur-son-poste.md).
 - **Précède** : [`USE-004`](USE-004-elever-un-depot-a-une-version-plus-recente.md), [`USE-005`](USE-005-ramener-un-depot-a-une-version-anterieure.md).
-- **Satisfait par** : aucune exigence à ce jour. Ce parcours **présuppose une notion de version du système d'augmentation** qui n'existe pas dans le modèle actuel ; c'est le premier point d'[`ANL-015`](../analyses/ANL-015-faisabilite-installation-et-versions.md).
+- **Satisfait par** : [`REQ-002`](../requis/REQ-002-cli-clia.md) (F14, F16), spécifié par [`SPEC-002`](../specs/SPEC-002-cli-clia.md), groupe `setup`. La notion de version que ce parcours présupposait est désormais définie par [`ADR-013`](../adr/ADR-013-version-augmentation-et-marque-installation.md) (D1, D2, D5).
 - **Source** : cas d'usage 3 de la tâche 38 de `.dev/session.md`.
