@@ -1,6 +1,6 @@
 ---
 type: analyse
-version: 0.1.0
+version: 0.2.0
 title: "Méthode de gestion du travail : ressources et mécaniques manquantes (préparation d'un ADR)"
 date: 2026-08-02
 ---
@@ -9,6 +9,17 @@ date: 2026-08-02
 
 - **Périmètre** : le dépôt au 2026-08-02, examiné sous l'angle de **la mémoire et de l'ordonnancement du travail restant** : `.dev/bugs/`, `.dev/plans/`, `.dev/adr/`, `.dev/specs/`, `.dev/requis/`, `.dev/principes/`, `.dev/acteurs/`, `.dev/usages/`, `.dev/skills/`, `.dev/resource-types.yaml`, `.dev/session.md`, `.dev/session-x01.md`, `.dev/session-x02.md`, `.dev/sessions/`, `.dev/logs/ia-output/`, `CLAUDE.md`, `CONSTITUTION.md`, `ARCHITECTURE.md`. Corpus externe consulté en lecture seule : `../../noumanity-dev/ticket-driven-ai` et `../../noumanity-ai-assisted-development-toolkit/nou-methodologies-ia/experimentations/deeptech-ticket-driven`. Exclus : `.git/`, `src/`, `test/`, `doc/` (le code n'est pas l'objet de cette analyse).
 - **Référence** : [`FND-019-systemes-de-suivi-du-travail`](../fondations/FND-019-systemes-de-suivi-du-travail.md), produite le même jour, dont les constats servent de grille de mesure.
+
+## Changelog
+
+- **Révision 1 (2026-08-02, tâche 3)** : incorporation des réponses humaines aux cinq objections de la révision initiale. Cinq changements de fond :
+  - **objection 1 résolue** (recommandation de l'agent suivie) : l'esquisse de plan est réordonnée, les étapes 3 à 5 sont explicitement conditionnées à la résolution de [`BUG-009`](../bugs/BUG-009-contexte-repertoire-ignore-par-clia.md) et [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md) ;
+  - **objection 2 résolue** : l'humain tranche en faveur de la production d'une **ressource « ressource »**. La question n'est donc plus reportée : le méta-type entre dans le périmètre, et l'`ADR` cesse de porter les définitions de types ;
+  - **objection 3 résolue** : « Extreme SMART » ne devient **pas** un `PDC`. Il est porté par un `ADR` et décliné en `REQ` et `SPEC` selon nécessité. `PDC-011` est retiré des ressources à produire ;
+  - **objection 4 résolue** : l'horodatage est acté (sessions horodatées, datation des tâches par l'historique git, commandes `clia session elapsed` et `clia session task elapsed <N>`), **sans limite de temps** pour l'instant ;
+  - **objection 5 résolue par la négative** : la capture bon marché **par l'agent** est refusée par principe. Un agent ne crée aucune entrée de travail ; il ne peut que **suggérer**, dans une analyse ou dans une objection, et l'humain valide toute intention et tout élément de travail. Le constat C8 est requalifié en conséquence, et la dimension D6 cesse d'être un écart.
+  - Quatre **objections nouvelles** naissent de ces réponses et sont ouvertes (voir « Objections de l'agent IA »).
+  - **Objection humaine ouverte, non traitée ici** : la tâche 4 de `.dev/session.md` porte « adopter une ressource comportement attendu », qui renverse la recommandation de la section correspondante. Cette section est conservée en l'état et **signalée comme contredite** ; sa révision relève de la tâche 4, dont l'énoncé n'est pas clos.
 
 ## Objet
 
@@ -103,7 +114,9 @@ Le modèle qui en ressort, et que la tâche `xy` de `session.md` reprend : deux 
 
 **C7. Le stock se périme, et il n'existe aucun moyen de le savoir.** `.dev/session-x02.md` porte deux sujets qui paraissent déjà satisfaits : « abolir la distinction ressource vivante contre point fixe » et « nous allons réécrire `ADR-004` ». Or `ADR-004` est en v0.2.0, daté du 2026-07-21, et sa décision détaillée énonce que « la distinction point fixe / vivant / travail est **abolie** ». Rien dans le système ne permet d'établir si ces deux entrées sont périmées ou si elles visent autre chose : elles sont dans un fichier en édition humaine uniquement, sans date d'écriture par sujet, sans statut, et sans lien vers la ressource concernée. C'est exactement le pourrissement décrit en [`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 10.2, observé ici sur un stock de sept éléments seulement.
 
-**C8. L'agent ne peut rien capturer.** Les trois supports où le travail futur s'énonce naturellement (les deux fichiers de session et les logs) sont soit en édition humaine uniquement, soit immuables. Les seuls canaux de capture ouverts à l'agent sont l'**objection** dans un plan (qui exige un plan, donc une tâche) et le `BUG` (qui exige un défaut avéré). Une observation du type « les dix `ACT` devront être revérifiés contre `skl-016` quand il existera » n'a aucun porteur : elle a été écrite dans un log immuable, où elle est inerte. C'est un écart au principe de capture de GTD ([`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 9.1) et, plus grave, une **asymétrie de gouvernance non intentionnelle** : l'agent a le devoir d'objecter mais pas le moyen de retenir.
+**C8. Les suggestions de l'agent n'ont pas de canal de remontée, et meurent dans des traces immuables.** *(Constat requalifié à la révision 1.)* Les trois supports où le travail futur s'énonce naturellement (les deux fichiers de session et les logs) sont soit en édition humaine uniquement, soit immuables. La révision initiale y voyait une asymétrie de gouvernance non intentionnelle ; la réponse humaine à l'objection 5 établit que **c'en est une, mais qu'elle est intentionnelle et doit le rester** : un agent ne crée aucune entrée de travail, il ne peut que suggérer, et l'humain valide toute intention et tout élément de travail. Cette règle est cohérente avec [`PDC-010`](../principes/PDC-010-point-entree-unique-autorite-humaine-irreversible.md) et n'est pas remise en cause.
+
+Le défaut résiduel est donc plus étroit, et il subsiste entièrement : **une suggestion émise par l'agent n'a aucun chemin vers l'humain autre que la lecture intégrale d'un log**. Une observation du type « les dix `ACT` devront être revérifiés contre `skl-016` quand il existera » a été écrite dans `LOG-2026-07-17-task-37.md`, qui est immuable ; elle y est inerte, sans destinataire, sans date d'échéance et sans moyen d'être marquée traitée. Le manque n'est donc pas un droit de capture pour l'agent, c'est un **canal de suggestion adressé** : un endroit où l'agent dépose, où l'humain arbitre, et dont le contenu ne se perd pas à la clôture de la tâche.
 
 **C9. La focalisation est le point fort du dispositif, et il est théoriquement bien fondé.** L'invariant d'`ADR-006` (une seule session active, tous espaces confondus) est un en-cours limité à un au sens du Kanban, et il rejoint l'argument de la contrainte unique de la théorie des contraintes ([`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) sections 7.2 et 9.2). Ce mécanisme fonctionne et ne doit pas être touché. Ce qu'il ne fait pas, c'est dire **quoi** mettre dans la session suivante.
 
@@ -120,11 +133,11 @@ Application de la grille de la section « Périmètre et méthode ».
 | D3 Interrogabilité | `clia res ls` ne lit pas les statuts correctement (`BUG-007`), trois statuts hors vocabulaire (C2) | **fort** |
 | D4 Relation | aucune relation de blocage dans le vocabulaire ; blocages connus écrits en prose (C4) | **fort** |
 | D5 Sortie du stock | aucun mécanisme ; péremption observée (C7) | **fort** |
-| D6 Capture sans engagement | impossible pour l'agent (C8) ; possible pour l'humain via `session-x<YZ>` | **fort** |
+| D6 Capture sans engagement | réservée à l'humain **par décision** (`session-x<YZ>`) ; l'agent suggère sans créer (C8) | **conforme par décision**, écart résiduel sur la remontée |
 | D7 Attendu énonçable | partiel : `PDC` fournit des critères de conformité, `USE` des critères d'acceptation ; `SPEC` et `REQ` existent ; aucune obligation de rattachement dans le `BUG` | **modéré** |
 | D8 Focalisation | invariant de session active unique (C9) | **conforme** |
 
-Sept dimensions sur huit sont en écart, six d'entre elles fortement. La seule dimension conforme est celle que le dépôt a explicitement conçue.
+*(Ligne D6 révisée à la révision 1.)* Six dimensions sur huit sont en écart, cinq d'entre elles fortement. D6 n'est plus comptée comme un écart de conception : la réponse humaine à l'objection 5 en fait une **règle de gouvernance assumée**, et le manque se réduit au canal de remontée des suggestions décrit en C8. Les deux dimensions conformes sont celles que le dépôt a explicitement conçues.
 
 ## Discussion : le graphe d'intention
 
@@ -151,6 +164,8 @@ Le graphe d'intention est un modèle **mieux fondé théoriquement que son énon
 
 ## Question posée : faut-il une ressource « comportement attendu » ?
 
+> **Objection humaine ouverte.** La tâche 4 de `.dev/session.md` porte « adopter une ressource comportement attendu », qui **contredit la recommandation de cette section**. L'énoncé de cette tâche n'étant pas clos (son objection 2 est vide), la section est conservée en l'état à la révision 1 et sa reprise relève de la tâche 4. Elle doit donc être lue comme l'argumentaire auquel l'humain objecte, pas comme une conclusion en vigueur.
+
 **Recommandation : non, pas comme type autonome.** Quatre arguments.
 
 1. **La littérature ne connaît pas cette ressource.** La tradition normative place l'attendu dans l'exigence, la tradition BDD dans le test exécutable, et le rapport de défaut en porte une instance locale. Aucune école établie ne défend une troisième ressource autonome ([`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 8). Ce n'est pas une interdiction, c'est un signal de prudence.
@@ -170,30 +185,38 @@ Le traitement complet est en [`FND-019`](../fondations/FND-019-systemes-de-suivi
 
 ## Ressources manquantes, ressources à adapter
 
+*(Section révisée à la révision 1 : `PDC-011` retiré, méta-type « ressource » ajouté, volet horodatage ajouté.)*
+
 ### À produire
 
 | Ressource | Rôle | Justification |
 |---|---|---|
-| **`ISU`** (issue) | Sujet de travail ouvert, non-SMART, sans livrable propre, coût d'entrée minimal (un titre, une phrase). Porte les arêtes du graphe. | C1, C4, C8, C10 ; tâche `xy` de `session.md` |
-| **`INT`** (intention) | Ce que veut un humain ou un groupe. Racine ou racines du graphe. | Tâche `xy` ; `FND-019` section 7.1 (but racine) |
-| **`PDC-011`** Extreme SMART | Invariant : toute unité de travail engagée est bornée, produit un livrable défini d'avance, et se clôt en succès ou en échec. | `todo` de la tâche 2 ; voir objection 3 sur sa formulation |
-| **`ADR-015`** Méthode de gestion du travail | Acte le modèle : deux régimes, graphe à arêtes typées, obsolescence, capture, rattachement de l'attendu. | Objet de la tâche `xy` |
-| **`skl-018-issue`**, **`skl-019-intention`** | Encadrement de production. | `ADR-004` : tout type a un skill |
+| **`ISU`** (issue) | Sujet de travail ouvert, non-SMART, sans livrable propre, coût d'entrée minimal (un titre, une phrase). Porte les arêtes du graphe. Créé par l'humain seul. | C1, C4, C10 ; tâche `xy` de `session.md` |
+| **`INT`** (intention) | Ce que veut un humain ou un groupe. Racine ou racines du graphe. Créée par l'humain seul. | Tâche `xy` ; `FND-019` section 7.1 (but racine) |
+| **Méta-type « ressource »** | Décrit un type de ressource : son préfixe, son emplacement, son gabarit, ses droits d'édition, son skill. Une instance par type. Sépare la **décision** d'avoir un type (qui reste dans un `ADR`) de la **description** de ce type. | Résolution humaine de l'objection 2 ; objection humaine de `session-x02.md` ; voir objection N1 |
+| **`ADR`** Méthode de gestion du travail | Acte le modèle : deux régimes, graphe à arêtes typées, obsolescence, rattachement de l'attendu, droits de création réservés à l'humain. | Objet de la tâche `xy` |
+| **`ADR` + `REQ` + `SPEC`** Extreme SMART | Le principe est porté par une décision et décliné en exigences et spécification vérifiables, **et non par un `PDC`**. Sans limite de temps contraignante en 0.1.0. | Résolution humaine des objections 3 et 4 ; voir objection N4 |
+| **`skl-018-issue`**, **`skl-019-intention`**, **skill du méta-type** | Encadrement de production. | `ADR-004` : tout type a un skill |
 | **`skl-016-acteur`**, **`skl-017-cas-d-usage`** | Déjà décidés, déjà référencés, inexistants. | C5 (références pendantes) |
-| **`BUG-010`** et **`BUG-011`** | Écarts à `PDC-006` non tracés : divergence `CLAUDE.md` contre couche type ; section « Acteurs et rôles » d'`ARCHITECTURE.md`. | C6 ; `ADR-003` (un écart à un `PDC` est un bogue) |
+| **Trois `BUG`** | Écarts non tracés : divergence `CLAUDE.md` contre couche type ; section « Acteurs et rôles » d'`ARCHITECTURE.md` ; références pendantes vers `skl-016` et `skl-017`. | C5, C6 ; `ADR-003` (un écart à un `PDC` est un bogue) |
+
+Ressource **retirée** par rapport à la révision initiale : `PDC-011` Extreme SMART (résolution humaine de l'objection 3).
 
 ### À adapter
 
 | Ressource | Adaptation | Justification |
 |---|---|---|
-| [`.dev/resource-types.yaml`](../resource-types.yaml) | Entrées `issue` et `intention` ; relations `bloque`, `raffine-necessaire`, `raffine-alternative`, `rend-obsolete` | C4 ; typage des arêtes |
-| [`ADR-004`](../adr/ADR-004-ressources-livrables.md) | Intégrer les deux nouveaux types ; statuer sur le statut normalisé comme métadonnée obligatoire | C2 |
-| [`ADR-003`](../adr/ADR-003-gestion-des-bogues.md) | Frontière `BUG` contre `ISU` (le risque de recouvrement `BUG` / `PLN` y est déjà nommé) ; obligation de déclarer la source de l'attendu | C10 ; section « comportement attendu » |
-| [`CONSTITUTION.md`](../../CONSTITUTION.md) | Vocabulaire de statut fermé pour les plans, incluant `remplacé` et `partiellement exécuté` | C2 |
-| [`CLAUDE.md`](../../CLAUDE.md) | Resynchroniser la table des livrables avec la couche type (`ACT`, `USE`, puis `ISU`, `INT`) | C6 |
+| [`.dev/resource-types.yaml`](../resource-types.yaml) | Entrées `issue`, `intention` et méta-type ; relations `bloque`, `raffine-necessaire`, `raffine-alternative`, `rend-obsolete` ; articulation avec le méta-type (voir objection N1) | C4 ; typage des arêtes |
+| [`ADR-004`](../adr/ADR-004-ressources-livrables.md) | Intégrer les nouveaux types ; statuer sur le statut normalisé comme métadonnée obligatoire ; articuler avec le méta-type | C2 ; objection 2 résolue |
+| [`ADR-003`](../adr/ADR-003-gestion-des-bogues.md) | Frontière `BUG` contre `ISU` ; obligation de déclarer la source de l'attendu ; **droits de création** du `BUG` au regard de la règle « l'agent suggère, l'humain valide » (voir objection N2) | C10 ; résolution de l'objection 5 |
+| [`ADR-006`](../adr/ADR-006-gestion-des-sessions.md) | Datation des tâches et temps écoulé : `start-at` existe déjà, la datation par tâche est dérivée de l'historique git (voir objection N3) | Résolution humaine de l'objection 4 |
+| [`SPEC-002`](../specs/SPEC-002-cli-clia.md) et [`REQ-002`](../requis/REQ-002-cli-clia.md) | Ajouter `clia session elapsed` et `clia session task elapsed <N>` au groupe `ses` (`session` en est déjà l'alias, `REQ-002-F6`) ; définir la source de temps et le comportement hors dépôt git | Résolution humaine de l'objection 4 |
+| [`CONSTITUTION.md`](../../CONSTITUTION.md) | Vocabulaire de statut fermé pour les plans, incluant `remplacé` et `partiellement exécuté` ; inscrire la règle « l'agent ne crée aucune entrée de travail, il suggère » | C2 ; résolution de l'objection 5 |
+| [`CLAUDE.md`](../../CLAUDE.md) | Resynchroniser la table des livrables avec la couche type (`ACT`, `USE`, puis `ISU`, `INT`, méta-type) | C6 |
 | [`skl-003-plan-de-travail`](../skills/skl-003-plan-de-travail/SKILL.md) | Un plan déclare l'`ISU` qu'il fait avancer ; le suivi d'avancement sort du changelog | C3 |
 | [`skl-013-rapport-de-bogue`](../skills/skl-013-rapport-de-bogue/SKILL.md) | Déclaration obligatoire de la source de l'attendu ; rattachement à un `ISU` | Section « comportement attendu » |
-| [`skl-008-log-ia-output`](../skills/skl-008-log-ia-output/SKILL.md) | Toute observation de travail restant consignée dans un log doit être **déversée** dans un `ISU` avant clôture de la tâche | C8 (le log est immuable, donc inerte) |
+| [`skl-008-log-ia-output`](../skills/skl-008-log-ia-output/SKILL.md) | Section **« Suggestions »** normalisée et distincte des notes : ce que l'agent propose de retenir comme `ISU` ou `BUG`, à charge pour l'humain de l'instancier ou de l'écarter | C8 requalifié ; résolution de l'objection 5 |
+| [`skl-012-analyse-corpus`](../skills/skl-012-analyse-corpus/SKILL.md) | Même section « Suggestions », l'analyse étant l'un des deux canaux autorisés | Résolution de l'objection 5 |
 | `src/lib/resource.sh` | Lecture des statuts, déjà tracée par [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md) ; à étendre à l'interrogation du graphe | C2, D3 |
 
 ## Les mécaniques actuelles sont-elles suffisantes ?
@@ -206,53 +229,76 @@ Le traitement complet est en [`FND-019`](../fondations/FND-019-systemes-de-suivi
 2. **La décision** : cycle objection-sociocratique, breakpoints, approbation partielle. Mécanique de **décision**, complète pour ce qu'elle fait.
 3. **La trace** : log obligatoire par tâche, sessions archivées. Mécanique de **mémoire du passé**, complète.
 
-**Ce qui manque** :
+**Ce qui manque** *(révisé à la révision 1)* :
 
-1. **La capture.** Aucun moyen bon marché d'enregistrer une chose à faire, et aucun moyen du tout pour l'agent (C8, C10). C'est le manque le plus urgent, parce qu'il fait perdre de l'information à chaque tâche.
+1. **La capture bon marché, pour l'humain, et la remontée des suggestions, pour l'agent.** La réponse humaine à l'objection 5 sépare les deux besoins, qui étaient confondus dans la révision initiale. Pour l'**humain** : aucun enregistrement bon marché n'existe (C10), et c'est le manque le plus urgent. Pour l'**agent** : la création est interdite par principe, et ce qui manque est un canal de suggestion adressé, dont le contenu ne se perde pas à la clôture de la tâche (C8 requalifié). Le second est un problème de format de livrable, pas de droits.
 2. **La structure.** Aucune relation de blocage ni de raffinement, donc aucun calcul possible de ce qui est exécutable, ni de ce qui est devenu inutile (C4, C7).
-3. **L'interrogation.** `clia` ne sait pas répondre à « que reste-t-il ? » ni à « quoi ensuite ? ». C'est le coût résiduel du modèle fichier, identifié comme tel dans [`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 6.3 : le vrai prix du tracker en fichiers est l'écriture de son outil de lecture.
+3. **L'interrogation.** `clia` ne sait pas répondre à « que reste-t-il ? » ni à « quoi ensuite ? ». C'est le coût résiduel du modèle fichier, identifié comme tel dans [`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 6.3 : le vrai prix du tracker en fichiers est l'écriture de son outil de lecture. S'y ajoute désormais la mesure du temps écoulé (`clia session elapsed`), qui est une interrogation et non une contrainte.
 
-**Point important : la mécanique de gouvernance ne doit pas être chargée de ces trois manques.** Le cycle objection-sociocratique est un mécanisme de décision ; lui adjoindre la capture reviendrait à exiger un plan et un cycle d'objections pour retenir une idée, ce qui reproduirait le coût d'entrée prohibitif de C10. Les deux mécaniques doivent rester séparées : on capture sans décider, on décide au moment d'engager.
+**Point important : la mécanique de gouvernance ne doit pas être chargée de ces trois manques.** Le cycle objection-sociocratique est un mécanisme de décision ; lui adjoindre la capture reviendrait à exiger un plan et un cycle d'objections pour retenir une idée, ce qui reproduirait le coût d'entrée prohibitif de C10. Les deux mécaniques doivent rester séparées : l'humain capture sans décider, et décide au moment d'engager. La règle « l'agent suggère, l'humain valide » n'entre pas en conflit avec cette séparation : elle dit **qui** capture, pas **à quel coût**.
 
 ## Esquisse de plan
 
-Esquisse, non normative, produite dans cette analyse et non dans un fichier `PLN`, conformément à la demande. Elle suppose la validation des choix ci-dessus.
+Esquisse, non normative, produite dans cette analyse et non dans un fichier `PLN`, conformément à la demande. *(Réordonnée à la révision 1 : la résolution de l'objection 1 suit la recommandation de l'agent, ce qui coupe l'esquisse en deux blocs séparés par une condition de reprise, et non par un simple breakpoint.)*
 
-**Étape 1 : décider.** Produire l'`ADR` de méthode de gestion du travail. Contenu minimal : les deux régimes (`ISU` ouvert, unité de travail Extreme SMART) ; la définition d'`INT` et son articulation à `INTENTION.md` ; le graphe orienté à arêtes typées (nécessaire contre alternative) et la règle d'obsolescence conditionnée au type ; le principe de capture bon marché ; la frontière `BUG` contre `ISU` ; le rejet du type « comportement attendu » et l'obligation de rattachement qui le remplace. Cette étape ne produit aucun fichier de type nouveau.
+### Bloc A : décider et formaliser (session courante)
 
-**Étape 2 : formaliser les types.** `ADR` de définition de `ISU` et de `INT` (ou sections dédiées de l'`ADR` de l'étape 1, selon l'arbitrage de l'objection 2) ; entrées dans `.dev/resource-types.yaml` ; relations `bloque`, `raffine-necessaire`, `raffine-alternative`, `rend-obsolete` ; `PDC-011` Extreme SMART. Amendement de `ADR-004`, `ADR-003` et `CONSTITUTION.md` (vocabulaire de statut).
+**Étape 1 : décider.** Produire l'`ADR` de méthode de gestion du travail. Contenu minimal : les deux régimes (`ISU` ouvert, unité de travail Extreme SMART) ; la définition d'`INT` et son articulation à `INTENTION.md` ; le graphe orienté à arêtes typées (nécessaire contre alternative) et la règle d'obsolescence conditionnée au type ; la frontière `BUG` contre `ISU` ; la règle de création (l'humain seul crée une entrée de travail, l'agent suggère dans une analyse ou une objection) ; l'obligation de rattachement de l'attendu, **sous réserve de l'objection humaine de la tâche 4**. Cette étape ne produit aucune instance de type nouveau.
 
-**BREAKPOINT 1.** Le modèle est décidé mais rien n'est migré. L'humain valide avant que trente-trois éléments ne soient convertis en instances.
+**Étape 2 : formaliser les types.** Produire le **méta-type « ressource »** et son skill, puis décrire par son moyen les types `ISU` et `INT` ; l'`ADR` porte la décision d'avoir ces types, le méta-type en porte la description (résolution de l'objection 2). Entrées correspondantes dans `.dev/resource-types.yaml` et relations `bloque`, `raffine-necessaire`, `raffine-alternative`, `rend-obsolete` (voir objection N1 sur l'articulation des deux). Produire l'`ADR`, le `REQ` et la `SPEC` d'Extreme SMART, sans limite de temps contraignante (résolutions des objections 3 et 4). Amender `ADR-004`, `ADR-003`, `ADR-006` et `CONSTITUTION.md`.
 
-**Étape 3 : méthodologie.** `skl-018-issue`, `skl-019-intention` ; amendements de `skl-003`, `skl-013`, `skl-008` ; resynchronisation de `CLAUDE.md`. Rattrapage de la dette de `PLN-017` segment 2 (`skl-016`, `skl-017`) au passage, puisqu'elle bloque la même table.
+**BREAKPOINT 1.** Le modèle est décidé et décrit, rien n'est migré ni outillé. L'humain valide avant que le reste ne s'y accroche.
 
-**Étape 4 : constituer le graphe initial.** Convertir l'inventaire de la section « Inventaire » en instances `ISU` : les sept `BUG` diagnostiqués (rattachés, non convertis), les trois plans inachevés, les dix reports en prose, les sept sujets de `session-x02`, les quatre objectifs de la session courante. Déclarer les arêtes connues, à commencer par celle qu'`PLN-020` objection 3 énonce déjà (`BUG-009` bloque `BUG-007`). Marquer obsolètes les entrées de `session-x02` que `ADR-004` v0.2.0 a satisfaites, après confirmation humaine.
+### Bloc B : mettre en oeuvre (après `BUG-009` et `BUG-007`)
+
+Le bloc B est **conditionné à la résolution de [`BUG-009`](../bugs/BUG-009-contexte-repertoire-ignore-par-clia.md) et de [`BUG-007`](../bugs/BUG-007-resource-sh-modele-abroge.md)** (résolution humaine de l'objection 1). Motif : `BUG-009` fait opérer `clia` sur l'arbre de l'outil quel que soit le répertoire d'appel, et `BUG-007` fausse la lecture des ressources ; toute mécanique bâtie avant leur correction serait à refaire, et toute commande d'interrogation lirait le mauvais dépôt.
+
+**Étape 3 : méthodologie.** `skl-018-issue`, `skl-019-intention` ; amendements de `skl-003`, `skl-013`, `skl-008` et `skl-012` (section « Suggestions ») ; resynchronisation de `CLAUDE.md`. Rattrapage de la dette de `PLN-017` segment 2 (`skl-016`, `skl-017`) au passage, puisqu'elle porte sur la même table.
+
+**Étape 4 : constituer le graphe initial.** Instancier l'inventaire de la section « Inventaire » : les trois plans inachevés, les dix reports en prose, les sept sujets de `session-x02`, les quatre objectifs de la session courante ; les sept `BUG` diagnostiqués sont **rattachés**, non convertis. Déclarer les arêtes connues, à commencer par celle que `PLN-020` objection 3 énonce déjà (`BUG-009` bloque `BUG-007`). Marquer obsolètes les entrées de `session-x02` que `ADR-004` v0.2.0 a satisfaites, après confirmation humaine. **Cette étape crée des entrées de travail : elle est opérée par l'humain, l'agent se limitant à proposer la liste et les arêtes** (résolution de l'objection 5).
 
 **BREAKPOINT 2.** Le graphe existe et est lisible. L'humain arbitre la racine et le chemin courant avant qu'un outil ne s'appuie dessus.
 
-**Étape 5 : interrogation.** Étendre `clia` : lister les `ISU`, afficher le graphe, calculer l'ensemble exécutable (noeuds sans prédécesseur non résolu) et les noeuds obsolètes. Cette étape est **conditionnée à la résolution de [`BUG-009`](../bugs/BUG-009-contexte-repertoire-ignore-par-clia.md)** : tant que `clia` opère sur l'arbre de l'outil quel que soit le répertoire d'appel, toute commande d'interrogation du graphe lira le mauvais dépôt.
+**Étape 5 : interrogation.** Étendre `clia` : lister les `ISU`, afficher le graphe, calculer l'ensemble exécutable (noeuds sans prédécesseur non résolu) et les noeuds obsolètes ; ajouter `clia session elapsed` et `clia session task elapsed <N>` (résolution de l'objection 4, voir objection N3 sur la source de temps).
 
 ## Objections de l'agent IA
 
-**Objection 1 (ordonnancement contre la version 0.1.0).** Si ce plan est exécuté avant la stabilisation annoncée par l'intention de la session, il ajoute deux types de ressources, quatre skills et un principe à un système qui porte déjà sept bogues diagnostiqués non résolus et trois plans inachevés. Le risque concret : la version 0.1.0 sortirait avec plus de mécanismes et autant de défauts, ce qui est l'inverse de l'objectif déclaré (« nettoyer et refactorer pour la version 0.1.0 »). L'agent recommande de traiter l'étape 1 et l'étape 2 (décider et formaliser) dans cette session, et de **différer les étapes 3 à 5 après la résolution de `BUG-009` et de `BUG-007`**. La décision engage le contenu de la version et revient à l'humain.
+### Objections résolues (révision 1)
 
-**Objection 2 (frontière `ADR` contre définition de ressource).** L'esquisse propose un `ADR` de méthode plus deux définitions de types. Or `.dev/session-x02.md` porte une objection humaine déjà formulée sur ce point : les `ADR` servent aujourd'hui à deux usages (documenter une décision, définir une ressource), et l'humain y propose une ressource « ressource » pour séparer les deux. Si l'esquisse est exécutée telle quelle, elle produit deux `ADR` de définition de plus, c'est-à-dire qu'elle **aggrave la confusion que l'humain a déjà relevée** et que l'objection sera à traiter ensuite sur un corpus plus grand. L'agent ne peut pas trancher : la question porte sur le modèle de ressources lui-même.
+Les cinq objections de la révision initiale ont reçu une réponse humaine à la tâche 3 de `.dev/session.md`. Aucune n'est ouverte.
 
-**Objection 3 (« Extreme SMART » comme principe de conception).** La tâche 2 demande d'ajouter « Extreme Smart » aux principes de conception. Or [`skl-014`](../skills/skl-014-principe-de-conception/SKILL.md) exige d'un `PDC` qu'il soit un énoncé normatif transverse auquel **tout élément du système** doit se conformer, et exclut explicitement les règles de gouvernance des acteurs. « Extreme SMART » qualifie une unité de travail, pas un élément du système : formulé tel quel, il n'est pas conforme à son propre type. Il est en revanche reformulable en invariant vérifiable (« toute unité de travail engagée est bornée dans le temps, produit un livrable défini avant son ouverture, et se clôt en succès ou en échec »). Si le plan est exécuté sans cette reformulation, le dépôt produit un `PDC` non conforme à `skl-014`, ce qui est un bogue au sens d'`ADR-003` dès sa création. **Suggestion : accepter la reformulation, ou statuer que la méthode de travail relève de la constitution et non des principes de conception.**
+| Objection | Objet | Résolution |
+|---|---|---|
+| 1 | Ordonnancement contre la version 0.1.0 | **Recommandation de l'agent suivie** : bloc A maintenant, bloc B après `BUG-009` et `BUG-007`. |
+| 2 | Frontière `ADR` contre définition de ressource | **Tranchée** : produire le méta-type « ressource ». L'`ADR` décide, le méta-type décrit. |
+| 3 | « Extreme SMART » comme `PDC` | **Tranchée** : pas de `PDC`. Un `ADR`, un `REQ` et une `SPEC` selon nécessité. |
+| 4 | Timebox intransposable | **Tranchée** : horodatage des sessions, datation des tâches par l'historique git, `clia session elapsed` et `clia session task elapsed <N>` ; **pas de limite de temps** pour l'instant. |
+| 5 | Enflure par la capture bon marché | **Tranchée par la négative** : l'agent ne crée aucune entrée de travail. Il suggère, dans une analyse ou une objection ; l'humain valide toute intention et tout élément de travail. |
 
-**Objection 4 (la timebox de 12 heures est intransposable en l'état).** Le modèle externe borne l'unité de travail à 12 heures et la ferme en échec au-delà (`ADR-002` du dépôt `deeptech-ticket-driven`, critère T). Ce dépôt n'a pas d'unité de travail horodatée : la session porte une date d'ouverture et de fermeture, la tâche n'en porte aucune, et le log ne porte qu'une durée déclarative. Si l'invariant Extreme SMART est adopté sans porteur de temps, il sera **inapplicable et donc invérifiable**, ce qui affaiblit le statut de principe. Soit la tâche devient une ressource horodatée, soit le critère temporel est retiré de la formulation du principe. L'agent recommande la seconde voie pour la version 0.1.0, mais le choix engage le modèle.
+### Objections nouvelles, ouvertes
 
-**Objection 5 (risque d'enflure introduit par la capture bon marché).** Abaisser le coût d'entrée résout C8 et C10, et crée mécaniquement le risque décrit en [`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md) section 11 : un agent qui peut enregistrer sans coût peut saturer le stock plus vite que l'humain ne peut le trier. Si l'étape 4 est exécutée sans que le mécanisme d'obsolescence de l'étape 2 soit opérant, le dépôt se dote d'un stock qui grossit et dont rien ne sort, c'est-à-dire du défaut que cette analyse constate déjà, à plus grande échelle. **L'agent objecte à toute exécution de l'étape 4 avant que la règle d'obsolescence et son typage d'arêtes ne soient décidés.**
+Ces quatre objections naissent des résolutions ci-dessus et n'existaient pas à la révision initiale.
+
+**Objection N1 (deux descriptions concurrentes du même type).** Le méta-type « ressource » décrira, en markdown vivant et versionné, ce que [`.dev/resource-types.yaml`](../resource-types.yaml) décrit déjà en YAML lisible par un programme (préfixe, emplacement, nommage, skill, droits d'édition). Si l'étape 2 est exécutée sans trancher la préséance, le dépôt se dote de **deux sources de vérité sur la même chose**, c'est-à-dire exactement le défaut constaté en C6 sur `CLAUDE.md`, et il le crée volontairement. Le risque est certain, pas hypothétique : la divergence a déjà eu lieu une fois entre `resource-types.yaml` et sa vue. Trois issues possibles, à trancher par l'humain : (a) le méta-type fait autorité et `resource-types.yaml` en est **dérivé** mécaniquement ; (b) le YAML fait autorité et l'instance de méta-type en est une vue rédigée ; (c) le YAML est **aboli** et remplacé par le frontmatter des instances de méta-type, `clia` lisant ces fichiers. L'agent ne peut pas choisir : la décision engage la couche machine-lisible dont dépend `clia`.
+
+**Objection N2 (le droit de créer un `BUG` est contredit).** La règle « un agent n'a pas le droit de créer des entrées de travail » entre en conflit direct avec l'état du dépôt : `BUG` est en co-édition ([`ADR-003`](../adr/ADR-003-gestion-des-bogues.md), [`.dev/resource-types.yaml`](../resource-types.yaml)), `skl-013` est un skill de production destiné à l'agent, et [`BUG-009`](../bugs/BUG-009-contexte-repertoire-ignore-par-clia.md) a été créé par l'agent à la tâche 1 de **cette session**. Si la règle est gravée telle quelle, neuf `BUG` existants deviennent rétroactivement irréguliers et `skl-013` perd son destinataire. Deux lectures sont possibles et elles ne produisent pas le même système : (a) **stricte**, l'agent ne crée aucun fichier `BUG` ni `ISU`, et `skl-013` devient un skill de rédaction de section de suggestion ; (b) **de statut**, l'agent rédige le fichier mais celui-ci naît dans un état non validé, et seule la validation humaine le fait exister comme entrée de travail. L'agent recommande (b), qui préserve l'acquis et place le contrôle au bon endroit, mais la question relève de la constitution.
+
+**Objection N3 (la datation des tâches par l'historique git n'est pas fiable).** `clia session task elapsed <N>` suppose que la date d'apparition d'une tâche dans `session.md` soit lisible dans l'historique. Trois failles concrètes. D'abord, la date git est celle du **commit**, pas celle de l'écriture : les commits observés dans ce dépôt sont des « save » manuels et groupés, si bien que la valeur retournée sous-estimerait le temps écoulé d'un montant inconnu. Ensuite, la commande n'a **aucune source de temps** dans un dépôt équipé non versionné, cas que [`ADR-010`](../adr/ADR-010-clia-setup-commandes-modes-installation.md) n'exclut pas, ni dans un clone superficiel. Enfin, un rebase ou un amend réécrit les dates, donc la mesure n'est pas reproductible, ce qui heurte [`PDC-001`](../principes/PDC-001-determinisme-de-clia.md) : mêmes fichiers, résultats différents selon l'historique. **Suggestion : soit la commande annonce explicitement qu'elle mesure « depuis le premier commit contenant la tâche » et échoue proprement hors dépôt git, soit la date de création d'une tâche est écrite dans `session.md` au moment de l'ajout, ce qui la rend indépendante de git.** La seconde voie touche un fichier en édition humaine uniquement et relève donc de l'humain.
+
+**Objection N4 (« Extreme SMART » sans son critère le plus discriminant).** La résolution de l'objection 3 retire le `PDC` et celle de l'objection 4 retire la limite de temps. Le T de SMART n'est donc plus contraignant, et le A (assignable) est déjà sans objet dans un dépôt à opérateur unique. Si l'`ADR` est produit tel quel, le dépôt adopte un principe nommé « Extreme SMART » dont deux des cinq critères ne contraignent rien, et dont le nom promet plus que le contenu : un lecteur externe attendra la timebox, qui est le trait le plus visible du modèle d'origine (`ADR-002` du dépôt `deeptech-ticket-driven`, critère T, 12 heures). Le risque n'est pas technique mais documentaire, et il porte sur une version destinée à être présentable publiquement. **Suggestion : que l'`ADR` énonce explicitement, critère par critère, lequel est contraint, lequel est seulement mesuré, et lequel est sans objet en 0.1.0 ; et qu'il justifie le maintien du nom, ou en change.**
 
 ## Synthèse et recommandations
 
-1. **Le diagnostic.** Le dépôt n'a pas de problème de volume de travail, il a un problème de **représentation** du travail : trente-trois éléments ouverts répartis sur six supports, dont trois que l'agent ne peut pas éditer, sans relation, sans statut normalisé, sans mécanisme de sortie et sans interrogation.
-2. **Deux types manquent, et ils sont bien choisis.** `ISU` (sujet ouvert, coût d'entrée minimal) et `INT` (intention, racine du graphe) répondent à quatre des six écarts forts. La proposition de la tâche `xy` est validée par l'analyse.
+*(Points 4, 5 et 6 révisés à la révision 1.)*
+
+1. **Le diagnostic.** Le dépôt n'a pas de problème de volume de travail, il a un problème de **représentation** du travail : trente-trois éléments ouverts répartis sur six supports, sans relation, sans statut normalisé, sans mécanisme de sortie et sans interrogation.
+2. **Deux types manquent, et ils sont bien choisis.** `ISU` (sujet ouvert, coût d'entrée minimal) et `INT` (intention, racine du graphe) répondent à quatre des écarts forts. La proposition de la tâche `xy` est validée par l'analyse.
 3. **Le graphe d'intention est adoptable, avec un correctif de fond** : typer les arêtes en nécessaire contre alternative, sans quoi la règle d'obsolescence autorise à déclarer obsolète un travail encore nécessaire. Abandonner par ailleurs la question parent-enfant et la métrique de vitesse du graphe, et ne pas définir de métrique d'importance.
-4. **Pas de ressource « comportement attendu ».** Le dépôt en a déjà trois porteurs sous-exploités. Ce qui manque est l'**obligation**, pour un `BUG`, de nommer la clause d'attendu qu'il enfreint, avec le cas d'échec explicite : pas d'attendu écrit, pas de bogue.
-5. **Ne pas charger la gouvernance.** Le cycle objection-sociocratique décide ; il ne doit pas capturer. Confondre les deux reproduirait le coût d'entrée prohibitif qui est la cause de C10.
-6. **Priorité recommandée** : étapes 1 et 2 (décider, formaliser) maintenant ; étapes 3 à 5 après `BUG-009`, dont dépend toute interrogation par `clia`. Voir objection 1.
-7. **Trois écarts constatés méritent un `BUG` indépendamment de cette analyse** : la divergence de `CLAUDE.md` avec la couche type, la section « Acteurs et rôles » d'`ARCHITECTURE.md`, et les deux références pendantes vers `skl-016` et `skl-017`. Les trois sont des écarts à `PDC-006` ou à `ADR-004`, donc des bogues au sens d'`ADR-003`.
+4. **Un troisième type est décidé : le méta-type « ressource »**, qui sépare la décision d'avoir un type (l'`ADR`) de la description de ce type. Sa production est conditionnée par l'objection N1 : sans arbitrage de préséance avec `.dev/resource-types.yaml`, il crée volontairement le défaut constaté en C6.
+5. **Sur le comportement attendu, la question est rouverte.** L'analyse recommandait de ne pas créer de type autonome ; l'humain objecte et veut l'adopter (tâche 4 de `.dev/session.md`). La section correspondante est conservée comme argumentaire, non comme conclusion. Ce qui reste acquis quelle que soit l'issue : l'**obligation**, pour un `BUG`, de nommer la clause d'attendu qu'il enfreint, avec le cas d'échec explicite (pas d'attendu écrit, pas de bogue).
+6. **Les droits de création sont réservés à l'humain**, et c'est une règle de gouvernance, pas un défaut. L'agent suggère dans une analyse ou une objection. La conséquence à trancher est le sort du `BUG`, aujourd'hui en co-édition et produit par l'agent (objection N2). Le cycle objection-sociocratique décide et ne doit pas capturer : confondre les deux reproduirait le coût d'entrée prohibitif qui est la cause de C10.
+7. **Priorité arbitrée** : bloc A (décider, formaliser) maintenant ; bloc B (méthodologie, graphe initial, outillage) après `BUG-009` et `BUG-007`, dont dépend toute interrogation par `clia`.
+8. **Trois écarts constatés méritent un `BUG` indépendamment de cette analyse** : la divergence de `CLAUDE.md` avec la couche type, la section « Acteurs et rôles » d'`ARCHITECTURE.md`, et les deux références pendantes vers `skl-016` et `skl-017`. Les trois sont des écarts à `PDC-006` ou à `ADR-004`, donc des bogues au sens d'`ADR-003`. Leur ouverture relève de l'humain (voir objection N2).
 
 ## Portée et péremption
 
@@ -260,3 +306,4 @@ Esquisse, non normative, produite dans cette analyse et non dans un fichier `PLN
 - **Limites** : l'analyse ne juge pas le code (`src/`, `test/`), qui est hors périmètre. Les statuts sont lus tels que déclarés, sans vérification que l'état déclaré corresponde à l'état réel ; `PLN-016` (« partiellement exécuté ») n'a pas été audité pour délimiter son reliquat. La lecture des deux dépôts externes porte sur leur état au 2026-08-02 et ne présume pas de leur évolution.
 - **Incertitude signalée** : la péremption supposée de deux entrées de `session-x02.md` (constat C7) est établie par comparaison de contenu avec `ADR-004` v0.2.0, pas par une date d'écriture par sujet, qui n'existe pas. Elle demande une confirmation humaine avant toute action.
 - **Péremption** : l'inventaire est daté du 2026-08-02 et se périme à chaque tâche exécutée. Les constats structurels (C1 à C4, C8 à C10) restent valides tant que le modèle de ressources n'est pas amendé. La confrontation à la référence se revalide en même temps que [`FND-019`](../fondations/FND-019-systemes-de-suivi-du-travail.md).
+- **État des décisions à la révision 1** : les cinq objections initiales sont résolues et leurs résolutions sont intégrées. Quatre objections nouvelles (N1 à N4) sont **ouvertes** et bloquent l'exécution de l'esquisse selon la règle absolue de [`CONSTITUTION.md`](../../CONSTITUTION.md). Une objection humaine est ouverte sur la section « comportement attendu » (tâche 4 de `.dev/session.md`), dont l'énoncé n'est pas clos.

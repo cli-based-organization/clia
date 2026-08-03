@@ -56,6 +56,47 @@ Produire une recherche de fondation (FND) à propos des systèmes, frameworks et
 
 Prendre connaissance du travail qui reste à faire dans ce repo. Prendre en compte la tâche en préparation xy. Produire une analyse (ANL) à propos d'un ADR qui définit la méthode de gestion de travail. Quel ressources sont manquantes et doivent être produitent? Quels ressources doivent être adaptées? Est-ce que les processus et mécaniques de travail actuels sont suffisant? ou bien doit-on en prévoir de nouvelles ou adapter celles qui sont déjà en place? Esquisser un plan (dans l'analyse et NON PAS dans un fichier PLN). Émettre des objections. Doit-on ajouter une ressource "comportement attendu"? Dire en quoi les issues de GitHub ont été un progrès de simplification des bug tracker qui a grandement aidé à l'adoption de la plateforme Github. Discuter du système de graph d'intention proposé dans @../../noumanity-dev/ticket-driven-ai et @../../noumanity-ai-assisted-development-toolkit/nou-methodologies-ia/experimentations/deeptech-ticket-driven .
 
+## 3. [traitement des objections] ANL-016
+
+Adapter ANL-016 en tenant compte des réponses aux objections
+
+### objection 1
+
+Suivre la recommendation de l'agent
+
+### objection 2
+
+Produire la ressource "ressource"
+
+### objection 3
+
+Faire un ADR, un REQ et un SPEC (selon ce qui est nécessaire) avec le principe Extreme Smart
+
+### objection 4
+
+horodater les sessions. Et avec l'historique git, on peut voir à quel moment une tâche a été créé.
+
+On peut ainsi savoir depuis combien de temps a été ouvert une session et une tâche.
+
+`clia session elapsed`
+
+`clia session task elapsed 5`
+
+Mais on ne met pas de temps limite pour l'instant.
+
+### objection 5
+
+Un agent n'a pas le droit de créer des entrées de travail. Il ne peut que faire des suggestions d'issue ou de bug :
+- dans ANL
+- dans une objection
+
+L'humain doit valider toutes les intentions et éléments de travail.
+
+## 4. [objections humaines]
+
+### objection 1 => adopter une ressource comportement attendu
+
+### objection 2 => 
 
 ## xy. [conception] ADR à propos de la gestion du travail
 
