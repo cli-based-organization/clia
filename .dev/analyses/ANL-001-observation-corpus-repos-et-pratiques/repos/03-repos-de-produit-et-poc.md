@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-03-repos-de-produit-et-poc
 title: "Les dépôts de produit, de prototype et de code"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Les dépôts de produit, de prototype et de code"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -135,3 +138,7 @@ Quatre idées du système actuel existaient déjà, formulées et parfois implé
 Le corpus démontre une capacité de développement long, avec `harmony` et ses 651 commits, et une pratique dominante d'exploration courte, avec une trentaine de dépôts de moins d'une semaine. La méthode actuelle ne modélise que le second régime, à travers la session et le ticket, et n'a rien à dire du premier.
 
 Le réflexe CLI est constant depuis 2023, avant toute théorie. Le nom du groupe `cli-based-organization` formalise une pratique de trois ans, il ne l'invente pas.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](../index.md)

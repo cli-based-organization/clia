@@ -8,9 +8,11 @@ prefixe: INT
 emplacement: ".dev/intentions/INT-<SEQ>-<SLUG>.md, sauf INT-001 qui vit à INTENTION.md"
 cycle-de-vie: vivant
 edition: humain
+famille: fondamentale
 champs-obligatoires: [type, id, title, version, status, portee, critere-de-satisfaction, critere-de-trahison]
 relations-admissibles: [intention, contexte, concept]
-skill: aucun
+sections: [Le but, La raison, Critère de satisfaction, Critère de trahison, Ce que cette intention exclut, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

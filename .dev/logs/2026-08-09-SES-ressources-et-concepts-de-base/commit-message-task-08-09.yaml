@@ -1,0 +1,54 @@
+type: feat
+scope: ressources
+sujet: "nature composable de la ressource, six familles, trente types outillés"
+corps: |
+  Exécute les tâches 8 et 9 de la session du 2026-08-09. La tâche 9 a été
+  traitée en premier : elle change la définition de la ressource, dont tout ce
+  que la tâche 8 produit dépend.
+
+  Tâche 9. DCN-001 enregistre la décision de l'humain, ADR-004 l'instruit en
+  sept décisions. La ressource est désormais définie par ses propriétés et non
+  par son support : identifiable et auto-cohérente. Elle est composable, et
+  chaque composant est un atome, ressource de plein droit déclarant
+  fait-partie-de. La propriété holographique est retenue dans sa lecture
+  faible : tout atome se lit seul. RES-001 passe en 0.3.0, ANL-001 est mis en
+  conformité.
+
+  La décision débloque immédiatement le type code, qui ne pouvait pas exister
+  tant qu'une ressource était un fichier markdown à frontmatter.
+
+  Tâche 8. Deux types nouveaux : FRG le fragment, matière captée que l'agent
+  ne retouche jamais, et DCN la décision, qui enregistre sans décider.
+  DCN-002 et ADR-005 actent le regroupement en six familles. Vingt-et-une
+  définitions manquantes sont écrites, portant le dépôt à trente types.
+
+  Les trois artefacts mécaniques sont dérivés des définitions, non rédigés :
+  soixante schémas CUE et vingt-neuf gabarits, générés depuis les champs
+  champs-obligatoires et sections. C'est l'application de ADR-003 D7, dont la
+  circularité se dissout puisque la dérivation est un script.
+
+  Premier contrôle de fond de ce dépôt. cue vet ne signale rien sur les
+  soixante schémas, et la validation trouve dix-sept non-conformités réelles
+  sur les soixante-neuf ressources, dont seize sont corrigées. Le seul échec
+  restant est le NON-013 de l'humain, laissé intact.
+
+  Trois bogues du CLI trouvés par cette validation : res new posait une liste
+  fixe de champs au lieu de lire la définition, le champ type était dérivé du
+  titre lisible au lieu de l'identifiant canonique, et la résolution de type
+  échouait sur les accents. Les trois ont la même cause : l'outil dérivait de
+  l'affichage plutôt que de l'identité. Soixante-sept tests restent verts.
+
+  Écart déclaré avec la demande : six skills de famille au lieu de vingt-neuf
+  skills de type, motivé par ADR-005 D4 et porté par NON-017 Q1, bloquante.
+
+  Trois objections nouvelles : NON-015 sur les mécanismes d'entrée, dont le
+  relevé trouve sept là où la demande en citait trois, NON-016 sur la
+  composition et l'atomicité, NON-017 sur les familles et le processus. Le
+  dépôt porte dix-sept objections et cent vingt-deux questions.
+note_pour_l_humain: >-
+  Le relevé demandé par la tâche 8 trouve un mécanisme d'entrée que personne
+  n'avait nommé : la réponse à une question d'objection. Cent vingt-deux
+  questions attendent une réponse écrite, ce qui en fait le point d'entrée le
+  plus actif du dépôt, et il n'est pas modélisé. NON-015 Q2 le porte.
+  NON-017 Q1 décide si le travail restant est de six documents ou de
+  vingt-neuf. Le versionnage reste la responsabilité de l'humain.

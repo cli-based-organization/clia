@@ -8,9 +8,11 @@ prefixe: ONT
 emplacement: ".dev/ontologies/ONT-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: co-edition
+famille: fondamentale
 champs-obligatoires: [type, id, title, version, status, domaine]
 relations-admissibles: [ontologie, concept, ressource]
-skill: aucun
+sections: [Termes retenus, Termes écartés, Relations admissibles, Zones non couvertes, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

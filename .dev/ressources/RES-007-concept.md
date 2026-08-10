@@ -8,9 +8,11 @@ prefixe: CPT
 emplacement: ".dev/concepts/CPT-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: co-edition
+famille: fondamentale
 champs-obligatoires: [type, id, title, version, status, terme-ontologique, origine, emplois-attestes]
 relations-admissibles: [concept, ontologie, fondation, analyse, intention]
-skill: aucun
+sections: [Ce que nomme ce concept, Origine, Ce qu'il permet de voir, Ce qu'il exclut, Emplois attestés, Limites et cas frontières, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

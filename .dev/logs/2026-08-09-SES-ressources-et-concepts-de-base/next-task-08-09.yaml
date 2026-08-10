@@ -1,0 +1,76 @@
+# Suggestions de prochaines étapes après les tâches 8 et 9.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-017 Q1 : six skills de famille ou vingt-neuf skills de type"
+    detail: >-
+      C'est la question qui décide si le travail restant est de six documents
+      ou de vingt-neuf. L'écart est déjà consommé : six skills de famille
+      existent. Les vingt-trois autres ne seront écrits que sur demande.
+    effet: bloquant
+
+  - titre: "Statuer sur ADR-004 et ADR-005"
+    detail: >-
+      Les décisions de fond sont prises par l'humain dans les tâches 8 et 9 ;
+      les ADR qui les instruisent portent le statut propose. Les DCN-001 et
+      DCN-002 sont en effet en-vigueur, ce qui est incohérent avec le statut
+      des ADR et mérite d'être aligné.
+
+  - titre: "Répondre à NON-016 Q1 : la propriété holographique"
+    detail: >-
+      Lecture faible retenue, chaque atome étant auto-cohérent. Lecture forte
+      possible, chaque atome portant l'information du tout. Le mot figure dans
+      le titre d'une tâche et il n'est défini nulle part.
+
+  - titre: "Répondre à NON-015 Q2 : la réponse à objection est-elle une entrée modélisée"
+    detail: >-
+      Cent vingt-deux questions attendent une réponse écrite. C'est le
+      mécanisme d'entrée le plus actif du dépôt et il n'est pas modélisé.
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Le cahier des charges est désormais complet et outillé : les neuf
+      contrôles de skl-001 pour la forme, et la validation de schéma CUE pour
+      le fond. La chaîne fonctionne à la main depuis le 2026-08-10 et a trouvé
+      dix-sept défauts. L'automatiser est le geste le plus rentable qui reste.
+
+  - titre: "Faire de clia le générateur des artefacts dérivés"
+    detail: >-
+      Les soixante schémas et les vingt-neuf gabarits sont générés par un
+      script hors du dépôt. Ce script doit devenir une commande, sans quoi la
+      dérivation dépend d'un fichier temporaire.
+
+dette_nommee:
+  - titre: "CLAUDE.md est doublement dépassé"
+    detail: >-
+      Il annonce vingt-sept types là où trente sont définis, et sa désignation
+      par triplet de numéros reste invalidée par ADR-001 D3. Le chantier A de
+      PLN-001 le traite et reste suspendu à trois réponses.
+
+  - titre: "Le décompte de clia res ls est faux depuis ADR-004 D6"
+    detail: >-
+      Il compte des fichiers là où la décision exige de compter des
+      ressources. Un composite compte donc pour autant que ses atomes.
+
+  - titre: "Deux régimes de validation coexistent sans être déclarés"
+    detail: >-
+      Schéma CUE pour les ressources textuelles, tests pour le code. RES-026
+      nomme les substituts du code au frontmatter, et aucun document ne dit
+      que le modèle a deux régimes. Porté par NON-016 Q5.
+
+  - titre: "L'index des définitions est une vue déguisée en ressource"
+    detail: >-
+      Il porte type: ressource par commodité. Contournement assumé, porté par
+      NON-016 Q6.
+
+  - titre: "Deux types sont déclarés non-installe"
+    detail: >-
+      Harnais constitutionnel et harnais de gouvernance. Le premier a été
+      archivé et son contenu repris par ADR-002 ; le second n'a jamais existé
+      et RES-017 interroge sa nécessité.
+
+  - titre: "Sept types n'ont aucune instance"
+    detail: >-
+      Contexte, Ontologie, Concept, Fragment, et la plupart des types de
+      préparation. NON-002 Q3 demandait si un type sans instance se justifie ;
+      la question est désormais chiffrée.

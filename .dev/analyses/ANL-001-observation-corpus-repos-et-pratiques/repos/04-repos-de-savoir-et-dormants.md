@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-04-repos-de-savoir-et-dormants
 title: "Les dépôts de savoir, d'apprentissage et les dormants"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Les dépôts de savoir, d apprentissage et dormants"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -64,3 +67,7 @@ Le seuil d'entrée est mal calibré. La seule forme disponible pour conserver un
 Les répétitions sont nombreuses et non détectées. L'idée d'organiser ses outils par CLI apparaît cinq fois. Le dépôt `INTENTION` vide apparaît trois fois. Le dépôt de notes IA vide apparaît trois fois. Rien dans la pratique actuelle ne permet à l'humain de constater qu'il recommence.
 
 Le seul dépôt de savoir qui fonctionne est `jvtrudel/ecrits`, et il fonctionne parce qu'il est orienté publication : le livrable a un destinataire, une date et un lien. C'est la piste la plus solide que ce fichier offre pour la conception : le savoir se conserve quand il est destiné à sortir.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](../index.md)

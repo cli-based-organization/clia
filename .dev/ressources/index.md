@@ -8,8 +8,10 @@ prefixe: RES
 emplacement: ".dev/ressources/index.md"
 cycle-de-vie: vivant
 edition: co-edition
+famille: fondamentale
 champs-obligatoires: [type, id, title, version, status]
 relations-admissibles: [ressource]
+sections: [Statut, Les ressources fondamentales, Objections ouvertes, Relations]
 skill: aucun
 adr: aucun
 statut: actif
@@ -17,32 +19,87 @@ statut: actif
 
 # Couche type du dépôt
 
-> Table des types de ressources fondamentales de `clia`. Chaque type est décrit par sa définition et par elle seule ; cette table est une vue, non une source parallèle.
+> Table des types de ressources de `clia`. Ce fichier est une **vue** dérivée des définitions, non une définition de type : son frontmatter porte les champs du type `ressource` par commodité, ce que `NON-016` conteste.
+>
+> Table des types de ressources de `clia`. Chaque type est décrit par sa définition et par elle seule ; cette table est une vue, non une source parallèle.
 
 ## Statut
 
 Premier jet du 2026-08-09, produit par la tâche 2 de la session `ressources-et-concepts-de-base`, à partir des constats de `ANL-001-observation-corpus-repos-et-pratiques`.
 
-Les sept définitions sont en `status: draft`.
+Les trente définitions sont en `status: draft`.
 
 Le triplet est complet pour un seul type. La tâche 3 de la même session a produit `ADR-001-adoption-de-la-notion-de-ressource`, au statut de décision `propose`, et `skl-001-ressource`, qui porte les règles communes à toute ressource et la procédure de production d'une définition de type. Les six autres définitions déclarent encore `skill: aucun` et `adr: aucun` : c'est délibéré et signalé, non oublié.
 
 Cette progression type par type est elle-même une décision, actée par `ADR-001` D6. Elle répond au défaut D4 de `ANL-001` : exiger le triplet complet à l'introduction de chaque type rendrait l'extensibilité prohibitive.
 
-## Les sept ressources fondamentales
+## Les types de ressources
 
-| Définition | Type | Préfixe | Emplacement | Cycle de vie | Édition | Skill | ADR |
-|---|---|---|---|---|---|---|---|
-| [RES-001](RES-001-ressource.md) | Ressource | `RES` | `.dev/ressources/` | vivant | co-édition | [skl-001](../skills/skl-001-ressource/SKILL.md) | [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md) |
-| [RES-002](RES-002-contexte.md) | Contexte | `CTX` | `.dev/contextes/` | vivant | hybride | aucun | aucun |
-| [RES-003](RES-003-intention.md) | Intention | `INT` | `INTENTION.md` et `.dev/intentions/` | vivant | humain | aucun | aucun |
-| [RES-004](RES-004-objection.md) | Objection | `NON` | `.dev/objections/` | travail | hybride | aucun | aucun |
-| [RES-005](RES-005-fait.md) | Faits | `FCT` | `.dev/faits/` | point-fixe | hybride | aucun | aucun |
-| [RES-006](RES-006-ontologie.md) | Ontologie | `ONT` | `.dev/ontologies/` | vivant | co-édition | aucun | aucun |
-| [RES-007](RES-007-concept.md) | Concept | `CPT` | `.dev/concepts/` | vivant | co-édition | aucun | aucun |
+Trente types, regroupés en six familles par `ADR-005`. La famille porte le processus de production, le type porte ses spécificités, `skl-001-ressource` porte les règles communes.
 
-Sept types, sept préfixes distincts.
+### Famille fondamentale
 
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-001](RES-001-ressource.md) | Ressource | `RES` | vivant | co-edition | `skl-001-ressource` | actif |
+| [RES-002](RES-002-contexte.md) | Contexte | `CTX` | vivant | hybride | `skl-002-ressource-fondamentale` | actif |
+| [RES-003](RES-003-intention.md) | Intention | `INT` | vivant | humain | `skl-002-ressource-fondamentale` | actif |
+| [RES-004](RES-004-objection.md) | Objection | `NON` | travail | hybride | `skl-002-ressource-fondamentale` | actif |
+| [RES-005](RES-005-fait.md) | Faits | `FCT` | point-fixe | hybride | `skl-002-ressource-fondamentale` | actif |
+| [RES-006](RES-006-ontologie.md) | Ontologie | `ONT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
+| [RES-007](RES-007-concept.md) | Concept | `CPT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
+
+### Famille conception
+
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-010](RES-010-analyse.md) | Analyse | `ANL` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
+| [RES-011](RES-011-fondation.md) | Recherche de fondation | `FND` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
+| [RES-012](RES-012-principe-de-conception.md) | Principe de conception | `PDC` | vivant | co-edition | `skl-003-ressource-de-conception` | actif |
+| [RES-013](RES-013-methodologie.md) | Méthodologie | `MET` | vivant | ia | `skl-003-ressource-de-conception` | actif |
+
+### Famille controle
+
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-014](RES-014-harnais-operatoire.md) | Harnais opératoire | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+| [RES-015](RES-015-harnais-d-architecture.md) | Harnais d'architecture | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+| [RES-016](RES-016-harnais-constitutionnel.md) | Harnais constitutionnel | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
+| [RES-017](RES-017-harnais-de-gouvernance.md) | Harnais de gouvernance | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
+| [RES-018](RES-018-skill.md) | Skill | `skl` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+
+### Famille contenu
+
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-008](RES-008-fragment.md) | Fragment | `FRG` | point-fixe | hybride | `skl-004-ressource-de-contenu` | actif |
+| [RES-009](RES-009-decision.md) | Décision | `DCN` | vivant | hybride | `skl-004-ressource-de-contenu` | actif |
+| [RES-030](RES-030-entrevue.md) | Entrevue | `ENT` | travail | hybride | `skl-004-ressource-de-contenu` | actif |
+
+### Famille preparation
+
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-019](RES-019-adr.md) | Décision d'architecture | `ADR` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-020](RES-020-specification.md) | Spécification | `SPC` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-021](RES-021-requis-fonctionnel.md) | Requis fonctionnel | `RQF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-022](RES-022-requis-non-fonctionnel.md) | Requis non fonctionnel | `RQNF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-023](RES-023-cas-d-usage.md) | Cas d'usage | `USE` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-024](RES-024-comportement-attendu.md) | Comportement attendu | `CMP` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| [RES-025](RES-025-plan.md) | Plan de travail | `PLN` | travail | ia | `skl-006-ressource-de-preparation` | actif |
+
+### Famille implementation
+
+| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|
+| [RES-026](RES-026-code.md) | Code | `CDE` | vivant | ia | `skl-007-ressource-d-implementation` | actif |
+| [RES-027](RES-027-rapport-de-recherche.md) | Rapport de recherche | `RPT` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+| [RES-028](RES-028-article.md) | Article | `ART` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+| [RES-029](RES-029-presentation.md) | Présentation | `PRS` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+
+Trente types, trente préfixes distincts, six familles.
+
+Chaque type porte quatre artefacts dérivés de sa définition : un schéma CUE de frontmatter dans `.dev/schemas/`, un gabarit markdown dans `.dev/templates/`, un schéma CUE des données du gabarit, et un skill de famille dans `.dev/skills/`. Les trois premiers sont **générés** depuis la définition et ne doivent pas être édités à la main.
 ## Ce que ce jet apporte de neuf
 
 Cinq propositions de conception ne sont pas des reprises de l'état de l'art, et chacune est fondée sur une mesure de `ANL-001`.

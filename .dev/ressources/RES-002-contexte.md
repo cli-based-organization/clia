@@ -8,9 +8,11 @@ prefixe: CTX
 emplacement: ".dev/contextes/CTX-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: hybride
+famille: fondamentale
 champs-obligatoires: [type, id, title, version, status, portee, peremption]
 relations-admissibles: [contexte, intention, fait, ontologie, concept, analyse]
-skill: aucun
+sections: [Situation, Historique, Acteurs, Contraintes, Constats et mesures, Ce qui n'est pas su, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

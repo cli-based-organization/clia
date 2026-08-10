@@ -8,9 +8,11 @@ prefixe: FCT
 emplacement: ".dev/faits/FCT-<DATE>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: hybride
+famille: fondamentale
 champs-obligatoires: [type, id, title, status, sujet, date-de-constat, diffusion]
 relations-admissibles: [fait, contexte, analyse, ontologie, concept]
-skill: aucun
+sections: [Portée et date d'arrêt, Faits, Faits contestés, Ce qui n'a pas pu être établi, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

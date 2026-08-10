@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-01-lignee-methodologique
 title: "Les dépôts porteurs du système d'augmentation"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Les dépôts qui portent le système"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -228,3 +231,7 @@ Les décisions de rupture ne sont jamais actées. Trois abandons majeurs, `tda` 
 Le système consacre une part croissante de son énergie à se décrire. Cinq skills sur douze portaient déjà sur le harnais dans `nou-methodologies-ia`. `clia` prévoit aujourd'hui trois documents par type de ressource pour vingt-sept types. Le rapport entre l'outillage produit et le travail métier accompli se dégrade.
 
 Le meilleur travail est le moins protégé. `RES-001` vit dans un dépôt de candidature sans remote. Le CLI Go de `nou-scripts-ia-support` et le manifeste de `cli-based-enterprise` ne sont pas commités. Quatre-vingt-quatorze dépôts sur cent soixante-six n'ont aucun remote.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](../index.md)

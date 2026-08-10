@@ -198,22 +198,56 @@ clia_resource_new() {
     return 1
   fi
 
+  # L'identite canonique du type vient de l'id de sa definition, jamais de son
+  # titre : le titre est un libelle lisible, l'id porte le slug canonique.
+  local type_canonique
+  type_canonique=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" id 2>/dev/null)
+  type_canonique="${type_canonique#*-}"
+  [[ -n "$type_canonique" ]] || type_canonique=$(printf '%s' "$title" | tr '[:upper:]' '[:lower:]')
+
+  # Les champs a poser sont ceux que la definition declare obligatoires, non une
+  # liste fixe. Sans cela, l'instance produite est non conforme des sa creation :
+  # bogue constate le 2026-08-10 sur NON-013, cree la veille par cette commande.
+  local champs
+  champs=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" champs-obligatoires 2>/dev/null)
+  champs=$(printf '%s' "$champs" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+  [[ -n "$champs" ]] || champs=$(printf 'type\nid\ntitle\nstatus\n')
+
   local id="${prefixe}-${slug}"
+  local sections
+  sections=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" sections 2>/dev/null)
+
   {
     printf -- '---\n'
-    printf 'type: %s\n' "$(printf '%s' "$title" | tr '[:upper:]' '[:lower:]')"
-    printf 'id: %s\n' "$id"
-    printf 'title: "%s"\n' "$description"
-    if [[ "$cycle" != "point-fixe" ]]; then printf 'version: 0.1.0\n'; fi
-    printf 'status: draft\n'
-    printf 'date: %s\n' "$(date +%Y-%m-%d)"
+    local c
+    while IFS= read -r c; do
+      [[ -n "$c" ]] || continue
+      case "$c" in
+        type)    printf 'type: %s\n' "$type_canonique" ;;
+        id)      printf 'id: %s\n' "$id" ;;
+        title)   printf 'title: "%s"\n' "$description" ;;
+        name)    printf 'name: %s\n' "${prefixe}-${discriminant}-${slug}" ;;
+        status)  printf 'status: draft\n' ;;
+        version) printf 'version: 0.1.0\n' ;;
+        date*)   printf '%s: %s\n' "$c" "$(date +%Y-%m-%d)" ;;
+        aucun*)  ;;
+        *)       printf '%s: À RENSEIGNER\n' "$c" ;;
+      esac
+    done <<< "$champs"
     printf -- '---\n'
     printf '\n'
     printf '# %s-%s - %s\n' "$prefixe" "$discriminant" "$description"
     printf '\n'
     printf '> À rédiger.\n'
-    printf '\n'
-    printf '## Relations\n'
+    if [[ -n "$sections" ]]; then
+      printf '%s' "$sections" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//' \
+        | while IFS= read -r sec; do
+            [[ -n "$sec" ]] || continue
+            printf '\n## %s\n' "$sec"
+          done
+    else
+      printf '\n## Relations\n'
+    fi
   } > "$file"
 
   # La sortie de donnees va sur stdout : le chemin, seul, est utilisable par

@@ -5,6 +5,7 @@ title: "Usage des CLI et leur renouveau à l'ère du cloud et de la manipulation
 status: draft
 date: 2026-08-09
 sujet: "Interfaces en ligne de commande : propriétés, histoire, causes du renouveau, modèle orienté ressources"
+methodologie: "revue documentaire sur sources publiques, faits datés vérifiés à la source"
 generated:
   by: claude-opus-5
   at: 2026-08-09

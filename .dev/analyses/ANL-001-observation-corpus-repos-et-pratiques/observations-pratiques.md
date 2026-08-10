@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-observations-pratiques
 title: "Observations sur la manière de travailler de l'humain"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Régime de travail de l humain, mesuré"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -111,3 +114,7 @@ Le revers est une dérive lexicale non contrôlée. Le même objet s'appelle `li
 | Cycle objection, réponse, autorisation | Ressources Objection et réponse nécessaires dans `clia` |
 | Dérive lexicale entre dépôts et lignées | Lexique unique tenu, synonymes écartés explicitement |
 | Le savoir se conserve quand il est destiné à sortir | Le type Publication doit exister et être outillé |
+
+## Relations
+
+- `fait-partie-de` [ANL-001](index.md)

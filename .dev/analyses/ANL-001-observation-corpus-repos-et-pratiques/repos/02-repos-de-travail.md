@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-02-repos-de-travail
 title: "Les dépôts de travail équipés du harnais"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Les dépôts de travail métier équipés du harnais"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -231,3 +234,7 @@ Le harnais n'a pas de prise sur les travaux non textuels. Assets visuels, PDF g�
 Les dépôts qui portent le plus de valeur métier sont souvent les moins protégés. La stratégie d'entreprise, la stratégie post-quantique et le dossier de talent sont à zéro commit ou sans remote.
 
 La présence du harnais ne prédit pas le volume de travail. Le dépôt le plus régulièrement travaillé du corpus métier, `linux-pqc` avec 48 commits, n'a pas de harnais. Les deux dépôts entièrement équipés et entièrement vides, `pdg-augmenté` et `app-itinerance`, en ont un complet.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](../index.md)

@@ -91,8 +91,9 @@ prefixe: CHO
 emplacement: ".dev/choses/CHO-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: ia
-champs-obligatoires: [type, id, title]
+champs-obligatoires: [type, id, title, version, status]
 relations-admissibles: [ressource]
+sections: [Objet, Relations]
 skill: aucun
 adr: aucun
 statut: actif
@@ -112,8 +113,9 @@ prefixe: TRC
 emplacement: ".dev/traces/TRC-<DATE>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: ia
-champs-obligatoires: [type, id, title]
+champs-obligatoires: [type, id, title, status]
 relations-admissibles: [ressource]
+sections: [Objet, Relations]
 skill: aucun
 adr: aucun
 statut: actif
@@ -217,6 +219,12 @@ assert_contains 'le frontmatter porte un id stable' 'id: CHO-premiere-chose-a-fa
 assert_contains 'le frontmatter porte le titre donne' 'title: "Première chose à faire"' "$content"
 assert_contains 'un type vivant porte une version' 'version: 0.1.0' "$content"
 assert_contains 'le statut initial est draft' 'status: draft' "$content"
+
+# res new pose exactement les champs que la definition declare obligatoires,
+# ni plus ni moins. Regression du bogue constate le 2026-08-10 sur NON-013,
+# ou seuls les champs communs etaient poses.
+assert_contains 'les sections declarees sont posees' '## Objet' "$content"
+out2=$(run_out res ls traces)
 assert_contains 'le corps reste a rediger' 'À rédiger' "$content"
 
 # clia ne redige pas : le corps doit rester un squelette.

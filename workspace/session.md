@@ -158,3 +158,106 @@ Au regard de ANL-001 et du savoir mobilisé dans la précédente FND, faire une 
 ### Objections
 
 Compléter les objections existantes avec de nouvelles questions et émettre de nouvelles objections au besoin.
+
+
+## 8. [conception] Étendre les entrée possibles provenant d'humain
+
+Dès le départ, on a voulu restreindre les moyens par lesquels l'humain fournit de l'information au système.
+
+En contraignt à un fichier markdown (ticket.md, issue.md, task.md, session.md), on vient répondre à plusieurs besoins, notamment: 1. entrée conventionnée, 2. journalisation des prompts, etc.
+
+Cependant, cet unique mécanisme est contraignant. Il est rataché à un certain mécanisme de traitement qui peut être inadapté dans le cas d'usages variés.
+
+Aussi, nous avont déjà étendu le système afin de permettre une plus grande variété de cas d'usage:
+
+- répertoire `source-material`. inspiré de notebook LM permet de prendre en input n'importe quel fichier produit à l'extérieur de clia. Donc, ça peut inclure aussi du texte écrit par l'humain qui pilote son système d'informaiton.
+- NON. les objections
+- ENT. les entrevues
+
+Il y en a peut être d'autres que je n'ai pas en mémoire? Vérifier et les prendre en considération.
+
+Nous ajoutons un autre mécanisme => FRG, le Fragment. Il s'agit de ressource textelle auto-cohérente d'intérêt à partir de laquelle d'autres ressources seront générées. 
+
+Également, nous ajoutons la ressource DCN => décision. Qui est une ressource qui encode une décision : texte de loi, règlement, décision d'un CA on de n'importe quelle autre instance.
+
+Écrire les RES "FRG" et "DCN".
+
+Écrire une DCN pour les ADR-001 à ADR-014
+
+Nous décidons ceci => les ressources sont regroupés en fonction de leur fonction: 
+- fondamentale
+- de conception
+- de contrôle
+- de contenu (FRG, DCN, ...)
+- de préparation/planification
+- d'implémentation (COD, PRS, ...)
+
+
+Écrire une DCN qui signale cette décision et en explique les conséquenses. Et écrire une ADR qui explique la décision architecturale.
+
+Décrire les ressources (RES) FRG et DCN.
+
+Décrire l'ensemble des ressources (RES) mentionnés dans le fichier CLAUDE.md et qui ne sont pas encore décrites.
+
+Pour toute ressource, fournir les éléments suivants:
+
+- un skill qui guide les agents IA dans la création, modification et dans la validation de la ressource,
+- un fichier cuelang permettant de valider la validité du frontmatter yaml,
+- un template permettant de générer la ressource dans son format markdown,
+- un fichier cuelang permettant de valider le contenu yaml à passer un template
+
+Pour toute ressource qui n'est pas explicitement approuvée par un humain, mettre le status 'draft'.
+
+
+
+## 9. [conception] propriété holographique et composable/atomique des ressources
+
+Une ressource est définit comme un ensemble identifiable et auto-cohérent d'informations.
+L'implémentation spécifique n'est pas importante. Une ressource peut être un fichier, un répertoire contenant plusieurs fichiers, un répertoire git ou tout autre 
+
+Écrire une DCN et un ADR pour cette décision.
+
+
+Décision: Un ressource est est composable/atomique. C'est à dirre qu'on peut construire une ressource à partir d'un assemblage d'autres ressource et que chaque "composant" d'une ressource est un atome (une petite ressource qui fait partie d'une autre ressource).
+
+Mettre â aussi dans la DCN et l'ADR 
+
+
+## 10. [décision] distinguer de manière stricte la spécification du système clia de son implémentation
+
+DCN en draft et premier jet de ADR
+
+
+## 11. [méthodologie] Recherche
+
+Consulter ANL-001 pour définir la meilleur méthodologie de recherche de fondation.
+
+La version la plus aboutie du prompt pour une FDN est celui de la tâche 7. Quoique le poduit FND-002 n'est pas assez long et exhaustif et que les citations ne sont pas au niveau attendue d'une recherche universitaire.
+
+Produire un document MET qui décrit comment procéder pour faire une recherche de fondation, quel est l'input requis/optionnel et quel est le résultat attendu.
+
+
+## 12. [implémentation] améliore l' auto-documentation de clia
+
+
+le cli clia devrait être utilisable par n'importe qui et les fonctionnalités découvrables.
+
+Or, actuellement, toutes les fonctions ne sont pas découvrables:
+
+```sh
+$ clia res new -h
+clia: description manquante
+```
+
+corriger ce bug.
+
+Et mettre dans les principes fondamentaux l' "auto-découvrabilité" du système.
+
+
+## x. [conception] Amélioration de la notion de ressource
+
+La notion de ressource est le socle sur lequel repose le système clia.
+
+### traitement des objections émises par l'agent IA
+
+Prendre en compte les objections 

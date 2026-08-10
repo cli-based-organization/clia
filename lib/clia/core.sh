@@ -241,7 +241,12 @@ clia_slug() {
 # c'est le moyen le moins couteux d'eviter une source parallele.
 #
 # Sortie, un type par ligne, champs separes par une tabulation :
-#   type  prefixe  emplacement  cycle-de-vie  edition  definition  statut
+#   type  prefixe  emplacement  cycle-de-vie  edition  definition  statut  canonique
+#
+# La huitieme colonne est le slug de l'id de la definition, c'est-a-dire le nom
+# canonique du type, sans accent. C'est la valeur que porte le champ type des
+# instances, et celle qu'un humain tape au clavier. Sans elle, "decision" ne
+# resolvait pas le type intitule "Décision" : bogue constate le 2026-08-10.
 
 clia_types_defined() {
   local dir file base
@@ -260,9 +265,12 @@ clia_types_defined() {
     edition=$(clia_frontmatter_field "$file" edition)
     statut=$(clia_frontmatter_field "$file" statut)
     [[ -n "$prefixe" ]] || continue
-    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    local ident canonique
+    ident=$(clia_frontmatter_field "$file" id)
+    canonique="${ident#*-}"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
       "${title:-?}" "$prefixe" "${emplacement:-?}" "${cycle:-?}" \
-      "${edition:-?}" "${base%.md}" "${statut:-?}"
+      "${edition:-?}" "${base%.md}" "${statut:-?}" "${canonique:-?}"
   done < <(find "$dir" -maxdepth 1 -type f -name 'RES-*.md' | sort)
 }
 
@@ -324,9 +332,9 @@ clia_type_resolve() {
 
   clia_types_defined | awk -F'\t' -v w="$lower" -v a="$alt" '
     !found {
-      t = tolower($1); p = tolower($2)
-      if (t == w || p == w) { line = $0; found = 1; next }
-      if (t == a || p == a) { fallback = $0; hasfallback = 1 }
+      t = tolower($1); p = tolower($2); c = tolower($8)
+      if (t == w || p == w || c == w) { line = $0; found = 1; next }
+      if (t == a || p == a || c == a) { fallback = $0; hasfallback = 1 }
     }
     END {
       if (found) { print line; exit 0 }

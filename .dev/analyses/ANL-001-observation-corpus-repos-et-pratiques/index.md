@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-observation-corpus-repos-et-pratiques
 title: "Observation du corpus de dépôts et des pratiques de travail"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Méthode, portée et index de l analyse du corpus"
 generated:
   by: claude-opus-5
   at: 2026-08-09

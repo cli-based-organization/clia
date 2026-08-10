@@ -8,9 +8,11 @@ prefixe: NON
 emplacement: ".dev/objections/NON-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
 edition: hybride
+famille: fondamentale
 champs-obligatoires: [type, id, title, status, initiateur, effet, etat, porte-sur]
 relations-admissibles: [objection, ressource, intention, contexte, fait, ontologie, concept, analyse]
-skill: aucun
+sections: [Journal, Ce qui est contesté, Pourquoi cela ne peut pas rester implicite, Questions, Ce qui lèverait cette objection, Relations]
+skill: skl-002-ressource-fondamentale
 adr: aucun
 statut: actif
 ---

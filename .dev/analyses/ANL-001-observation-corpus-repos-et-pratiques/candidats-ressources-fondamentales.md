@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-candidats-ressources-fondamentales
 title: "Matière disponible pour le premier jet des ressources fondamentales"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Matière disponible par ressource fondamentale annoncée"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -171,3 +174,7 @@ Ces recommandations ne décident rien ; elles proposent un ordre de traitement f
 **Reprendre la question des issues avant d'ajouter des types.** C'est la seule lacune fonctionnelle qui bloque le travail réel, et le corpus contient trois réponses déjà éprouvées et jamais comparées.
 
 **Décider du coût avant de décider des types.** Vingt-sept types multipliés par trois documents font quatre-vingt-un livrables de méthode. Le corpus montre que le rapport entre outillage et travail accompli se dégrade. Une décision explicite sur ce que coûte un type, et sur le seuil au-delà duquel il ne se justifie pas, conditionne tout le reste.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](index.md)

@@ -2,14 +2,16 @@
 type: ressource
 id: RES-ressource
 title: "Ressource"
-version: 0.2.0
+version: 0.3.0
 status: draft
 prefixe: RES
 emplacement: ".dev/ressources/RES-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: co-edition
-champs-obligatoires: [type, id, title, version, status, prefixe, emplacement, cycle-de-vie, edition, champs-obligatoires, relations-admissibles, skill, adr, statut]
-relations-admissibles: [ressource]
+famille: fondamentale
+champs-obligatoires: [type, id, title, version, status, prefixe, emplacement, cycle-de-vie, edition, famille, champs-obligatoires, relations-admissibles, sections, skill, adr, statut]
+relations-admissibles: [ressource, adr, decision]
+sections: [Objet, Ce qu'est une ressource, Identité, Cycle de vie et versionnage, Régimes d'édition, Frontmatter, Relations, Points ouverts]
 skill: skl-001-ressource
 adr: ADR-adoption-de-la-notion-de-ressource
 statut: actif
@@ -35,7 +37,23 @@ Les questions que ce jet laisse ouvertes sont portées par les objections `NON-0
 
 ## Ce qu'est une ressource
 
-Une ressource est un fichier porteur d'un frontmatter YAML typé, produit dans un dépôt équipé, et qui fait foi. Sa fonction est de déplacer la vérité du travail hors de la conversation, qui est volatile, vers un objet versionné, qui persiste.
+**Définition en vigueur depuis le 2026-08-09**, révisée par `DCN-001` et instruite par `ADR-004` : une ressource est un **ensemble identifiable et auto-cohérent d'informations**. Son implémentation est indifférente : fichier, répertoire de fichiers, dépôt git, ou toute autre forme.
+
+Le markdown à frontmatter YAML reste le **format par défaut** d'une ressource textuelle, pour les motifs que `ADR-001` D2 énonce et qui restent valables. Ce n'est plus une définition mais un choix de mise en oeuvre.
+
+Sa fonction est de déplacer la vérité du travail hors de la conversation, qui est volatile, vers un objet versionné, qui persiste.
+
+### Composition et atomicité
+
+Une ressource est **composable** : elle peut être construite par assemblage d'autres ressources. Une telle ressource est dite **composite**, et son entrée est conventionnellement nommée `index`.
+
+Chaque composant d'un composite est un **atome**, c'est-à-dire une ressource de plein droit : identifiable, auto-cohérent, typé, et déclarant son appartenance par la relation `fait-partie-de`. Un atome peut lui-même être composite ; la composition n'a pas de profondeur imposée.
+
+**Propriété holographique.** Tout atome est auto-cohérent au même titre que son composite : il se lit seul et porte assez de contexte pour être compris seul. Un fichier qui ne se comprend qu'après avoir lu l'index de son composite n'est pas un atome, c'est une section mal découpée.
+
+Un composite et ses atomes portent des **identités distinctes**. L'identité de l'atome n'est pas dérivée de celle du composite par concaténation.
+
+Le **décompte** des instances d'un type compte les ressources et non les fichiers : un composite compte pour une.
 
 Trois conséquences suivent de cette fonction, et elles sont plus importantes que le format.
 
@@ -141,6 +159,8 @@ Vocabulaire de départ, hérité de `resource-types.yaml` de `clia` et réduit �
 |---|---|
 | `specifie` | La source fixe la forme de la cible |
 | `derive-de` | La source procède de la cible |
+| `compose` | La source assemble la cible comme atome |
+| `fait-partie-de` | La source est un atome de la cible |
 | `remplace` et `est-remplacee-par` | Succession d'identité |
 | `reference` | Renvoi simple, sans engagement |
 | `objecte-a` | La source conteste la cible |
@@ -172,7 +192,7 @@ Ce triplet a un coût, et le coût est le sujet de `NON-002` : sept types font v
 | `workspace/session.md` | Point d'entrée humain. Éphémère par destination |
 | `.dev/templates/*.template.md` | Squelettes destinés à être copiés puis renseignés |
 | Matériel source importé | Conservé verbatim, non conforme par nature. Sa place est `source-material/` |
-| Assets binaires, PDF générés | Hors de la portée du modèle. Voir `NON-006` |
+| Assets binaires, PDF générés | Portée non tranchée. `ADR-004` D1 les rend possibles sans les modéliser. Voir `NON-006` |
 
 Le statut de `INTENTION.md` est traité par `RES-003` et n'est pas tranché ici : c'est le seul fichier de racine dont la nature est disputée.
 
@@ -186,6 +206,8 @@ L'auto-application est une contrainte et non une élégance : un modèle dont le
 
 - `reference` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/index.md)
 - `derive-de` [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md)
+- `derive-de` [ADR-004](../adr/ADR-004-nature-composable-de-la-ressource.md)
+- `derive-de` [ADR-005](../adr/ADR-005-regroupement-fonctionnel-des-ressources.md)
 - `reference` [skl-001-ressource](../skills/skl-001-ressource/SKILL.md)
 
 ## Points ouverts
@@ -198,3 +220,5 @@ Portés par des objections, non enterrés ici.
 | Coût du triplet définition, décision, processus ; seuil d'admission d'un type | `NON-002` |
 | Absence de validation mécanique ; règles écrites et non tenues | `NON-005` |
 | Portée du modèle : textuel seulement, ou aussi les assets et les données | `NON-006` |
+| Granularité minimale utile d'un atome | `NON-016` |
+| Portée de la propriété holographique | `NON-016` |

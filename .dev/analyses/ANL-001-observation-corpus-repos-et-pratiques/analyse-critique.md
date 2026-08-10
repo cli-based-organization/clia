@@ -1,8 +1,11 @@
 ---
 type: analyse
+id: ANL-analyse-critique
 title: "Analyse critique transversale du système"
 version: 0.1.0
 status: draft
+date: 2026-08-09
+sujet: "Défauts transverses du système, mesurés"
 generated:
   by: claude-opus-5
   at: 2026-08-09
@@ -127,3 +130,7 @@ Le point d'entrée unique est une bonne décision. Il répond exactement à la c
 La gouvernance par objection est appliquée réellement, pas seulement documentée. Les objections sont numérotées, tracées, réévaluées, et elles ont donné lieu à des changements de conception effectifs.
 
 `RES-001-ressource.md` est du travail de première qualité : il énonce sept invariants, en retient quatre, écarte trois avec justification, pose un critère de départage sous forme de test pratique, et se termine par cinq lacunes assumées dont l'aveu qu'une de ses règles n'est pas tenue. C'est le modèle à suivre pour toutes les ressources fondamentales que la présente session veut définir, et c'est aussi le document qu'il faut rapatrier de toute urgence hors d'un dépôt de candidature.
+
+## Relations
+
+- `fait-partie-de` [ANL-001](index.md)
