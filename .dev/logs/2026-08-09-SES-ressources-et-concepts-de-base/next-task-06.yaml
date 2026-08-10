@@ -1,0 +1,88 @@
+# Suggestions de prochaines étapes après la tâche 6.
+# Ne décide rien.
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate, à partir des neuf contrôles de skl-001"
+    detail: >-
+      Les neuf contrôles V1 à V9 ont été écrits pour cela, ADR-003 D9 le
+      déclare, et ils ont déjà servi à valider vingt-neuf fichiers à la main.
+      C'est le dernier terme du critère de convergence qui reste non
+      instrumenté.
+    raison: >-
+      La validation est le seul contrôle de fond du système, et elle est
+      aujourd'hui entièrement manuelle. NON-005 porte la contestation
+      générale de cet état.
+    reserve: >-
+      V3, les champs obligatoires, reste inapplicable à sept types sur neuf
+      faute de définition. Voir NON-011 Q1.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-001 Q1, l'identité"
+    detail: >-
+      La question n'est plus théorique : clia res show 002 est ambigu et le
+      démontre. La distinction produite par l'implémentation, adresse contre
+      identité, est peut-être la réponse : conserver PREFIXE-SEQ comme adresse
+      courte et PREFIXE-SLUG comme identité de renvoi.
+    effet: bloquant
+
+  - titre: "Trancher NON-012 Q1 et Q2, le bundle"
+    detail: >-
+      Une ressource peut-elle être un répertoire, et qu'est-ce qui le
+      reconnaît. Le format bundle avec index.md est éprouvé dans
+      micrologic-clients et formalisé par son ADR-001. Deux réponses suffisent
+      à rendre le décompte juste.
+
+  - titre: "Préciser ARCHITECTURE.md"
+    detail: >-
+      Le fichier prévoit src/ et tests/ et ne mentionne ni bin/ ni lib/, que
+      l'implémentation emploie. ARCHITECTURE.md est co-édité : le corriger
+      relève d'une demande.
+
+suite_de_l_outillage:
+  - titre: "clia setup et clia ses, annoncées par CLAUDE.md et non implémentées"
+    detail: >-
+      Sur les sept commandes que CLAUDE.md documente, trois sont désormais
+      implémentées telles quelles, deux le sont sous une autre forme, et deux
+      ne le sont pas. Le chantier A de PLN-001 prévoit de classer chaque
+      directive du harnais selon qu'elle est en vigueur, prévue ou abandonnée.
+
+  - titre: "Restaurer une commande d'installation dans un dépôt tiers"
+    detail: >-
+      setup.sh installe clia sur le poste. Rien n'installe le harnais dans un
+      dépôt tiers, ce que tda faisait avec sa commande init et qui est la
+      raison pour laquelle il a équipé huit dépôts. Sans cela, la propagation
+      reste la copie manuelle, avec ses effets mesurés par ANL-001 défaut D2.
+
+  - titre: "Collisions de numéros entre travaux parallèles"
+    detail: >-
+      clia attribue le numéro par maximum plus un. Deux travaux avancant en
+      parallèle produiront le même numéro. NON-001 Q7 le soulevait, et
+      l'implémentation ne le règle pas.
+
+dette_nommee:
+  - titre: "Le décompte est faux pour les types dont une instance est un bundle"
+    detail: "Un seul type concerné aujourd'hui, analyse. Porté par NON-012."
+
+  - titre: "clia ne valide rien"
+    detail: >-
+      Il crée, liste, affiche, ouvre. Il ne vérifie ni le frontmatter, ni les
+      relations, ni la conformité de nommage des fichiers existants.
+
+  - titre: "Aucune commande ne touche git, y compris pour signaler un état"
+    detail: >-
+      Conforme au harnais, contesté par NON-010 Q6. ANL-001 mesure au défaut
+      D5 le coût de cette règle : 94 dépôts sans remote, dont ceux qui portent
+      la stratégie de l'entreprise et la théorie des ressources.
+
+  - titre: "L'exclusion des archives est un défaut configurable, non une règle"
+    detail: >-
+      CLIA_EXCLUDE_DIRS vaut archives par défaut. La question de savoir ce qui
+      d'autre doit être exclu, gabarits, matériel source, journaux, est posée
+      par NON-012 Q6 et non tranchée.
+
+  - titre: "Le frontmatter est lu par un analyseur partiel"
+    detail: >-
+      Paires clé deux-points valeur sur une ligne. Une valeur sur plusieurs
+      lignes, une liste en bloc ou un objet imbriqué ne sont pas lus. C'est
+      suffisant pour les champs que le modèle rend obligatoires, et cela
+      évite une dépendance à un analyseur YAML.

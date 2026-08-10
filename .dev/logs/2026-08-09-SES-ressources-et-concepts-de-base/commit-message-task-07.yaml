@@ -1,0 +1,79 @@
+type: docs
+scope: identifiants
+sujet: "FND-002, ANL-003 et NON-014 : identifiants dans les systèmes décentralisés"
+corps: |
+  Revue de la littérature, analyse et objections demandées par la tâche 7 de
+  la session du 2026-08-09, selon la méthodologie en sept étapes imposée par
+  la demande.
+
+  .dev/fondations/FND-002 : revue de la littérature en sept étapes. Trente-deux
+  sources, toutes interrogées par requête HTTP le 2026-08-10, aucune morte.
+  Huit questions de recherche, quatorze domaines de savoir dont sept ajoutés à
+  ceux suggérés, quatorze axes d'analyse plus un nommé comme absent de la
+  littérature.
+
+  Cinq propositions établies. Le trilemme de Zooko tient pour un petit
+  système : lisible, unique globalement, sans autorité, il faut en abandonner
+  un. Un système d'identifiants viable est une famille, et les familles qui
+  marchent combinent un noyau intrinsèque et des qualificateurs extrinsèques.
+  Un identifiant doit déclarer le niveau FRBR auquel il s'applique. La
+  persistance est un engagement, pas une propriété technique, sauf pour
+  l'identifiant intrinsèque. Et la traversée de la frontière interne vers
+  externe se fait par extension du noyau, jamais par remplacement.
+
+  .dev/analyses/ANL-003 : position de clia sur les quatorze axes. Cinq justes,
+  six indéterminés, trois faux, et les trois faux sont exactement ceux qui
+  empêchent la réutilisation hors du dépôt : portée d'unicité, granularité,
+  vérifiabilité. Dix suggestions ordonnées par rapport entre effet et coût,
+  dont les cinq premières ne demandent aucun code. Cinq refus motivés, dont
+  l'UUID et l'adressage par contenu comme identité principale, qui
+  détruiraient les deux seuls axes où clia fait mieux que la littérature.
+
+  .dev/objections/NON-014 : effet bloquant. clia a retenu la lisibilité et
+  l'absence d'autorité, donc abandonné l'unicité globale, sans que ce choix
+  soit écrit nulle part. Le corpus en paie déjà le prix, ANL-001 mesurant
+  douze numéros de skill sur vingt portant plusieurs noms selon le dépôt. Sa
+  question Q4 reprend NON-004 Q7 sur l'INTENTION.md avec un argument
+  théorique là où celle-ci avait un argument empirique.
+
+  Trois objections existantes complétées : NON-001 par cinq questions,
+  NON-012 par trois, NON-006 par deux. Le dépôt porte quatorze objections et
+  cent une questions.
+
+  Une prédiction vérifiée en moins de vingt-quatre heures. La question Q7 de
+  NON-001 annonçait que l'attribution du numéro par observation du répertoire
+  produirait des collisions entre travaux parallèles. clia res new a attribué
+  le numéro 013 à l'objection de l'agent, alors que l'humain avait créé la
+  veille, avec le même outil, une objection portant ce numéro et non
+  commitée. L'outil n'a pas échoué : le défaut est que le numéro s'obtient
+  par observation d'un état. L'objection de l'agent est renumérotée en
+  NON-014, celle de l'humain conservée, conformément au régime hybride de
+  RES-004 qui protège les blocs de l'initiateur. Consigné comme deuxième
+  preuve empirique dans le journal de NON-001.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-07.
+fichiers_ajoutes:
+  - .dev/fondations/FND-002-identifiants-dans-les-systemes-decentralises.md
+  - .dev/analyses/ANL-003-systeme-d-identifiants-de-clia.md
+  - .dev/objections/NON-014-choix-du-trilemme-de-nommage.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-07.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-07.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-07.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-07.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-07.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-07.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-07.yaml
+fichiers_modifies:
+  - .dev/objections/NON-001-identite-et-nommage.md
+  - .dev/objections/NON-006-portee-du-systeme.md
+  - .dev/objections/NON-012-granularite-de-la-ressource.md
+  - .dev/ressources/index.md
+note_pour_l_humain: >-
+  NON-014 est bloquante et sa question Q1 est la moins coûteuse de toute la
+  session : assumer par écrit que clia abandonne l'unicité globale transforme
+  une propriété perdue par inadvertance en une propriété écartée par
+  décision. Les cinq premières suggestions de ANL-003 ne demandent aucun code
+  et règlent trois questions ouvertes. Votre NON-013 n'a pas été touché. Le
+  versionnage reste la responsabilité de l'humain.

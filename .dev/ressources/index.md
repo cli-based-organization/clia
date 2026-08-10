@@ -77,7 +77,7 @@ Cinq propositions de conception ne sont pas des reprises de l'état de l'art, et
 
 ## Objections ouvertes
 
-Les huit premières ont été ouvertes par la tâche 2 sur les définitions elles-mêmes, les deux suivantes par la tâche 4 sur le processus de travail, la dernière par la tâche 5 sur les types que ce dépôt emploie sans les avoir définis.
+Les huit premières ont été ouvertes par la tâche 2 sur les définitions elles-mêmes, les deux suivantes par la tâche 4 sur le processus de travail, la onzième par la tâche 5 sur les types que ce dépôt emploie sans les avoir définis, la douzième par la tâche 6 sur ce que l'implémentation du CLI a rendu mesurable, la treizième par l'humain le 2026-08-09, la dernière par la tâche 7 sur la propriété de nommage que le système abandonne. Les tâches 6 et 7 ont aussi complété `NON-001`, `NON-006` et `NON-012` par dix questions nouvelles.
 
 | Objection | Thème |
 |---|---|
@@ -92,6 +92,9 @@ Les huit premières ont été ouvertes par la tâche 2 sur les définitions elle
 | [NON-009](../objections/NON-009-statut-de-la-session-et-convergence.md) | Statut de la session et critère de convergence |
 | [NON-010](../objections/NON-010-roles-des-agents-et-production.md) | Rôles des trois agents et conditions de production |
 | [NON-011](../objections/NON-011-types-employes-sans-definition.md) | Types employés sans définition, et nommage non conforme |
+| [NON-012](../objections/NON-012-granularite-de-la-ressource.md) | Granularité de la ressource et décompte des instances |
+| [NON-013](../objections/NON-013-ce-qu-est-une-ressource.md) | Ce qu'est une ressource. Ouverte par l'humain, à rédiger |
+| [NON-014](../objections/NON-014-choix-du-trilemme-de-nommage.md) | Le choix du trilemme de nommage : quelle propriété clia abandonne |
 
 ## Relations
 

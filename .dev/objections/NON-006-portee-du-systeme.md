@@ -16,6 +16,7 @@ porte-sur: [RES-ressource, RES-contexte, RES-intention, RES-ontologie, RES-conce
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-10 : deux questions ajoutées, Q8 et Q9, à partir de `FND-002` et `ANL-003`, qui apportent des mécanismes attestés là où Q5 n'avait que le constat.
 
 ## Ce qui est contesté
 
@@ -77,6 +78,24 @@ Le corpus contient trois dépôts de données séparés de leur outil : `clients
 
 **Réponse.**
 
+### Q8 - Un renvoi inter-dépôts doit-il être une extension du renvoi local ?
+
+Ajoutée le 2026-08-10, et elle apporte à Q5 le mécanisme qui lui manquait. `FND-002` établit que la traversée de la frontière interne vers externe se fait par extension du noyau et jamais par remplacement, mécanisme attesté par le SWHID, dont le coeur intrinsèque reçoit des qualificateurs contextuels, et par le GroupVersionKind de Kubernetes, où le groupe qualifie la sorte.
+
+La suggestion S3 de `ANL-003` en tire une forme : `<origine>:<PREFIXE>-<SLUG>`, l'identité locale demeurant inchangée à l'intérieur du dépôt. Un renvoi déjà écrit ne casse pas.
+
+**Réponse.**
+
+### Q9 - Faut-il décider maintenant, ou attendre le deuxième dépôt ?
+
+Ajoutée le 2026-08-10. La suggestion S10 de `ANL-003` propose de suspendre toute décision sur l'espace de noms global jusqu'à ce qu'un deuxième dépôt consomme `clia`, en reprenant le critère que `ANL-002` a retenu pour la localisation du CLI.
+
+`FND-002` appuie ce report : toutes les stratégies de gouvernance documentées, registre payant, délégation au DNS, consensus distribué, sont disproportionnées pour un système à un acteur.
+
+Le risque du report est nommé : décider plus tard coûte plus cher si des renvois inter-dépôts ont été écrits entre-temps. S3 est conçue pour que ce risque soit nul.
+
+**Réponse.**
+
 ## Ce qui lèverait cette objection
 
 Une réponse à Q1 et Q2. Ces deux réponses bornent le modèle, ce qui est un préalable à toute prétention de version publique.
@@ -89,3 +108,5 @@ Q3, Q4 et Q5 relèvent probablement de la session d'outillage annoncée par la s
 - `objecte-a` [RES-003](../ressources/RES-003-intention.md)
 - `objecte-a` [RES-006](../ressources/RES-006-ontologie.md)
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md)
+- `reference` [FND-002](../fondations/FND-002-identifiants-dans-les-systemes-decentralises.md)
+- `reference` [ANL-003](../analyses/ANL-003-systeme-d-identifiants-de-clia.md)

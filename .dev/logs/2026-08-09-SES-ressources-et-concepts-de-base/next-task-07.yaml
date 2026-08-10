@@ -1,0 +1,90 @@
+# Suggestions de prochaines étapes après la tâche 7.
+# Ne décide rien.
+
+le_moins_couteux_et_le_plus_structurant:
+  - titre: "Répondre à NON-014 Q1 : assumer l'abandon de l'unicité globale"
+    detail: >-
+      Une phrase dans RES-001 ou dans ADR-001 transforme une propriété perdue
+      par inadvertance en une propriété écartée par décision. Sans cela, le
+      prochain défaut de type D1 se produira comme les précédents.
+    effet: bloquant
+
+  - titre: "Répondre à NON-014 Q3 : l'ergonomie est-elle opposable ?"
+    detail: >-
+      FND-002 établit que l'ergonomie de saisie n'a aucune littérature, et
+      ANL-003 que c'est l'un des deux seuls axes où clia fait mieux que les
+      systèmes documentés. Une exigence non écrite perd tous les arbitrages.
+
+  - titre: "Appliquer les cinq premières suggestions de ANL-003"
+    detail: >-
+      S1 nommer les deux registres, S2 déclarer le niveau FRBR de l'identité,
+      S7 séparer la correction de slug du changement d'identité, S8 écrire
+      l'exigence d'ergonomie, S9 traiter le bundle comme une ressource à
+      index. Aucune ne demande de code, et elles règlent trois questions
+      ouvertes : NON-001 Q6 et Q8, NON-012 Q1.
+
+a_faire_par_l_humain:
+  - titre: "Rédiger NON-013, ou le clore"
+    detail: >-
+      Créé le 2026-08-09 avec clia res new, il porte encore le squelette « À
+      rédiger ». Son sujet, ce qu'est une ressource, recoupe RES-001 et
+      NON-012. L'agent ne l'a pas touché : son initiateur est l'humain.
+
+  - titre: "Trancher NON-011 Q2, le nommage des fondations et des analyses"
+    detail: >-
+      RES-001 prescrit un nommage daté pour les types point fixe, l'usage les
+      séquence. Cinq fichiers sont désormais concernés au lieu de trois. La
+      troisième position, reconnaître que ces types ne sont pas point fixe,
+      est renforcée par NON-012 Q5.
+
+suite_de_la_session:
+  - titre: "Un ADR sur le système d'identifiants"
+    detail: >-
+      Il aura quelque chose à acter quand NON-014 Q1 et Q3 auront reçu
+      réponse. Aujourd'hui il ne pourrait qu'enregistrer une indécision.
+    prealable: "réponses à NON-014 Q1 et Q3"
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Toujours le chantier le plus rentable, et inchangé depuis la tâche 6.
+      Les neuf contrôles de skl-001 en sont le cahier des charges. S8 y
+      ajouterait un contrôle de lisibilité du slug.
+
+  - titre: "Instrumenter l'empreinte, suggestion S4"
+    detail: >-
+      Une commande qui calcule et vérifie une empreinte de contenu, sans la
+      stocker. C'est le seul identifiant intrinsèque que le système aurait, et
+      le seul moyen de rendre une citation vérifiable.
+
+dette_nommee:
+  - titre: "La proposition 1 de FND-002 repose sur une conjecture non démontrée"
+    detail: >-
+      Le trilemme de Zooko a été énoncé sur une liste de diffusion en 2001 et
+      n'a jamais été démontré formellement. NON-014 en dépend et son effet est
+      bloquant. La dépendance est signalée dans les limites de FND-002.
+
+  - titre: "L'exhaustivité des axes d'analyse n'est pas garantie"
+    detail: >-
+      La demande exigeait tous les axes pertinents. Quatorze sont proposés, un
+      quinzième est nommé comme absent de la littérature. Le document ne
+      revendique pas l'exhaustivité.
+
+  - titre: "Cinq domaines pertinents non explorés"
+    detail: >-
+      Identité auto-souveraine au-delà des DID, identifiants auto-certifiants
+      de type KERI, gouvernance des méthodes DID, identifiants de Wikidata,
+      droit des oeuvres dérivées. Les quatre premiers recoupent QR1 et QR5, le
+      dernier recoupe QR7.
+
+  - titre: "Le numéro de séquence collisionne, et rien ne le prévient"
+    detail: >-
+      L'incident du 2026-08-10 l'a démontré en situation réelle. Aucun
+      mécanisme de réservation n'existe et aucun n'est possible sans
+      coordination. La seule parade est de ne pas faire du numéro une
+      identité, ce qui est l'objet de NON-001 Q1.
+
+  - titre: "L'édition collaborative n'est pas instrumentée"
+    detail: >-
+      FND-002 QR6 y répond techniquement, par un identifiant local plus une
+      horloge logique. Aucune des dix suggestions ne l'instrumente, faute de
+      cas d'usage. À rouvrir si un deuxième acteur écrit dans le même dépôt.

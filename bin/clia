@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+# clia - Systeme d'augmentation IA du travail DeepTech.
+#
+# Ce fichier est le point d'entree du CLI. Il ne contient aucune logique de
+# domaine : il resout son contexte, charge ses modules, et delegue.
+#
+# Decisions appliquees, voir .dev/adr/ :
+#   ADR-003 D1  clia est deterministe. Memes entrees, memes sorties
+#   ADR-003 D2  aucun contenu de domaine dans ce code
+#   ADR-003 D3  grammaire orientee ressources, nom puis verbe
+#   ADR-003 D5  clia garantit, l'agent interprete
+#   ADR-003 D9  la sortie sert un humain, un agent, et un programme
+
+set -euo pipefail
+
+CLIA_VERSION='0.1.0'
+
+# --------------------------------------------------------------------------
+# CLIA_HOME : ou vit clia. Distinct du depot sur lequel on travaille.
+# --------------------------------------------------------------------------
+#
+# Resolu depuis l'emplacement reel de ce fichier, liens symboliques suivis.
+# Ne jamais deduire CLIA_HOME du repertoire courant : c'est le bogue constate
+# dans ce depot le 2026-07-31, ou le depot de reference etait toujours le
+# meme quel que soit le repertoire de lancement.
+
+clia_self_path() {
+  local src="${BASH_SOURCE[0]}" dir
+  while [[ -L "$src" ]]; do
+    dir=$(cd -P "$(dirname "$src")" && pwd)
+    src=$(readlink "$src")
+    [[ "$src" != /* ]] && src="$dir/$src"
+  done
+  cd -P "$(dirname "$src")" && pwd
+}
+
+CLIA_BIN_DIR=$(clia_self_path)
+CLIA_HOME="${CLIA_HOME:-$(dirname "$CLIA_BIN_DIR")}"
+export CLIA_HOME
+
+CLIA_LIB_DIR="$CLIA_HOME/lib/clia"
+[[ -d "$CLIA_LIB_DIR" ]] || {
+  printf 'clia: modules introuvables dans %s\n' "$CLIA_LIB_DIR" >&2
+  exit 1
+}
+
+# shellcheck source=lib/clia/core.sh
+. "$CLIA_LIB_DIR/core.sh"
+
+# --------------------------------------------------------------------------
+# Aide et reflexivite
+# --------------------------------------------------------------------------
+#
+# Reflexivite : l'outil expose sa version, son emplacement et ses commandes.
+# Principe emprunte a cli-based-organization/linux-inspect.
+
+clia_usage() {
+  cat <<'EOF'
+clia - systeme d'augmentation IA du travail DeepTech
+
+Usage : clia [option] <ressource> <verbe> [arguments]
+
+Ressources :
+  resource, res, r        gerer les ressources du depot
+  configuration, config, c  gerer la configuration de l'utilisateur
+
+Options :
+  -h, --help              cette aide
+  -v, --version           numero de version
+  -c, --config            configuration active (equivaut a clia config ls)
+      --context           contexte resolu : CLIA_HOME et depot courant
+
+Aide d'une ressource :
+  clia resource --help
+  clia config --help
+
+clia est deterministe : il cree, liste, affiche et valide. Il ne redige
+aucun contenu, n'interprete aucune demande et n'effectue aucune operation
+git. Ces trois choses appartiennent a l'humain et a l'agent IA.
+EOF
+}
+
+clia_context() {
+  {
+    printf 'CLE\tVALEUR\n'
+    printf 'CLIA_VERSION\t%s\n' "$CLIA_VERSION"
+    printf 'CLIA_HOME\t%s\n' "$CLIA_HOME"
+    printf 'PWD\t%s\n' "$(pwd -P)"
+    printf 'depot courant\t%s\n' "${CLIA_REPO_ROOT_RESOLVED:-(aucun)}"
+    if [[ -n "${CLIA_REPO_ROOT_RESOLVED:-}" ]]; then
+      printf 'repertoire de developpement\t%s\n' "$(clia_dev_dir)"
+      printf 'repertoire des definitions\t%s\n' "$(clia_resources_dir)"
+      local meme='non'
+      [[ "$CLIA_REPO_ROOT_RESOLVED" == "$CLIA_HOME" ]] && meme='oui'
+      printf 'depot courant = CLIA_HOME\t%s\n' "$meme"
+    fi
+    printf 'fichier de configuration\t%s\n' "$(clia_config_file)"
+  } | column -t -s $'\t'
+}
+
+# --------------------------------------------------------------------------
+# Initialisation
+# --------------------------------------------------------------------------
+
+clia_config_load
+
+# Le depot courant est resolu a chaque execution, depuis le repertoire
+# courant. Son absence n'est pas une erreur : certaines commandes, comme
+# config, n'en ont pas besoin.
+if CLIA_REPO_ROOT_RESOLVED=$(clia_resolve_repo_root); then
+  export CLIA_REPO_ROOT_RESOLVED
+else
+  CLIA_REPO_ROOT_RESOLVED=''
+fi
+
+# --------------------------------------------------------------------------
+# Dispatch
+# --------------------------------------------------------------------------
+
+main() {
+  # Sans argument : afficher l'aide, ne rien faire de destructeur.
+  if [[ $# -eq 0 ]]; then
+    clia_usage
+    return 0
+  fi
+
+  local cmd="$1"; shift
+  case "$cmd" in
+    -h|--help|help)     clia_usage ;;
+    -v|--version)       printf 'clia %s\n' "$CLIA_VERSION" ;;
+    --context)          clia_context ;;
+    -c|--config)
+      . "$CLIA_LIB_DIR/config.sh"
+      clia_config_main ls ;;
+    resource|res|r)
+      . "$CLIA_LIB_DIR/resource.sh"
+      clia_resource_main "$@" ;;
+    configuration|config|c)
+      . "$CLIA_LIB_DIR/config.sh"
+      clia_config_main "$@" ;;
+    *)
+      clia_warn "commande inconnue : $cmd"
+      clia_hint "clia --help affiche les commandes disponibles"
+      return 2 ;;
+  esac
+}
+
+main "$@"

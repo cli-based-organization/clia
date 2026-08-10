@@ -1,0 +1,78 @@
+type: feat
+scope: clia
+sujet: "premier jet de clia et setup.sh, commandes resource et configuration"
+corps: |
+  Implémente les commandes demandées par la tâche 6 de la session du
+  2026-08-09. Premier code exécutable du dépôt depuis le refactor du
+  2026-08-08, qui avait archivé setup.sh et les tests.
+
+  setup.sh : activate, deactivate, check, install, uninstall, help. Seul
+  activate était demandé ; les cinq autres suivent la doctrine d'installation
+  de linux-inspect, qui distingue l'activation éphémère de l'installation
+  permanente et exige que celle-ci soit explicite et retirable.
+
+  bin/clia plus lib/clia/{core,resource,config}.sh : les neuf commandes
+  demandées, plus quatre ajouts de réflexivité, clia --version, --help,
+  --context et config path.
+
+  tests/test_clia.sh : 66 assertions, dépôt et configuration temporaires,
+  aucune dépendance externe. shellcheck -S warning ne signale rien.
+
+  Le bogue documenté le 2026-07-31 est évité et testé : CLIA_HOME est résolu
+  depuis l'emplacement réel du fichier exécuté, le dépôt de travail est
+  résolu à chaque appel depuis le répertoire courant, et un test vérifie
+  explicitement que le premier n'est pas pris pour le second.
+
+  Trois bogues trouvés par les tests et corrigés : un SIGPIPE provoqué par un
+  exit prématuré dans un tube, que pipefail transformait en échec ; les
+  ressources archivées comptées comme actives, 17 ADR annoncés au lieu de 3 ;
+  une valeur de type comportant une espace, scindée au reformatage. Le même
+  piège d'awk avait produit le premier bogue et deux faux échecs dans les
+  tests censés le trouver.
+
+  Ce que l'implémentation révèle du modèle. clia res show 002 est ambigu dès
+  que deux types portent un rang 002 : le numéro de séquence n'est pas un
+  identifiant, et la question Q1 de NON-001 cesse d'être théorique. La preuve
+  est consignée dans son journal, avec une distinction que les documents
+  n'avaient pas faite, l'adresse PREFIXE-SEQ contre l'identité PREFIXE-SLUG.
+  Et clia res ls compte neuf analyses là où il y en a deux, ANL-001 étant un
+  bundle : le modèle ne connaît pas le bundle, d'où NON-012.
+
+  La tension déclarée non résolue par ADR-003 D7 se dissout : clia dérive les
+  types en lisant les frontmatter des définitions à chaque appel, sans
+  fichier intermédiaire, donc sans la circularité que D7 signalait.
+
+  Deux réponses de fait à des objections ouvertes. NON-011 Q7 : clia tolère un
+  type sans définition en lecture, avec la mention aucune, et refuse en
+  écriture. NON-001 Q7 : clia attribue le numéro de séquence.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-06.
+fichiers_ajoutes:
+  - setup.sh
+  - bin/clia
+  - lib/clia/core.sh
+  - lib/clia/resource.sh
+  - lib/clia/config.sh
+  - tests/test_clia.sh
+  - .dev/objections/NON-012-granularite-de-la-ressource.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-06.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-06.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-06.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-06.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-06.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-06.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-06.yaml
+fichiers_modifies:
+  - .dev/objections/NON-001-identite-et-nommage.md
+  - .dev/ressources/index.md
+note_pour_l_humain: >-
+  Le critère de convergence de la session est atteint sur ses trois termes :
+  le concept de ressource est défini par RES-001, utilisable par skl-001, et
+  instrumenté depuis cette tâche. Reste non instrumentée la validation : les
+  neuf contrôles de skl-001 sont encore des commandes à lancer à la main, et
+  ADR-003 D9 en fait le cahier des charges d'une commande à venir. Un effet
+  de bord des essais manuels, un fichier de configuration créé dans
+  ~/.config/clia/, a été nettoyé. Le versionnage reste la responsabilité de
+  l'humain.
