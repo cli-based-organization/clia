@@ -1,0 +1,124 @@
+# Suggestions de prochaines étapes, par ordre de rentabilité décroissante.
+# Ne décide rien : matière pour la tâche suivante de la session.
+
+urgent:
+  - titre: "Protéger RES-001 et les treize définitions de micrologic-clients"
+    raison: >-
+      Le meilleur travail conceptuel du corpus vit dans un dépôt de
+      candidature à deux commits, sans remote, avec treize fichiers non
+      commités. Risque de perte immédiat.
+    action_suggeree: "rapatriement critique vers clia, ou au minimum un remote"
+    reference: "analyse-critique.md, D5"
+
+  - titre: "Trancher le point d'entrée : workspace/session.md ou .dev/session.md"
+    raison: >-
+      Les deux fichiers existent sur le disque avec des contenus différents.
+      CLAUDE.md désigne le premier, tout l'historique utilise le second.
+      Chaque session s'ouvrira sur cette ambiguïté tant qu'elle dure.
+    reference: "analyse-critique.md, D8"
+
+conception_des_ressources:
+  - titre: "Décider du coût admissible d'un type avant d'en définir vingt-sept"
+    raison: >-
+      Vingt-sept types multipliés par trois documents font quatre-vingt-un
+      livrables de méthode. Le corpus montre que le rapport entre outillage
+      et travail accompli se dégrade.
+    reference: "analyse-critique.md, D4"
+
+  - titre: "Traiter Contexte, Intention et Faits ensemble"
+    raison: >-
+      Les trois posent la même question sous trois formes : quelle part de
+      ce qui entoure le travail est durable et versionnée. Les définir
+      séparément produira trois réponses incohérentes.
+    reference: "candidats-ressources-fondamentales.md"
+
+  - titre: "Reporter Concept après Ontologie"
+    raison: >-
+      Concept est le seul type sans aucune matière dans le corpus, et le plus
+      susceptible de proliférer. Il est peut-être un cas particulier de
+      l'Ontologie.
+    reference: "candidats-ressources-fondamentales.md"
+
+  - titre: "Produire une ontologie du système lui-même"
+    raison: >-
+      La seule instance ONT du corpus porte sur un domaine métier. Le lexique
+      du système, où livrable et ressource, completed et complet, tickets et
+      issues et améliorations et needs coexistent, n'a pas d'instance.
+    reference: "observations-pratiques.md, rapport au vocabulaire"
+
+lacunes_fonctionnelles:
+  - titre: "Comparer les trois réponses déjà éprouvées à la question des issues"
+    raison: >-
+      C'est la seule lacune qui bloque le travail réel, ouverte depuis
+      juillet. Trois réponses existent dans le corpus et n'ont jamais été
+      comparées : les répertoires en-cours et todo de nty, les fiches
+      d'amélioration numérotées de comm-cli, et le couple issue non-smart
+      plus ticket extreme-smart de ticket-driven-ai.
+    reference: "analyse-critique.md, D9"
+
+  - titre: "Résoudre l'identité des ressources indépendamment du numéro de séquence"
+    raison: >-
+      Douze numéros de skill sur vingt portent plusieurs noms. Le triplet
+      ADR-XXX, RES-XXX, skl-XXX de CLAUDE.md ne désigne rien de stable dès
+      qu'un deuxième dépôt est équipé.
+    reference: "analyse-critique.md, D1"
+
+  - titre: "Poser un fichier d'état d'installation et une validation mécanique"
+    raison: >-
+      Sans état d'installation, le harnais se propage par copie et emporte
+      les traces d'autres dépôts. Sans validation, rien ne détecte un type
+      mal orthographié ni une référence pendante. Les deux étaient prévus
+      par resource-types.yaml, aucun n'est implémenté.
+    reference: "analyse-critique.md, D2"
+
+decisions_a_acter:
+  - titre: "Acter par écrit les quatre ruptures de cap non documentées"
+    liste:
+      - "abandon de la validation par schéma CUE"
+      - "abandon de l'intention machine-lisible (kind: Intention)"
+      - "abandon de ticket-driven-ai et du CLI tda au profit de clia"
+      - "abandon du principe zéro trace dans le projet cible"
+    raison: >-
+      Le corpus compte quatre-vingt-neuf ADR, aucun sur ces quatre décisions.
+      Un lecteur ne peut pas reconstituer pourquoi le système a sa forme
+      actuelle, et ne peut donc pas éviter de refaire le chemin inverse.
+    reference: "analyse-critique.md, D3"
+
+  - titre: "Trancher l'immuabilité des ressources point fixe"
+    raison: >-
+      La règle est écrite et transgressée, RES-001 le reconnaît. Trois
+      positions sont tenables : l'appliquer, l'abandonner, la remplacer par
+      un versionnage. La position actuelle n'en est pas une.
+    reference: "analyse-critique.md, D10"
+
+  - titre: "Déclarer la portée du système"
+    raison: >-
+      Aucun document ne dit que la méthode s'applique aux ressources
+      textuelles et non aux assets. Trois dépôts commitent des PDF générés
+      aux côtés des sources sans règle.
+    reference: "analyse-critique.md, D7"
+
+objection_ouverte:
+  - titre: "L'INTENTION.md revendique des capacités de mobilisation du savoir"
+    objection: >-
+      Rien dans le corpus ne soutient cette affirmation. Onze dépôts de
+      technotes dont six sans fichier versionné, trois dépôts de notes IA
+      vides, aucun mécanisme d'indexation ni de réutilisation. La seule
+      ressource de savoir outillée, l'essai de fondation, est plus lourde
+      que le besoin observé. Rien ne distingue aujourd'hui une capacité de
+      mobilisation du savoir d'une gestion documentaire soignée.
+    reference: "analyse-critique.md, D6"
+
+hygiene_du_corpus:
+  - titre: "Supprimer ou remplir les coquilles"
+    detail: >-
+      Trois dépôts nommés INTENTION et vides, dans trois groupes. Trois
+      dépôts de notes IA vides. deliverable-cli vide alors que son nom
+      désigne le concept central. Un CONSTITUTION.md de zéro octet dans
+      disks-management. Deux dépôts nommés devops-cli avec la même
+      intention.
+  - titre: "Corriger les remotes en désaccord avec les répertoires"
+    detail: >-
+      walk-and-talk pour dile-ola, datalyse/platform pour
+      noumanity-infra/platform, nou-ai-methodology pour nou-methodologies-ia,
+      et intentional-dooers-governance avec sa faute de frappe.

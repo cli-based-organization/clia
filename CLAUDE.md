@@ -37,10 +37,9 @@ Pour chaque demande, produire un ordre de travail correspondant à:
 
 ### Lexique
 
-- Harnais IA: ensemble des documents d'autorité 
+- Harnais IA: ensemble des documents d'autorité décrivant le fonctionnement de l'agent IA 
 - clia: système d'augmentation IA du travail DeepTech
 - cli clia: le terme `clia` peut également désigner le cli du système clia
-
 
 ### Intention ultime
 
@@ -57,29 +56,99 @@ SEUL les harnais avec le status `actif` doivent être pris en compte.
 
 ### Core du système clia
 
-**Ressources livrables**:
 
-- Ressource: ADR-001, RES-001
-- Objections (NON):  ADR-002, RES-002
-- Principes de conception (PDC): ADR-003, RES-003
-- Recherche de Fondation (FND):
-- Analyse critique (ANL): 
-- Décisions d'architecture (ADR)
-- Harnais IA (CLAUDE.md, A)
+**Ressouces fondamentales**:
 
-
-**Commandes `clia`: **
+- Ressource: ADR-001, RES-001, skl-001
+- Contexte (CTX): ADR-002, RES-002, skl-002
+- Intention (INT): ADR-003, RES-003, skl-003
+- Objection (NON): ADR-004, RES-004, skl-004
+- Faits (FCT): ADR-005, RES-005, skl-005
+- Ontologie (ONT): ADR-006, RES-006, skl-006
+- Concept (CPT): ADR-007, RES-007, skl-007
 
 
+**Ressources de conception**:
+
+
+- Analyse critique (ANL): ADR-008, RES-008, skl-008
+- Recherche de Fondation (FND): ADR-009, RES-009, skl-009
+- Principes de conception (PDC): ADR-010, RES-010, skl-010
+- Methodologie (MET): ADR-011, RES-011, skl-011
+
+
+**Ressouces de contrôle (Harnais IA)**:
+- CLAUDE.md: ADR-012, RES-012, skl-012
+- Skills: ADR-0, RES-0, skl-0
+- ARCHITEC/TURE.md: ADR-0, RES-0, skl-0
+- CONSTITUTION.md: ADR-0, RES-0, skl-0
+- GOUVERNANCE.md: ADR-0, RES-0, skl-0
+
+
+**Ressources de préparation**:
+- Décisions d'architecture (ADR): ADR-0, RES-0, skl-0 
+- Spécification (SPC): ADR-0, RES-0, skl-0
+- Requis fonctionnels (RQF): ADR-0, RES-0, skl-0
+- Requis non-fonctionnels (RQNF): ADR-0, RES-0, skl-0
+- Cas d'usage (USE): ADR-0, RES-0, skl-0
+- Comportement attendu (CMP): ADR-0, RES-0, skl-0
+
+**Ressource d'implémentation**:
+- Code (CDE): ADR-0, RES-0, skl-0
+- Rapport de recherche (RPT): ADR-0, RES-0, skl-0
+- Article scientifique (ART): ADR-0, RES-0, skl-0
+- Présentation (PRS): ADR-0, RES-0, skl-0
+- Entrevue (ENT): ADR-0, RES-0, skl-0
+
+**Commandes cli**:
+
+```sh
+cli   # informations à propos de clia
+clia -h|--help     # aide et usage
+clia -v|--version  # numéro de version
+clia -c|--config   # configuration active
+```
+
+```sh
+clia config (ls|edit)
+clia ls|list [RESSOURCE]
+clia ses|session CMD
+```
+
+**Utilitaire de gestion**
+
+
+```sh
+. setup.sh install
+clia setup upgrade|downgrade
+clia remote CMD
+```
 
 ### Extensions de clia
 
+Des extentions peuvent ajouter des ressources et/ou des commandes à `clia`
 
-## Espace actif
+### Espace actif (contexte documentaire)
 
+Sous-ensemble de documents à prendre en considération
 
-- @INTENTION.md => intention ultime, raison d'être du repo
-- @CLAUDE.md => point d'entrée de la méthodologie d'augmentation IA
-- @CONSTITUTION.md => les agents autorisés (humains et IA), les rôles et leurs permissions
-- ARCHITECTURE.md => détails d'implémentation du système d'information
-- @.dev/session/*  => documents à considérer
+## Directives
+
+### Session
+
+- Le seul point d'entré des demandes est le fichier @workspace/session.md
+- Exécuter uniquement la ou les tâches demandés par l'humain
+- Si la requête de l'humain n'est pas l'exécution d'une tâche du fichier session, refuser
+
+### Journalisation
+
+- Chaque requête à un répertoire de journalisation dans `@.dev/logs/<YYYY-MM-DD>-SES-<SLUG>/`
+- Chaque catégorie d'information concernant la requête est renseignée dans son propre fichier. Par exemple:
+  - demande.md => interprétation de la demande (contexte, intention et skill)
+  - commit-message.yaml => renseignement nécessaire à l'écriture du message de commit
+  - analyse.md => résumé de la réflexion avant la réalisation de la tâche
+  - fait.md => ce qui a été fait
+  - validation.md => ce qui a été fait pour valider que la tâche a bien été exécutée
+  - resultat-validation.md => ce qui a été constaté par la validation
+  - next.yaml => suggestion de prochaines étapes
+

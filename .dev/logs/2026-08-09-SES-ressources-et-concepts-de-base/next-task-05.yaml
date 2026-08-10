@@ -1,0 +1,94 @@
+# Suggestions de prochaines étapes après la tâche 5.
+# Ne décide rien.
+
+urgent:
+  - titre: "Restaurer le setup.sh archivé"
+    detail: >-
+      Le dépôt n'est ni installable ni vérifiable depuis le refactor du
+      2026-08-08. Son INTENTION.md promet un cadre de collaboration avec des
+      automatismes ; la promesse n'a pas d'objet. ADR-003 D8 pose que c'est
+      la première tâche d'outillage, avant toute fonctionnalité.
+    raison: >-
+      Neuf des onze CLI du corpus sont morts sans jamais sortir du dépôt où
+      ils sont nés. Le seul qui ait équipé des dépôts, tda, avait un setup.sh
+      à trois modes et une commande init.
+
+a_faire_par_l_humain:
+  - titre: "Statuer sur ADR-003 D4, la localisation"
+    detail: >-
+      La réponse retenue contredit le précédent le plus visible du corpus.
+      Elle porte son critère de renversement, mais elle reste au statut
+      propose.
+
+  - titre: "Trancher NON-011 Q1, les sept types employés sans définition"
+    detail: >-
+      Voie la moins coûteuse proposée : rapatrier six définitions depuis
+      micrologic-clients, qui les définit et les a éprouvées. ANL-001
+      recommandait déjà ce rapatriement au titre du risque de perte, ce dépôt
+      étant sans remote avec treize fichiers non commités.
+
+  - titre: "Trancher NON-011 Q2, le nommage des analyses et des fondations"
+    detail: >-
+      RES-001 prescrit un nommage daté pour les types point-fixe, l'usage du
+      dépôt les séquence, trois fichiers sont concernés. Trois positions :
+      corriger RES-001, renommer les fichiers, ou reconnaître que ces types
+      ne sont pas point-fixe. La troisième mérite examen, ANL-001 ayant été
+      relu et corrigé après sa production.
+
+  - titre: "Les questions bloquantes des tâches précédentes restent ouvertes"
+    detail: >-
+      NON-001 identité, NON-002 coût du modèle, NON-005 validation, NON-009
+      statut de la session. Quatre objections bloquantes, dont trois portent
+      sur des décisions de ADR-003.
+
+suite_de_la_session:
+  - titre: "Rétablir une source machine-lisible des types"
+    raison: >-
+      Seule dépendance technique de ADR-003. Le resource-types.yaml archivé
+      jouait ce rôle. La tension est signalée dans D7 : la source doit être
+      dérivée des définitions et non écrite à la main, et la dérivation est
+      un travail de clia, dont l'existence dépend de la dérivation.
+    prealable: "réponse à NON-002 Q6 sur la source de vérité de la table"
+
+  - titre: "Vérifier le critère de convergence de la session"
+    detail: >-
+      Le critère déclaré est que le concept de ressource soit bien défini,
+      utilisable et instrumenté. Défini : RES-001 en version 0.2.0.
+      Utilisable : skl-001 fournit la procédure et neuf contrôles.
+      Instrumenté : non, aucun exécutable. Le troisième terme n'est pas
+      atteint, et ADR-003 D8 dit par où commencer.
+    reference: "NON-009 Q4, qui demande qui déclare la convergence"
+
+  - titre: "Exécuter le chantier B de PLN-001"
+    detail: >-
+      Le skill d'analyse de la demande. Aucun prérequis bloquant. Le jeu
+      d'essai compte désormais cinq demandes documentées, avec leurs
+      interprétations écrites et leurs six ambiguïtés signalées.
+
+dette_nommee:
+  - titre: "Sept types employés sans définition sur neuf"
+    detail: >-
+      adr, analyse, fondation, plan, skill, log, session. Le contrôle V3 est
+      inapplicable à la majorité des livrables du dépôt, et la validation se
+      réduit à des contrôles typographiques.
+
+  - titre: "Deux instances nommées en violation de RES-001"
+    detail: "FND-001 et ANL-002. Non-conformité assumée et déclarée, portée par NON-011 Q2."
+
+  - titre: "D5 de ADR-003 est fondé par déduction, non par mesure"
+    detail: >-
+      La règle de périmètre découle du déterminisme posé en D1. Même cas que
+      D7 de ADR-001. Signalé plutôt que masqué par une mesure forcée.
+
+  - titre: "La circularité de la source machine-lisible"
+    detail: >-
+      L'outil qui doit dériver la source des définitions est celui dont
+      l'existence dépend de cette source. Écrit dans ADR-003 D7 comme
+      tension, non comme problème résolu.
+
+  - titre: "FND-001 ne documente aucun échec"
+    detail: >-
+      La littérature consultée décrit ce qui marche. Aucune source ne
+      documente les CLI orientés ressources qui ont échoué. Lacune symétrique
+      de celle du corpus local, où onze CLI ont été réinventés sans qu'aucun
+      bilan d'échec ne soit écrit.

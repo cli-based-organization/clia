@@ -1,0 +1,57 @@
+type: docs
+scope: ressources
+sujet: "ADR-001 et skl-001, adoption et production d'une ressource"
+corps: |
+  Complète le triplet du type ressource, demandé par la tâche 3 de la
+  session du 2026-08-09. La définition existait depuis la tâche 2 ; il
+  manquait la décision qui l'acte et le processus qui la produit.
+
+  .dev/adr/ADR-001-adoption-de-la-notion-de-ressource.md : neuf décisions
+  numérotées, avec pour chacune son motif mesuré, ses alternatives écartées
+  et, pour cinq d'entre elles, sa porte de sortie. Statut de décision
+  propose, non accepte : trois objections bloquantes portent sur D3
+  l'identité, D6 la progression type par type, et D9 la validation.
+
+  D9 est la première trace écrite de l'abandon de la validation par schéma
+  exécutable, que le corpus avait perdue trois fois sans decision, et elle
+  le déclare temporaire.
+
+  .dev/skills/skl-001-ressource/SKILL.md : partie A, cinq règles communes à
+  toute ressource auxquelles les skills des autres types renverront ; partie
+  B, la production d'une définition de type ; neuf contrôles de validation
+  exécutables sans outil, chacun nommant le dégât mesuré qu'il prévient.
+
+  Le skill s'est auto-appliqué et a révélé un défaut réel dans ses propres
+  contrôles : V4 et V5 ne distinguaient pas une mention d'un emploi, et
+  signalaient le skill lui-même comme non conforme. Les trois contrôles
+  textuels excluent désormais frontmatter, blocs de code et code inline. La
+  règle et l'incident sont écrits dans le skill.
+
+  Mises à jour rendues nécessaires : RES-001 passe en 0.2.0, ses champs
+  skill et adr sont renseignés, son objet et son auto-application corrigés ;
+  l'index reflète le triplet complet.
+
+  En demandant l'ADR et le skill d'un seul type, la tâche 3 répond de fait
+  par la négative à NON-002 Q1 : le triplet n'est pas exigible
+  simultanément. Acté par ADR-001 D6.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-03.
+fichiers_ajoutes:
+  - .dev/adr/ADR-001-adoption-de-la-notion-de-ressource.md
+  - .dev/skills/skl-001-ressource/SKILL.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-03.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-03.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-03.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-03.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-03.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-03.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-03.yaml
+fichiers_modifies:
+  - .dev/ressources/RES-001-ressource.md
+  - .dev/ressources/index.md
+note_pour_l_humain: >-
+  ADR-001 est au statut de décision propose. Il ne devient une décision
+  qu'après réponse aux objections NON-001, NON-002 et NON-005, qui portent
+  sur D3, D6 et D9. Le versionnage reste la responsabilité de l'humain.

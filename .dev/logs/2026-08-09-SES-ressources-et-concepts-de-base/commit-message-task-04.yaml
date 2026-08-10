@@ -1,0 +1,77 @@
+type: docs
+scope: processus
+sujet: "ADR-002 processus de travail, deux objections et le plan du point d'entrée"
+corps: |
+  Acte le mécanisme de travail du système d'information à trois agents,
+  demandé par la tâche 4 de la session du 2026-08-09.
+
+  .dev/adr/ADR-002-adoption-du-processus-de-travail.md : huit décisions
+  couvrant les six axes de la demande. Trois agents aux rôles non
+  interchangeables, dont clia comme délégué déterministe de l'humain ;
+  segmentation par sessions avec critère de convergence différable ; analyse
+  de la demande en cinq temps avant toute exécution ; production faite de
+  ressources typées ; harnais conventionnés ; objection émise au moment de
+  l'identification par l'un ou l'autre agent ; journalisation obligatoire ;
+  interface par fichiers.
+
+  Première rupture de cap tracée de ce corpus : D6 remplace la règle absolue
+  de non-exécution sous objection ouverte, héritée du CONSTITUTION.md
+  archivé, par la déclaration d'effet à trois niveaux de RES-004. Prise au
+  mot, la règle absolue aurait interdit les tâches 3 et 4 de cette session.
+  Ce que la rupture perd, le breakpoint déclaré à l'avance, est nommé, et
+  une porte de sortie est écrite.
+
+  Deux écarts entre processus écrit et processus pratiqué sont signalés sans
+  être corrigés : aucun plan n'a précédé l'exécution des trois premières
+  tâches, et les réponses conversationnelles ont dépassé la phrase
+  prescrite. Décider s'il s'agit de fautes ou de révisions appartient à
+  l'humain.
+
+  L'ADR porte une section de mesures sur les trois tâches déjà exécutées,
+  pour s'adosser à ce que le processus vient de produire plutôt qu'à un
+  idéal. La mesure la plus parlante vaut zéro : aucune objection émise par
+  l'humain, le dispositif fonctionne à sens unique.
+
+  Quatre ambiguïtés de la demande signalées comme la demande l'exige :
+  NON-009 statut de la session et critère de convergence, effet bloquant,
+  qui porte la contradiction entre ADR-001 D8 et ADR-002 D2 ainsi que
+  l'ambiguïté persistante du point d'entrée ; NON-010 rôles des agents et
+  conditions de production, effet conditionnel, qui porte la remarque
+  tronquée de la demande et le fait que PLN-001 instancie un type sans
+  définition.
+
+  .dev/plans/PLN-001 : plan des deux chantiers demandés par la note TODO,
+  réécriture de CLAUDE.md et skill d'analyse de la demande. Dix-sept étapes,
+  deux points d'arrêt, quatre objections de l'agent. Le chantier A est
+  suspendu à trois réponses. Aucun chantier n'est engagé, CLAUDE.md est
+  intact.
+
+  Le contrôle V8 de skl-001 a été corrigé une seconde fois : il signalait
+  PLN-001 à tort pour des mentions du mot TODO. Motif restreint au début de
+  ligne, de puce, ou suivi de deux points. Contre-épreuve faite.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-04.
+fichiers_ajoutes:
+  - .dev/adr/ADR-002-adoption-du-processus-de-travail.md
+  - .dev/objections/NON-009-statut-de-la-session-et-convergence.md
+  - .dev/objections/NON-010-roles-des-agents-et-production.md
+  - .dev/plans/PLN-001-point-d-entree-et-analyse-de-la-demande.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-04.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-04.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-04.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-04.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-04.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-04.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-04.yaml
+fichiers_modifies:
+  - .dev/skills/skl-001-ressource/SKILL.md
+  - .dev/ressources/index.md
+note_pour_l_humain: >-
+  Une ligne de la tâche 4 est restée inachevée : "les ressources créés par".
+  ADR-002 a été écrit sans elle et rien ne garantit qu'il ne la contredit
+  pas. La compléter est le geste le plus rentable de la suite. NON-009 est
+  bloquant et porte notamment l'ambiguïté du point d'entrée, qui n'avait
+  jamais été objectée formellement. Le versionnage reste la responsabilité
+  de l'humain.

@@ -1,0 +1,100 @@
+# Suggestions de prochaines étapes après la tâche 4.
+# Ne décide rien.
+
+a_faire_par_l_humain:
+  - titre: "Compléter la remarque tronquée de la tâche 4"
+    detail: >-
+      La ligne "les ressources créés par" s'arrête là. ADR-002 a été écrit
+      sans elle. C'est le geste le moins coûteux et le plus rentable de la
+      suite : une phrase, qui peut changer une décision.
+    objection: "NON-010 Q1"
+
+  - titre: "Trancher le statut de la session"
+    detail: >-
+      ADR-001 D8 l'exclut du modèle de ressources, ADR-002 D2 en fait l'unité
+      du travail porteuse d'intention, de livrables et de critère de
+      convergence. Les deux ne peuvent pas être vrais ensemble.
+    objection: "NON-009 Q1"
+    effet: bloquant
+
+  - titre: "Dire si le critère de convergence diffère du critère de satisfaction"
+    detail: >-
+      RES-003 rend déjà obligatoire un critère de satisfaction sur toute
+      intention. Si les deux sont la même chose, il faut un seul nom. ANL-001
+      mesure jusqu'à cinq mots pour un même objet dans le corpus.
+    objection: "NON-009 Q3"
+
+  - titre: "Trancher l'emplacement du point d'entrée"
+    detail: >-
+      workspace/session.md et .dev/session.md coexistent avec des contenus
+      différents. Une ligne à décider, et un fichier à supprimer ou archiver
+      ensuite, faute de quoi l'ambiguïté reste sur le disque.
+    objection: "NON-009 Q7"
+
+  - titre: "Dire si un plan doit précéder l'exécution"
+    detail: >-
+      Le processus antérieur l'exigeait. Les quatre tâches de cette session
+      ont été exécutées sans plan préalable. L'écart retire à l'humain le
+      point de contrôle qui précède la production.
+    objection: "NON-010 Q4"
+
+suite_de_la_session:
+  - titre: "Exécuter le chantier B de PLN-001, le skill d'analyse de la demande"
+    raison: >-
+      Aucun prérequis bloquant : ADR-002 D3 pose déjà les cinq temps. Le jeu
+      d'essai existe et il est documenté, ce sont les quatre demandes de
+      cette session avec leurs interprétations écrites et leurs quatre
+      ambiguïtés signalées.
+    point_d_arret: "après B8, épreuve sur les quatre demandes réelles"
+
+  - titre: "Ne pas commencer le chantier A avant trois réponses"
+    detail: >-
+      Réécrire CLAUDE.md avant les réponses à NON-001 Q1 et Q5, NON-002 Q6 et
+      NON-009 Q7 obligerait à le réécrire une seconde fois.
+
+  - titre: "Définir les types que le dépôt emploie déjà sans définition"
+    detail: >-
+      Trois des quatre livrables de la tâche 4 appartiennent à des types non
+      définis : adr, plan. La validation V3 des champs obligatoires est donc
+      inapplicable à la moitié de ce que le dépôt produit.
+    raison: >-
+      Révélé par la validation de cette tâche. Plus large que le seul cas du
+      plan signalé par NON-010 Q3.
+
+  - titre: "Compléter le triplet de RES-004 Objection"
+    detail: >-
+      Dix instances existent désormais, produites sans skill. C'est le type
+      le plus employé du dépôt et celui dont le skill décrirait un processus
+      déjà pratiqué.
+
+dette_nommee:
+  - titre: "Le dispositif d'objection fonctionne à sens unique"
+    detail: >-
+      Dix objections émises par l'agent, zéro par l'humain, sur quatre
+      tâches. Mesuré dans ADR-002. Ce n'est pas un défaut du dispositif mais
+      un fait à connaître : il n'a pas encore été éprouvé dans le sens
+      humain vers agent.
+
+  - titre: "D4 de ADR-002 renvoie à ADR-001 sans reprendre son motif"
+    detail: >-
+      Intentionnel, pour éviter une source parallèle. Signalé pour que le
+      renvoi soit lu comme tel et non comme une décision non fondée.
+
+  - titre: "Le breakpoint a été perdu par la rupture de D6"
+    detail: >-
+      Le processus antérieur offrait un point d'arrêt déclaré à l'avance, que
+      la déclaration d'effet ne donne pas. Si le besoin réapparaît, il est
+      moins coûteux de le réintroduire comme propriété d'une session que
+      comme propriété d'un plan.
+
+  - titre: "Le mot conventionné de D5 n'a aucun mécanisme"
+    detail: >-
+      Trente-trois CLAUDE.md pour dix-huit contenus dans le corpus. La
+      convention des harnais entre dépôts n'est maintenue par rien. Porté par
+      NON-006 Q3 et Q4.
+
+  - titre: "Journalisation asymétrique entre les tâches d'une même session"
+    detail: >-
+      Les tâches 2, 3 et 4 portent un suffixe, la tâche 1 non. Le harnais ne
+      dit pas comment journaliser plusieurs tâches d'une session. Aucun
+      fichier de la tâche 1 n'a été déplacé.

@@ -1,0 +1,1682 @@
+# inventaire.yaml - Donnees brutes de l'observation du corpus $HOME/git
+#
+# Produit par ANL-001. Releve mecanique, non interprete : les interpretations
+# vivent dans les fichiers markdown du bundle. Genere le 2026-08-09.
+#
+# Champs :
+#   commits   : nombre de commits, toutes branches (0 = depot initialise, jamais commite)
+#   premier   : date du premier commit
+#   dernier   : date du dernier commit
+#   fichiers  : fichiers suivis par git
+#   sur_disque: fichiers presents sur le disque, hors .git (revele le non-commite)
+#   dirty     : entrees de git status --porcelain
+#   remote    : origin, forme <org>/<repo>, vide si absent
+#   harnais   : fichiers de harnais IA detectes a la racine
+#   langages  : cinq extensions les plus frequentes parmi les fichiers suivis
+
+version: 0.1.0
+date_releve: 2026-08-09
+racine: "$HOME/git"
+depots_denombres: 166
+
+depots:
+  - chemin: "archive/cli-based-organisation_git-resource"
+    commits: 7
+    premier: "2026-06-21"
+    dernier: "2026-06-21"
+    fichiers: 23
+    sur_disque: 24
+    dirty: 0
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:16 .sh:3 .yaml:1"
+  - chemin: "archive/jvtrudel-cv"
+    commits: 21
+    premier: "2026-03-18"
+    dernier: "2026-06-12"
+    fichiers: 165
+    sur_disque: 189
+    dirty: 108
+    remote: ""
+    harnais: "CLAUDE.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".yaml:92 .md:57 .docx:4 .pdf:1 .cue:1"
+  - chemin: "archive/les-epiceries-de-quartier-scott"
+    commits: 4
+    premier: "2026-02-07"
+    dernier: "2026-02-07"
+    fichiers: 39
+    sur_disque: 45
+    dirty: 5
+    remote: ""
+    harnais: ""
+    langages: ".md:38 .gitignore:1"
+  - chemin: "archive/noumanity-linkedin"
+    commits: 19
+    premier: "2026-01-23"
+    dernier: "2026-06-15"
+    fichiers: 24
+    sur_disque: 24
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:16 .sh:5 .yaml:1 .png:1"
+  - chemin: "archive/noumanity_proposition-borealis"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 16
+    dirty: 3
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "cli-based-organization/clia"
+    commits: 21
+    premier: "2026-07-08"
+    dernier: "2026-08-08"
+    fichiers: 223
+    sur_disque: 226
+    dirty: 3
+    remote: "cli-based-organization/clia.git"
+    harnais: "CLAUDE.md,INTENTION.md,ARCHITECTURE.md,.claude"
+    langages: ".md:207 .sh:9 .yaml:3 .gitignore:1"
+  - chemin: "cli-based-organization/INTENTION"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: "cli-based-organization/INTENTION.git"
+    harnais: ""
+    langages: ""
+  - chemin: "cli-based-organization/linux-cli-interface"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: "cli-based-organization/linux-cli-interface.git"
+    harnais: ""
+    langages: ""
+  - chemin: "cli-based-organization/linux-inspect"
+    commits: 7
+    premier: "2026-06-20"
+    dernier: "2026-06-21"
+    fichiers: 22
+    sur_disque: 23
+    dirty: 0
+    remote: "cli-based-organization/linux-inspect.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ".md:16 .sh:2 .yaml:1 .gitignore:1"
+  - chemin: "cli-based-organization/raar"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: "cli-based-organization/raar.git"
+    harnais: ""
+    langages: ""
+  - chemin: "clients-data/vortex-finops"
+    commits: 53
+    premier: "2026-05-18"
+    dernier: "2026-05-20"
+    fichiers: 52
+    sur_disque: 53
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ".csv:37 .yaml:4 .md:4 .txt:2 .db:2"
+  - chemin: "cryptosecops/communications"
+    commits: 7
+    premier: "2026-06-25"
+    dernier: "2026-06-25"
+    fichiers: 15
+    sur_disque: 16
+    dirty: 1
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ".md:11 .png:1"
+  - chemin: "cryptosecops/conf-hackfest-2026"
+    commits: 2
+    premier: "2026-06-30"
+    dernier: "2026-06-30"
+    fichiers: 12
+    sur_disque: 20
+    dirty: 8
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:11 .yaml:1"
+  - chemin: "cryptosecops/noumanity+qguard"
+    commits: 6
+    premier: "2026-06-11"
+    dernier: "2026-06-19"
+    fichiers: 35
+    sur_disque: 39
+    dirty: 4
+    remote: ""
+    harnais: "README.md,.claude"
+    langages: ".md:30 .pdf:2 .docx:2 .gitignore:1"
+  - chemin: "cryptosecops/pqc-domain"
+    commits: 4
+    premier: "2026-06-25"
+    dernier: "2026-06-25"
+    fichiers: 13
+    sur_disque: 16
+    dirty: 4
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ".md:10"
+  - chemin: "cryptosecops/presentation-marie-eve-cyr"
+    commits: 1
+    premier: "2026-07-01"
+    dernier: "2026-07-01"
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "cryptosecops/stratégie"
+    commits: 15
+    premier: "2026-06-18"
+    dernier: "2026-06-24"
+    fichiers: 81
+    sur_disque: 93
+    dirty: 13
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:64 .pdf:6 .docx:2 .yaml:1 .tex:1"
+  - chemin: "cryptosecops/veille"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 11
+    dirty: 6
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ""
+  - chemin: "datalyse/cli-photomanager"
+    commits: 6
+    premier: "2025-04-20"
+    dernier: "2025-05-05"
+    fichiers: 10
+    sur_disque: 11
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ".sum:1 .mod:1 .md:1 .html:1 .go:1"
+  - chemin: "dev-data/personal-journal-dev-data"
+    commits: 1
+    premier: "2026-05-21"
+    dernier: "2026-05-21"
+    fichiers: 44
+    sur_disque: 57
+    dirty: 9
+    remote: ""
+    harnais: ""
+    langages: ".md:29 .log:15"
+  - chemin: "disruptiva-dev/cli-based-enterprise"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 3
+    dirty: 2
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "disruptiva-dev/comm-cli"
+    commits: 9
+    premier: "2026-05-01"
+    dernier: "2026-05-02"
+    fichiers: 22
+    sur_disque: 32
+    dirty: 11
+    remote: ""
+    harnais: "ARCHITECTURE.md,CONSTITUTION.md,README.md"
+    langages: ".md:14"
+  - chemin: "disruptiva-dev/deliverable-cli"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "disruptiva-dev/devops-cli"
+    commits: 4
+    premier: "2026-06-05"
+    dernier: "2026-06-05"
+    fichiers: 46
+    sur_disque: 48
+    dirty: 6
+    remote: ""
+    harnais: "CLAUDE.md,README.md,.claude"
+    langages: ".md:36 .yaml:4 .bats:2 .sh:1 .log:1"
+  - chemin: "disruptiva-dev/disks-management"
+    commits: 2
+    premier: "2026-05-04"
+    dernier: "2026-05-04"
+    fichiers: 37
+    sur_disque: 1964
+    dirty: 18
+    remote: ""
+    harnais: "ARCHITECTURE.md,CONSTITUTION.md,README.md"
+    langages: ".rs:19 .md:9 .sh:4 .toml:1 .ssh:1"
+  - chemin: "disruptiva-dev/nty"
+    commits: 14
+    premier: "2026-03-27"
+    dernier: "2026-04-08"
+    fichiers: 47
+    sur_disque: 52
+    dirty: 8
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:13 .go:9 .sh:8 .yml:2 .log:2"
+  - chemin: "disruptiva-dev/os-iso-management"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "disruptiva-dev/personal-journal"
+    commits: 5
+    premier: "2026-05-20"
+    dernier: "2026-05-21"
+    fichiers: 79
+    sur_disque: 84
+    dirty: 3
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,ARCHITECTURE.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".go:43 .md:16 .yaml:8 .cue:3 .webmanifest:1"
+  - chemin: "disruptiva-dev/poc-formulaire-offline-first"
+    commits: 2
+    premier: "2026-05-05"
+    dernier: "2026-05-05"
+    fichiers: 25
+    sur_disque: 34
+    dirty: 6
+    remote: ""
+    harnais: "INTENTION.md,ARCHITECTURE.md,CONSTITUTION.md,README.md"
+    langages: ".md:23 .yaml:1 .gitignore:1"
+  - chemin: "esafwan/go_sqlite"
+    commits: 2
+    premier: "2023-12-02"
+    dernier: "2023-12-02"
+    fichiers: 6
+    sur_disque: 7
+    dirty: 4
+    remote: "esafwan/go_sqlite"
+    harnais: "README.md"
+    langages: ".go:2 .sum:1 .mod:1 .md:1 .db:1"
+  - chemin: "horizon-ia/app-itinerance"
+    commits: 1
+    premier: "2026-07-22"
+    dernier: "2026-07-22"
+    fichiers: 0
+    sur_disque: 21
+    dirty: 1
+    remote: "jvtrudel/app-itinerance.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ""
+  - chemin: "johnride/nationtech-website"
+    commits: 93
+    premier: "2023-03-29"
+    dernier: "2024-07-02"
+    fichiers: 154
+    sur_disque: 154
+    dirty: 0
+    remote: "johnride/nationtech-website"
+    harnais: "README.md"
+    langages: ".rs:41 .png:41 .ttf:13 .yaml:8 .md:7"
+  - chemin: "julouso/monster-truck"
+    commits: 15
+    premier: "2017-10-22"
+    dernier: "2024-05-05"
+    fichiers: 16
+    sur_disque: 202
+    dirty: 0
+    remote: "julouso/monster-truck"
+    harnais: ""
+    langages: ".png:4 .xcf:2 .json:2 .yaml:1 .svg:1"
+  - chemin: "jvtrudel-adhoc/alpine-k8s"
+    commits: 1
+    premier: "2024-10-12"
+    dernier: "2024-10-12"
+    fichiers: 0
+    sur_disque: 3
+    dirty: 3
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel-adhoc/appII"
+    commits: 2
+    premier: "2025-04-12"
+    dernier: "2025-04-12"
+    fichiers: 1
+    sur_disque: 5
+    dirty: 4
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "jvtrudel-adhoc/autohot2000"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 969
+    dirty: 3
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-adhoc/demo-cobol"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 2
+    dirty: 2
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-adhoc/documents-comptables"
+    commits: 5
+    premier: "2024-09-23"
+    dernier: "2024-10-08"
+    fichiers: 2
+    sur_disque: 4
+    dirty: 5
+    remote: ""
+    harnais: "README.md"
+    langages: ".sh:1 .md:1"
+  - chemin: "jvtrudel-adhoc/edit-google-doc-from-markdown"
+    commits: 30
+    premier: "2026-03-12"
+    dernier: "2026-03-14"
+    fichiers: 73
+    sur_disque: 6548
+    dirty: 5
+    remote: "jvtrudel/edit-google-doc-from-markdown.git"
+    harnais: "CLAUDE.md,README.md,.claude"
+    langages: ".md:57 .rs:10 .toml:1 .sh:1 .lock:1"
+  - chemin: "jvtrudel-adhoc/github-go"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-adhoc/go-socket"
+    commits: 3
+    premier: "2025-05-03"
+    dernier: "2025-05-04"
+    fichiers: 9
+    sur_disque: 9
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".sum:2 .mod:2 .html:2 .go:2 .md:1"
+  - chemin: "jvtrudel-adhoc/nou"
+    commits: 11
+    premier: "2024-11-10"
+    dernier: "2024-11-19"
+    fichiers: 19
+    sur_disque: 20
+    dirty: 2
+    remote: ""
+    harnais: "README.md"
+    langages: ".go:15 .sum:1 .mod:1 .md:1 .gitignore:1"
+  - chemin: "jvtrudel-adhoc/nou2"
+    commits: 1
+    premier: "2024-12-05"
+    dernier: "2024-12-05"
+    fichiers: 0
+    sur_disque: 10
+    dirty: 8
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel-adhoc/rust-generated-quantum-toolkit"
+    commits: 28
+    premier: "2026-03-10"
+    dernier: "2026-03-12"
+    fichiers: 97
+    sur_disque: 8788
+    dirty: 0
+    remote: "noumanity/quantum-intelligence-toolkit.git"
+    harnais: "ARCHITECTURE.md,README.md"
+    langages: ".rs:61 .yaml:12 .md:11 .sh:8 .toml:1"
+  - chemin: "jvtrudel-adhoc/shelp"
+    commits: 5
+    premier: "2024-10-19"
+    dernier: "2025-05-04"
+    fichiers: 4
+    sur_disque: 4
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "jvtrudel-adhoc/time-tracker"
+    commits: 3
+    premier: "2025-03-27"
+    dernier: "2025-04-03"
+    fichiers: 5
+    sur_disque: 9
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:2 .gitignore:1"
+  - chemin: "jvtrudel-adhoc/vanilla-web-dev"
+    commits: 3
+    premier: "2025-02-18"
+    dernier: "2025-02-18"
+    fichiers: 4
+    sur_disque: 9
+    dirty: 4
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:1 .gitignore:1 .dev:1"
+  - chemin: "jvtrudel-apprentissage/ameliore-communication"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 2
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-copilot/git-multi-remote"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 3
+    dirty: 3
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-copilot/leptos-fluent"
+    commits: 522
+    premier: "2024-02-08"
+    dernier: "2025-11-14"
+    fichiers: 197
+    sur_disque: 2974
+    dirty: 0
+    remote: "mondeja/leptos-fluent.git"
+    harnais: "README.md"
+    langages: ".rs:99 .toml:28 .md:21 .ftl:12 .stderr:11"
+  - chemin: "jvtrudel-copilot/rust-keypair"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 591
+    dirty: 5
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel-copilot/rust_macro"
+    commits: 2
+    premier: "2025-11-10"
+    dernier: "2025-11-10"
+    fichiers: 8
+    sur_disque: 164
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".rs:4 .toml:1 .md:1 .lock:1 .gitignore:1"
+  - chemin: "jvtrudel-copilot/rust-scp"
+    commits: 2
+    premier: "2025-11-10"
+    dernier: "2025-11-10"
+    fichiers: 4
+    sur_disque: 54
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ".toml:1 .rs:1 .lock:1 .gitignore:1"
+  - chemin: "jvtrudel-copilot/rust-tokio"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 262
+    dirty: 4
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "jvtrudel-copilot/rust-tokio-sdterr"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 256
+    dirty: 5
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel/ecrits"
+    commits: 3
+    premier: "2025-11-15"
+    dernier: "2025-12-11"
+    fichiers: 13
+    sur_disque: 14
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:12 .png:1"
+  - chemin: "jvtrudel/ephemeral-vault"
+    commits: 1
+    premier: "2025-11-19"
+    dernier: "2025-11-19"
+    fichiers: 0
+    sur_disque: 5
+    dirty: 4
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel-exportech/jido"
+    commits: 49
+    premier: "2016-03-01"
+    dernier: "2016-03-05"
+    fichiers: 67
+    sur_disque: 67
+    dirty: 0
+    remote: "Exportech/jido.git"
+    harnais: ""
+    langages: ".svg:33 .sass:12 .otf:9 .mustache:4 .sh:3"
+  - chemin: "jvtrudel/ftl-duplex.nvim"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 2
+    dirty: 2
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel-github/vitrine-web"
+    commits: 5
+    premier: "2022-01-25"
+    dernier: "2026-02-27"
+    fichiers: 3
+    sur_disque: 3
+    dirty: 0
+    remote: "jvtrudel/vitrine-web.git"
+    harnais: "README.md"
+    langages: ".yaml:1 .md:1 .html:1"
+  - chemin: "jvtrudel/script-template"
+    commits: 2
+    premier: "2025-11-19"
+    dernier: "2025-11-19"
+    fichiers: 4
+    sur_disque: 4
+    dirty: 0
+    remote: "jvtrudel/script-template.git"
+    harnais: "README.md"
+    langages: ".template:1 .md:1"
+  - chemin: "jvtrudel/technotes.ai"
+    commits: 1
+    premier: "2025-11-17"
+    dernier: "2025-11-17"
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel/technotes.cryptography"
+    commits: 3
+    premier: "2025-11-18"
+    dernier: "2025-11-19"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "jvtrudel/technotes.hardware"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel/technotes.network-reflection"
+    commits: 2
+    premier: "2025-11-17"
+    dernier: "2025-11-17"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: ""
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "jvtrudel/technotes.nvim"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "jvtrudel/technotes.secrets"
+    commits: 1
+    premier: "2025-11-17"
+    dernier: "2025-11-17"
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "knowledge/collecte-de-connaissance"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "la-isla-disruptiva/ai-explore-naive-text-to-speech"
+    commits: 19
+    premier: "2025-09-18"
+    dernier: "2025-09-21"
+    fichiers: 42
+    sur_disque: 1731
+    dirty: 0
+    remote: "La-Isla-Disruptiva/ai-explore-naive-text-to-speech.git"
+    harnais: "README.md"
+    langages: ".md:16 .js:7 .sh:6 .json:3 .svg:2"
+  - chemin: "la-isla-disruptiva/airu"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 17
+    dirty: 4
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "la-isla-disruptiva/ai-ultimate-consulting-replacement"
+    commits: 1
+    premier: "2025-11-30"
+    dernier: "2025-11-30"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: "La-Isla-Disruptiva/ai-ultimate-consulting-replacement.git"
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "la-isla-disruptiva/architecture"
+    commits: 5
+    premier: "2024-01-15"
+    dernier: "2024-01-31"
+    fichiers: 6
+    sur_disque: 6
+    dirty: 0
+    remote: "la-isla-disruptiva/architecture.git"
+    harnais: "README.md"
+    langages: ".md:4 .svg:1 .drawio:1"
+  - chemin: "la-isla-disruptiva/canvas-exploration"
+    commits: 3
+    premier: "2025-09-30"
+    dernier: "2025-09-30"
+    fichiers: 8
+    sur_disque: 497
+    dirty: 10
+    remote: "La-Isla-Disruptiva/canvas-exploration.git"
+    harnais: "README.md"
+    langages: ".json:2 .js:2 .md:1 .html:1 .gitignore:1"
+  - chemin: "la-isla-disruptiva/dile-ola"
+    commits: 73
+    premier: "2025-08-21"
+    dernier: "2025-12-06"
+    fichiers: 78
+    sur_disque: 331
+    dirty: 2
+    remote: "La-Isla-Disruptiva/walk-and-talk.git"
+    harnais: "README.md"
+    langages: ".png:40 .js:15 .yaml:6 .yml:1 .sum:1"
+  - chemin: "la-isla-disruptiva/explore-component-base-development"
+    commits: 3
+    premier: "2022-10-05"
+    dernier: "2022-10-05"
+    fichiers: 2
+    sur_disque: 2
+    dirty: 0
+    remote: "La-Isla-Disruptiva/explore-component-base-development.git"
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "la-isla-disruptiva/.github"
+    commits: 7
+    premier: "2022-10-05"
+    dernier: "2022-10-21"
+    fichiers: 5
+    sur_disque: 5
+    dirty: 0
+    remote: "La-Isla-Disruptiva/.github.git"
+    harnais: "README.md"
+    langages: ".md:4 .gitignore:1"
+  - chemin: "la-isla-disruptiva/idiomas.lab"
+    commits: 8
+    premier: "2024-01-09"
+    dernier: "2024-02-20"
+    fichiers: 22
+    sur_disque: 22
+    dirty: 0
+    remote: "la-isla-disruptiva/idiomas.lab.git"
+    harnais: "README.md"
+    langages: ".yaml:4 .ts:3 .md:3 .json:3 .js:2"
+  - chemin: "la-isla-disruptiva/kata-clientside-stuctureddata-editor"
+    commits: 29
+    premier: "2022-10-25"
+    dernier: "2022-10-11"
+    fichiers: 4
+    sur_disque: 4
+    dirty: 0
+    remote: "La-Isla-Disruptiva/kata-clientside-stuctureddata-editor.git"
+    harnais: "README.md"
+    langages: ".md:3"
+  - chemin: "la-isla-disruptiva/kata-p2p-web-app"
+    commits: 7
+    premier: "2022-11-01"
+    dernier: "2022-11-02"
+    fichiers: 4
+    sur_disque: 4
+    dirty: 0
+    remote: "La-Isla-Disruptiva/kata-p2p-web-app.git"
+    harnais: "README.md"
+    langages: ".md:3"
+  - chemin: "la-isla-disruptiva/manual-de-identidad"
+    commits: 6
+    premier: "2022-10-07"
+    dernier: "2022-10-07"
+    fichiers: 9
+    sur_disque: 9
+    dirty: 0
+    remote: "La-Isla-Disruptiva/manual-de-identidad.git"
+    harnais: ""
+    langages: ".svg:4 .yml:2 .pdf:1 .md:1 .js:1"
+  - chemin: "la-isla-disruptiva/moodboard"
+    commits: 2
+    premier: "2025-12-07"
+    dernier: "2025-12-07"
+    fichiers: 2
+    sur_disque: 2
+    dirty: 0
+    remote: "La-Isla-Disruptiva/moodboard.git"
+    harnais: ""
+    langages: ".excalidraw:1"
+  - chemin: "la-isla-disruptiva/ola-mapas"
+    commits: 8
+    premier: "2025-09-27"
+    dernier: "2025-09-28"
+    fichiers: 19
+    sur_disque: 20
+    dirty: 0
+    remote: "La-Isla-Disruptiva/ola-mapas.git"
+    harnais: "README.md"
+    langages: ".yaml:4 .md:2 .png:1 .js:1 .html:1"
+  - chemin: "la-isla-disruptiva/ola-ws"
+    commits: 33
+    premier: "2025-08-21"
+    dernier: "2025-12-06"
+    fichiers: 48
+    sur_disque: 49
+    dirty: 0
+    remote: "La-Isla-Disruptiva/ola-ws.git"
+    harnais: "README.md"
+    langages: ".go:13 .yaml:10 .yml:8 .md:4 .sum:1"
+  - chemin: "la-isla-disruptiva/poc-cue-validated-yaml-editor"
+    commits: 18
+    premier: "2025-10-16"
+    dernier: "2025-12-06"
+    fichiers: 37
+    sur_disque: 124
+    dirty: 0
+    remote: "La-Isla-Disruptiva/poc-cue-validated-yaml-editor.git"
+    harnais: "README.md"
+    langages: ".go:9 .yaml:7 .md:6 .yml:3 .txt:2"
+  - chemin: "la-isla-disruptiva/ptyle"
+    commits: 19
+    premier: "2023-11-29"
+    dernier: "2023-12-03"
+    fichiers: 38
+    sur_disque: 38
+    dirty: 0
+    remote: "la-isla-disruptiva/ptyle.git"
+    harnais: "README.md"
+    langages: ".ts:16 .css:8 .yaml:6 .md:3 .json:3"
+  - chemin: "la-isla-disruptiva/specruptiva"
+    commits: 52
+    premier: "2025-07-09"
+    dernier: "2026-03-18"
+    fichiers: 29
+    sur_disque: 35
+    dirty: 2
+    remote: "La-Isla-Disruptiva/specruptiva.git"
+    harnais: "README.md"
+    langages: ".go:17 .yml:3 .cue:2 .sum:1 .mod:1"
+  - chemin: "la-isla-disruptiva/technote-ai"
+    commits: 1
+    premier: "2025-09-18"
+    dernier: "2025-09-18"
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "la-isla-disruptiva/technotes-git"
+    commits: 5
+    premier: "2024-02-10"
+    dernier: "2024-02-11"
+    fichiers: 4
+    sur_disque: 3
+    dirty: 0
+    remote: "la-isla-disruptiva/technotes-git.git"
+    harnais: "README.md"
+    langages: ".md:4"
+  - chemin: "la-isla-disruptiva/website"
+    commits: 1
+    premier: "2025-11-30"
+    dernier: "2025-11-30"
+    fichiers: 1
+    sur_disque: 2
+    dirty: 2
+    remote: "La-Isla-Disruptiva/website.git"
+    harnais: "README.md"
+    langages: ".md:1"
+  - chemin: "le-gros-quebec/fondation-d-un-parti-politique"
+    commits: 4
+    premier: "2026-04-29"
+    dernier: "2026-04-29"
+    fichiers: 23
+    sur_disque: 23
+    dirty: 1
+    remote: "le-gros-quebec/fondation-d-un-parti-politique.git"
+    harnais: "README.md"
+    langages: ".pdf:20 .md:3"
+  - chemin: "le-gros-quebec/le-gros-quebec.github.io"
+    commits: 4
+    premier: "2025-05-06"
+    dernier: "2025-05-07"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: "le-gros-quebec/le-gros-quebec.github.io.git"
+    harnais: ""
+    langages: ".html:1"
+  - chemin: "marketing/marketing-pro-bono"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 3
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "monteroy+noumanity/coentreprise"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "nationtech/harmony"
+    commits: 651
+    premier: "2024-08-28"
+    dernier: "2025-11-07"
+    fichiers: 558
+    sur_disque: 554
+    dirty: 0
+    remote: "nationtech/harmony"
+    harnais: "README.md"
+    langages: ".rs:306 .toml:41 .md:39 .jpg:16 .xml:13"
+  - chemin: "nationtech/web-site-content"
+    commits: 4
+    premier: "2025-11-18"
+    dernier: "2025-11-20"
+    fichiers: 4
+    sur_disque: 5
+    dirty: 3
+    remote: "jvtrudel/website-content.git"
+    harnais: ""
+    langages: ".ftl:4"
+  - chemin: "nationtech/websites"
+    commits: 104
+    premier: "2023-03-29"
+    dernier: "2025-11-18"
+    fichiers: 254
+    sur_disque: 5799
+    dirty: 2
+    remote: "NationTech/websites.git"
+    harnais: "README.md"
+    langages: ".rs:76 .png:45 .svg:15 .json:14 .ttf:13"
+  - chemin: "noumanity-ai-assisted-development-toolkit/nou-methodologies-ia"
+    commits: 51
+    premier: "2026-03-14"
+    dernier: "2026-06-14"
+    fichiers: 220
+    sur_disque: 284
+    dirty: 27
+    remote: "noumanity/nou-ai-methodology.git"
+    harnais: "README.md,.claude"
+    langages: ".md:153 .yaml:29 .bash:11 .log:10 .bats:8"
+  - chemin: "noumanity-ai-assisted-development-toolkit/nou-scripts-ia-support"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 30
+    dirty: 13
+    remote: ""
+    harnais: "INTENTION.md,ARCHITECTURE.md,CONSTITUTION.md,README.md"
+    langages: ""
+  - chemin: "noumanity-communication/bootstrap-site-recherche-obstak"
+    commits: 4
+    premier: "2026-01-21"
+    dernier: "2026-01-22"
+    fichiers: 2
+    sur_disque: 14
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ".md:1 .log:1"
+  - chemin: "noumanity-communication/catalogue-startup"
+    commits: 1
+    premier: "2026-01-29"
+    dernier: "2026-01-29"
+    fichiers: 0
+    sur_disque: 10
+    dirty: 4
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "noumanity-communication/cloud-ia-souverain"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 2
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-communication/creation-image-de-marque"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-communication/event-xminds-console-juillet-2026"
+    commits: 4
+    premier: "2026-07-29"
+    dernier: "2026-07-29"
+    fichiers: 181
+    sur_disque: 182
+    dirty: 0
+    remote: "noumanity/de-la-console-a-merida-au-studio-deeptech-noumanity.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".png:48 .tex:32 .md:27 .jpg:23 .pdf:11"
+  - chemin: "noumanity-communication/noumanity-bureau-de-rédaction"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-communication/noumanity-correspondance-affaire"
+    commits: 1
+    premier: "2026-03-25"
+    dernier: "2026-03-25"
+    fichiers: 0
+    sur_disque: 5
+    dirty: 2
+    remote: ""
+    harnais: "README.md"
+    langages: ""
+  - chemin: "noumanity-communication/pilier-communication-noumanity"
+    commits: 2
+    premier: "2026-01-22"
+    dernier: "2026-01-22"
+    fichiers: 3
+    sur_disque: 3
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ".md:2 .log:1"
+  - chemin: "noumanity-consultation/cofomo-infra-moderne"
+    commits: 5
+    premier: "2026-07-08"
+    dernier: "2026-07-22"
+    fichiers: 78
+    sur_disque: 107
+    dirty: 11
+    remote: "noumanity-consultation/desjardins-devsecops"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:68 .sh:5 .yaml:2 .pdf:1 .gitignore:1"
+  - chemin: "noumanity-consultation/commission-scolaire-de-la-capitale"
+    commits: 4
+    premier: "2026-07-08"
+    dernier: "2026-07-10"
+    fichiers: 70
+    sur_disque: 72
+    dirty: 4
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:61 .sh:5 .yaml:2 .gitignore:1"
+  - chemin: "noumanity-consultation/desjardins-devsecops"
+    commits: 4
+    premier: "2026-07-08"
+    dernier: "2026-07-10"
+    fichiers: 70
+    sur_disque: 70
+    dirty: 0
+    remote: "commission-scolaire-de-la-capitale/."
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md"
+    langages: ".md:61 .sh:5 .yaml:2 .gitignore:1"
+  - chemin: "noumanity-consultation/jvtrudel-cv"
+    commits: 19
+    premier: "2026-06-21"
+    dernier: "2026-06-21"
+    fichiers: 174
+    sur_disque: 181
+    dirty: 8
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:138 .yaml:11 .docx:4 .pdf:1 .gitignore:1"
+  - chemin: "noumanity-consultation/LGS"
+    commits: 4
+    premier: "2026-07-10"
+    dernier: "2026-07-10"
+    fichiers: 38
+    sur_disque: 53
+    dirty: 14
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:22 .gitkeep:9 .yaml:1"
+  - chemin: "noumanity-consultation/micrologic-clients"
+    commits: 2
+    premier: "2026-08-08"
+    dernier: "2026-08-08"
+    fichiers: 110
+    sur_disque: 4418
+    dirty: 13
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:88 .gitkeep:9 .pdf:2 .yaml:1 .docx:1"
+  - chemin: "noumanity-consultation/vortex-solution"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-deals/achat-epicerie-scott"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 13
+    dirty: 2
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-deals/noumanity-redaction-ententes"
+    commits: 2
+    premier: "2026-02-25"
+    dernier: "2026-02-26"
+    fichiers: 79
+    sur_disque: 115
+    dirty: 8
+    remote: ""
+    harnais: ""
+    langages: ".md:53 .txt:3 .pdf:3 .docx:1"
+  - chemin: "noumanity-dev/abai-deeptech-notebook"
+    commits: 2
+    premier: "2026-06-24"
+    dernier: "2026-06-24"
+    fichiers: 9
+    sur_disque: 21
+    dirty: 8
+    remote: "noumanity-dev/abai-deeptech-notebook.git"
+    harnais: "CLAUDE.md,INTENTION.md"
+    langages: ".md:4 .gitkeep:3 .yaml:1 .gitignore:1"
+  - chemin: "noumanity-dev/cli-convention"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 7
+    dirty: 5
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ""
+  - chemin: "noumanity-dev/exploracion-sobre-decentralizado-post-quantum-vpn"
+    commits: 2
+    premier: "2026-07-27"
+    dernier: "2026-07-27"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: "noumanity-dev/exploracion-sobre-decentralizado-post-quantum-vpn.git"
+    harnais: "INTENTION.md"
+    langages: ".md:1"
+  - chemin: "noumanity-dev/INTENTION"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: "noumanity-dev/INTENTION.git"
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity/devops-cli"
+    commits: 28
+    premier: "2023-11-17"
+    dernier: "2023-11-17"
+    fichiers: 17
+    sur_disque: 17
+    dirty: 0
+    remote: "noumanity/devops-cli.git"
+    harnais: "README.md"
+    langages: ".data:4 .taskrc:1 .md:1 .gitignore:1"
+  - chemin: "noumanity-dev/resource-driven-ai"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 2
+    dirty: 2
+    remote: ""
+    harnais: "INTENTION.md"
+    langages: ""
+  - chemin: "noumanity-dev/ticket-driven-ai"
+    commits: 28
+    premier: "2026-06-21"
+    dernier: "2026-07-04"
+    fichiers: 72
+    sur_disque: 76
+    dirty: 2
+    remote: "noumanity-dev/ticket-driven-ai.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:50 .yaml:5 .sh:1 .gitignore:1"
+  - chemin: "noumanity/e-wtfpl"
+    commits: 11
+    premier: "2023-06-18"
+    dernier: "2024-02-10"
+    fichiers: 8
+    sur_disque: 7
+    dirty: 0
+    remote: "noumanity/e-wtfpl.git"
+    harnais: ""
+    langages: ".md:6 .json:1"
+  - chemin: "noumanity-formation/INTENTION"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: "noumanity-formation/INTENTION.git"
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-formation/intentional-doers-governance"
+    commits: 7
+    premier: "2026-07-06"
+    dernier: "2026-07-07"
+    fichiers: 62
+    sur_disque: 79
+    dirty: 0
+    remote: "noumanity-formation/intentional-dooers-governance.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:28 .yaml:9 .tex:8 .png:5 .lua:5"
+  - chemin: "noumanity-formation/linux-and-quantum-computers"
+    commits: 14
+    premier: "2026-07-06"
+    dernier: "2026-07-17"
+    fichiers: 92
+    sur_disque: 119
+    dirty: 2
+    remote: "noumanity-formation/linux-and-quantum-computers.git"
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:36 .tex:18 .yaml:10 .pdf:10 .png:6"
+  - chemin: "noumanity-formation/linux-pqc"
+    commits: 48
+    premier: "2026-06-12"
+    dernier: "2026-07-08"
+    fichiers: 37
+    sur_disque: 474
+    dirty: 0
+    remote: "noumanity-formation/linux-pqc.git"
+    harnais: "README.md,.claude"
+    langages: ".md:18 .csv:7 .yaml:2 .yml:1 .webp:1"
+  - chemin: "noumanity-formation/tmp"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity/imagen"
+    commits: 17
+    premier: "2022-02-18"
+    dernier: "2022-06-15"
+    fichiers: 66
+    sur_disque: 69
+    dirty: 3
+    remote: "noumanity/imagen.git"
+    harnais: "INTENTION.md,README.md"
+    langages: ".png:27 .jpg:20 .svg:3 .pdf:3 .ai:2"
+  - chemin: "noumanity/information-entreprise-noumanity"
+    commits: 2
+    premier: "2024-03-24"
+    dernier: "2024-03-24"
+    fichiers: 1
+    sur_disque: 1
+    dirty: 0
+    remote: "noumanity/information-entreprise-noumanity.git"
+    harnais: ""
+    langages: ".md:1"
+  - chemin: "noumanity/infra"
+    commits: 19
+    premier: "2023-11-07"
+    dernier: "2024-02-20"
+    fichiers: 39
+    sur_disque: 39
+    dirty: 0
+    remote: "noumanity/infra.git"
+    harnais: "README.md"
+    langages: ".yaml:24 .md:5 .yml:4 .txt:1 .svg:1"
+  - chemin: "noumanity-infra/platform"
+    commits: 48
+    premier: "2023-11-07"
+    dernier: "2025-09-14"
+    fichiers: 43
+    sur_disque: 34300
+    dirty: 2
+    remote: "datalyse/platform.git"
+    harnais: "README.md"
+    langages: ".yaml:25 .md:6 .yml:4 .txt:1 .svg:1"
+  - chemin: "noumanity-infra/template-k83"
+    commits: 14
+    premier: "2024-02-23"
+    dernier: "2024-04-28"
+    fichiers: 23
+    sur_disque: 23
+    dirty: 1
+    remote: "datalyse/template-k83.git"
+    harnais: "README.md"
+    langages: ".yaml:4 .md:4 .css:2 .json:1 .html:1"
+  - chemin: "noumanity-ops/etude-marché-conformité"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 31
+    dirty: 6
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,ARCHITECTURE.md,CONSTITUTION.md"
+    langages: ""
+  - chemin: "noumanity-ops/noumanity-communication-stratégique"
+    commits: 2
+    premier: "2026-06-24"
+    dernier: "2026-06-24"
+    fichiers: 21
+    sur_disque: 22
+    dirty: 1
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md,.claude"
+    langages: ".md:12 .pdf:3 .yaml:1"
+  - chemin: "noumanity-ops/noumanity-linkedin"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 1
+    dirty: 1
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-ops/noumanity-planification-stratégique"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 42
+    dirty: 8
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,ARCHITECTURE.md,CONSTITUTION.md,.claude"
+    langages: ""
+  - chemin: "noumanity-ops/noumanity-quantum-roadmap"
+    commits: 2
+    premier: "2026-07-24"
+    dernier: "2026-07-24"
+    fichiers: 113
+    sur_disque: 114
+    dirty: 12
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,.claude"
+    langages: ".md:33 .tex:32 .pdf:11 .yaml:10 .png:7"
+  - chemin: "noumanity-ops/pdg-augmenté"
+    commits: 1
+    premier: "2026-06-22"
+    dernier: "2026-06-22"
+    fichiers: 0
+    sur_disque: 15
+    dirty: 8
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ""
+  - chemin: "noumanity-ops/technotes"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-projet-collaboration/poc-uni-nano-cameroun"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 19
+    dirty: 7
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-recherche-action/comptes-de-banque-et-credit"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 3
+    dirty: 3
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-research/demande-financement-concours-exploration-2026"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-research/global-innovation-index"
+    commits: 2
+    premier: "2026-03-17"
+    dernier: "2026-03-17"
+    fichiers: 27
+    sur_disque: 30
+    dirty: 5
+    remote: ""
+    harnais: "README.md"
+    langages: ".pdf:21 .xlsx:5"
+  - chemin: "noumanity-research/quantum-review"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 4
+    dirty: 4
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-talents/guillaume_viau-trudel"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 25
+    dirty: 7
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "noumanity-used-program/aws-finops-analysis"
+    commits: 20
+    premier: "2026-05-18"
+    dernier: "2026-05-19"
+    fichiers: 75
+    sur_disque: 2786
+    dirty: 0
+    remote: ""
+    harnais: "CLAUDE.md,ARCHITECTURE.md,README.md,.claude"
+    langages: ".md:35 .rs:34 .toml:1 .sh:1 .lock:1"
+  - chemin: "ontpe/dossier-president"
+    commits: 2
+    premier: "2026-07-06"
+    dernier: "2026-07-06"
+    fichiers: 9
+    sur_disque: 10
+    dirty: 3
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,session.md"
+    langages: ".md:9"
+  - chemin: "orignal-bleu-finance/admin-frontend"
+    commits: 39
+    premier: "2023-09-25"
+    dernier: "2023-10-14"
+    fichiers: 84
+    sur_disque: 84
+    dirty: 0
+    remote: "orignalbleu/admin-frontend.git"
+    harnais: "README.md"
+    langages: ".jpg:30 .tsx:13 .ts:10 .css:8 .json:5"
+  - chemin: "orignal-bleu-finance/cli-combinerQrLogo"
+    commits: 2
+    premier: "2023-09-10"
+    dernier: "2023-09-10"
+    fichiers: 7
+    sur_disque: 7
+    dirty: 0
+    remote: "orignalbleu/cli-combinerQrLogo.git"
+    harnais: ""
+    langages: ".toml:2 .txt:1 .py:1 .png:1 .lock:1"
+  - chemin: "orignal-bleu-finance/fx-history-download"
+    commits: 68
+    premier: "2017-05-22"
+    dernier: "2024-02-18"
+    fichiers: 19
+    sur_disque: 19
+    dirty: 0
+    remote: "Orignal-Bleu/fx-history-download.git"
+    harnais: "README.md"
+    langages: ".py:8 .txt:2 .md:2 .yml:1 .toml:1"
+  - chemin: "orignal-bleu-finance/infra-automation"
+    commits: 20
+    premier: "2023-10-12"
+    dernier: "2023-10-26"
+    fichiers: 25
+    sur_disque: 25
+    dirty: 0
+    remote: "orignalbleu/infra-automation.git"
+    harnais: "README.md"
+    langages: ".yml:11 .md:2 .svg:1 .gitignore:1 .drawio:1"
+  - chemin: "orignal-bleu-finance/logs-persistence"
+    commits: 4
+    premier: "2023-09-14"
+    dernier: "2023-09-15"
+    fichiers: 6
+    sur_disque: 6
+    dirty: 0
+    remote: "orignalbleu/logs-persistence.git"
+    harnais: ""
+    langages: ".conf:2 .yaml:1 .js:1 .html:1 .gitignore:1"
+  - chemin: "orignal-bleu-finance/poc-analytic"
+    commits: 33
+    premier: "2023-09-12"
+    dernier: "2023-10-03"
+    fichiers: 26
+    sur_disque: 26
+    dirty: 0
+    remote: "orignalbleu/poc-analytic.git"
+    harnais: "README.md"
+    langages: ".html:5 .json:2 .js:2 .md:1 .gitignore:1"
+  - chemin: "orignal-bleu-finance/poc-api"
+    commits: 5
+    premier: "2023-09-19"
+    dernier: "2023-09-20"
+    fichiers: 24
+    sur_disque: 24
+    dirty: 0
+    remote: "orignalbleu/poc-api.git"
+    harnais: ""
+    langages: ".py:13 .yaml:1 .txt:1 .toml:1 .sample:1"
+  - chemin: "orignal-bleu-finance/poc-landing-page"
+    commits: 8
+    premier: "2023-09-10"
+    dernier: "2023-09-11"
+    fichiers: 20
+    sur_disque: 18
+    dirty: 0
+    remote: "orignalbleu/poc-landing-page.git"
+    harnais: ""
+    langages: ".png:8 .js:4 .json:3 .svg:1 .ico:1"
+  - chemin: "orignal-bleu-finance/poc-landing-page-0"
+    commits: 9
+    premier: "2023-09-04"
+    dernier: "2023-09-12"
+    fichiers: 18
+    sur_disque: 18
+    dirty: 0
+    remote: "orignalbleu/poc-landing-page-0.git"
+    harnais: "README.md"
+    langages: ".tsx:4 .json:4 .ts:2 .css:2 .png:1"
+  - chemin: "orignal-bleu-finance/poc-landing-page-2"
+    commits: 6
+    premier: "2023-10-10"
+    dernier: "2023-10-11"
+    fichiers: 21
+    sur_disque: 21
+    dirty: 0
+    remote: "orignalbleu/poc-landing-page-2.git"
+    harnais: ""
+    langages: ".ts:8 .png:5 .json:3 .js:1 .ico:1"
+  - chemin: "orignal-bleu-finance/qr-generator"
+    commits: 9
+    premier: "2023-09-24"
+    dernier: "2023-09-24"
+    fichiers: 2
+    sur_disque: 2
+    dirty: 0
+    remote: "orignalbleu/qr-generator.git"
+    harnais: "README.md"
+    langages: ".md:1 .html:1"
+  - chemin: "orignal-bleu-finance/timeseries-predictor"
+    commits: 258
+    premier: "2022-08-07"
+    dernier: "2024-02-18"
+    fichiers: 67
+    sur_disque: 41621
+    dirty: 0
+    remote: "Orignal-Bleu/timeseries-predictor.git"
+    harnais: "README.md"
+    langages: ".py:35 .yaml:9 .txt:3 .lock:3 .md:2"
+  - chemin: "orignalbleu/webapp"
+    commits: 9
+    premier: "2025-11-30"
+    dernier: "2025-12-17"
+    fichiers: 24
+    sur_disque: 798
+    dirty: 1
+    remote: "orignalbleu/webapp.git"
+    harnais: "README.md"
+    langages: ".js:6 .html:6 .json:5 .md:2 .css:2"
+  - chemin: "parti-horizon/analyse-des-partis"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 0
+    dirty: 0
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "parti-horizon/fondation"
+    commits: 8
+    premier: "2026-06-22"
+    dernier: "2026-06-23"
+    fichiers: 22
+    sur_disque: 23
+    dirty: 4
+    remote: ""
+    harnais: "CLAUDE.md,INTENTION.md,CONSTITUTION.md,README.md"
+    langages: ".md:19 .yaml:1"
+  - chemin: "parti-horizon/scripts"
+    commits: 0
+    premier: ""
+    dernier: ""
+    fichiers: 0
+    sur_disque: 7
+    dirty: 7
+    remote: ""
+    harnais: ""
+    langages: ""
+  - chemin: "ReLaQx/bbq-relaqx-juillet-2026"
+    commits: 1
+    premier: "2026-07-14"
+    dernier: "2026-07-14"
+    fichiers: 9
+    sur_disque: 13
+    dirty: 3
+    remote: ""
+    harnais: ".claude"
+    langages: ".png:4 .jpg:2 .mp4:1 .html:1 .avif:1"
+  - chemin: "terrencetao/E-sante-ISM-SPUM"
+    commits: 16
+    premier: "2026-05-05"
+    dernier: "2026-05-18"
+    fichiers: 142
+    sur_disque: 46575
+    dirty: 0
+    remote: "terrencetao/E-sante-ISM-SPUM.git"
+    harnais: "README.md"
+    langages: ".py:41 .md:35 .ts:19 .tsx:14 .sh:10"

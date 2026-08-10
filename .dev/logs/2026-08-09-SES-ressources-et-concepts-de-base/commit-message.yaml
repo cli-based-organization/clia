@@ -1,0 +1,48 @@
+type: docs
+scope: analyses
+sujet: "ANL-001 observation du corpus de dépôts et des pratiques de travail"
+corps: |
+  Produit l'analyse critique du corpus complet des 166 dépôts git sous
+  $HOME/git, demandée par la tâche 1 de la session du 2026-08-09.
+
+  Bundle .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/ :
+  inventaire mécanique des 166 dépôts en YAML, description et analyse
+  critique de chaque dépôt en quatre fichiers, observations sur la manière
+  de travailler de l'humain, analyse critique transversale en dix défauts
+  mesurés, et état de la matière disponible pour les onze ressources
+  annoncées par CLAUDE.md.
+
+  Constats principaux : douze numéros de skill sur vingt portent plusieurs
+  noms distincts selon le dépôt, ce qui invalide la désignation des
+  ressources par triplet de numéros ; trente-trois CLAUDE.md du corpus
+  portent dix-huit contenus différents sans mécanisme de propagation ;
+  trois dépôts de consultation partagent le même INTENTION.md et les mêmes
+  traces, désignant le mauvais client ; RES-001-ressource.md, le meilleur
+  travail conceptuel du corpus, vit dans un dépôt de candidature sans
+  remote.
+
+  Journalisation dans .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/.
+
+  Aucune ressource fondamentale produite : la description de la tâche
+  demande l'observation, pas la conception.
+fichiers_ajoutes:
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/index.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/inventaire.yaml
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/observations-pratiques.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/candidats-ressources-fondamentales.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/repos/01-lignee-methodologique.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/repos/02-repos-de-travail.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/repos/03-repos-de-produit-et-poc.md
+  - .dev/analyses/ANL-001-observation-corpus-repos-et-pratiques/repos/04-repos-de-savoir-et-dormants.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message.yaml
+note_pour_l_humain: >-
+  workspace/session.md et CLAUDE.md sont modifiés dans l'arbre de travail et
+  n'ont pas été touchés par cette tâche. Le versionnage reste la
+  responsabilité de l'humain.

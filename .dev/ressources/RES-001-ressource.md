@@ -1,0 +1,200 @@
+---
+type: ressource
+id: RES-ressource
+title: "Ressource"
+version: 0.2.0
+status: draft
+prefixe: RES
+emplacement: ".dev/ressources/RES-<SEQ>-<SLUG>.md"
+cycle-de-vie: vivant
+edition: co-edition
+champs-obligatoires: [type, id, title, version, status, prefixe, emplacement, cycle-de-vie, edition, champs-obligatoires, relations-admissibles, skill, adr, statut]
+relations-admissibles: [ressource]
+skill: skl-001-ressource
+adr: ADR-adoption-de-la-notion-de-ressource
+statut: actif
+---
+
+# RES-001 - Ressource
+
+> Une ressource est un fichier typé, versionné, produit dans un dépôt équipé, dont un type déclaré gouverne la forme. Cette définition se prend elle-même pour objet : elle définit le type dont elle est une instance, et fixe la forme de toutes les autres définitions.
+
+## Objet
+
+Ce document définit ce que `clia` appelle une **ressource**, et fixe la forme que doit prendre toute définition de type.
+
+Il est la source de vérité du type `ressource`. Rien de ce qu'il porte n'est déclaré ailleurs.
+
+Ce qu'il n'est pas : ni la décision d'introduire ce type, qui appartient à [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md), ni le processus de production d'une définition, qui appartient à [skl-001-ressource](../skills/skl-001-ressource/SKILL.md). Le triplet de ce type est complet depuis le 2026-08-09 ; les six autres types fondamentaux n'ont encore ni décision ni processus.
+
+## Statut de ce document
+
+Premier jet, produit le 2026-08-09 à partir des constats de `ANL-001-observation-corpus-repos-et-pratiques`. Il s'appuie sur `RES-001-ressource.md` du dépôt `noumanity-consultation/micrologic-clients`, qui est l'état de l'art du corpus, et s'en écarte sur un point : l'identité. La justification de cet écart est donnée plus bas.
+
+Les questions que ce jet laisse ouvertes sont portées par les objections `NON-001` à `NON-008`, et non enterrées dans une section de lacunes.
+
+## Ce qu'est une ressource
+
+Une ressource est un fichier porteur d'un frontmatter YAML typé, produit dans un dépôt équipé, et qui fait foi. Sa fonction est de déplacer la vérité du travail hors de la conversation, qui est volatile, vers un objet versionné, qui persiste.
+
+Trois conséquences suivent de cette fonction, et elles sont plus importantes que le format.
+
+Une ressource est **relisible sans mémoire de session**. C'est la contrainte dominante du régime de travail observé : le travail se fait par vagues séparées de plusieurs mois (`ANL-001`, `observations-pratiques.md`). Une ressource qui n'est compréhensible qu'en se souvenant de la conversation qui l'a produite a manqué son objet.
+
+Une ressource est **opposable**. L'humain et l'agent peuvent tous deux s'y référer pour contester une avancée. C'est ce qui rend la gouvernance par objection possible.
+
+Une ressource a un **coût**. Elle se produit, se relit, se maintient, se renumérote. Ce coût est un critère de conception au même titre que l'utilité, et le corpus montre qu'il a été systématiquement ignoré (`ANL-001`, D4).
+
+## Les sept invariants
+
+`FND-2026-08-07-notion-de-ressource` du dépôt `micrologic-clients` dégage sept invariants de la notion de ressource. Le tableau ci-dessous dit lesquels `clia` retient, et à quelles conditions.
+
+| Invariant | Retenu | Comment, ou pourquoi pas |
+|---|---|---|
+| I1 Identité stable | **Oui**, par le champ `id` | Point d'écart avec `micrologic-clients`, qui l'écarte. Voir la section « Identité » |
+| I2 Type comme contrat | **Oui**, partiellement | Le type est déclaré et ses champs obligatoires sont écrits en un seul endroit. La vérification reste humaine, faute d'outil. Voir `NON-005` |
+| I3 Représentation distincte | **Oui**, partiellement | Une ressource peut être publiée sous une autre forme. La relation entre les deux se déclare, elle n'est pas outillée |
+| I4 Désiré et constaté | **Non**, transposé | Pas de dualité déclarative. Les sections « Points ouverts » et les objections en tiennent lieu |
+| I5 Interface uniforme | **Non**, pour l'instant | Chaque type a son skill. `clia` est précisément l'outil qui rendrait une interface commune possible ; la question est reportée à la session d'outillage. Voir `NON-006` |
+| I6 Cycle de vie explicite | **Oui** | Trois classes, plus le champ `status` |
+| I7 Extensibilité | **Oui** | Ajouter un type demande une définition et un skill, sans toucher au harnais |
+
+## Identité
+
+C'est le point où ce jet s'écarte de l'état de l'art, et l'écart est fondé sur une mesure.
+
+`RES-001` de `micrologic-clients` écarte l'invariant d'identité stable et pose que l'identité d'une ressource est son chemin. Le calcul est défendable pour un dépôt isolé de faible volume, et le document lui-même en donne le coût constaté : renommer un préfixe a demandé six corrections manuelles.
+
+Ce calcul ne tient pas pour `clia`, dont l'objet est d'équiper plusieurs dépôts. `ANL-001` le mesure : dans le corpus, douze numéros de skill sur vingt portent plusieurs noms distincts selon le dépôt, `skl-004` en portant cinq et `skl-006` quatre. Un dépôt porte sept ADR dont trois paires de doublons de titre. Le numéro de séquence n'est donc pas un identifiant, c'est un ordre d'apparition local.
+
+**Décision de ce jet.** L'identité d'une ressource est le champ `id`, de la forme `<PREFIXE>-<SLUG>`, où le slug est celui du nom de fichier. Exemples : `RES-ressource`, `NON-identite-et-nommage`, `CTX-etat-du-systeme`.
+
+| Propriété | Porteur | Rôle |
+|---|---|---|
+| Identité | Champ `id` du frontmatter | Cible de tout renvoi entre ressources. Stable |
+| Ordre de lecture | Numéro `<SEQ>` du nom de fichier | Ordre d'apparition. Renumérotable sans casse |
+| Localisation | Chemin | Déductible du type et du nom. Modifiable |
+
+Trois propriétés en découlent. Renuméroter ne casse aucun renvoi. Déplacer un fichier ne casse aucun renvoi. Renommer le slug reste un changement d'identité, et doit être traité comme tel : la ressource ancienne est marquée `est-remplacee-par` et la nouvelle `remplace`.
+
+Le coût de cette décision est d'un champ de frontmatter par ressource, et de la discipline de renvoyer par `id` plutôt que par numéro. La forme exacte du slug et le traitement des collisions entre dépôts restent à arbitrer : voir `NON-001`.
+
+## Cycle de vie et versionnage
+
+Trois classes. Le cycle de vie commande le nommage et le versionnage.
+
+| Classe | Nommage | Versionnage | Types concernés |
+|---|---|---|---|
+| **Vivant** | Séquencé, `<PREFIXE>-<SEQ>-<SLUG>` | Semver dans le frontmatter | Ressource, Contexte, Intention, Ontologie, Concept |
+| **Point fixe** | Daté, `<PREFIXE>-<DATE>-<SLUG>` | Aucun. Une modification produit une nouvelle instance datée | Faits, analyses, fondations, logs, publications |
+| **Travail** | Séquencé | Aucun. Un journal en tête du document suffit | Objection, plans |
+
+Règles de semver pour les ressources vivantes. Majeur : changement incompatible du sens ou du contrat. Mineur : ajout rétrocompatible. Correctif : clarification sans effet sémantique.
+
+**Réserve reprise et assumée.** La règle d'immuabilité du point fixe n'a été tenue dans aucun dépôt du corpus, et `RES-001` de `micrologic-clients` le reconnaît explicitement. Ce jet la conserve comme règle et signale l'écart plutôt que de le dissimuler, mais refuse de laisser la question ouverte indéfiniment : trois positions sont tenables, l'appliquer, l'abandonner, ou la remplacer par un versionnage, et la position actuelle n'en est pas une. Voir `NON-005`.
+
+## Régimes d'édition
+
+Quatre régimes. Chaque définition de type déclare le sien.
+
+| Régime | Qui écrit | Qui lit et commente |
+|---|---|---|
+| `humain` | L'humain seul. L'agent ne modifie jamais | L'agent |
+| `ia` | L'agent seul | L'humain |
+| `hybride` | Les deux, avec **propriété par bloc** : l'initiateur possède les blocs d'ouverture, l'autre partie les blocs de réponse | Les deux |
+| `co-edition` | Les deux, sans découpage par bloc | Les deux |
+
+Le régime `humain` a une histoire : il vient d'un incident réel, documenté par le premier log du dépôt `commission-scolaire-de-la-capitale`, où l'agent avait écrasé un `INTENTION.md` avec du contenu générique. La règle est fondée sur l'expérience, non sur un principe.
+
+Le régime `humain` n'est aujourd'hui protégé par rien d'autre que la règle elle-même. Voir `NON-005`.
+
+## Frontmatter d'une définition de type
+
+Toute définition de type porte les quatorze champs suivants. Les cinq premiers sont ceux que porte n'importe quelle ressource ; les neuf suivants décrivent le type défini.
+
+| Champ | Portée | Rôle |
+|---|---|---|
+| `type` | La définition | Vaut `ressource` |
+| `id` | La définition | Identité stable, `RES-<SLUG>` |
+| `title` | La définition | Nom lisible du type défini |
+| `version` | La définition | Semver de la définition |
+| `status` | La définition | `draft`, `stable` ou `deprecated` |
+| `prefixe` | Le type défini | Les trois lettres du type |
+| `emplacement` | Le type défini | Répertoire et motif de nom des instances |
+| `cycle-de-vie` | Le type défini | `vivant`, `point-fixe` ou `travail` |
+| `edition` | Le type défini | `humain`, `ia`, `hybride` ou `co-edition` |
+| `champs-obligatoires` | Le type défini | Clefs que le frontmatter des instances doit porter |
+| `relations-admissibles` | Le type défini | Types vers lesquels une instance peut pointer |
+| `skill` | Le type défini | Le skill de production, ou `aucun` |
+| `adr` | Le type défini | La décision qui a acté le type, ou `aucun` |
+| `statut` | Le type défini | `actif`, `deprecie` ou `non-installe` |
+
+La cohabitation, dans un même frontmatter, des métadonnées de la définition et des propriétés du type défini est un compromis assumé : elle évite un second fichier par type. Elle demande en retour de savoir lire la colonne « Portée » du tableau ci-dessus.
+
+## Relations
+
+Une relation est un renvoi typé d'une ressource vers une autre, écrit dans une section `## Relations` du corps du document, sous forme de lien markdown accompagné du nom de la relation et de l'`id` de la cible.
+
+Vocabulaire de départ, hérité de `resource-types.yaml` de `clia` et réduit à ce que ce jet emploie effectivement.
+
+| Relation | Sens |
+|---|---|
+| `specifie` | La source fixe la forme de la cible |
+| `derive-de` | La source procède de la cible |
+| `remplace` et `est-remplacee-par` | Succession d'identité |
+| `reference` | Renvoi simple, sans engagement |
+| `objecte-a` | La source conteste la cible |
+| `repond-a` | La source répond à la cible |
+
+Une relation dont la cible n'existe pas est un défaut. Rien ne le détecte aujourd'hui, et c'est la lacune la plus structurante du modèle : la couche relations était déjà déclarée par `resource-types.yaml` et n'a jamais été instanciée. Voir `NON-005`.
+
+Pour une définition de type, les relations admissibles se limitent à `ressource` : une définition ne pointe que vers d'autres définitions. Ses renvois vers un ADR ou un skill passent par ses champs `adr` et `skill`.
+
+## Le critère de départage
+
+Trois documents accompagnent un type. Ce qui va dans lequel :
+
+| Question | Document |
+|---|---|
+| **Ce qu'est** le type | La définition, `RES` |
+| **Pourquoi** il a été adopté | La décision, `ADR` |
+| **Comment** on le produit | Le processus, `skl` |
+
+Test pratique, repris de `micrologic-clients` : un passage qui cesserait d'être vrai en changeant d'avis relève de la décision ; un passage qui décrit une suite d'actions relève du processus ; un passage qui décrit une propriété du type telle qu'elle est aujourd'hui relève de la définition.
+
+Ce triplet a un coût, et le coût est le sujet de `NON-002` : sept types font vingt-et-un documents, vingt-sept types en font quatre-vingt-un. Ce jet ne produit que les définitions, sciemment.
+
+## Ce qui n'est pas une ressource
+
+| Objet | Pourquoi |
+|---|---|
+| `CLAUDE.md`, `ARCHITECTURE.md` | Fichiers de harnais. Noms fixes, autorité sur le comportement de l'agent, hors du système de types |
+| `workspace/session.md` | Point d'entrée humain. Éphémère par destination |
+| `.dev/templates/*.template.md` | Squelettes destinés à être copiés puis renseignés |
+| Matériel source importé | Conservé verbatim, non conforme par nature. Sa place est `source-material/` |
+| Assets binaires, PDF générés | Hors de la portée du modèle. Voir `NON-006` |
+
+Le statut de `INTENTION.md` est traité par `RES-003` et n'est pas tranché ici : c'est le seul fichier de racine dont la nature est disputée.
+
+## Auto-application
+
+Cette définition est une instance du type qu'elle définit. Elle porte les quatorze champs obligatoires, vit à l'emplacement qu'elle déclare, suit la nomenclature qu'elle fixe, et déclare le skill et l'ADR qui l'accompagnent effectivement.
+
+L'auto-application est une contrainte et non une élégance : un modèle dont le document central échappe à ses propres règles n'est pas un modèle.
+
+## Relations
+
+- `reference` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/index.md)
+- `derive-de` [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md)
+- `reference` [skl-001-ressource](../skills/skl-001-ressource/SKILL.md)
+
+## Points ouverts
+
+Portés par des objections, non enterrés ici.
+
+| Question | Objection |
+|---|---|
+| Forme du champ `id`, collisions entre dépôts, coût de la discipline de renvoi | `NON-001` |
+| Coût du triplet définition, décision, processus ; seuil d'admission d'un type | `NON-002` |
+| Absence de validation mécanique ; règles écrites et non tenues | `NON-005` |
+| Portée du modèle : textuel seulement, ou aussi les assets et les données | `NON-006` |

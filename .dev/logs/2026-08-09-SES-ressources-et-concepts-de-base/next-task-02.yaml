@@ -1,0 +1,84 @@
+# Suggestions de prochaines étapes après la tâche 2.
+# Ne décide rien. Les objections attendent des réponses de l'humain.
+
+a_faire_par_l_humain:
+  - titre: "Répondre aux trois objections bloquantes"
+    detail: >-
+      NON-001 identité et nommage, questions Q1 à Q3. NON-002 coût du modèle,
+      questions Q1, Q2 et Q6. NON-005 validation et règles non tenues,
+      questions Q1 et Q2. Ces sept réponses conditionnent la forme de tous
+      les renvois du système et la portée de la suite de la session.
+    pourquoi_bloquant: >-
+      Produire davantage de documents avant d'avoir statué sur le coût du
+      modèle et sur la forme des renvois engage un travail qu'il faudrait
+      refaire.
+
+  - titre: "Trancher Q7 de NON-004 : l'affirmation de INTENTION.md sur le savoir"
+    detail: >-
+      ANL-001 établit que rien dans le corpus ne soutient l'affirmation selon
+      laquelle le cadre fournit nativement des capacités de mobilisation du
+      savoir. INTENTION.md est en édition humaine exclusive : seule l'humain
+      peut la maintenir, la reformuler ou la retirer.
+
+  - titre: "Trancher Q1 de NON-003 : le statut de INTENTION.md"
+    detail: >-
+      RES-003 propose que INTENTION.md soit l'instance INT-001, ce qui
+      impliquerait de lui ajouter un frontmatter. La position concurrente le
+      laisse hors du modèle de types.
+
+suite_de_la_session:
+  - titre: "Produire ONT-001, l'ontologie du système"
+    raison: >-
+      C'est la lacune la plus immédiate et une contradiction interne du jet :
+      les sept définitions emploient six relations que rien ne définit, et le
+      vocabulaire provisoire vit dans RES-001, ce qui en fait une source
+      parallèle.
+    prealable: "réponse à Q2 de NON-004"
+
+  - titre: "Rapatrier les définitions de micrologic-clients qui manquent ici"
+    raison: >-
+      Sept types de plus y sont définis et éprouvés : plan, ADR, analyse,
+      fondation, log, skill, méthodologie, publication. Les redéfinir à neuf
+      serait un gâchis, et le dépôt source est sans remote avec treize
+      fichiers non commités.
+    reference: "ANL-001, D5"
+
+  - titre: "Écrire les trois concepts dont le système dépend"
+    detail: "extreme-smart, distillation, objection sociocratique"
+    raison: >-
+      Les trois sont employés par la méthode et aucun n'est écrit. RES-007
+      les désigne comme instances candidates prioritaires. Attention à Q6 de
+      NON-004 : le seuil d'admission crée un problème d'amorçage.
+
+  - titre: "Comparer les trois réponses éprouvées à la question des issues"
+    detail: >-
+      Les répertoires en-cours et todo de nty, les fiches d'amélioration
+      numérotées de comm-cli, le couple issue non-smart plus ticket
+      extreme-smart de ticket-driven-ai.
+    raison: "Seule lacune fonctionnelle qui bloque le travail réel. Portée par NON-008 Q2"
+
+dette_nommee:
+  - titre: "Aucun ADR ni skill pour les sept types"
+    detail: >-
+      Chaque définition déclare skill: aucun et adr: aucun. C'est un aveu
+      inscrit dans les fichiers, non une exemption. La question de savoir si
+      le triplet complet est exigible est portée par NON-002 Q1.
+
+  - titre: "Le vocabulaire de relations est une source parallèle"
+    detail: "Vit dans RES-001 en attendant ONT-001. Porté par NON-004 Q2"
+
+  - titre: "La table des types est dupliquée"
+    detail: >-
+      CLAUDE.md et .dev/ressources/index.md portent la même information. Une
+      des deux doit devenir une vue déclarée de l'autre. Porté par NON-002 Q6.
+
+  - titre: "Le harnais ne dit pas comment journaliser deux tâches d'une session"
+    detail: >-
+      Les fichiers de la tâche 2 portent un suffixe -task-02, ceux de la
+      tâche 1 n'en portent pas. Nommage asymétrique, à trancher.
+
+  - titre: "Cinq répertoires de types non créés"
+    detail: >-
+      .dev/contextes/, .dev/intentions/, .dev/faits/, .dev/concepts/,
+      .dev/ontologies/. Laissés absents tant qu'ils sont vides, pour éviter
+      les arborescences de .gitkeep mesurées par ANL-001.

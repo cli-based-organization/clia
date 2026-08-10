@@ -1,0 +1,71 @@
+type: docs
+scope: clia
+sujet: "FND-001, ANL-002 et ADR-003 : adoption de l'usage d'un CLI extensible"
+corps: |
+  Chaîne de trois livrables demandée par la tâche 5 de la session du
+  2026-08-09 : recherche, analyse, décision.
+
+  .dev/fondations/FND-001 : recherche sourcée sur l'usage des CLI et leur
+  renouveau. Quatorze sources, cinq causes datées, dont la mise à
+  disposition de l'AWS CLI le 2013-09-02, kubectl apply et la conception
+  orientée ressources de l'AIP-121, GitHub CLI 1.0 le 2020-09-17, la
+  formalisation par les 12 facteurs et clig.dev, et la préférence des agents
+  IA pour le CLI plutôt que l'API. Autorité des sources déclarée, trois
+  affirmations signalées comme rapportées, section d'interprétation séparée
+  de la recherche, limites écrites.
+
+  Trois apports non anticipés ont modifié l'ADR : la grammaire d'un CLI
+  orienté ressources est un produit cartésien de ressources et de verbes, ce
+  qui est l'invariant d'extensibilité de RES-001 formalisé ailleurs ; la
+  frontière entre outil et agent passe plus haut ici que dans les CLI
+  d'infrastructure, parce que créer une ressource est un travail de
+  rédaction ; le déterminisme comme partage de responsabilité est la
+  pratique qui s'impose et non une intuition locale.
+
+  .dev/analyses/ANL-002 : réponse à la question posée. clia reste dans ce
+  dépôt, avec une frontière interne stricte, et l'extraction est préparée
+  plutôt que faite. Quatre options, sept critères. Le précédent tda, seule
+  diffusion réussie du corpus, est retourné plutôt qu'écarté : les huit
+  dépôts qu'il a équipés renvoient encore à une méthode délaissée deux
+  semaines plus tard, donc la séparation dit quand séparer, pas s'il faut
+  séparer. Critère de renversement en trois conditions constatables, dont
+  une mesurable sur les vingt derniers commits.
+
+  .dev/adr/ADR-003 : neuf décisions. clia est un agent et non un accessoire,
+  générique, orienté ressources, extensible, reste ici avec critère de
+  bascule, garantit ce qui doit être garanti tandis que l'agent interprète,
+  a besoin d'une source machine-lisible des types, doit être installable et
+  vérifiable, et sert trois publics. Portée volontairement bornée : ni
+  grammaire, ni langage, ni mécanisme d'extension, ni format de sortie, la
+  session d'outillage étant annoncée.
+
+  .dev/objections/NON-011 : ce dépôt emploie neuf types de ressources et
+  n'en a défini que deux. Le contrôle V3, seul contrôle de fond du système,
+  est inapplicable à la majorité des livrables. Deux non-conformités de
+  nommage déclarées : FND-001 et ANL-002 sont séquencés alors que RES-001
+  prescrit un nommage daté pour les types point-fixe.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-05.
+fichiers_ajoutes:
+  - .dev/fondations/FND-001-usage-des-cli-et-leur-renouveau.md
+  - .dev/analyses/ANL-002-localisation-du-cli-clia.md
+  - .dev/adr/ADR-003-adoption-de-l-usage-de-clia.md
+  - .dev/objections/NON-011-types-employes-sans-definition.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-05.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-05.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-05.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-05.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-05.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-05.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-05.yaml
+fichiers_modifies:
+  - .dev/ressources/index.md
+note_pour_l_humain: >-
+  La réponse à la question posée est : clia reste ici. Elle contredit le
+  précédent le plus visible du corpus, et porte pour cette raison son propre
+  critère de renversement. Le geste le plus urgent qu'elle révèle n'est pas
+  un choix de dépôt : le setup.sh a été archivé le 2026-08-08 et le dépôt
+  n'est plus ni installable ni vérifiable. Le versionnage reste la
+  responsabilité de l'humain.

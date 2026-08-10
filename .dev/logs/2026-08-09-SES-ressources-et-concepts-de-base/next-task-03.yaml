@@ -1,0 +1,76 @@
+# Suggestions de prochaines étapes après la tâche 3.
+# Ne décide rien.
+
+a_faire_par_l_humain:
+  - titre: "Statuer sur ADR-001, décisions D3, D6 et D9"
+    detail: >-
+      ADR-001 porte le statut de décision propose. Il ne devient une décision
+      qu'après réponse aux trois objections bloquantes : NON-001 Q1 à Q3 pour
+      D3, NON-002 Q1 pour D6, NON-005 Q1 et Q2 pour D4 et D9.
+    consequence_si_refus: >-
+      Un refus de D3 invalide le champ id des seize ressources produites et
+      demande leur révision. Un refus de D6 rend exigibles six ADR et six
+      skills supplémentaires. Un refus de D9 rouvre la question de la
+      validation par schéma exécutable.
+
+  - titre: "Décider si le triplet de RES-001 fait précédent"
+    detail: >-
+      Si oui, chaque type sera complété dans le même ordre : définition,
+      puis décision, puis processus. Si non, l'ordre reste au cas par cas.
+
+suite_de_la_session:
+  - titre: "Compléter le triplet de RES-004 Objection"
+    raison: >-
+      C'est le type le plus employé du système et le plus éprouvé du corpus :
+      huit instances existent déjà dans ce dépôt depuis la tâche 2, produites
+      sans skill pour les encadrer. Le skill décrirait un processus déjà
+      pratiqué, ce qui est le cas le plus favorable.
+    prealable: "aucun"
+
+  - titre: "Produire ONT-001, l'ontologie du système"
+    raison: >-
+      La dette la plus visible. Le vocabulaire de relations vit dans la
+      règle A4 de skl-001 et dans la section Relations de RES-001, ce qui
+      fait deux sources parallèles pour la même information, exactement le
+      défaut que ADR-001 D6 et RES-006 dénoncent.
+    prealable: "réponse à NON-004 Q2"
+
+  - titre: "Faire de skl-001 le socle des skills à venir"
+    detail: >-
+      La partie A porte les règles communes à toute ressource. Les six skills
+      restants doivent y renvoyer et non les recopier. C'est un choix de
+      conception à confirmer avant d'écrire le deuxième skill, faute de quoi
+      la duplication s'installe.
+
+dette_nommee:
+  - titre: "D7 de ADR-001 n'a pas de motif mesuré"
+    detail: >-
+      L'auto-application du méta-type repose sur un argument logique et non
+      empirique. Signalé dans resultat-validation-task-03.md plutôt que
+      masqué par une mesure forcée.
+
+  - titre: "Les contrôles V1 à V9 ne sont pas outillés"
+    detail: >-
+      Ce sont des commandes que l'agent exécute et dont il rapporte le
+      résultat. ADR-001 D9 déclare cette position temporaire et nomme sa
+      porte de sortie : dès que clia existe, les neuf contrôles deviennent
+      son cahier des charges de validation.
+
+  - titre: "V9 demande une comparaison manuelle entre dépôts"
+    detail: >-
+      Le contrôle qui prévient le défaut le plus coûteux du corpus, la copie
+      non adaptée, est aussi le seul qui ne puisse pas s'exécuter sur un seul
+      dépôt. Il suppose un inventaire des dépôts équipés, ce que le fichier
+      d'état d'installation prévu par resource-types.yaml fournirait. Porté
+      par NON-006 Q3.
+
+  - titre: "Six types déclarent encore skill: aucun et adr: aucun"
+    detail: >-
+      Contexte, Intention, Objection, Faits, Ontologie, Concept. C'est
+      conforme à ADR-001 D6 et inscrit dans chaque fichier.
+
+  - titre: "CLAUDE.md duplique la table des types et désigne par numéro"
+    detail: >-
+      Sa désignation par triplet ADR-XXX, RES-XXX, skl-XXX est invalidée par
+      ADR-001 D3. CLAUDE.md est un fichier de harnais et n'a pas été touché.
+      Porté par NON-001 Q5 et NON-002 Q6.

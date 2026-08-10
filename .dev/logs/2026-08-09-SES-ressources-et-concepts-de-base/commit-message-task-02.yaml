@@ -1,0 +1,68 @@
+type: docs
+scope: ressources
+sujet: "premier jet des sept ressources fondamentales et huit objections"
+corps: |
+  Produit le premier jet de description des sept ressources fondamentales
+  demandé par la tâche 2 de la session du 2026-08-09, à partir des constats
+  de ANL-001.
+
+  .dev/ressources/ : RES-001 Ressource, RES-002 Contexte, RES-003 Intention,
+  RES-004 Objection, RES-005 Faits, RES-006 Ontologie, RES-007 Concept, plus
+  un index. Sept types, sept préfixes distincts, quatorze champs de
+  frontmatter, toutes en status draft.
+
+  .dev/objections/ : huit objections thématiques, NON-001 à NON-008,
+  cinquante-six questions au total. Trois sont bloquantes : identité et
+  nommage, coût du modèle, validation et règles non tenues.
+
+  Cinq apports de conception fondés sur des mesures de ANL-001 :
+  l'identité est le champ id de forme PREFIXE-SLUG et non le numéro de
+  séquence ; l'intention porte un critère de satisfaction et un critère de
+  trahison, sans quoi l'objection pour conflit d'intention est impossible à
+  instruire ; l'objection déclare son effet, bloquant, conditionnel ou
+  informatif ; l'unité de fichier des faits est le recueil par sujet ; le
+  concept porte un seuil d'admission à trois conditions.
+
+  Trois écarts assumés avec RES-001 de micrologic-clients, qui est la
+  référence du corpus : l'identité stable est retenue alors que la référence
+  l'écarte, l'ontologie passe en co-édition, et le préfixe de l'objection
+  est NON conformément à CLAUDE.md.
+
+  Contradiction interne assumée et signalée : les définitions emploient six
+  relations dont le vocabulaire vit provisoirement dans RES-001, alors qu'il
+  relève de l'ontologie. ONT-001 n'existe pas. Porté par NON-004 Q2.
+
+  Journalisation dans
+  .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/, fichiers
+  suffixés -task-02.
+
+  Ni ADR ni skill produits : la demande porte sur les RES.
+fichiers_ajoutes:
+  - .dev/ressources/index.md
+  - .dev/ressources/RES-001-ressource.md
+  - .dev/ressources/RES-002-contexte.md
+  - .dev/ressources/RES-003-intention.md
+  - .dev/ressources/RES-004-objection.md
+  - .dev/ressources/RES-005-fait.md
+  - .dev/ressources/RES-006-ontologie.md
+  - .dev/ressources/RES-007-concept.md
+  - .dev/objections/NON-001-identite-et-nommage.md
+  - .dev/objections/NON-002-cout-du-modele.md
+  - .dev/objections/NON-003-frontiere-contexte-intention-faits.md
+  - .dev/objections/NON-004-frontiere-savoir.md
+  - .dev/objections/NON-005-validation-et-regles-non-tenues.md
+  - .dev/objections/NON-006-portee-du-systeme.md
+  - .dev/objections/NON-007-faits-preuve-et-confidentialite.md
+  - .dev/objections/NON-008-regime-de-travail.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/demande-task-02.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/analyse-task-02.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/fait-task-02.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/validation-task-02.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/resultat-validation-task-02.md
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/next-task-02.yaml
+  - .dev/logs/2026-08-09-SES-ressources-et-concepts-de-base/commit-message-task-02.yaml
+note_pour_l_humain: >-
+  Les cinquante-six questions des huit objections attendent des réponses
+  écrites dans les blocs prévus. Les trois objections bloquantes portent sur
+  l'identité, le coût du modèle et la validation ; les répondre conditionne
+  la suite de la session. Le versionnage reste la responsabilité de l'humain.
