@@ -9,7 +9,7 @@ emplacement: ".dev/contextes/CTX-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: hybride
 famille: fondamentale
-champs-obligatoires: [type, id, title, version, status, portee, peremption]
+champs-obligatoires: [type, id, title, version, status, portee]
 relations-admissibles: [contexte, intention, fait, ontologie, concept, analyse]
 sections: [Situation, Historique, Acteurs, Contraintes, Constats et mesures, Ce qui n'est pas su, Relations]
 skill: skl-002-ressource-fondamentale
@@ -73,7 +73,7 @@ Trois portées, déclarées par le champ `portee`. Un dépôt peut porter plusie
 
 Le contexte est le seul type dont la fausseté est silencieuse. Une intention périmée reste lisible comme intention ; un contexte périmé se lit comme vrai.
 
-Le champ `peremption` est donc obligatoire. Il prend une date, ou l'une des deux valeurs suivantes.
+Le champ `peremption` est **facultatif**, à titre indicatif. `NON-003` Q6. Il prend une date, ou l'une des deux valeurs suivantes.
 
 | Valeur | Sens |
 |---|---|
@@ -108,11 +108,24 @@ C'est la frontière la plus fragile du type. `NON-003` la porte dans son ensembl
 
 ## L'affect
 
-`CLAUDE.md` demande de comprendre « comment se sent l'humain ». L'affect n'entre pas dans le contexte.
+`CLAUDE.md` demande de comprendre « comment se sent l'humain ». L'affect **entre dans le contexte**. `NON-003` Q2.
 
-Une ressource est versionnée, partageable et opposable. L'état émotionnel d'une personne n'a aucune de ces trois propriétés : le versionner en fait un dossier, le partager le rend indiscret, l'opposer le rend une arme. La demande de `CLAUDE.md` reste légitime, mais elle porte sur une qualité d'attention de l'agent dans la conversation, non sur un objet à produire.
+Il se déduit de `workspace/session.md` et s'écrit explicitement, soit dans une ressource `CTX`, soit dans la rubrique de contexte de la ressource concernée.
 
-L'affect n'est pas une ressource. Il reste dans la conversation et, s'il doit apparaître, dans la rubrique de contexte de la session, qui est éphémère. `NON-003` porte la question.
+Il suit le régime de fiabilité de ce type : une affirmation d'agent, non vérifiée, et lue comme telle.
+
+## Degré de fiabilité
+
+Un contexte porte des affirmations qu'un agent, humain ou IA, pose **sans vérification**. `NON-003` Q5.
+
+C'est ce qui le distingue d'un fait.
+
+| Type | Ce qu'il affirme | Régime |
+|---|---|---|
+| `CTX`, et toute rubrique de contexte | Une situation telle qu'elle est perçue | Affirmé sans vérification, lu comme tel |
+| `FCT` | Un énoncé dont la véracité a été établie | Éprouvé par un processus rigoureux et normé |
+
+Un contexte peut donc énoncer des mesures sans les consigner comme faits. Le degré de fiabilité se déduit du type, il n'a pas à être déclaré instance par instance.
 
 ## Structure attendue d'une instance
 

@@ -1,0 +1,88 @@
+# Suggestions de prochaines étapes après les tâches 23 et 24.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-027 Q1 : un agent peut-il produire un premier jet de PDC"
+    detail: >-
+      PDC-003 a été produit et déclaré non actif, par analogie avec le régime
+      que DCN-013 fixe pour les décisions. L'analogie n'est fondée par aucun
+      texte. Soit elle est étendue et CONSTITUTION.md C1 l'écrit, soit
+      PDC-003 est retiré et réécrit par vous.
+
+  - titre: "Exécuter le chantier A de PLN-003 ou l'autoriser"
+    detail: >-
+      C'est le conflit actif : CONSTITUTION.md C1 est plus strict que
+      DCN-013, qui est l'autorité ultime. Un fichier, trois éditions, aucun
+      outil requis. Tant qu'il n'est pas levé, l'agent laisse des gabarits
+      vides là où il pourrait laisser des brouillons.
+
+  - titre: "Trancher PLN-003 chantier D : le sort des ADR"
+    detail: >-
+      Bloquant. Rendre les ADR non actifs invalide le fondement cité par 248
+      renvois dans 58 fichiers. Onze ADR sur dix-sept n'ont aucune DCN
+      source, et l'agent ne peut pas les créer. Trois options, aucune bonne.
+      Recommandation de l'agent : D-c, marquer à partir d'une date et traiter
+      au fil de l'eau.
+
+  - titre: "Renseigner DCN-013, qui ne déclare pas son propre état"
+    detail: >-
+      La décision qui fait de la DCN l'autorité ultime porte cinq champs
+      À RENSEIGNER, dont son effet. Trois autres gabarits attendent :
+      DCN-011, DCN-012, et les fichiers FRG-001 et NON-013.
+
+  - titre: "Trancher NON-027 Q3 : PLN-001 et PLN-002 non conformes"
+    detail: >-
+      Les deux seuls plans du dépôt échouent aux trois contrôles de PDC-003.
+      PLN-002 porte huit livrables là où E1 en exige un. Trois options, dont
+      celle de réserver le régime extrême SMART aux plans d'implémentation.
+
+le_plus_rentable_maintenant:
+  - titre: "Exécuter les chantiers A, B et C de PLN-003"
+    detail: >-
+      L'adaptation minimale à DCN-013. Un fichier de harnais, un module, une
+      définition. Aucun outil nouveau, aucune instance touchée hors C4. La
+      garde du chantier B réutilise telle quelle la fonction écrite pour
+      clia git save.
+
+  - titre: "Écrire la MET du mécanisme de génération"
+    detail: >-
+      Chantier F, sans dépendance. NON-026 Q5 la réclame par un todo, décrit
+      le mécanisme hybride en cinq étapes, et demande de nommer les deux
+      mécanismes. Le dépôt possède déjà les étapes 4 et 5 : trente gabarits
+      et soixante-deux schémas, dont les *.input.cue qui sont exactement le
+      contrat de l'étape 4.
+
+  - titre: "Écrire les critères de conformité d'un dépôt clia"
+    detail: >-
+      Chantier G1. Sans eux, clia setup init ne sait pas quoi produire et
+      aucun contrôle ne sait quoi vérifier. C'est un livrable de type SPC,
+      qui n'a aucune instance : ce serait la première.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis six jours. Le chantier H de PLN-003 en dépend
+      explicitement : déplacer 123 fichiers sans contrôle de conformité est
+      le geste que ANL-005 T1 déconseille.
+
+dette_nommee:
+  - titre: "248 renvois citent des décisions d'ADR comme fondement"
+    detail: >-
+      Dans 58 fichiers actifs. Sous NON-026 Q1, les ADR ne font plus
+      autorité. Aucune source ne dit comment traiter cet intervalle. C'est la
+      mesure la plus lourde de l'analyse, et elle a été sous-estimée d'un
+      facteur six dans la première rédaction.
+
+  - titre: "PDC-003 déclare non conformes les deux plans du dépôt"
+    detail: >-
+      Tout en se déclarant lui-même non actif. Un lecteur ne sait pas si
+      PLN-002 est en faute.
+
+  - titre: "Le corpus avait écarté l'idée d'un PDC pour extrême SMART"
+    detail: >-
+      ANL-016 archivée porte une objection résolue en ce sens, avec son
+      motif. La tâche 23 revient dessus sans la nommer. NON-027 Q2.
+
+  - titre: "Trois plans non exécutés coexistent"
+    detail: "PLN-001 depuis le 2026-08-09, PLN-003 depuis aujourd'hui, et le chantier R2 de ANL-005."
+
+  - titre: "Neuf règles écrites et non tenues"
+    detail: "Inchangé depuis la tâche 22. NON-005 conteste depuis le 2026-08-09."

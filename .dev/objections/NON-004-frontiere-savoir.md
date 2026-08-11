@@ -43,15 +43,22 @@ L'`INTENTION.md` de `clia` affirme fournir nativement des capacités de mobilisa
 
 **Réponse.**
 
-L'ontologie est un ensemble de concept et leurs relations.
+L'ontologie est un ensemble de concepts et leurs relations.
 
-Il faut comprendre ce qu'est clia: un système de manipulation avancé d'informatoin
+Il faut comprendre ce qu'est clia: un système de manipulation avancé d'information.
+L'usage d'aucune ressource n'est obligatoire. Ils sont utilisables au besoin.
+
+Donc, CPT peut être utiliser pour des concepts importants qui seront utilisés et réutilisés à plusieurs endroits. Si ce n'est pas le cas, un CPT peut être définit dans un fichier ONT.
+
+Conséquence => nous avons besoin de pouvoir définir une ressource dans un document ressource. Comment implémenter ce feature? documenter un ISU à propos de cette question
 
 ### Q2 - Où vit le vocabulaire de relations, en attendant `ONT-001` ?
 
 Il est aujourd'hui dans `RES-001`, ce qui est une source parallèle assumée par défaut. Trois positions : produire `ONT-001` immédiatement ; laisser le vocabulaire dans `RES-001` et le déclarer comme provisoire daté ; renoncer aux relations typées jusqu'à ce qu'un outil les exploite.
 
 **Réponse.**
+
+
 
 ### Q3 - Faut-il une forme légère de conservation du savoir, plus courte que la fondation ?
 

@@ -5,7 +5,7 @@ title: "Intention"
 version: 0.1.0
 status: draft
 prefixe: INT
-emplacement: ".dev/intentions/INT-<SEQ>-<SLUG>.md, sauf INT-001 qui vit à INTENTION.md"
+emplacement: ".dev/intentions/INT-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
 edition: humain
 famille: fondamentale
@@ -59,9 +59,20 @@ Toute intention dérivée doit pouvoir être rattachée à l'intention ultime pa
 
 `INTENTION.md` occupe une position particulière et disputée : c'est le seul fichier qui soit à la fois une ressource par sa nature et un fichier à nom fixe par sa fonction.
 
-**`INTENTION.md` est l'instance `INT-001`.** Son emplacement à la racine est une propriété déclarée du type, non une exception tacite.
+**`INTENTION.md` est un lien symbolique vers une instance `INT`.** `NON-003` Q1.
 
-La conséquence est que `INTENTION.md` doit porter un frontmatter, ce qu'aucun `INTENTION.md` du corpus ne fait aujourd'hui. C'est un changement visible, à arbitrer : voir `NON-003`.
+L'instance vit à l'emplacement conventionnel du type, `.dev/intentions/INT-<SEQ>-<SLUG>.md`. Le fichier de racine n'est pas une ressource : c'est une adresse fixe qui pointe vers elle.
+
+| Geste | Détail |
+|---|---|
+| À l'initialisation de `clia` dans un dépôt | Créer `INT-001` et faire de `INTENTION.md` un lien symbolique vers lui |
+| Quelle instance porte l'intention ultime | Par défaut `INT-001`. Ce n'est pas une contrainte : une autre instance peut le devenir, et le lien suit |
+
+Ce mécanisme retire l'exception : le type n'a plus d'emplacement dérogatoire, et le document le plus important du dépôt garde son adresse fixe.
+
+La conséquence est que l'instance porte un frontmatter, ce qu'aucun `INTENTION.md` du corpus ne fait. Le lien symbolique rend ce frontmatter visible depuis la racine sans dupliquer le fichier.
+
+**Non implémenté.** Aucune commande de `clia` ne pose ce lien : `setup.sh` n'a pas de verbe d'initialisation de dépôt. `NON-026` le porte.
 
 Une position concurrente est tenable : `INTENTION.md` reste hors du système de types, et les intentions typées sont toutes dérivées. Elle a l'avantage de ne rien changer et l'inconvénient de laisser sans modèle le document le plus important du dépôt.
 

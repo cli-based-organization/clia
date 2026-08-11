@@ -1,0 +1,59 @@
+type: feat
+scope: ressources
+sujet: "le fait se distingue du contexte par la véracité, et l'ADR devient dérivé"
+corps: |
+  Exécute la tâche 22 de la session du 2026-08-09. Sept réponses de l'humain
+  à NON-003, instruites par ADR-017 en huit décisions.
+
+  La frontière entre fait et contexte ne porte plus sur la nature de
+  l'énoncé mais sur le régime de véracité. Un FCT porte un énoncé dont la
+  véracité a été établie par un processus rigoureux et normé ; un CTX, et
+  toute rubrique de contexte, porte une affirmation qu'un agent pose sans
+  vérification. Le test d'admission de RES-005 passe de trois à quatre
+  conditions, et le processus qui établit la véracité doit être nommé.
+
+  L'affect entre dans le contexte, déduit de session.md. RES-002 posait
+  l'inverse, au motif qu'une ressource est versionnée, partageable et
+  opposable. L'argument tombe par la décision précédente : un contexte n'a
+  pas à être opposable, et un affect consigné est une perception d'agent,
+  non un dossier.
+
+  INTENTION.md devient un lien symbolique vers une instance INT vivant à
+  l'emplacement conventionnel du type. L'exception disparaît, l'adresse fixe
+  demeure. Aucune commande ne pose ce lien : setup.sh n'a pas de verbe
+  d'initialisation, et ce dépôt n'est pas conforme à sa propre prescription.
+
+  La décision la plus lourde ne répondait pas à la question posée. Q3
+  demandait s'il manque un type pour la décision de cap ; la réponse pose
+  que l'ADR ne décide de rien. Les décisions relèvent de DCN, et l'ADR est
+  une justification raisonnée générée à partir d'une ou plusieurs DCN et
+  d'un ou plusieurs FRG. RES-019 passe en edition ia, et la frontière avec
+  RES-009 est inversée dans les deux sens.
+
+  C'est le troisième mouvement de dérivation en trois jours, après le
+  retrait de la justification des définitions et le retrait de l'autorité
+  aux skills. Deux des trois n'ont aucun outil, et seize ADR existent, tous
+  écrits à la main comme des actes de décision.
+
+  Deux champs deviennent facultatifs, peremption dans RES-002 et le critère
+  de trahison dans RES-003 à la tâche précédente. Le type Acteur est
+  reporté. Les trois types restent distincts, aucun obligatoire sauf
+  l'intention ultime.
+
+  NON-003 passe à repondue, effet informatif. NON-026 est ouverte, cinq
+  questions sur ce que les réponses laissent indéterminé.
+
+  DCN-012 est un gabarit : CONSTITUTION.md C1 en réserve la rédaction à
+  l'humain. 124 tests verts. 112 ressources sur 116 valident leur schéma,
+  les quatre échecs étant des gabarits en attente de leur initiateur.
+note_pour_l_humain: >-
+  ADR-017 est dans la situation que sa propre décision D5 décrit : il
+  instruit que l'ADR dérive d'une DCN, et sa DCN source n'existe pas, C1 la
+  réservant à votre main. J'ai écrit l'ADR et déclaré la tension dans sa
+  section Statut, plutôt que de produire en silence le cas que la décision
+  interdit. C'est le deuxième document en deux tâches dans ce cas.
+  Une conséquence rétroactive que je n'ai pas traitée : FCT-001, produite
+  hier, ne nomme aucun processus d'établissement de la véracité de ses dix
+  faits. Sous D1, c'est désormais la première condition du test d'admission.
+  C'est la seule instance FCT du dépôt et du corpus, donc elle fera
+  précédent.

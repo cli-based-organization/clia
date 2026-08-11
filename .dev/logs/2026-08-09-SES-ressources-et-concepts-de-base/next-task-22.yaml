@@ -1,0 +1,79 @@
+# Suggestions de prochaines étapes après la tâche 22.
+
+a_faire_par_l_humain:
+  - titre: "Renseigner DCN-011 et DCN-012, les deux gabarits en attente"
+    detail: >-
+      DCN-011 enregistre les réponses à NON-002, DCN-012 celles à NON-003.
+      C1 interdit à l'agent de les rédiger. ADR-016 et ADR-017 instruisent
+      déjà les conséquences et peuvent servir de source.
+
+  - titre: "Trancher NON-026 Q2 et Q3 : l'ordre de travail sous l'ADR dérivé"
+    detail: >-
+      Q2 dit si un ADR peut exister sans DCN source. Q3 dit comment
+      travailler quand seul l'humain peut écrire la source. Sans réponse,
+      l'agent ne peut plus produire d'ADR régulier, et seize existent déjà
+      sans source.
+
+  - titre: "Trancher NON-024 Q1 : le sort des douze ressources d'autorité"
+    detail: >-
+      Bloquante depuis la tâche 20, et NON-026 l'élargit : si l'ADR dérive
+      d'une DCN que seul l'humain écrit, l'autorité des seize ADR dépend de
+      DCN non approuvées.
+
+  - titre: "Quatre objections bloquantes restent sans réponse"
+    detail: "NON-005, NON-009, NON-014, NON-017, NON-018, plus NON-024."
+
+le_plus_rentable_maintenant:
+  - titre: "Relire FCT-001 sous le nouveau critère de D1"
+    detail: >-
+      Produite hier, elle ne nomme aucun processus d'établissement de la
+      véracité de ses dix faits. Sous ADR-017 D1, c'est la première
+      condition du test d'admission. C'est la seule instance FCT du dépôt et
+      du corpus : elle sert de précédent.
+
+  - titre: "Poser le lien symbolique de INTENTION.md"
+    detail: >-
+      ADR-017 D3 le prescrit à l'initialisation d'un dépôt. setup.sh n'a
+      aucun verbe d'initialisation, et ce dépôt n'est pas conforme à sa
+      propre prescription. NON-026 Q4 pose le choix entre clia init, un
+      ajout à setup.sh install, ou la conversion manuelle.
+
+  - titre: "Écrire la spécification du générateur"
+    detail: >-
+      Deux décisions de dérivation sans outil, ADR-016 D3 et ADR-017 D5. Le
+      type SPC a zéro instance, et ADR-006 pose la séparation stricte entre
+      spécification et implémentation. Écrire la SPC serait la première
+      instance d'un type défini et jamais éprouvé, et elle donnerait un
+      cahier des charges aux deux décisions. NON-026 Q5.
+
+  - titre: "Aligner CLAUDE.md"
+    detail: >-
+      Inchangé depuis la tâche 21. ADR-016 D2 pose que sa table des types
+      cesse d'être une source. Le fichier annonce vingt-sept types là où
+      trente sont définis, documente deux commandes qui n'existent pas, et
+      ignore clia git.
+
+dette_nommee:
+  - titre: "Trois mouvements de dérivation, deux sans outil"
+    detail: >-
+      ADR-015 D4 a retiré la justification des définitions, et il est
+      appliqué. ADR-016 D3 retire l'autorité aux skills, ADR-017 D5 la
+      retire aux ADR : aucun des deux n'a de générateur. Le système converge
+      vers une structure où seuls DCN et FRG sont écrits, et rien ne dérive
+      le reste.
+
+  - titre: "Seize ADR sans DCN source"
+    detail: >-
+      Tous écrits à la main comme des actes de décision, ce qu'ils ne sont
+      plus depuis ADR-017 D5. Deux d'entre eux, ADR-016 et ADR-017,
+      instruisent la décision qu'ils enfreignent en existant.
+
+  - titre: "Neuf règles écrites et non tenues"
+    detail: >-
+      Les huit de la tâche 21, plus ADR-017 D5. NON-005 conteste
+      l'accumulation depuis le 2026-08-09.
+
+  - titre: "Le dépôt n'est pas conforme à RES-003"
+    detail: >-
+      La prescription du lien symbolique y est écrite depuis aujourd'hui, et
+      INTENTION.md reste un fichier ordinaire à la racine.

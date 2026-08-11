@@ -65,11 +65,14 @@ Un recueil est `point-fixe` : il est arrêté à sa date. Constater de nouveaux 
 
 ## Test d'admission
 
-Un constat mérite d'entrer dans un recueil s'il satisfait les trois conditions.
+Un constat mérite d'entrer dans un recueil s'il satisfait les quatre conditions.
 
-1. Il est **vérifiable** au sens ci-dessus.
-2. Il **soutient ou conteste** au moins une affirmation qui compte.
-3. Il **risque d'être perdu ou contesté** s'il n'est pas consigné.
+1. Sa véracité a été **établie par un processus rigoureux et normé**. `NON-003` Q5.
+2. Il est **vérifiable** au sens ci-dessus.
+3. Il **soutient ou conteste** au moins une affirmation qui compte.
+4. Il **risque d'être perdu ou contesté** s'il n'est pas consigné.
+
+La première condition est ce qui sépare un fait d'un contexte. Une affirmation qu'un agent, humain ou IA, pose sans vérification appartient à `CTX` ou à une rubrique de contexte, quelle que soit sa justesse apparente. Le processus qui établit la véracité doit être nommé dans le recueil.
 
 La troisième condition est celle qui évite la prolifération. Une mesure qu'on peut reproduire en une commande à tout moment n'a pas besoin d'être consignée comme fait ; il suffit de consigner la commande. Une mesure prise sur un état qui a disparu, en revanche, doit l'être.
 

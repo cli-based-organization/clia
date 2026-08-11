@@ -42,7 +42,7 @@ Une ressource vivante qui porte six choses.
 
 | Ce n'est pas | Différence |
 |---|---|
-| Un **ADR** | Un ADR décide, une DCN enregistre. Un ADR porte des alternatives écartées et des portes de sortie parce qu'il est l'acte de décider ; une DCN n'en porte pas, elle constate |
+| Un **ADR** | La `DCN` porte l'acte, l'ADR en dérive la justification. `NON-003` Q3. Un ADR porte les alternatives écartées et les portes de sortie ; une `DCN` n'en porte pas, elle constate |
 | Un **fait** | Un fait est un énoncé vérifiable. Une décision est un acte de volonté, qui peut être mauvais et rester en vigueur |
 | Une **intention** | Une intention énonce un but poursuivi. Une décision énonce une contrainte acquise |
 | Un **fragment** | Un fragment est du matériau textuel capté. Une décision est un acte dont on enregistre la teneur |
@@ -142,7 +142,7 @@ Un agent qui constate une conséquence la porte dans une objection ou dans le jo
 
 | Voisin | Ce qui départage |
 |---|---|
-| `ADR` | L'acte de décider contre l'enregistrement d'un acte |
+| `ADR` | L'acte de décider contre sa justification, qui en dérive |
 | `FCT` | Un énoncé vérifiable contre un acte de volonté |
 | `INT` | Un but poursuivi contre une contrainte acquise |
 | `FRG` | Du matériau capté contre un acte dont on enregistre la teneur |

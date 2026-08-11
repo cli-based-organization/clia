@@ -4,8 +4,8 @@ id: NON-003
 title: "Frontière entre Contexte, Intention et Faits"
 status: draft
 initiateur: agent
-effet: conditionnel
-etat: ouverte
+effet: informatif
+etat: repondue
 porte-sur: [RES-002, RES-003, RES-005]
 ---
 
@@ -16,6 +16,8 @@ porte-sur: [RES-002, RES-003, RES-005]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-10 : **les sept questions répondues par l'humain**. La réponse Q3 déborde la question posée et renverse le rôle de l'ADR.
+- 2026-08-11 : traitement des réponses, tâche 22. Instruites par `ADR-017`, huit décisions. Le fait se distingue du contexte par le régime de véracité, l'affect entre dans le contexte, `INTENTION.md` devient un lien symbolique, et l'ADR devient une justification dérivée de `DCN` et de `FRG`. L'état passe à `repondue`, l'effet à `informatif`. Ce que les réponses laissent ouvert est porté par `NON-026`.
 
 ## Ce qui est contesté
 
@@ -98,9 +100,11 @@ Oui. C'est un choix de conception. Ils sont là au besoin. Mais rien n'oblige l'
 
 ## Ce qui lèverait cette objection
 
-Une réponse à Q1, Q2 et Q7. Les autres questions peuvent rester ouvertes sans empêcher l'usage des trois types.
+**Levée le 2026-08-11.** Les sept questions portent une réponse de l'humain, instruite par `ADR-017`.
 
-L'effet est déclaré `conditionnel` : les trois définitions sont utilisables en l'état, et ce qui sera produit sur leur base est réputé provisoire jusqu'à résolution.
+Cinq questions sont tranchées, une est reportée, Q4 sur le type Acteur, et une déborde son cadre : la réponse Q3 ne dit pas quel type manque pour une décision de cap, elle redéfinit le rôle de l'ADR.
+
+L'effet passe de `conditionnel` à `informatif`. Ce que les réponses laissent ouvert, dont le sort des seize ADR écrits comme des actes de décision, est porté par `NON-026`.
 
 ## Relations
 
@@ -108,3 +112,4 @@ L'effet est déclaré `conditionnel` : les trois définitions sont utilisables e
 - `objecte-a` [RES-003](../ressources/RES-003-intention.md)
 - `objecte-a` [RES-005](../ressources/RES-005-fait.md)
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/candidats-ressources-fondamentales.md)
+- `reference` [NON-026](NON-026-consequences-de-l-adr-derive.md)

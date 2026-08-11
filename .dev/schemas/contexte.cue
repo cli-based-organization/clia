@@ -12,5 +12,5 @@ package clia
 	version: #Semver
 	status: #Status
 	portee: string & !=""
-	peremption: string & !=""
+	peremption?: string & !=""
 }

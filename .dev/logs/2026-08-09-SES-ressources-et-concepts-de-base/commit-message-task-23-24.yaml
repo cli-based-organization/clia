@@ -1,0 +1,69 @@
+type: feat
+scope: ressources, conformite
+sujet: "type Issue, principe SMART, et plan de mise en conformité avec DCN-013"
+corps: |
+  Exécute les tâches 23 et 24 de la session du 2026-08-09.
+
+  La tâche 23 crée le trente-et-unième type de ressource. Une issue documente
+  une problématique dans le but de la résoudre, et elle est non SMART par
+  construction : ni livrable, ni échéance, ni critère mesurable. C'est ce qui
+  rend son coût d'entrée minimal, un titre et une phrase. Son test
+  d'admission tient en deux conditions, dont la seconde évite la confusion
+  avec le plan : une problématique assez nette pour être planifiée n'est pas
+  une issue.
+
+  PDC-003 fixe le régime SMART des ressources de planification, et déclare
+  critère par critère lequel contraint, lequel est seulement mesuré, et
+  lequel est sans objet. C'était la suggestion d'une objection archivée qui
+  reprochait au modèle d'origine de promettre plus que son contenu. Trois
+  exigences propres à l'extrême : livrable unique, critère de réussite
+  exécutable, limite de temps courte. Le seuil de bascule protège les deux
+  régimes : ce qui ne satisfait pas S, M et T devient une issue.
+
+  Le principe est déclaré non actif. CONSTITUTION.md C1 réserve la création
+  d'un principe à l'humain, et la demande exigeait de le générer. Le document
+  est produit au régime que DCN-013 fixe pour les décisions, un premier jet
+  d'agent suspendu jusqu'à approbation. L'analogie n'est fondée par aucun
+  texte et NON-027 la porte.
+
+  La tâche 24 prend acte de DCN-013 et des cinq réponses à NON-026. Le
+  constat le plus urgent est un conflit actif : CONSTITUTION.md C1, écrit par
+  l'agent à la tâche 20, est plus strict que DCN-013 qui est l'autorité
+  ultime. C1 interdit à l'agent de rédiger une décision là où DCN-013 le lui
+  permet en régime suspendu. Le conflit a déjà coûté deux gabarits vides aux
+  tâches 21 et 22.
+
+  Le mécanisme central est la distinction entre créer et rédiger. Créer le
+  fichier est l'acte conscient de l'humain, non délégable. Rédiger le contenu
+  peut être fait par l'agent, la décision étant alors suspendue. Approuver
+  est un geste distinct.
+
+  Huit implications sont classées par urgence, et l'adaptation minimale en
+  compte trois : aligner C1, poser la garde de création sur clia res new
+  decision, et ajouter au champ effet la valeur redigee-par-agent. Un fichier
+  de harnais, un module, une définition, aucun outil nouveau.
+
+  PLN-003 ordonne huit chantiers et trois points d'arrêt. Le chantier D est
+  bloquant et sans bonne option : rendre les ADR non actifs invalide le
+  fondement cité par 248 renvois dans 58 fichiers, et onze ADR sur dix-sept
+  n'ont aucune DCN source que l'agent puisse créer.
+
+  Trois mesures ont été corrigées après vérification, dont celle des renvois,
+  sous-estimée d'un facteur six dans la première rédaction.
+
+  124 tests verts. 117 ressources sur 122 valident leur schéma, les cinq
+  échecs étant des gabarits en attente de leur initiateur.
+note_pour_l_humain: >-
+  Deux choses appellent votre arbitrage, et la première porte sur ma propre
+  conduite. Vous m'avez demandé de générer un PDC, ce que la règle C1 que
+  j'ai écrite avant-hier m'interdit. J'ai produit le document et l'ai déclaré
+  non actif, en empruntant à DCN-013 un régime qu'elle ne prévoit que pour
+  les décisions. Produire un gabarit vide aurait respecté la lettre et rendu
+  la tâche sans objet ; produire sans signaler aurait masqué la
+  transgression. NON-027 Q1 vous laisse trancher.
+  Ensuite, l'analyse de la tâche 24 élargit ce que je peux faire, et c'est
+  moi qui l'écris. Ma lecture est que le mécanisme protège votre intention,
+  non la rédaction : vous créez le fichier, je peux le remplir, vous
+  approuvez. Elle est cohérente avec votre justification et elle m'arrange.
+  Je l'ai signalée comme interprétation dans ANL-006 et comme conflit
+  d'intérêt en première objection de PLN-003.

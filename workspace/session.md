@@ -341,6 +341,59 @@ Interdire aux agents IA d'utiliser la commande `clia git save`
 
 ## 22. [traitement des objections] prendre en compte des réponses à NON-003
 
+## 23. [conception] générer une ressources de type issue (ISU)
+
+générer un PDC "SMART et extrême SMART" applicable aux ressources de planification du travail.
+
+issue permet de stocker des information documentant une problématique dans le but de la résoudre. Il est non smart 
+
+## 24. [planification] refactor de mise en conformité avec DCN-013
+
+Prendre acte de la décision DCN-013 et des réponses données en NON-026
+
+En faire une analyse qui en donne une interprétation du point de vue de l'agent IA et qui en déduit les implications pour le système clia.
+
+Faire des propositions pour adapter minimalement clia afin de la mettre en conformité avec DCN-013.
+
+Proposer un plan de mise en conformité.
+
+## 25. [convergence comportement attendu] système de journalisation
+
+Défauts:
+
+- **D1.** Un humain doit être capable de comprendre le contexte permettant de se repérer en inspectant les noms de fichiers et de répertoires des journaux.
+- **D2.** Le contenu doit être facilement cherchable par un humain
+- **D3.** Le contexte (notamment les dates/heures d'exécution) doit être facilement compréhensible par un humain
+- **D4.** Les éléments du journal doit être généré au moment de sa réalisation
+
+
+conséquence => les skills métier doivent être générés en tenant compte de la MET de journalisation
+
+
+Correctifs proposés:
+
+
+- Session, tâche et log sont des ressources => écrire RES pour LOG, TSK et SES
+- chaque tâche a son propre répertoire contenant (tous et uniquement) les logs de cette tâche
+- on ne combine jamais les logs de plusieurs tâches
+- le nom de fichier est: TSK-<SEQ>-<TYPE_LOG>_<YYYY-MM-DD-HH-MM>_<SLUG>.md
+- le numéro SEQ est le numéro du type d'information de log. L'association numéro séquentiel + type de log est fixe (le même) pour toutes les taches et le numéro est une estimation de l'ordre de génération de chaque type d'info dans les logs
+- produire une méthode MET de journalisation (ressource source) interne à RES log
+- dans la méthode, exiger que l'info de log soit inscrite dans le fichier au moment de son exécution
+- générer les skills en prenant en compte la méthode MET de journalisation
+
+
+
+
+
+
+## 26. [traitement des objections] prendre en compte les réponses à NON-004
+
+Faire une analyse ANL qui interprète les réponses à NON-004 et en décrit les implications et conséquences.
+
+Proposer un plan d'ajustement de clia pour tenir compte des réponses de NON-004.
+
+
 ## x. [conception] Amélioration de la notion de ressource
 
 La notion de ressource est le socle sur lequel repose le système clia.

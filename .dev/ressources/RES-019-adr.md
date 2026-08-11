@@ -7,10 +7,10 @@ status: draft
 prefixe: ADR
 emplacement: ".dev/adr/ADR-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
-edition: co-edition
+edition: ia
 famille: preparation
 champs-obligatoires: [type, id, title, version, status, statut-decision, date, decideurs]
-relations-admissibles: [adr, decision, ressource, objection, analyse, fondation]
+relations-admissibles: [adr, decision, ressource, objection, analyse, fondation, fragment]
 sections: [Statut, Contexte, Décision en une phrase, Décisions détaillées, Conséquences, Objections ouvertes, Relations]
 skill: skl-006-ressource-de-preparation
 adr: ADR-013
@@ -19,11 +19,27 @@ statut: actif
 
 # RES-019 - Décision d'architecture
 
-> Une décision d'architecture acte un choix de conception, avec ses motifs, les alternatives écartées et les conditions de sa révision. Elle dit pourquoi, jamais ce qu'est ni comment on produit.
+> Une décision d'architecture est la **justification raisonnée** d'un choix de conception, générée à partir d'une ou plusieurs décisions et d'un ou plusieurs fragments. Elle dit pourquoi, jamais ce qu'est ni comment on produit. Elle ne décide pas.
 
 ## Objet
 
-Définit le type `adr`. C'est le deuxième terme du triplet qui accompagne un type de ressource.
+Définit le type `adr`. Sa fonction est de rendre lisible le raisonnement qui relie une décision à ses conséquences.
+
+## Ce qu'un ADR n'est plus
+
+`NON-003` Q3 : « les décisions relèvent de DCN et non pas de ADR. L'ADR est une justification raisonnée générée à partir d'un ou plusieurs DCN et un ou plusieurs FRG. »
+
+L'acte de décider appartient à `DCN`, en édition humaine par `CONSTITUTION.md` C1. L'ADR **dérive** de cet acte ; il ne le porte pas.
+
+| Avant le 2026-08-11 | Depuis |
+|---|---|
+| L'ADR décide, la `DCN` enregistre une décision prise ailleurs | La `DCN` porte l'acte, l'ADR en dérive la justification |
+| `co-edition` | `ia`, un document généré n'est pas co-édité |
+| Source : le raisonnement de l'agent | Sources : une ou plusieurs `DCN`, un ou plusieurs `FRG` |
+
+C'est le même mouvement que `ADR-016` D3 applique aux skills : ce qui se dérive n'a pas d'autorité propre.
+
+**Non outillé.** Aucun générateur ne dérive un ADR de ses sources, et les seize ADR du dépôt ont été écrits à la main comme des actes de décision. `NON-026` le porte.
 
 ## Ce qu'un ADR porte
 
@@ -35,9 +51,9 @@ Six choses. Un statut de décision, distinct du statut de maturité du document.
 
 | Ce n'est pas | Différence |
 |---|---|
-| Une **décision** au sens `DCN` | Un ADR décide, une DCN enregistre une décision prise ailleurs |
+| Une **décision** au sens `DCN` | La `DCN` porte l'acte, l'ADR en dérive la justification. Un ADR sans `DCN` source est un raisonnement sans décision |
 | Une **définition** | La définition dit ce qu'est le type. `ADR-008` du corpus documente le dégât inverse : six ADR sur sept y servaient de définition, et deux ont dû être amendés le jour de leur création |
-| Un **plan** | Le plan propose une intervention, l'ADR acte un choix |
+| Un **plan** | Le plan propose une intervention, l'ADR justifie un choix déjà acté par une `DCN` |
 
 ## Deux statuts distincts
 
@@ -47,7 +63,9 @@ Les cinq ADR de ce dépôt sont tous au statut `propose`. Un ADR qui se déclare
 
 ## Cycle de vie et édition
 
-`vivant`, `co-edition`. Une décision datée ne se réécrit pas, mais son statut évolue et ses conséquences se constatent.
+`vivant`, `ia`. Un ADR est généré à partir de ses sources ; il se régénère quand elles changent.
+
+L'humain lit, commente et objecte. Il ne co-édite pas un document dérivé : il corrige la source.
 
 ## Relations
 
@@ -59,4 +77,5 @@ Les cinq ADR de ce dépôt sont tous au statut `propose`. Un ADR qui se déclare
 | Question | Objection |
 |---|---|
 | L'ADR appartient-il à la famille préparation ou à une autre | `NON-017` |
-| Manque-t-il un type pour la décision de cap, distincte de l'architecture | `NON-003` Q3 |
+| Que deviennent les seize ADR écrits comme des actes de décision | `NON-026` |
+| Le générateur qui dériverait un ADR de ses sources n'existe pas | `NON-026` |

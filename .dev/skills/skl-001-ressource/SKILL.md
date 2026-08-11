@@ -148,7 +148,7 @@ Trois documents accompagnent un type. Ce qui va dans lequel :
 | Question | Document |
 |---|---|
 | **Ce qu'est** le type | La définition, `RES` |
-| **Pourquoi** il a été adopté | La décision, `ADR` |
+| **Pourquoi** il a été adopté | La justification, `ADR`, dérivée de la décision `DCN` |
 | **Comment** on le produit | Le processus, `skl` |
 
 Test pratique : un passage qui cesserait d'être vrai en changeant d'avis relève de la décision ; un passage qui décrit une suite d'actions relève du processus ; un passage qui décrit une propriété du type telle qu'elle est aujourd'hui relève de la définition.
