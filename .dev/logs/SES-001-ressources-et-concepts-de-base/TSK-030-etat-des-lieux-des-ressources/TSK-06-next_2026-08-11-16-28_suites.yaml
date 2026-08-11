@@ -1,0 +1,63 @@
+# Suggestions de prochaines étapes après la tâche 30.
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      C'est l'axe A7 de ANL-009, et il est réclamé depuis huit jours. Six
+      sources demandent des contrôles, aucun n'est outillé, et quatre
+      obligations de propagation en dépendent. Le script de validation par
+      schéma existe et fonctionne : le porter dans le CLI est mécanique.
+      ISU-007 le porte.
+
+  - titre: "Exécuter le chantier A de PLN-003"
+    detail: >-
+      Inchangé depuis la tâche 29. Un fichier, trois éditions. Il lève le
+      conflit entre CONSTITUTION.md C1 et DCN-013, que ANL-009 C5 mesure
+      comme ayant produit trois conduites différentes en trois tâches.
+
+  - titre: "Écrire la SPC des critères de conformité d'un dépôt"
+    detail: >-
+      Axe A9. Elle sert deux fins : dire ce qu'un dépôt clia doit contenir,
+      et donner un cahier des charges à clia validate. Le type SPC n'a
+      aucune instance : ce serait la première.
+
+a_faire_par_l_humain:
+  - titre: "Trancher les deux objections bloquantes ouvertes hier"
+    detail: >-
+      NON-030 sur les trente-trois documents dérivés sans générateur, et
+      NON-033 sur l'autorité de créer un PDC. La seconde est la même question
+      que NON-027 Q1, posée depuis la tâche 23.
+
+  - titre: "Six objections bloquantes héritées restent sans réponse"
+    detail: "NON-005, NON-009, NON-014, NON-017, NON-018, NON-024."
+
+  - titre: "Renseigner les sept gabarits en attente"
+    detail: "DCN-011 à DCN-014, FRG-001, FRG-2026-08-11, NON-013."
+
+dette_nommee:
+  - titre: "Vingt-huit objections ouvertes, dont huit bloquantes"
+    detail: >-
+      Le ménage de cette tâche a corrigé un état faux et croisé deux
+      doublons. Il n'a fermé aucune objection : la charge est inchangée.
+
+  - titre: "Trois axes de ANL-009 bloquent"
+    detail: >-
+      A4 l'autorité, A5 la dérivation, A7 la validation. Le plus lourd est
+      A5 : trente-trois documents ne font plus autorité en droit et
+      continuent de commander en pratique.
+
+  - titre: "Quatre obligations de propagation sans contrôle"
+    detail: >-
+      Alias, décisions remplacées, savoir vers ressources générées, registres
+      saisis. Toutes dépendent de A7.
+
+  - titre: "Six plans, aucun ne déclare de limite de temps"
+    detail: >-
+      Le constat est désormais porté par chacun. PDC-003 V-S3 l'exige au
+      régime extrême SMART, et aucune base ne permet d'estimer une durée : le
+      dépôt n'a mesuré la durée d'aucun chantier.
+
+  - titre: "NON-013 n'a toujours pas de frontmatter valide"
+    detail: >-
+      Fichier de l'humain, créé le 2026-08-09, avec des champs À RENSEIGNER.
+      Il est le seul du dépôt à ne porter ni effet ni état.

@@ -1,0 +1,73 @@
+# Suggestions de prochaines étapes après la tâche 29.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-030 Q1 : les trente-deux documents dérivés sans générateur"
+    detail: >-
+      Bloquante. Sept skills, dix-sept ADR, huit analyses sont déclarés
+      dérivés depuis le 2026-08-11 et rien ne les dérive. skl-001, que
+      l'agent lit avant d'écrire toute ressource, est dans ce cas. Trois
+      positions : suspendre les trois décisions, déclarer une autorité par
+      exception datée, ou accepter l'écart en le nommant.
+
+  - titre: "Trancher NON-033 Q1 : un agent peut-il rédiger un PDC"
+    detail: >-
+      Bloquante, et c'est la même question que NON-027 Q1 depuis la tâche 23.
+      Elle bloque désormais un chantier de PLN-005. Le chantier A de PLN-003
+      la réglerait en trois éditions : aligner CONSTITUTION.md C1 sur
+      DCN-013.
+
+  - titre: "Renseigner DCN-014, sur le cycle de vie des ressources"
+    detail: >-
+      Vous l'avez créée pendant cette tâche. Son contenu trancherait ISU-003
+      et NON-031, la thématique T2. Le gabarit est bien nommé : le bogue de
+      la tâche 28 ne se reproduit pas.
+
+  - titre: "Trancher NON-029 Q1 avant les trois registres restants"
+    detail: >-
+      Type unique ou catégorie à plusieurs préfixes. La question bloque D2 à
+      D4 de PLN-005, qui sont SMART par ailleurs.
+
+le_plus_rentable_maintenant:
+  - titre: "Exécuter le chantier A de PLN-003"
+    detail: >-
+      Un fichier, trois éditions, aucun outil. Il lève le conflit entre
+      CONSTITUTION.md C1 et DCN-013, débloque ISU-005, et met fin aux
+      conduites contradictoires : deux gabarits vides aux tâches 21 et 22, un
+      PDC complet à la tâche 23.
+
+  - titre: "Écrire la SPC du générateur"
+    detail: >-
+      NON-030 Q2. ADR-006 sépare la spécification de l'implémentation, et le
+      type SPC n'a aucune instance : ce serait la première. Elle donnerait un
+      cahier des charges aux trois décisions de dérivation.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis huit jours. Les contrôles réclamés s'accumulent : V1 à
+      V10 de skl-001, la dérivation du champ effet, les alias de PDC-002, la
+      cohérence des registres, et désormais le croisement des relations
+      ISU-NON.
+
+dette_nommee:
+  - titre: "Trente-deux documents dérivés sans générateur"
+    detail: "ISU-002 et NON-030. C'est la dette la plus lourde du dépôt."
+
+  - titre: "Aucun plan du dépôt ne déclare de limite de temps"
+    detail: >-
+      PDC-003 V-S3 l'exige au régime extrême SMART. Les cinq plans échouent,
+      et le défaut porte sur le plan entier, non sur un chantier. La
+      correction tient en une ligne par plan.
+
+  - titre: "Cinq objections bloquantes ouvertes par cette session"
+    detail: >-
+      NON-024, NON-030, NON-033, plus NON-005, NON-009, NON-014, NON-017,
+      NON-018 héritées. Le dépôt compte trente-quatre objections.
+
+  - titre: "Six gabarits attendent leur initiateur"
+    detail: "DCN-011 à DCN-014, FRG-001, FRG-2026-08-11, NON-013."
+
+  - titre: "Les règles A7 et A8 ne sont vérifiables par rien"
+    detail: >-
+      Elles disent qu'une observation est une hypothèse et qu'un écart n'est
+      pas un démenti. Rien ne détecte leur violation. ISU-006 porte la
+      question du nettoyage de l'existant.

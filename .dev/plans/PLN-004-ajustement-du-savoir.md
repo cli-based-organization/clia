@@ -25,6 +25,8 @@ L'interprétation et les mesures sont dans `ANL-007`. Ce plan ordonne l'ajusteme
 
 **Une réserve sur la portée.** `NON-004` porte sept questions et une seule a une réponse. Les chantiers C à F sont donc des chantiers **en attente d'arbitrage**, décrits pour que leur coût soit connu, non pour être exécutés.
 
+**Limite de temps.** Non déclarée. `PDC-003` V-S3 l'exige au régime extrême SMART, et les cinq plans du dépôt échouent à ce contrôle. Le défaut porte sur le plan entier, non sur un chantier ; il est constaté ici plutôt que corrigé, faute de base pour estimer une durée.
+
 ## Intention
 
 Ajuster `clia` à ce que la réponse Q1 de `NON-004` établit, et rendre exécutables les quatre chantiers qui attendent une réponse.

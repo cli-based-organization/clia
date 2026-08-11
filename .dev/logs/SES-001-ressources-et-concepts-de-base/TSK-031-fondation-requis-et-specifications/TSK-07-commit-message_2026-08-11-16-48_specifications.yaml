@@ -1,0 +1,59 @@
+type: docs
+scope: specifications
+sujet: "publication des spécifications, et où placer la source de vérité de l'implémentation"
+corps: |
+  Exécute la tâche 31 de la session du 2026-08-09.
+
+  L'inventaire préalable, demandé par l'humain, a trouvé soixante-quatorze
+  fondations dans le corpus, dont une répond à la moitié de la demande.
+  FND-015, produite le 2026-07-18, traite la distinction entre requis et
+  spécification, sa taxonomie, et pourquoi deux équipes rigoureuses
+  divergent. FND-004 porte les quatre points qu'elle ne couvre pas et la cite
+  pour les deux autres.
+
+  Quatre régimes de publication coexistent depuis 1969 : la norme par
+  procédure, le RFC par adoption, le consortium par compromis, la
+  spécification exécutable par vérification. Le plus influent est né sans
+  autorité : Steve Crocker a nommé le premier document Request for Comments
+  en 1969 parce qu'il craignait de paraître présomptueux, et le nom est resté
+  pour tous les suivants, y compris ceux devenus obligatoires.
+
+  Le résultat central est que le code qui tourne fait partie du critère
+  d'acceptation. RFC 2026 exige des implémentations interopérables pour qu'un
+  texte avance. Une spécification n'est pas un document qui précède le code,
+  c'est un document qui co-évolue avec lui.
+
+  L'angle mort est déclaré : toute la littérature suppose que celui qui
+  spécifie et celui qui implémente sont deux parties. Le cas d'un auteur
+  unique n'est traité nulle part, et c'est celui de clia.
+
+  ANL-010 tranche pour trois emplacements et non un. Ce que le système doit
+  faire va dans la SPC, agnostique au stack. Les contraintes de mise en
+  oeuvre vont dans le requis. Les choix techniques pris en implémentant vont
+  dans le code et dans un ADR. Le critère de départage est ce qui survivrait
+  à une réécriture complète.
+
+  Le dépôt pratique la lecture C de FND-015 sans l'avoir déclarée, et
+  FND-015 établit qu'elle est minoritaire. Quatre décisions techniques ne
+  vivent que dans le code, dont trois prises en l'écrivant ; la quatrième a
+  produit un bogue de deux jours.
+
+  L'ordre recommandé est d'écrire d'abord la SPC descriptive de ce qui
+  existe, non la SPC prescriptive de ce qui manque. C'est ce que l'histoire
+  suggère : XHTML 2.0 avait la procédure et pas les implémentations, il est
+  mort ; HTML 5 avait les implémentations et pas la procédure, il a gagné.
+
+  144 tests verts. 147 ressources sur 154 valident leur schéma.
+note_pour_l_humain: >-
+  Vous aviez raison de penser que la demande avait déjà été faite. FND-015
+  existe depuis le 2026-07-18 et couvre P5 et P6. Sans l'inventaire que vous
+  avez demandé, je les aurais refaits, ce qui est exactement le défaut que
+  NON-021 conteste depuis la tâche 14.
+  Un manquement à signaler : MET-001 étape 9 exige d'interroger chaque URL
+  citée, et aucun outil en ligne n'était disponible dans cette session. Les
+  douze sources sont citées par leur référence complète, qui les identifie
+  sans ambiguïté, mais leur accessibilité n'est pas vérifiée. FND-004 le
+  déclare deux fois plutôt que de simuler la vérification.
+  Enfin, la frontière machine vous appartient. Trois sont possibles, aucune
+  n'est déclarée, et le choix change ce qui est un requis et ce qui est une
+  spécification.

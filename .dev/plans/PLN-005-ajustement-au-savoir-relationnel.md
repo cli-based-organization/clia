@@ -15,11 +15,26 @@ porte-sur: [RES-007, RES-010, skl-001, ONT-001]
 
 ## Statut
 
-`propose`. Aucun chantier n'est engagé.
+`propose`. **Réévalué le 2026-08-11 par `MET-004`**, tâche 29.
+
+| Livrable | Verdict |
+|---|---|
+| A1, A2 règles de méthode | **implémenté** |
+| C1, C2 seuil d'admission de `RES-007` | **implémenté** |
+| I1 distinction des deux catégories | **implémenté** |
+| D1 type `REG` | **fait à la tâche 28** |
+| C3, C4, D2 à D4, I2 | SMART, préalable ouvert |
+| A3, B, E, F, G, H | non-SMART, sortis du plan |
+
+**Six livrables sont sortis du plan** et vivent désormais dans cinq issues, `ISU-002` à `ISU-006`, chacune avec son objection.
+
+**Aucun chantier ne déclarait de limite de temps**, ce que `PDC-003` V-S3 exige au régime extrême SMART. Le défaut porte sur le plan entier.
 
 L'interprétation et les mesures sont dans `ANL-008`, qui remplace `ANL-007`.
 
 Remplace `PLN-004`, fondé sur une seule réponse.
+
+**Limite de temps.** Non déclarée. `PDC-003` V-S3 l'exige au régime extrême SMART, et les cinq plans du dépôt échouent à ce contrôle. Le défaut porte sur le plan entier, non sur un chantier ; il est constaté ici plutôt que corrigé, faute de base pour estimer une durée.
 
 ## Intention
 
@@ -224,5 +239,10 @@ Avant E : `CONSTITUTION.md` C1 réserve le `PDC` à l'humain, et `NON-027` Q1 es
 
 - `derive-de` [ANL-008](../analyses/ANL-008-le-savoir-est-une-relation-entre-un-acteur-et-une-information.md)
 - `remplace` [PLN-004](PLN-004-ajustement-du-savoir.md)
+- `reference` [ISU-002](../issues/ISU-002-aucun-generateur-de-ressources-derivees.md)
+- `reference` [ISU-003](../issues/ISU-003-le-cycle-de-vie-collectif-n-est-pas-modelisable.md)
+- `reference` [ISU-004](../issues/ISU-004-deux-frontieres-conceptuelles-non-tracees.md)
+- `reference` [ISU-005](../issues/ISU-005-l-agent-ne-peut-pas-creer-un-principe-de-conception.md)
+- `reference` [ISU-006](../issues/ISU-006-le-volume-du-nettoyage-des-formulations-est-inconnu.md)
 - `reference` [RES-007](../ressources/RES-007-concept.md)
 - `reference` [PLN-003](PLN-003-mise-en-conformite-avec-dcn-013.md)

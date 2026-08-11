@@ -1,0 +1,50 @@
+type: feat
+scope: plans
+sujet: "réévaluation de PLN-005 par le régime SMART, cinq issues et MET-004"
+corps: |
+  Exécute la tâche 29 de la session du 2026-08-09.
+
+  Douze livrables de PLN-005 sont confrontés aux trois contrôles de PDC-003.
+  Aucun chantier ne déclarait de limite de temps, ce que V-S3 exige au régime
+  extrême SMART : le défaut porte sur le plan entier, non sur un chantier.
+
+  Six livrables sortent du plan. Ils se regroupent en cinq thématiques, et
+  une thématique nomme un manque, non un livrable bloqué : aucun générateur
+  de ressources dérivées, le cycle de vie collectif non modélisable, deux
+  frontières conceptuelles non tracées, l'interdit de créer un PDC, et le
+  volume inconnu du nettoyage des formulations normatives.
+
+  Cinq issues, cinq objections, relations croisées dans les deux sens. Deux
+  objections sont bloquantes. NON-030 est la plus lourde : trente-deux
+  documents sont déclarés dérivés depuis le 2026-08-11 et rien ne les dérive,
+  dont skl-001 que l'agent lit avant d'écrire toute ressource.
+
+  MET-004 écrit la procédure, demandée par un TODO. Six étapes, dont la
+  troisième demande du jugement : regrouper les échecs par thématique. Le
+  principe qui la fonde tient en deux documents : PDC-003 pose le seuil de
+  bascule, RES-031 pose que l'issue est non-SMART par construction. Le flou a
+  un endroit où aller, et c'est ce qui permet au plan de rester net.
+
+  Trois livrables sont implémentés. skl-001 reçoit deux règles de méthode,
+  A7 et A8, qui répondent aux reproches des réponses Q5 et Q7 de NON-004 :
+  une observation est une hypothèse et non une norme, et un écart entre une
+  intention et son implémentation n'est pas un démenti. RES-007 remplace son
+  seuil à trois conditions par le critère unique de compatibilité. RES-001
+  reçoit la distinction entre ressource de système et ressource de dépôt.
+
+  Cinq livrables SMART restent en attente d'un préalable ouvert et ne sont
+  pas implémentés : c'est le quatrième mode d'échec que MET-004 nomme, et il
+  a été évité.
+
+  144 tests verts. 142 ressources sur 149 valident leur schéma.
+note_pour_l_humain: >-
+  Vous avez créé DCN-014 pendant que je travaillais, sur le cycle de vie des
+  ressources. C'est exactement le sujet de ISU-003 que je venais d'ouvrir.
+  Son gabarit est vide : je l'ai consigné dans le journal de l'issue comme un
+  signal et non comme une information, et je n'y ai pas touché. Son nom est
+  séquencé, donc le bogue corrigé hier ne se reproduit pas.
+  Deux objections bloquantes vous attendent. NON-030 est la plus lourde du
+  dépôt : trente-deux documents ne font plus autorité en droit et continuent
+  de commander en pratique. NON-033 pose pour la seconde fois la question de
+  savoir si je peux rédiger un principe, et elle bloque maintenant un
+  chantier.

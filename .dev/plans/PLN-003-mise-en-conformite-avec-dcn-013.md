@@ -19,6 +19,8 @@ porte-sur: [CONSTITUTION.md, RES-009, RES-019, lib/clia/resource.sh]
 
 Le diagnostic et les mesures sont dans `ANL-006`. Ce plan ordonne l'adaptation.
 
+**Limite de temps.** Non déclarée. `PDC-003` V-S3 l'exige au régime extrême SMART, et les cinq plans du dépôt échouent à ce contrôle. Le défaut porte sur le plan entier, non sur un chantier ; il est constaté ici plutôt que corrigé, faute de base pour estimer une durée.
+
 ## Intention
 
 Rendre le dépôt conforme à `DCN-013`, qui fait de la décision humaine l'autorité ultime.

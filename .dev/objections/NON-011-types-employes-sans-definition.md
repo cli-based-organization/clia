@@ -16,6 +16,7 @@ porte-sur: [RES-001, ADR-001, ADR-003]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, après que la validation de la tâche 4 a révélé que le contrôle V3 est inapplicable à trois de ses quatre livrables, et que la tâche 5 a produit deux types non définis supplémentaires.
+- 2026-08-11 : **objet partiellement dépassé**, noté au ménage de la tâche 30. Trente-six types sont définis, contre sept à l'ouverture de l'objection. `ADR-016` D5 a clos la contestation sur leur nombre, et `ADR-016` D4 pose qu'un type se crée sous le besoin. L'objection n'est pas levée : la question du nommage des types point fixe est réglée par `ADR-007` D4, celle des types employés sans définition subsiste pour les types annoncés par `CLAUDE.md` et non définis.
 
 ## Ce qui est contesté
 

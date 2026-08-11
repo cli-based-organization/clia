@@ -137,6 +137,32 @@ Une mesure citée décrit le type, jamais la décision de l'écrire. `ANL-001` m
 
 Le contrôle est V10.
 
+### A7 - Une observation est une hypothèse, non une norme
+
+Le dépôt porte des ressources qui **observent** : `ANL-001` mesure cent soixante-six dépôts, et le corpus fournit des usages attestés.
+
+Un usage observé ne fait pas autorité. `NON-004` Q5 : « la source de vérité ultime est contextuelle (dépend du repo) et elle est déterminée par l'humain via `INT` et `DCN` ».
+
+| Emploi | Légitime |
+|---|---|
+| Fonder une décision sur une **mesure** | oui |
+| Traiter un **usage observé** comme une norme | non |
+| Conclure d'un usage d'un autre dépôt à une règle pour celui-ci | non |
+
+**Ce que la règle interdit en pratique.** Écrire « le corpus fait ainsi, donc c'est la bonne forme ». Écrire « quatre fondations d'un autre dépôt sont mal classées, il faut les reclasser ».
+
+**Ce qu'elle n'interdit pas.** Citer une mesure comme fait, ce qui est l'usage normal de `ANL-001`.
+
+### A8 - Un écart entre une intention et son implémentation n'est pas un démenti
+
+Une intention énonce ce à quoi l'acteur veut parvenir. Un système en cours de conception présente **nécessairement** un écart avec son intention.
+
+`NON-004` Q7 : « La réalisation d'un système de cette complexité à la frontière de la connaissance et du savoir-faire demande un temps non nul. »
+
+**Ce que la règle interdit.** Traiter l'écart comme une contradiction à résoudre, ou proposer de retirer une intention parce que l'état présent ne la satisfait pas encore.
+
+**Ce qu'elle demande à la place.** Constater l'écart, le mesurer si possible, et le rapporter au temps de construction.
+
 ## Partie B - Produire une définition de type
 
 Une définition de type est une instance du type `ressource`. Elle vit dans `.dev/ressources/`, porte les quatorze champs de frontmatter, et déclare les propriétés du type qu'elle définit.

@@ -1,0 +1,64 @@
+# Suggestions de prochaines étapes après la tâche 31.
+
+le_plus_rentable_maintenant:
+  - titre: "Écrire la SPC descriptive de resource.sh"
+    detail: >-
+      ANL-010 recommande de décrire ce qui existe avant de spécifier ce qui
+      manque. resource.sh porte quatre décisions techniques non documentées
+      et a produit deux bogues en trois jours. Ce serait la première instance
+      d'un type défini et jamais employé.
+
+  - titre: "Déclarer la lecture retenue et la frontière machine"
+    detail: >-
+      clia pratique la lecture C de FND-015 sans l'avoir déclarée, et
+      FND-015 établit qu'elle est minoritaire. Trois ajustements suivent :
+      déclarer la lecture dans RES-020, nommer RQF et RQNF comme documents de
+      contraintes de mise en oeuvre, et déclarer pour chaque module s'il est
+      source ou généré.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis huit jours. ANL-010 y ajoute un besoin : vérifier
+      qu'un module de code satisfait sa SPC. Sans ce contrôle, la divergence
+      n'est pas détectable, et c'est ce qui a produit le bogue de nommage.
+
+a_faire_par_l_humain:
+  - titre: "Choisir la frontière machine"
+    detail: >-
+      Trois sont possibles : le CLI seul, le système entier harnais compris,
+      ou le dépôt équipé. ANL-010 propose la deuxième. Le choix change ce qui
+      est un requis et ce qui est une spécification.
+
+  - titre: "Trancher NON-020 Q5 : le conflit de sections des fondations"
+    detail: >-
+      RES-011 déclare six sections, MET-001 impose dix étapes. Les quatre
+      fondations du dépôt échouent au contrôle de forme. La question porte
+      sur les trente-six types, non sur la fondation seule.
+
+  - titre: "Les deux objections bloquantes de la tâche 29 restent ouvertes"
+    detail: "NON-030 et NON-033, plus six héritées."
+
+dette_nommee:
+  - titre: "La vérification des URL n'a pas eu lieu"
+    detail: >-
+      MET-001 étape 9 l'exige. Aucun outil en ligne n'était disponible dans
+      la session. FND-004 le déclare deux fois. C'est la première fondation
+      du dépôt à échouer ainsi.
+
+  - titre: "ADR-016 D3 est inapplicable par construction"
+    detail: >-
+      Elle nomme SPC et RQF comme sources de dérivation d'un skill, et les
+      deux types ont zéro instance. Le constat est mesuré depuis ANL-009 et
+      confirmé ici.
+
+  - titre: "Quatre décisions techniques ne vivent que dans le code"
+    detail: >-
+      Le mécanisme de détection T1, les codes de retour, le format des noms
+      produits, les motifs de recherche des messages. Trois ont été prises en
+      écrivant ; la quatrième a produit un bogue de deux jours.
+
+  - titre: "FND-015 est archivée et reste la meilleure source du dépôt sur son sujet"
+    detail: >-
+      Son archivage tient au refactor du 2026-08-08, non à un défaut de
+      contenu. Rien ne distingue, dans les archives, ce qui est périmé de ce
+      qui est simplement rangé.

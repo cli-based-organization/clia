@@ -23,6 +23,8 @@ La règle A5 de `skl-001-ressource` prescrit d'ouvrir une objection plutôt que 
 
 `propose`. Aucune exécution. Trois objections bloquantes conditionnent le premier chantier, et elles sont listées en tête de celui-ci.
 
+**Limite de temps.** Non déclarée. `PDC-003` V-S3 l'exige au régime extrême SMART, et les cinq plans du dépôt échouent à ce contrôle. Le défaut porte sur le plan entier, non sur un chantier ; il est constaté ici plutôt que corrigé, faute de base pour estimer une durée.
+
 ## Intention
 
 Deux chantiers, qui répondent à deux défauts mesurés distincts.

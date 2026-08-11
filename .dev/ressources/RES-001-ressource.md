@@ -116,6 +116,21 @@ L'alias satisfait trois contraintes vérifiables : lisible, retenable en huit ca
 
 L'exigence est opposable. Un arbitrage qui l'affaiblit produit une objection.
 
+## Deux catégories de ressources
+
+`NON-004` Q2 : « il faut faire la distinction entre les ressources propres au repo clia et les ressources des repos qui utilisent clia. Dans la pure tradition des projets informatiques fondateurs, clia utilise clia. »
+
+| Catégorie | Ce qu'elle porte | Où elle vit |
+|---|---|---|
+| **Ressource de système** | Ce qui décrit `clia` : ses fondements, sa conception, son implémentation | Le dépôt `clia` |
+| **Ressource de dépôt** | Ce qu'un dépôt équipé produit pour son propre travail | Tout dépôt qui emploie `clia` |
+
+**Le dépôt `clia` porte les deux.** Il décrit le système et il l'emploie pour se décrire. C'est ce que « clia utilise clia » signifie.
+
+**Ce que la distinction sert.** Établir les critères de conformité d'un dépôt `clia`, que `NON-026` Q4 réclame : un dépôt équipé reçoit les définitions de types, non les ressources de système qui les ont produites.
+
+**Ce qui n'est pas classé.** Les cent trente-sept ressources du dépôt ne portent aucun marqueur de catégorie. Le classement est un chantier ouvert, `PLN-005` I2.
+
 ## Cycle de vie et versionnage
 
 Trois classes. Le cycle de vie commande le nommage et le versionnage.

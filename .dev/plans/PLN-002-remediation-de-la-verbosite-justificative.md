@@ -23,6 +23,8 @@ Les cinq chantiers sont exécutés. Le chantier C a été tranché par l'agent, 
 
 Le diagnostic, les mesures et le correctif sont dans `ANL-004`. Ce plan ordonne l'application du correctif.
 
+**Limite de temps.** Non déclarée. `PDC-003` V-S3 l'exige au régime extrême SMART, et les cinq plans du dépôt échouent à ce contrôle. Le défaut porte sur le plan entier, non sur un chantier ; il est constaté ici plutôt que corrigé, faute de base pour estimer une durée.
+
 ## Intention
 
 Ramener les définitions `RES` au registre directif et factuel exigé par la tâche 15.

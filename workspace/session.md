@@ -452,7 +452,47 @@ TODO: écrire cette procédure dans une nouvelle MET.
 Une fois que tous les ISU et les objections émises ont été créés, implémenter ce qui peut être implémenter de PLN-005
 
 
+## 30. [analyse] État des lieux de la définition et de l'instrumentation des ressources
 
+Analyser l'enesmble des documents du repo et lister tous ceux qui traitent des ressources du'une manière ou d'une autre.
+
+Faire une systhèse de la notion de ressource. Définir des axes pertinents d'analyse selon les problématiques abordées.
+
+Regrouper ce qui est implémentable de manière smart et dire quel livrable ils modifient ou crée. Créer un plan que ne contient que les éléments non implémentables.
+
+Regrouper tout le reste dans un ISU et y mettre en relation les NON bloquants.
+
+Faire du ménage dans les NON.
+
+## 31. [conception] recherche de fondation à propos des artéfacts d'architecture, principalement les requis et les spécifications
+
+Il me semble que ça fais plusieurs fois que je fais cette demande. puiser d'abord dans les FND existants à partir de $HOME/git
+
+puis décrire l'historique des RFC et autres mécanisme de publication des spécifications. Parler de la différence entre normalisation, standardisation et spécification.
+
+Donner des exemples archétypaux et historiquement important et dresser un portrait de l'évolution des forme de publication et de leurs raison d'être, usage, intérêt...
+
+En particuler: quels sont les différents types de spécifications et de documentation des requis? Et quel est la distinction entre requis et spécification?
+
+Faire une analyse sur la meilleur approche de documentation des requis et spécification d'architecture compatible avec le système clia. En particulier le fait qu'il y ait des ressources sources et des ressources générées (dont l'implémentation du code!). Où doit se trouver la source de vérité pour la description de l'implémentation et des contraintes, choix techniques, etc.
+
+## 32 [bogue] le status OKD n'est pas très utile...
+
+USE: un utilisateur demande à voir la liste des instances d'une ressource
+
+Comportement attendu => on affiche:
+- 1. alias: pour pouvoir s'y référer facilement
+- 2. description: pour savoir de quoi cette ressource s'occupe/contient
+- 3. un état: pour savoir ce qu'il reste à faire
+
+Situation actuelle => tout est en draft
+
+Conséquence => on ne connait pas l'état ni n'état de la ressource, ni n'état du système par rapport à cette ressource. Donc, on ne sait pas quoi ce qu'il faut faire sans ouvrant et inspectant tous les fichiers: cela n'est pas acceptable...
+
+
+TODO => ouvrir un bogue qui contient des pistes de solutions
+
+TODO => ouvrir un iSU portant sur la révision du modèle de frontmatter.
 
 
 

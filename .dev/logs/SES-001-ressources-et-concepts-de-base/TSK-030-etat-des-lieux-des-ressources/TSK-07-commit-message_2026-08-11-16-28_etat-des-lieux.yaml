@@ -1,0 +1,53 @@
+type: docs
+scope: ressources
+sujet: "état des lieux de la notion de ressource sur neuf axes, et ménage dans les objections"
+corps: |
+  Exécute la tâche 30 de la session du 2026-08-09.
+
+  Cent trente-six documents actifs sur cent cinquante traitent des
+  ressources. Le compte est le résultat : presque tout le dépôt en parle,
+  donc l'inventaire brut n'apprend rien et ce qui compte est l'angle.
+
+  Neuf axes sont tirés des problématiques abordées. Deux sont réglés,
+  l'identité et le typage. Deux le sont partiellement, la forme et les
+  frontières. Trois sont ouverts et bloquent : l'autorité, la dérivation et
+  la validation. Deux restent ouverts sans bloquer, le cycle de vie et la
+  portée.
+
+  La synthèse tient en six énoncés, et les six datent du 2026-08-11 : la
+  notion a plus changé en trois jours qu'en un an de corpus. Une ressource
+  est un ensemble identifiable et auto-cohérent d'informations, composable,
+  portant un alias interne et non une identité, réceptacle matérialisé d'une
+  idée, au cycle de vie collectif, portant de l'information et non du savoir,
+  source ou générée selon le contexte d'usage.
+
+  Le ménage porte sur cinq points et ne ferme aucune objection. NON-026
+  passait pour ouverte alors que ses cinq questions portaient une réponse.
+  NON-025 et NON-030 posent la même question et se citent désormais. NON-027
+  Q1 et NON-033 Q1 aussi. NON-014 et NON-011 portent une entrée disant ce que
+  les décisions ont changé, sans être fermées : leur objet a bougé, leur
+  question subsiste. Et les cinq plans antérieurs déclarent que leur limite
+  de temps manque.
+
+  PLN-006 ne porte que ce qui satisfait PDC-003 : cinq interventions à
+  livrable unique, sans dépendance ni outil, toutes exécutées. L'énoncé
+  demandait un plan ne contenant que les éléments non implémentables ;
+  PDC-003 et MET-004 imposent l'inverse, et la lecture littérale aurait
+  produit un plan inexécutable et une issue portant l'implémentable.
+
+  ISU-007 porte les deux axes qui n'avaient aucune issue, la validation et la
+  portée. Les quatre autres axes ouverts sont couverts par ISU-002 à ISU-005
+  depuis la tâche 29.
+
+  144 tests verts. 145 ressources sur 152 valident leur schéma.
+note_pour_l_humain: >-
+  Votre énoncé demandait de créer un plan ne contenant que les éléments non
+  implémentables, juste après avoir demandé de regrouper ce qui est
+  implémentable. J'ai retenu l'inverse : le plan ne porte que
+  l'implémentable. PDC-003 place les plans au régime extrême SMART et MET-004
+  prescrit que le non-SMART sorte du plan ; la lecture littérale aurait fait
+  échanger leur fonction au plan et à l'issue.
+  Le ménage n'a fermé aucune objection. Vingt-huit restent ouvertes, dont
+  huit bloquantes. J'ai corrigé un état faux et croisé deux doublons, mais
+  NON-014 et NON-011 sont restées ouvertes malgré leur objet déplacé : les
+  fermer aurait été décider à votre place.

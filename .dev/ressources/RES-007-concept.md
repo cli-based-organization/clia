@@ -42,15 +42,15 @@ Les deux dernières rubriques sont obligatoires, et elles sont ce qui distingue 
 
 ## Seuil d'admission
 
-`CPT` est le type le plus susceptible de proliférer : rien ne borne naturellement le nombre d'idées qu'on peut élaborer. `ANL-001` établit au défaut D4 que le système consacre une part croissante de son énergie à se décrire.
+**Un critère unique**, fixé par `NON-004` Q6 : la **compatibilité** du concept avec `clia`, ou avec le système où `clia` est employé.
 
-Un concept ne s'ouvre que si les trois conditions sont réunies.
+C'est l'humain qui crée le concept qui détermine s'il est pertinent.
 
-1. **Il est employé.** Le terme apparaît dans au moins deux ressources, ou dans deux dépôts. Un concept ouvert pour un emploi unique est un commentaire déguisé.
-2. **Il ne se réduit pas à une entrée d'ontologie.** Si l'élaboration tient en cinq lignes, elle appartient à `ONT`.
-3. **Il change une décision.** L'admettre ou le rejeter modifie ce qu'on fait. Une idée juste mais sans conséquence n'a pas besoin de ce type.
+**Ce qui est écarté.** Le seuil à trois conditions du premier jet, qui exigeait un emploi attesté dans deux ressources, une élaboration dépassant cinq lignes, et un effet sur une décision. La première condition posait un problème d'amorçage : un concept nouveau n'a aucun emploi au moment où on l'écrit.
 
-La première condition a une conséquence utile : elle rend le champ `emplois-attestes` non décoratif. Un concept dont les emplois attestés tombent à zéro passe en `status: deprecated`.
+**Ce que le critère unique déplace.** La pertinence n'est pas mesurable par observation. Elle est décidée, et elle est contextuelle : un concept compatible avec un dépôt peut ne pas l'être avec un autre.
+
+**Ce qui subsiste du premier jet.** Un concept qui se réduit à cinq lignes vit dans une `ONT`, et non dans un fichier propre. Ce n'est plus une condition d'admission mais un choix de forme, fixé par `NON-004` Q1 : un `CPT` sert aux concepts réutilisés à plusieurs endroits.
 
 ## Critère de clôture
 
@@ -117,6 +117,6 @@ Aucune instance n'existe. Les sept concepts orphelins recensés plus haut sont l
 | Question | Objection |
 |---|---|
 | Le concept est-il un type distinct, ou une entrée d'ontologie développée | `NON-004` |
-| Le seuil d'admission à trois conditions est-il applicable, ou dissuasif | `NON-002` |
+| Le critère de compatibilité est-il vérifiable, ou seulement déclaratif | `NON-002` |
 | Un concept doit-il être partagé entre dépôts, et par quel mécanisme | `NON-006` |
 | Que faire des sept concepts orphelins du corpus | `NON-004` |

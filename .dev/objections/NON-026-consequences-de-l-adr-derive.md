@@ -4,8 +4,8 @@ id: NON-026
 title: "Conséquences de l'ADR dérivé et du lien symbolique d'intention"
 status: draft
 initiateur: agent
-effet: conditionnel
-etat: ouverte
+effet: informatif
+etat: repondue
 porte-sur: [RES-019, RES-003, ADR-017]
 ---
 
@@ -16,6 +16,8 @@ porte-sur: [RES-019, RES-003, ADR-017]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 22, avec `ADR-017`.
+- 2026-08-11 : **les cinq questions répondues par l'humain.** Traitées à la tâche 24 par `ANL-006` et `PLN-003`.
+- 2026-08-11 : état corrigé au ménage de la tâche 30. L'objection était restée `ouverte` alors que ses cinq questions portaient une réponse.
 
 ## Ce qui est contesté
 

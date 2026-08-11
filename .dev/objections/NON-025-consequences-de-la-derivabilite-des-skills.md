@@ -16,6 +16,7 @@ porte-sur: [RES-018, RES-001, ADR-016]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 21, avec `ADR-016`.
+- 2026-08-11 : **doublon signalé au ménage de la tâche 30.** `NON-030` pose la même question, élargie aux trois familles dérivées et non aux seuls skills. Les questions Q1 et Q2 de cette objection sont reprises par `NON-030` Q1 et Q2. Cette objection reste ouverte pour ses Q3 et Q4, propres aux skills.
 
 ## Ce qui est contesté
 
@@ -89,3 +90,4 @@ L'effet est `conditionnel` : la décision est prise, rien de ce qui existe n'est
 - `objecte-a` [RES-001](../ressources/RES-001-ressource.md)
 - `derive-de` [NON-002](NON-002-cout-du-modele.md)
 - `reference` [NON-005](NON-005-validation-et-regles-non-tenues.md)
+- `reference` [NON-030](NON-030-generateur-absent.md)
