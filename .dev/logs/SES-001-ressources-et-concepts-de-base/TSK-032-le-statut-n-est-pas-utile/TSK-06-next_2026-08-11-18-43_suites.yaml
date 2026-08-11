@@ -1,0 +1,68 @@
+# Suggestions de prochaines étapes après la tâche 32.
+
+le_plus_rentable_maintenant:
+  - titre: "Appliquer la piste P1 de ISU-008"
+    detail: >-
+      Afficher le champ d'état propre du type quand la définition en déclare
+      un, et retomber sur status sinon. Corrige 119 instances sur 157, ne
+      touche aucune ressource, et la définition de chaque type porte déjà
+      champs-obligatoires où le champ figure. Sans dépendance ni préalable.
+    pourquoi_pas_fait: >-
+      La demande disait ouvrir un bogue avec des pistes de solutions. Les
+      pistes sont le livrable ; RES-031 pose qu'une piste n'est pas une
+      décision.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis huit jours. Un contrôle s'ajoute : un champ obligatoire
+      dont toutes les instances portent la même valeur est un défaut
+      détectable, et il aurait signalé status dès la deuxième instance.
+
+  - titre: "Créer REG-002, le registre de bogues"
+    detail: >-
+      Demandé par NON-004 Q4, porté par PLN-005 chantier D. La tâche 32 en
+      fournit la première entrée, et ouvrir un bogue sans type propre a
+      montré le manque.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-035 Q1 : le CLI doit-il afficher le champ propre"
+    detail: >-
+      Bloquante. C'est la question qui débloque P1. Le défaut se propage :
+      cinq types ont été créés depuis le 2026-08-11 et les cinq héritent de
+      status obligatoire.
+
+  - titre: "Trancher NON-035 Q2 : le champ status doit-il subsister"
+    detail: >-
+      Il vaut draft dans 157 instances sur 157. Aucune ressource n'est passée
+      à stable en trois jours d'usage intensif.
+
+  - titre: "Trois objections bloquantes ouvertes en deux jours"
+    detail: "NON-030, NON-033, NON-035, plus six héritées."
+
+dette_nommee:
+  - titre: "Un champ obligatoire à valeur unique sur 157 instances"
+    detail: >-
+      status vaut draft partout. NON-022 conteste la charge des champs
+      obligatoires sans avoir relevé que l'un d'eux ne transporte rien.
+
+  - titre: "38 instances n'ont aucun champ d'état"
+    detail: >-
+      Sept types : analyse, skill, fondation, méthodologie, principe, fait,
+      comportement attendu. Leur donner un état aggrave la charge que
+      NON-022 conteste.
+
+  - titre: "Huit champs d'état concurrents"
+    detail: >-
+      statut, etat, effet, statut-plan, statut-decision, exploitation, tenue.
+      statut et etat désignent la même chose dans deux types différents, et
+      leurs valeurs ne se comparent pas. ISU-009 le porte.
+
+  - titre: "Le défaut se reproduit dans le document qui le signale"
+    detail: >-
+      ISU-008, ISU-009 et NON-035 portent status draft comme les 154 autres,
+      et deux d'entre elles portent un champ etat que le CLI n'affichera pas.
+
+  - titre: "Aucun type bogue n'existe"
+    detail: >-
+      Ouvrir un bogue a produit une ISU. PLN-005 chantier D prévoit un
+      registre de bogues, jamais créé.

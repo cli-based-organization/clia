@@ -1,0 +1,76 @@
+# Suggestions de prochaines étapes après la tâche 33.
+
+a_faire_par_l_humain:
+  - titre: "Approuver ou amender DCN-016"
+    detail: >-
+      Elle porte effet suspendue, régime que DCN-013 fixe pour un premier jet
+      d'agent. PLN-007 ne peut pas être exécuté avant : appliquer une
+      décision suspendue reviendrait à appliquer une décision qui n'en est
+      pas une.
+
+  - titre: "Renseigner DCN-015 pour trancher le sort de status"
+    detail: >-
+      Vous l'avez créée pendant la tâche, intitulée « Cette implémentation
+      doit être compatible OKF ». Son contenu déciderait Q2 de NON-035, seul
+      point resté ouvert. Deux sources du corpus se contredisent sur ce
+      qu'OKF exige, et je n'ai pas pu consulter la spécification.
+
+  - titre: "Trancher la langue des quatre champs"
+    detail: >-
+      maturity, adoption, activated sont en anglais ; tout le frontmatter
+      existant est en français. Et le quatrième champ est nommé status-metier
+      dans Q1 et domain-status dans Q3. ISU-009 le porte.
+
+  - titre: "Huit objections bloquantes"
+    detail: >-
+      NON-005 et NON-009 depuis le 2026-08-09, NON-014, NON-017, NON-018
+      depuis le 2026-08-10, NON-024, NON-030, NON-033 depuis le 2026-08-11.
+      Quatre portent sur l'autorité, trois sur l'outillage manquant.
+
+le_plus_rentable_maintenant:
+  - titre: "Exécuter le chantier G de PLN-007, hors timebox"
+    detail: >-
+      Un contrôle qui signale un champ obligatoire dont toutes les instances
+      portent la même valeur. Une heure, sans dépendance. Il aurait signalé
+      status dès la deuxième instance, et il évite que le défaut se
+      reproduise sur les quatre champs à venir.
+
+  - titre: "Exécuter le chantier A de PLN-003"
+    detail: >-
+      Inchangé depuis la tâche 29. Il lève le conflit entre CONSTITUTION.md
+      C1 et DCN-013, qui a produit trois conduites différentes en trois
+      tâches et rend irrégulière la rédaction de DCN-016.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis neuf jours. Le chantier G en fait partie, et le
+      chantier E de PLN-007 en dépend : supprimer 154 champs sans contrôle de
+      reprise perdrait leurs valeurs.
+
+dette_nommee:
+  - titre: "PLN-007 applique une décision suspendue"
+    detail: >-
+      C'est le premier plan du dépôt à satisfaire les trois contrôles de
+      PDC-003, et il ne peut pas être exécuté avant approbation de DCN-016.
+
+  - titre: "Le chantier E est irréversible et mal protégé"
+    detail: >-
+      Supprimer 154 champs d'état après en avoir posé 628. ANL-005 T1 détecte
+      un renommage avec réécriture ; ici rien n'est renommé, donc le contrôle
+      ne s'applique pas. Une erreur de reprise perdrait les valeurs.
+
+  - titre: "adoption fait constater ce que NON-024 conteste"
+    detail: >-
+      Dix-sept ressources d'autorité vaudront propose parce que l'agent les a
+      rédigées. Poser cette valeur touche des documents que CONSTITUTION.md
+      C1 lui interdit de modifier.
+
+  - titre: "Deux sources du corpus se contredisent sur OKF"
+    detail: >-
+      RES-001 de micrologic-clients dit que status vient d'OKF ; ANL-006 ne
+      le liste pas parmi les champs réservés. La spécification n'est pas
+      consultable sans outil en ligne.
+
+  - titre: "Neuf issues ouvertes, aucune fermée"
+    detail: >-
+      ISU-001 à ISU-009. Aucune n'a atteint son critère de clôture.

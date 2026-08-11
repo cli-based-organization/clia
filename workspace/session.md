@@ -494,7 +494,37 @@ TODO => ouvrir un bogue qui contient des pistes de solutions
 
 TODO => ouvrir un iSU portant sur la révision du modèle de frontmatter.
 
+## 33. [taitement des objections] NON-035
 
+Prendre en compte les réponses de NON-35. Créer un plan avec livrables SMART. Est-ce suffisant pour fermer ISU? Quel objections reste-t-il?
+
+
+## 34. [conception] créer une ressource de type bogue BUG
+
+
+## 35 [implémentation] commande de gestion de la session
+
+
+```sh
+clia session|ses|s  [--help|-h]  # affiche l'aide
+
+clia ses status   # affiche l'état de la session en cours, # taches, # taches faites, temps depuis l'ouverture, etc...
+clia ses ls   # liste les sessions (toutes: celles fermé, celle ouverte et celles en planification)
+
+clia ses new DESCIPTION   # création d'une nouvelle session. ferme session ouverte. et ouvre celle-ci
+clia ses close  # ferme la session
+clia ses todo DESCRIPTION  # ouvre session dans état todo
+
+```
+
+
+cycle de vie: todo => open => closed
+
+sections: 
+- 1. INTENTION
+- 2. CONTEXTE
+- 3. LIVRABLES
+- 4. TÂCHES
 
 ## x. [conception] Amélioration de la notion de ressource
 

@@ -1,0 +1,62 @@
+type: feat
+scope: frontmatter
+sujet: "quatre champs d'état, premier jet suspendu et plan extrême SMART"
+corps: |
+  Exécute la tâche 33 de la session du 2026-08-09.
+
+  Les quatre questions de NON-035 portent une réponse. Trois sont instruites,
+  la quatrième reste conditionnelle.
+
+  Le guess de l'humain se vérifie : RES-001 du dépôt micrologic-clients, d'où
+  le modèle de clia est repris, déclare deux fois que status vient du format
+  OKF. Mais ANL-006, l'analyse d'OKF archivée, énumère les champs réservés
+  du format sans status. Les deux sources du corpus se contredisent, et la
+  spécification n'est pas consultable sans outil en ligne. Le sort de status
+  reste donc ouvert, seul point de la décision qui le soit.
+
+  DCN-016 enregistre les quatre champs : maturity pour où en est le document,
+  adoption pour ce que le système en fait, activated pour s'il faut le
+  considérer, domain-status pour le cycle de vie métier dont chaque
+  définition déclare les valeurs. Cent cinquante-quatre champs d'état sont
+  supprimés au profit du dernier.
+
+  Elle porte effet suspendue : DCN-013 pose qu'un premier jet d'IA reste
+  suspendu jusqu'à approbation manuelle. La demande disait d'ajouter les
+  champs dans DCN-004, qui existe et porte l'adoption du processus de
+  travail ; y toucher aurait falsifié une décision enregistrée.
+
+  PLN-007 ordonne sept chantiers et il est le premier plan du dépôt à
+  satisfaire les trois contrôles de PDC-003. Chaque chantier porte un
+  livrable unique, un critère exécutable et une limite de temps. Le total
+  atteint treize heures pour une timebox de douze : le chantier G sort du
+  plan, conformément à PDC-003 E3 qui pose qu'une planification qui dépasse
+  sa limite se scinde.
+
+  Deux chantiers sont sortis du plan parce que leur préalable est ouvert : le
+  sort de status, et la langue du quatrième champ.
+
+  Aux deux questions posées. Les issues ne peuvent pas être fermées :
+  ISU-008 demande un listage qui donne l'état, et clia res ls affiche
+  toujours draft sur cent cinquante-sept instances ; ISU-009 est tranchée aux
+  trois quarts. Une réponse à une objection ne ferme pas l'issue liée :
+  l'objection pose des questions et se répond, l'issue porte un problème et
+  se résout.
+
+  Il reste vingt-neuf objections ouvertes dont huit bloquantes. NON-035 passe
+  de bloquant à conditionnel.
+
+  144 tests verts. 152 ressources sur 160 valident leur schéma.
+note_pour_l_humain: >-
+  Votre guess sur OKF était fondé, et je n'ai pas pu le confirmer : deux
+  documents de votre corpus se contredisent, et la spécification OKF n'est
+  pas consultable sans outil en ligne. La DCN-015 que vous avez créée pendant
+  la tâche oriente vers la préservation de status, mais son gabarit est vide.
+  DCN-016 est un premier jet et porte effet suspendue. PLN-007 ne peut pas
+  être exécuté avant que vous l'approuviez : appliquer une décision suspendue
+  reviendrait à appliquer une décision qui n'en est pas une.
+  Deux choses vous appartiennent encore. La langue des champs : trois sont en
+  anglais dans un frontmatter entièrement français, et le quatrième porte
+  deux noms différents dans vos réponses Q1 et Q3. Et le chantier E est
+  irréversible : supprimer cent cinquante-quatre champs après en avoir posé
+  six cent vingt-huit, sans qu'aucun contrôle ne protège la reprise des
+  valeurs.

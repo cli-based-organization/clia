@@ -1,0 +1,48 @@
+type: docs
+scope: frontmatter
+sujet: "le statut affiché n'apprend rien : deux issues et une objection bloquante"
+corps: |
+  Exécute la tâche 32 de la session du 2026-08-09, classée bogue.
+
+  Cent cinquante-sept instances, cent cinquante-sept draft. Le champ status a
+  une seule valeur dans tout le dépôt : afficher une colonne dont toutes les
+  cases sont identiques revient à ne rien afficher. C'est pourtant le seul
+  état que clia res ls montre.
+
+  Cent dix-neuf instances portent un champ d'état propre qui n'est jamais
+  affiché : statut, etat, effet, statut-plan, statut-decision, exploitation,
+  tenue. Huit types en déclarent un. Trente-huit instances n'en ont aucun,
+  réparties sur sept types dont l'analyse avec dix-sept instances.
+
+  Trois défauts se superposent et les confondre produirait un correctif
+  partiel présenté comme complet. Le mauvais champ est affiché, ce qui se
+  corrige dans le CLI sans toucher aux ressources. Trente-huit instances
+  n'ont aucun état propre, ce qui se corrige dans leur définition de type. Et
+  le champ status n'a jamais servi : aucune ressource n'est passée à stable
+  en trois jours et cent cinquante-sept instances. Un champ obligatoire à
+  valeur unique n'a pas dérivé, il n'a jamais bougé.
+
+  ISU-008 porte le bogue avec six pistes. ISU-009 porte la révision du modèle
+  de frontmatter avec six autres. NON-035 porte les quatre questions à
+  trancher, effet bloquant : PDC-001 pose l'auto-découvrabilité, RES-012 pose
+  que le non-respect d'un principe est un bogue, et le défaut se propage à
+  chaque type créé.
+
+  Aucun correctif n'est appliqué. La demande disait ouvrir un bogue qui
+  contient des pistes de solutions, et RES-031 pose qu'une piste n'est pas
+  une décision. La piste P1 est signalée comme immédiatement implémentable :
+  elle corrige cent dix-neuf instances sur cent cinquante-sept sans toucher
+  aucune ressource.
+
+  144 tests verts. 150 ressources sur 157 valident leur schéma.
+note_pour_l_humain: >-
+  Le défaut se reproduit dans les documents qui le signalent : ISU-008,
+  ISU-009 et NON-035 portent status draft comme les cent cinquante-quatre
+  autres, et deux d'entre elles portent un champ etat que le CLI n'affichera
+  pas.
+  Le correctif de P1 est prêt et je ne l'ai pas appliqué : vous demandiez des
+  pistes, pas une correction. Il tient en quelques lignes, ne touche aucune
+  ressource, et corrige les trois quarts du dépôt. Dites-moi si vous voulez
+  que je l'applique.
+  Enfin, ouvrir un bogue a produit une issue : le dépôt n'a pas de type
+  bogue, et le registre prévu par PLN-005 n'existe pas.
