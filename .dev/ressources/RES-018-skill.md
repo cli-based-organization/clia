@@ -7,7 +7,7 @@ status: draft
 prefixe: skl
 emplacement: ".dev/skills/skl-<SEQ>-<nom>/SKILL.md"
 cycle-de-vie: vivant
-edition: co-edition
+edition: ia
 famille: controle
 champs-obligatoires: [type, id, name, version, status, description]
 relations-admissibles: [skill, ressource, methodologie, principe]

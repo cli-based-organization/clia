@@ -1,7 +1,7 @@
 // principe-de-conception.cue - Frontmatter du type Principe de conception, prefixe PDC.
 //
 // Genere depuis RES-012-principe-de-conception.md le 2026-08-10. Ne pas editer a la main.
-// Famille : conception. Cycle de vie : vivant. Edition : co-edition.
+// Famille : conception. Cycle de vie : vivant. Edition : humain.
 
 package clia
 

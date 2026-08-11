@@ -14,7 +14,7 @@ relations-admissibles: [harnais, ressource, decision, objection]
 sections: [Principe, Règles impératives, Classification des documents, Arbitrage]
 skill: skl-005-ressource-de-controle
 adr: ADR-012
-statut: non-installe
+statut: actif
 ---
 
 # RES-016 - Harnais constitutionnel
@@ -52,4 +52,4 @@ Une règle qui peut être levée par une instruction ordinaire n'est pas constit
 
 | Question | Objection |
 |---|---|
-| Ce dépôt doit-il rétablir un `CONSTITUTION.md`, ou `ADR-002` suffit-il | `NON-017` |
+| La frontière entre constitution et gouvernance | `NON-017` |

@@ -335,7 +335,11 @@ le cli clia génère un template. L'humain l'édite. L'historique est suivie par
 
 Interdire aux agents IA d'utiliser la commande `clia git save`
 
+Également valide pour les principes de conception... seul les humains peuvent créer des ressources PDC
+
 ## 21. [traitement des objections] prendre en compte des réponses à NON-002
+
+## 22. [traitement des objections] prendre en compte des réponses à NON-003
 
 ## x. [conception] Amélioration de la notion de ressource
 

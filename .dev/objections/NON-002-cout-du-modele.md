@@ -4,8 +4,8 @@ id: NON-002
 title: "Coût du modèle et prolifération des types"
 status: draft
 initiateur: agent
-effet: bloquant
-etat: ouverte
+effet: informatif
+etat: repondue
 porte-sur: [RES-001, RES-007, RES-000]
 ---
 
@@ -16,6 +16,8 @@ porte-sur: [RES-001, RES-007, RES-000]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-10 : **les sept questions répondues par l'humain**. Le modèle contesté n'est pas défendu : « le triplet n'était qu'une tentative », et « la notion de type n'est pas le bon concept ».
+- 2026-08-11 : traitement des réponses, tâche 21. Instruites par `ADR-016`, huit décisions. Le clivage structurant devient ressource ou non-ressource, la source de vérité est le fichier `RES`, et les skills cessent de faire autorité. L'état passe à `repondue`, l'effet de `bloquant` à `informatif`. Ce que les réponses laissent ouvert est porté par `NON-025`.
 
 ## Ce qui est contesté
 
@@ -125,9 +127,13 @@ Le critère de trahison est intéressant. à garder dans le template de généra
 
 ## Ce qui lèverait cette objection
 
-Une décision explicite sur Q1, Q2 et Q6. Ces trois réponses fixent la structure de coût et rendent les suivantes secondaires.
+**Levée le 2026-08-11.** Les sept questions portent une réponse de l'humain, instruite par `ADR-016`.
 
-Cette objection est déclarée `bloquant` non pour empêcher le travail, mais parce qu'elle conditionne la portée de la session : produire vingt et un documents supplémentaires avant d'avoir répondu à Q1 serait engager un coût que rien ne justifie.
+Le grief principal, la prolifération des types, est **rejeté** : la réponse Q3 pose que le nombre de types suit le nombre de natures de contenu à manipuler.
+
+Le grief secondaire, le coût du triplet, est **accueilli et dépassé** : le triplet est abandonné comme prescription, et le skill devient un document dérivé plutôt qu'un livrable à produire.
+
+L'effet passe de `bloquant` à `informatif`. Ce que les réponses laissent ouvert, dont le générateur de skills qui n'existe pas et le statut des logs, est porté par `NON-025`.
 
 ## Relations
 
@@ -135,3 +141,4 @@ Cette objection est déclarée `bloquant` non pour empêcher le travail, mais pa
 - `objecte-a` [RES-007](../ressources/RES-007-concept.md)
 - `objecte-a` [index](../ressources/index.md)
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md)
+- `reference` [NON-025](NON-025-consequences-de-la-derivabilite-des-skills.md)

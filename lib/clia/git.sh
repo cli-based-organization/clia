@@ -32,6 +32,30 @@ clia_git_guard() {
 clia_git() { git -C "$CLIA_REPO_ROOT_RESOLVED" "$@"; }
 
 # --------------------------------------------------------------------------
+# C2 : l'agent ne commite pas
+# --------------------------------------------------------------------------
+#
+# CONSTITUTION.md C2 reserve l'ecriture git a l'humain. Seuls les humains
+# decident, et commiter est l'acte qui arrete une version.
+#
+# La detection repose sur les marqueurs que les environnements d'agent posent
+# eux-memes. Elle n'est pas infranchissable : un agent qui dispose d'un shell
+# appelle git directement. Elle rend la transgression explicite, ce qui est sa
+# portee reelle et ce que la constitution declare.
+#
+# CLIA_ACTOR=human leve la garde. Le poser depuis un agent est une violation
+# de C2, non un contournement prevu.
+
+clia_git_acteur_est_agent() {
+  [[ "${CLIA_ACTOR:-}" == "human" ]] && return 1
+  [[ "${CLIA_ACTOR:-}" == "agent" ]] && return 0
+  [[ -n "${CLAUDECODE:-}" ]] && return 0
+  [[ -n "${CLAUDE_CODE_ENTRYPOINT:-}" ]] && return 0
+  [[ -n "${AIDER_MODEL:-}" ]] && return 0
+  return 1
+}
+
+# --------------------------------------------------------------------------
 # T1 : un commit ne renomme pas et ne reecrit pas la meme ressource
 # --------------------------------------------------------------------------
 #
@@ -232,6 +256,15 @@ PY
 clia_git_save() {
   if clia_is_help "${1:-}"; then clia_git_usage_save; return 0; fi
 
+  # C2 avant tout le reste : ne rien preparer que l'appelant n'a pas le droit
+  # de faire aboutir.
+  if clia_git_acteur_est_agent; then
+    clia_warn "C2 : commiter appartient a l'humain"
+    clia_hint "l'agent prepare le message dans le journal, l'humain lance clia git save"
+    clia_hint "voir CONSTITUTION.md, regle C2"
+    return 3
+  fi
+
   local msg
   msg=$(clia_git_message_file) || {
     clia_warn "aucun message de commit prepare"
@@ -361,6 +394,7 @@ Verbes :
   check clean              verifie que rien n'est en attente
   check done               verifie que la tache est prete a etre commitee
   save                     commite, avec le message prepare dans le journal
+                           reserve a l'humain, CONSTITUTION.md C2
   log RESSOURCE            historique d'une ressource, par identifiant de contenu
   diff RESSOURCE A B       compare deux versions par leur identifiant de contenu
 
@@ -399,6 +433,12 @@ EOF
 clia_git_usage_save() {
   cat <<'EOF'
 Usage : clia git save
+
+Reserve a l'humain. CONSTITUTION.md C2 : l'agent ne commite pas. La commande
+refuse de s'executer dans un environnement d'agent et retourne 3.
+
+L'agent prepare le message dans le journal de sa tache ; l'humain lance la
+commande.
 
 Commite toutes les modifications avec le message prepare le plus recent,
 cherche dans .dev/logs sous les noms :

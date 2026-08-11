@@ -1,0 +1,83 @@
+# Suggestions de prochaines étapes après les tâches 20 et 21.
+
+a_faire_par_l_humain:
+  - titre: "Renseigner DCN-011, le gabarit laissé par la tâche 21"
+    detail: >-
+      Il enregistre les sept réponses à NON-002. C1 interdit à l'agent de le
+      rédiger. Cinq champs À RENSEIGNER, et le corps. ADR-016 instruit déjà
+      les conséquences et peut servir de source.
+
+  - titre: "Trancher NON-024 Q1 : le sort des douze ressources d'autorité"
+    detail: >-
+      Bloquante. Les dix DCN et deux PDC ont toutes été rédigées par l'agent,
+      et sept portent effet en-vigueur sans que vous ayez posé ce champ. Huit
+      ADR du dépôt en dérivent. Trois positions : approuver en bloc, ramener à
+      proposee, ou déclarer que C1 ne vaut que pour l'avenir.
+
+  - titre: "Trancher NON-024 Q2 : qui corrige, puisque l'agent ne peut plus"
+    detail: >-
+      Si la réponse à Q1 demande une correction, elle est à votre main sur
+      douze fichiers. Une exception ponctuelle et écrite peut-elle être
+      accordée à l'agent pour cette correction précise ?
+
+  - titre: "Trancher NON-025 Q3 : les logs sont-ils des ressources"
+    detail: >-
+      Question que vous avez laissée ouverte dans votre réponse Q1 de
+      NON-002. Le dépôt en produit sept par tâche, plus de cent au total. Ils
+      ont la structure d'une ressource et n'en ont ni le type ni le schéma.
+
+  - titre: "Cinq objections bloquantes restent sans réponse"
+    detail: "NON-005, NON-009, NON-014, NON-017, NON-018, plus NON-024 ouverte aujourd'hui."
+
+le_plus_rentable_maintenant:
+  - titre: "Aligner CLAUDE.md sur ADR-016 D2"
+    detail: >-
+      D2 pose que la source de vérité est le fichier RES et que CLAUDE.md ne
+      porte plus qu'un skill d'interprétation de la demande. Le fichier
+      annonce encore vingt-sept types là où trente sont définis, documente
+      deux commandes qui n'existent pas, et ignore clia git. PLN-001 chantier
+      A attend depuis le 2026-08-09, et il a désormais une décision qui le
+      fonde.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé. Trois chaînes de validation tournent encore à la main dans un
+      script jeté. La tâche 20 y ajoute un contrôle : aucune DCN ni PDC
+      modifiée par un agent, vérifiable par l auteur du dernier commit qui
+      touche ces répertoires.
+
+  - titre: "Décider ce qui commande l'agent en attendant le générateur"
+    detail: >-
+      NON-025 Q4. ADR-016 D3 retire l autorité aux skills, et skl-001 reste
+      le document que l agent lit avant d écrire toute ressource. Trois
+      positions : suspendre D3, déclarer skl-001 en exception, ou nommer
+      l écart.
+
+dette_nommee:
+  - titre: "ADR-016 D3 est prise et inapplicable"
+    detail: >-
+      Aucun générateur ne dérive un skill. Deux des quatre sources nommées,
+      SPC et RQF, ont zéro instance. Les règles propres de skl-001, trois
+      interdits typographiques, cinq interdits de registre et dix contrôles,
+      ne se dérivent de rien. NON-025 Q1 et Q2.
+
+  - titre: "La garde C2 n'est pas une barrière"
+    detail: >-
+      Elle refuse clia git save et n empêche pas un agent d appeler git
+      commit. CONSTITUTION.md le déclare. FCT-001 F09 en fournit la
+      démonstration involontaire, une heure après l écriture de la garde.
+
+  - titre: "Une règle avait déjà été perdue par archivage"
+    detail: >-
+      La constitution du 2026-08-08 interdisait toute opération git à
+      l agent. Le refactor l a archivée, et la tâche 19 a construit clia git
+      save dans l intervalle. Rien ne garantit qu aucune autre règle n ait
+      disparu de la même façon.
+
+  - titre: "Huit règles écrites et non tenues"
+    detail: >-
+      Les sept de la tâche 19, plus ADR-016 D3. NON-005 conteste
+      l accumulation depuis le 2026-08-09 et reste bloquante.
+
+  - titre: "Deux plans non exécutés coexistent"
+    detail: "PLN-001, en attente depuis le 2026-08-09, et le chantier R2 de ANL-005."

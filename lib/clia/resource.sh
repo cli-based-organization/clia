@@ -292,11 +292,13 @@ clia_resource_new() {
     return 1
   fi
 
-  # L'identite canonique du type vient de l'id de sa definition, jamais de son
-  # titre : le titre est un libelle lisible, l'id porte le slug canonique.
+  # Le nom canonique du type vient du slug du nom de fichier de sa definition,
+  # jamais de son id ni de son titre. Depuis ADR-007, l'id d'une definition
+  # vaut RES-<SEQ> et son suffixe est un numero : le deduire de l'id produisait
+  # type: 009 au lieu de type: decision. Bogue constate le 2026-08-10, corrige
+  # le 2026-08-11 sur un gabarit destine a l'humain.
   local type_canonique
-  type_canonique=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" id 2>/dev/null)
-  type_canonique="${type_canonique#*-}"
+  type_canonique="${definition#*-*-}"
   [[ -n "$type_canonique" ]] || type_canonique=$(printf '%s' "$title" | tr '[:upper:]' '[:lower:]')
 
   # Les champs a poser sont ceux que la definition declare obligatoires, non une
@@ -307,7 +309,9 @@ clia_resource_new() {
   champs=$(printf '%s' "$champs" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
   [[ -n "$champs" ]] || champs=$(printf 'type\nid\ntitle\nstatus\n')
 
-  local id="${prefixe}-${slug}"
+  # L'id est l'alias interne, <PREFIX>-<SEQ>, jamais <PREFIX>-<SLUG> : ADR-008
+  # D2, et ADR-007 D1 avant lui, qui abolit la forme a slug.
+  local id="${prefixe}-${discriminant}"
   local sections
   sections=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" sections 2>/dev/null)
 

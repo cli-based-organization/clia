@@ -43,6 +43,10 @@ L'`INTENTION.md` de `clia` affirme fournir nativement des capacités de mobilisa
 
 **Réponse.**
 
+L'ontologie est un ensemble de concept et leurs relations.
+
+Il faut comprendre ce qu'est clia: un système de manipulation avancé d'informatoin
+
 ### Q2 - Où vit le vocabulaire de relations, en attendant `ONT-001` ?
 
 Il est aujourd'hui dans `RES-001`, ce qui est une source parallèle assumée par défaut. Trois positions : produire `ONT-001` immédiatement ; laisser le vocabulaire dans `RES-001` et le déclarer comme provisoire daté ; renoncer aux relations typées jusqu'à ce qu'un outil les exploite.

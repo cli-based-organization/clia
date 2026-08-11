@@ -215,7 +215,9 @@ assert_contains 'new affiche le chemin sur stdout' 'CHO-001-premiere-chose-a-fai
 
 content=$(cat "$DEPOT/.dev/choses/CHO-001-premiere-chose-a-faire.md")
 assert_contains 'le frontmatter porte le type' 'type: chose' "$content"
-assert_contains 'le frontmatter porte un id stable' 'id: CHO-premiere-chose-a-faire' "$content"
+# ADR-008 D2 : l id est l alias interne, <PREFIX>-<SEQ>. La forme a slug est
+# abolie depuis ADR-007.
+assert_contains 'le frontmatter porte l alias interne' 'id: CHO-001' "$content"
 assert_contains 'le frontmatter porte le titre donne' 'title: "Première chose à faire"' "$content"
 assert_contains 'un type vivant porte une version' 'version: 0.1.0' "$content"
 assert_contains 'le statut initial est draft' 'status: draft' "$content"
@@ -280,8 +282,10 @@ printf '\nresource show et edit\n'
 
 out=$(run_out res show CHO-001)
 assert_contains 'show par prefixe et sequence' 'Première chose' "$out"
-out=$(run_out res show CHO-premiere-chose-a-faire)
-assert_contains 'show par identifiant stable' 'Première chose' "$out"
+# La resolution par le slug du nom de fichier reste acceptee : c est une
+# commodite de saisie, pas un identifiant.
+out=$(run_out res show CHO-001-premiere-chose-a-faire)
+assert_contains 'show par nom de fichier' 'Première chose' "$out"
 # Le numero seul ne designe rien de facon unique : CHO-002 et RES-002
 # coexistent. clia refuse plutot que de choisir, et nomme les candidats.
 # C'est la demonstration a l'usage du defaut D1 de ANL-001 : le numero de
@@ -417,7 +421,10 @@ git -C "$GDEPOT" config user.email t@t
 git -C "$GDEPOT" config user.name T
 
 gres() { printf -- '---\ntype: ressource\nid: %s\ntitle: "T"\nstatus: draft\n---\n\n# %s - T\n\n%s\n' "$1" "$1" "${2:-corps}"; }
-rungit() { ( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" "$CLIA_BIN" git "$@" ) ; }
+# Les tests du fonctionnement nominal simulent l humain : la suite tourne
+# souvent dans un environnement d agent, et CONSTITUTION.md C2 y refuse save.
+# Les tests de la garde C2 posent explicitement l inverse.
+rungit() { ( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" CLIA_ACTOR=human "$CLIA_BIN" git "$@" ) ; }
 
 gres RES-001 > "$GDEPOT/.dev/ressources/RES-001-un.md"
 git -C "$GDEPOT" add -A >/dev/null && git -C "$GDEPOT" commit -qm "initial"
@@ -503,6 +510,23 @@ NONGIT="$TMP/nongit"; mkdir -p "$NONGIT/.dev/ressources"
 out=$( cd "$NONGIT" && CLIA_REPO_ROOT="$NONGIT" "$CLIA_BIN" git check clean 2>&1 ); rc=$?
 assert_rc 'git check hors depot git echoue en 2' 2 "$rc"
 assert_contains 'git check hors depot git le dit' 'pas suivi par git' "$out"
+
+# C2 : l agent ne commite pas. CONSTITUTION.md reserve save a l humain.
+out=$( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" CLAUDECODE=1 "$CLIA_BIN" git save 2>&1 ); rc=$?
+assert_rc 'save refuse un agent, code 3' 3 "$rc"
+assert_contains 'save nomme la regle C2' 'C2' "$out"
+
+out=$( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" CLIA_ACTOR=agent "$CLIA_BIN" git save 2>&1 ); rc=$?
+assert_rc 'save refuse CLIA_ACTOR=agent' 3 "$rc"
+
+# La garde ne bloque que save : lire reste permis a l agent.
+out=$( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" CLAUDECODE=1 "$CLIA_BIN" git log RES-001 2>&1 ); rc=$?
+assert_rc 'log reste permis a un agent' 0 "$rc"
+out=$( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" CLAUDECODE=1 "$CLIA_BIN" git check clean 2>&1 ); rc=$?
+assert_contains 'check reste permis a un agent' 'arbre de travail' "$out"
+
+out=$(rungit save --help 2>&1)
+assert_contains 'save --help declare la reserve a l humain' "Reserve a l'humain" "$out"
 
 out=$(rungit --help 2>&1)
 assert_contains 'git --help liste les verbes' 'check clean' "$out"

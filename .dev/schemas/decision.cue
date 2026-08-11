@@ -1,7 +1,7 @@
 // decision.cue - Frontmatter du type Décision, prefixe DCN.
 //
 // Genere depuis RES-009-decision.md v0.2.0 le 2026-08-10. Ne pas editer a la main.
-// Famille : contenu. Cycle de vie : vivant. Edition : hybride.
+// Famille : contenu. Cycle de vie : vivant. Edition : humain.
 //
 // La valeur effet: "remplacee" est derivee, non saisie : voir RES-009 R3.
 // Une decision est remplacee si et seulement si une autre declare remplace

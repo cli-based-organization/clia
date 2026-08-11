@@ -69,6 +69,16 @@ Un échec signale un champ absent, mal orthographié, ou dont la valeur sort de 
 
 Pour une fondation, vérifier en outre que chaque URL répond, et consigner la date de vérification.
 
+## Le type Principe de conception est en édition humaine
+
+`CONSTITUTION.md` C1 : seuls les humains créent un principe de conception. Un agent ne crée ni ne modifie un `PDC`.
+
+**Ce que l'agent fait.** `clia res new principe-de-conception "<description>"`, puis il s'arrête.
+
+**Pourquoi ce type et pas les autres de la famille.** Un principe est opposable : l'humain l'invoque pour refuser, l'agent l'invoque pour objecter. Un principe qu'un agent se donne à lui-même ne contraint personne.
+
+Les autres types de la famille, `ANL`, `FND` et `MET`, restent en édition `ia`.
+
 ## Le piège de cette famille
 
 Produire du savoir qui ne servira à rien. Une analyse sans question posée est une description. Une fondation sans décision à éclairer est un exercice. Avant de commencer, nommer la décision que le document doit rendre possible.

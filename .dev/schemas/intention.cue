@@ -13,5 +13,5 @@ package clia
 	status: #Status
 	portee: string & !=""
 	"critere-de-satisfaction": string & !=""
-	"critere-de-trahison": string & !=""
+	"critere-de-trahison"?: string & !=""
 }

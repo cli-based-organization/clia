@@ -1,0 +1,67 @@
+type: feat
+scope: gouvernance
+sujet: "seuls les humains décident, et le système est structuré par la ressource"
+corps: |
+  Exécute les tâches 20 et 21 de la session du 2026-08-09.
+
+  La tâche 20 rétablit CONSTITUTION.md, six règles. C1 réserve à l'humain la
+  création des décisions et des principes de conception : l'agent produit le
+  gabarit et s'arrête, ses recommandations vivent dans une analyse, un plan ou
+  une objection. C2 lui interdit toute opération git qui écrit, et clia git
+  save refuse désormais dans un environnement d'agent, code 3. Lire reste
+  permis : log et check fonctionnent.
+
+  Cette règle avait déjà existé. La constitution archivée le 2026-08-08
+  interdisait toute action git à l'agent, dans des termes plus larges. Le
+  refactor l'a archivée, aucun document actif ne la portait plus, et la tâche
+  19 a construit clia git save dans cet intervalle. La tâche 20 restaure une
+  règle perdue.
+
+  RES-009 et RES-012 passent en edition humain, RES-016 de non-installe à
+  actif, et skl-003 et skl-004 portent la règle.
+
+  FCT-001 relève l'existant, première instance d'un type qui n'en avait aucune
+  dans tout le corpus. Dix faits, dont quatre qui comptent : les douze DCN et
+  PDC du dépôt ont toutes été rédigées par l'agent, sept portent effet
+  en-vigueur sans que l'humain ait posé ce champ, aucune n'est approuvée, et
+  l'agent ne peut plus les corriger. NON-024 porte la question, bloquante :
+  huit ADR en dérivent.
+
+  Le bogue de clia res new, ouvert depuis la tâche 14 et signalé trois fois,
+  est corrigé. Il s'est manifesté sur un gabarit destiné à l'humain, ce qui
+  en fait un défaut de la fonction que la tâche 20 décrit. type vaut désormais
+  decision et non 009, id vaut DCN-011 et non un slug.
+
+  La tâche 21 instruit les sept réponses à NON-002 par ADR-016, huit
+  décisions. Le clivage structurant devient ressource ou non-ressource, la
+  source de vérité est le fichier RES, le triplet est abandonné, un type se
+  crée sous le besoin, et la contestation sur leur nombre est close. Le
+  critère de trahison devient facultatif, le coût de la journalisation est
+  assumé.
+
+  La décision la plus lourde est D3 : les skills ne font pas autorité et sont
+  dérivables de RES, ADR, SPC et RQF. C'est un renversement, skl-001 étant le
+  document que l'agent lit avant d'écrire toute ressource. Elle est instruite
+  et déclarée inapplicable : aucun générateur n'existe, et deux des quatre
+  sources nommées ont zéro instance. NON-025 porte les quatre questions, dont
+  le statut des logs.
+
+  NON-002 passe à repondue, effet informatif. Son grief principal est rejeté,
+  son grief secondaire accueilli et dépassé.
+
+  124 tests, tous verts. 110 ressources sur 113 valident leur schéma, les
+  trois échecs étant des gabarits en attente de leur initiateur.
+note_pour_l_humain: >-
+  Deux choses à savoir, et la première est une faute de ma part.
+  En vérifiant que CLIA_ACTOR=human levait la garde C2, j'ai lancé la commande
+  sur le dépôt réel au lieu d'un dépôt jetable, et j'ai commité huit fichiers
+  sous le message de la tâche précédente. Moins d'une heure après avoir écrit
+  la garde. Le commit n'était pas poussé, je l'ai annulé par reset --soft,
+  HEAD est revenu à e47eedd et rien n'a été perdu. Le fait est consigné en
+  FCT-001 F09 avec sa cause, et six tests couvrent désormais la garde, tous
+  dans un dépôt jetable.
+  Ensuite, DCN-011 vous attend. C1 m'interdit de la rédiger, donc le gabarit
+  est là avec ses cinq champs À RENSEIGNER. C'est la première application de
+  votre règle, et elle tombe sur le document qui aurait enregistré vos
+  réponses. NON-024 pose la question plus large : les douze DCN et PDC
+  existantes ont toutes été écrites par moi, et je ne peux plus y toucher.

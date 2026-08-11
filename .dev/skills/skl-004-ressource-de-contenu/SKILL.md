@@ -69,7 +69,19 @@ Un échec signale un champ absent, mal orthographié, ou dont la valeur sort de 
 
 Vérifier aussi que l'origine est renseignée : une matière sans provenance n'est pas citable.
 
+## Le type Décision est en édition humaine
+
+`CONSTITUTION.md` C1 : seuls les humains décident. Un agent ne crée ni ne modifie une `DCN`.
+
+**Ce que l'agent fait.** `clia res new decision "<description>"`, puis il s'arrête. Le gabarit est laissé à l'humain, avec ses champs `À RENSEIGNER`.
+
+**Ce que l'agent ne fait pas.** Rédiger le corps, poser `effet`, `portee` ou `diffusion`, modifier une instance existante.
+
+**Où va la recommandation.** Dans une analyse, un plan ou une objection. Un agent qui pense qu'une décision doit être prise l'écrit là, jamais dans une `DCN`.
+
 ## Contrôle propre au type Décision
+
+Ce contrôle s'applique à l'humain qui rédige, et à l'agent qui relit.
 
 Depuis `RES-009` v0.2.0, du 2026-08-10, une décision ne se renverse pas en éditant l'existante.
 

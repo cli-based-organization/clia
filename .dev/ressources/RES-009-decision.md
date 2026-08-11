@@ -7,7 +7,7 @@ status: draft
 prefixe: DCN
 emplacement: ".dev/decisions/DCN-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
-edition: hybride
+edition: humain
 famille: contenu
 champs-obligatoires: [type, id, title, version, status, instance, date-de-decision, portee, effet, attestation, diffusion]
 relations-admissibles: [decision, ressource, adr, intention, objection, fragment]
@@ -126,16 +126,17 @@ Ce qui évolue est la liste des conséquences constatées, et le champ `effet` l
 
 ## Régime d'édition
 
-`hybride`, avec propriété par bloc.
+`humain`. `CONSTITUTION.md` C1 : seuls les humains décident.
 
-| Bloc | Propriétaire |
+| Geste | Qui |
 |---|---|
-| La décision, l'instance, la date, l'attestation | L'humain, ou l'agent citant une source externe vérifiable |
-| Les conséquences constatées | Les deux, en append |
-| L'effet, sauf `remplacee` qui est dérivé | L'humain seul |
-| La diffusion | L'humain seul |
+| Produire le gabarit, `clia res new decision` | L'agent ou l'humain |
+| Renseigner la décision, l'instance, la date, l'attestation | L'humain seul |
+| Poser `portee`, `effet`, `diffusion` | L'humain seul |
+| Modifier une instance existante | L'humain seul |
+| Recommander une décision | L'agent, dans une analyse, un plan ou une objection |
 
-L'agent ne modifie jamais la teneur d'une décision enregistrée. Il peut en constater les conséquences.
+Un agent qui constate une conséquence la porte dans une objection ou dans le journal de sa tâche, jamais dans la `DCN`.
 
 ## Frontière avec les types voisins
 

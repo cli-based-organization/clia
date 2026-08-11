@@ -43,11 +43,15 @@ Les acteurs sont une rubrique du contexte dans `RES-002`, alors que `resource-ty
 
 **Réponse.**
 
+INTENTION.md est une INT-<XYZ>. Il serait logique que ce soit INT-001, mais ce n'est pas une obligation contrainte. Par défaut à l'initialisation de clia dans un projet, créer INT-001 et faire de INTENTION.md un symlink de INT-001
+
 ### Q2 - Où va l'état émotionnel de l'humain, que `CLAUDE.md` demande de prendre en compte ?
 
 `RES-002` propose qu'il ne soit pas une ressource, au motif qu'une ressource est versionnée, partageable et opposable, et que l'affect n'a aucune de ces trois propriétés. La demande de `CLAUDE.md` deviendrait alors une qualité d'attention de l'agent en conversation, sans objet produit. Cette lecture est-elle acceptée, ou l'humain veut-il que cela laisse une trace ?
 
 **Réponse.**
+
+déduire de session.md et mettre explicitement dans CTX ou dans les rubriques CONTEXTE d'une ressource
 
 ### Q3 - L'historique des intentions abandonnées relève-t-il du contexte, de l'intention, ou d'un type de décision qui manque ?
 
@@ -55,11 +59,18 @@ Le corpus n'a tracé aucune de ses quatre ruptures de cap. `RES-003` propose qu'
 
 **Réponse.**
 
+Il faut clarifier quelque chose avant de continuer: les décisions relèvent de DCN et non pas de ADR. L'ADR est une justification raisonnée générée à partir d'un ou plusieurs DCN et un ou plusieurs FRG. Nous expliquerons cela avec plus de détail, mais c'est vers ce résultat vers lequel le système clia converge.
+
+Donc, c'est effectivement une bonne idée et une bonne pratique de justifier un changement d'intention ultime par un DCN et un FRG. Mais en pratique c'est lourd... et ça me parait difficile à faire adopter comme pratique.
+
+
 ### Q4 - Faut-il un type Acteur distinct, ou les acteurs sont-ils une rubrique du contexte ?
 
 `RES-002` en fait une rubrique. `resource-types.yaml` en faisait un type, avec des champs propres (`categorie` valant primaire, secondaire ou partie prenante ; `portee` valant méthode ou domaine) et une relation `utilise` vers les cas d'usage. Le corpus n'a aucune instance des deux modélisations.
 
 **Réponse.**
+
+Ne pas faire ça pour l'instant. Nous y reviendrons plus tard.
 
 ### Q5 - Un contexte peut-il énoncer des mesures sans les consigner comme faits ?
 
@@ -67,17 +78,23 @@ Le corpus n'a tracé aucune de ses quatre ruptures de cap. `RES-003` propose qu'
 
 **Réponse.**
 
+oui. Un FCT est un fait dont le niveau de véracité a été établi/éprouvé par un processus rigoureux et normé. Ce qui est dans CTX ou toute rubrique CONTEXTE peut être affimé par un agent humain ou IA sans autre vérification. Le degré de fiabilité est à prendre comme tel également. 
+
 ### Q6 - Le champ `peremption` du contexte est-il exigible sans outil pour l'exploiter ?
 
 `RES-002` le rend obligatoire, au motif qu'un contexte périmé se lit comme vrai. Mais personne ne relira les dates de péremption à la main. Le champ a-t-il un sens avant que `clia` puisse signaler un contexte périmé ?
 
 **Réponse.**
 
+permettre à titre indicatif. Mais ne pas rendre obligatoire.
+
 ### Q7 - Faut-il trois types, ou moins ?
 
 La question de fond. Un seul type, portant à la fois la situation, le but et les constats, serait plus économique et moins juste. Trois types sont plus justes et coûtent trois fois plus. Y a-t-il une raison de conception, et non de goût, qui impose trois ?
 
 **Réponse.**
+
+Oui. C'est un choix de conception. Ils sont là au besoin. Mais rien n'oblige l'humain à les utiliser (sauf INT-001)
 
 ## Ce qui lèverait cette objection
 

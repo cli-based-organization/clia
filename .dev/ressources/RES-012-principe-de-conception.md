@@ -7,7 +7,7 @@ status: draft
 prefixe: PDC
 emplacement: ".dev/principes/PDC-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
-edition: co-edition
+edition: humain
 famille: conception
 champs-obligatoires: [type, id, title, version, status, portee]
 relations-admissibles: [principe, ressource, adr, concept, objection]
@@ -49,7 +49,16 @@ Un principe sans moyen de vérification est une exhortation. La rubrique « Comm
 
 ## Régime d'édition
 
-`co-edition`. Un principe engage les deux parties : l'humain l'invoque pour refuser, l'agent l'invoque pour objecter.
+`humain`. `CONSTITUTION.md` C1 : seuls les humains créent un principe de conception.
+
+| Geste | Qui |
+|---|---|
+| Produire le gabarit, `clia res new principe-de-conception` | L'agent ou l'humain |
+| Rédiger le principe, ses exclusions et ses contrôles | L'humain seul |
+| Modifier une instance existante | L'humain seul |
+| Recommander un principe | L'agent, dans une analyse, un plan ou une objection |
+
+Un principe engage les deux parties : l'humain l'invoque pour refuser, l'agent l'invoque pour objecter. C'est ce qui interdit à l'agent de l'écrire : un principe qu'un agent se donne à lui-même ne contraint personne.
 
 ## Structure attendue d'une instance
 

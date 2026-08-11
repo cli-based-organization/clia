@@ -9,7 +9,7 @@ emplacement: ".dev/intentions/INT-<SEQ>-<SLUG>.md, sauf INT-001 qui vit à INTEN
 cycle-de-vie: vivant
 edition: humain
 famille: fondamentale
-champs-obligatoires: [type, id, title, version, status, portee, critere-de-satisfaction, critere-de-trahison]
+champs-obligatoires: [type, id, title, version, status, portee, critere-de-satisfaction]
 relations-admissibles: [intention, contexte, concept]
 sections: [Le but, La raison, Critère de satisfaction, Critère de trahison, Ce que cette intention exclut, Relations]
 skill: skl-002-ressource-fondamentale
@@ -38,7 +38,9 @@ Elle porte quatre choses.
 | **Le critère de satisfaction** | À quoi on reconnaîtra que le but est atteint |
 | **Le critère de trahison** | Ce qui, s'il arrivait, signifierait que l'intention est trahie, même si le travail avance |
 
-Les deux derniers champs sont obligatoires. Le critère de satisfaction permet de clore. Le critère de trahison permet d'objecter, ce qui est la fonction que `CLAUDE.md` assigne à l'intention.
+Le critère de satisfaction est obligatoire : il permet de clore.
+
+Le critère de trahison est **facultatif**, réponse Q7 de `NON-002`, instruite par `ADR-016`. Il permet d'objecter, ce qui est la fonction que `CLAUDE.md` assigne à l'intention, et il reste dans le gabarit de génération. Le rendre obligatoire risquait de le faire renseigner pour la forme, ce qui serait pire que son absence.
 
 Un critère de trahison bien écrit est spécifique et vérifiable. Exemple, pour l'intention de `clia` : « le système coûte plus de temps qu'il n'en fait gagner », qui est mesurable par le rapport entre les ressources de méthode produites et le travail métier accompli, rapport que `ANL-001` a précisément mesuré comme se dégradant.
 
