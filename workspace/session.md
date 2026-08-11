@@ -383,11 +383,29 @@ Correctifs proposés:
 - générer les skills en prenant en compte la méthode MET de journalisation
 
 
+## [bogue] toujours relire la tâche avant de l'exécuter
 
+### Incident
 
+l'agent IA a exécuté la tâche 25 avec l'information qu'il avait en mémoire, sans tenir compte des modifications apportées à session.md
 
+### conséquence
 
-## 26. [traitement des objections] prendre en compte les réponses à NON-004
+La mauvaise tâche a été exécuté et, possiblement, avec des instructions incomplète
+
+### interprétation de l'humain
+
+Les fichieres SES sont écrits par des humains. Par conséquent, ils ne sont pas fiable et sont susseptible d'être modifiés à tout moment. Il faut toujours les relire et réévaluer les fichiers SES AVANT l'exécution d'une tâche
+
+### TODO
+
+Écrire une ressource USE décrivant le comportement attendu qui était attendu de la par de l'agent dans ce cas de figure
+
+Écrire un BUG qui rapporte l'incident. Ce bug doit inclure (entre autre choses): 1. la description de l'incident et des conséquence, 2. le diagnostique (pourquoi l'agent a agit ainsi) et 3. des suggestions de mesures à prendre pour régler le problème.
+
+Écrire un plan pour une prochaine ronde de résolution de BUG et y planifier la résolution de ce BUG.
+
+## 27. [traitement des objections] prendre en compte les réponses à NON-004
 
 Faire une analyse ANL qui interprète les réponses à NON-004 et en décrit les implications et conséquences.
 

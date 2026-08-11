@@ -221,8 +221,13 @@ clia_git_message_file() {
   local dev
   dev=$(clia_dev_dir) || return 1
   local trouve
+  # Deux formats de nommage coexistent depuis la tache 25 :
+  #   TSK-07-commit-message_<horodatage>_<slug>.yaml   MET-003, en vigueur
+  #   commit-message-task-<SEQ>.yaml                   forme anterieure
+  # Les deux sont acceptes : NON-028 Q1 laisse la migration ouverte.
   trouve=$(find "$dev/logs" -type f \
-             \( -name 'commit-message-task-*.yaml' -o -name 'commit-message-task-*.md' \
+             \( -name 'TSK-*-commit-message_*.yaml' -o -name 'TSK-*-commit-message_*.md' \
+                -o -name 'commit-message-task-*.yaml' -o -name 'commit-message-task-*.md' \
                 -o -name 'commit-message.yaml' -o -name 'commit-message.md' \) \
              -printf '%T@\t%p\n' 2>/dev/null | sort -rn | head -1 | cut -f2)
   [[ -n "$trouve" ]] || return 1
@@ -442,8 +447,9 @@ commande.
 
 Commite toutes les modifications avec le message prepare le plus recent,
 cherche dans .dev/logs sous les noms :
-  commit-message-task-<SEQ>.yaml    commit-message-task-<SEQ>.md
-  commit-message.yaml               commit-message.md
+  TSK-<NN>-commit-message_<horodatage>_<slug>.yaml   MET-003, en vigueur
+  commit-message-task-<SEQ>.yaml                     forme anterieure
+  commit-message.yaml
 
 Un fichier yaml portant les cles type, scope, sujet, corps et
 note_pour_l_humain est rendu au format conventionnel. Tout autre contenu est

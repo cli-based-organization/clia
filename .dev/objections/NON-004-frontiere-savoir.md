@@ -16,6 +16,8 @@ porte-sur: [RES-006, RES-007]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-10 : **Q1 répondue par l'humain.** Le concept a deux formes selon son usage attendu, et une demande explicite en découle : documenter un `ISU` sur la définition d'une ressource dans un document ressource.
+- 2026-08-11 : traitement de la réponse, tâche 25. Interprétée par `ANL-007`, ajustement ordonné par `PLN-004`, et `ISU-001` ouverte comme demandé. **L'objection reste ouverte** : Q2 à Q7 sont sans réponse, dont Q2 et Q3 que cette objection désigne comme celles qui la lèveraient.
 
 ## Ce qui est contesté
 
@@ -58,6 +60,18 @@ Il est aujourd'hui dans `RES-001`, ce qui est une source parallèle assumée par
 
 **Réponse.**
 
+Nous devons rappeller ce que le système clia est et faire la distinction entre les ressources propre au repo clia et les ressources des repos qui utilisent clia.
+
+Dans la pure tradition des projets informatiques fondateurs, clia utilise clia.
+
+Aussi, le système clia est décrit par des ressources. Et ce tant pour ses fondements théoriques, sa conception, que pour son implémentation.
+
+Commençons par créer une ontologie ONT-001 définisant les concepts fondamentaux de clia et leurs relations. 
+
+Au besoin, plus tard nous les extraierons
+
+Aussi, il serait probablement "logique" de créer une ressource RES de type "relation". Quoique il faudrait au préalable définir la frontière entre concept et relation. La relation est probablement un type de concepte avec un ensemble de propriétés particulières?...
+
 
 
 ### Q3 - Faut-il une forme légère de conservation du savoir, plus courte que la fondation ?
@@ -66,11 +80,53 @@ Le besoin est mesuré : six dépôts de technotes sans fichier versionné, parce
 
 **Réponse.**
 
+Il y a ici méprise de la par de l'agent. L'agent revient souvent avec cette conception naive à propos du savoir et cela m'agace beaucoup...
+
+Le savoir n'est pas homogène. Il est même quantum-like... Donc, c'est un objet très complexe pour lequel il n'existe pas une seule manière de le stocker et de le traiter.
+
+Quand vient le temps de stocker, mobiliser, transformer, etc. le savoir, il est impératif de prendre en compte le contexte et ses différentes déclinaisons:
+- le contexte "actuariel": qui il est l'acteur? Et dans quel état émotionnel se trouve-t-il au moment d'agir sur le savoir? Y a-t-il un ou plusieurs acteurs?
+- le contexte intentionnel: que veut-on accomplir?
+- le contexte des moyen: par quel moyen prévoit-on réaliser cette intention?
+- le contexte historique: qu'a-t-on fait dans le passé et quels ont été les résultats?
+- etc.
+- etc.
+
+conséquence => il faudrait bien définir la frontière entre information et savoir. le savoir est une forme particulière de relation entre un acteur et une information.
+
+
+Les technotes et les recherches de fondation sont effectivement toutes 2 des "condensés de savoir". Mais ils ont des objectifs et des usages totalement différents:
+
+- la technote (tel qu'on la retrouve dans les repos historique) est un condensé de savoir permettant à un humain de comprendre un dispositif technique et de l'utiliser concrètement.
+- la recherche de fondation est une mobilisation des savoir existant sur un sujet qui établit un socle de connaissance nécessaire à un travail intellectuel. Par exemple, le désign/conception d'un système, la recherche d'une solution/recette, la conduite d'une activité de recherche ou la rédaction d'un article scientifique.
+
+conséquence => les technotes et les fondations FND sont à la fois des ressources sources et des ressources générés. Donc, une ressource doit pouvoir être hybride (source et générée) dans l'absolut. Le contexte d'usage détermine de quelle manière elle s'incarne en pratique (source ou générée). Dans un contexte d'usage, à un moment précis, pour une tâche précise, la ressource n'a qu'un seul rôle à la fois (source OU généré)
+
+conséquence => une mise à jour du savoir mobilisée doit impliquer une mise à jour des ressources générés par ce savoir
+
+Aussi, la technote étant conçu pour guider l'action, la technote doit prendre en compte les capacités et caractéristiques intrinsèques à l'acteur.
+
+Conséquence => il y a possiblement minimalement 3 déclinaisons de technotes : 1. dans l'absolu (ou simultannément pour tous les acteurs possibles !), 2. pour un acteur humain et 3. pour un acteur IA
+
+
 ### Q4 - Que faire des sept concepts orphelins du corpus ?
 
 Trois sont critiques parce que le système en dépend : `extreme-smart`, `distillation`, `objection sociocratique`. Faut-il les écrire dans cette session, les inscrire à un registre de dette, ou les laisser où ils sont ?
 
 **Réponse.**
+
+Le registre de dette est une bonne idée!  Créer une ressources "registre" puis une instance "registre de dette". Également, "registre de bogues" et "registre de tâches à faire prochainement"
+
+PDC-003 traite déjà de 'extreme-smart'.
+
+Proposer un PDC qui traite de la 'distillation'. La distillation est également le moteur du cycle de vie des ressources informationnelles. 
+
+conséquence => la ressource informationnelle n'est qu'un réceptacle matérialisé et outillable d'une idée. 
+
+conséquence => le cycle de vie des ressources informationnelles n'est pas individuel, il est collectif. Les idées sont en constantes évolutions et en constantes relations les unes par rapport aux autres. Les idées sont polymorphes (selon le contexte) ou, dit autrement quantum-like. Leur nature peut changer suite à un changement de contexte.
+
+conséquence => la notion de "espace actif" est plus importante qu'il n'y parait... c'est l'incarnation d'une contextualité informationnelle dans un espace informationnel plus large.
+
 
 ### Q5 - La frontière fondation contre analyse est-elle tenue en pratique ?
 
@@ -78,11 +134,23 @@ Trois sont critiques parce que le système en dépend : `extreme-smart`, `distil
 
 **Réponse.**
 
+Cette question reflète une tendance de l'agent IA qui m'agace beaucoup: prendre ce qui est observé pour une vérité.
+
+Il est bien d'observer ce qui a été fait dans les autres repos. Mais cela ne fait pas de ces observations des vérités factuelles. L'agent IA a tendance à sauter trop vite aux conclusion et à ne pas bien gérer l'incertitude et l'indétermination. Certe, il faut poser des hypothèses pour comprendre le réel et agir. Mais la source de vérité ultime est contextuelle (dépend du repo) et elle est déterminé par l'humain via INT et DCN.
+
+**La fondation mobilise le savoir existant et accessible.**
+
+**L'analyse est une réflexion sur une question précise.** C'est une ressource générée à partir de FND, d'une question (besoin d'un autre type dédié?) et tout autre information pertinente.
+
 ### Q6 - Le seuil d'admission des concepts à trois conditions est-il applicable ?
 
 `RES-007` exige qu'un concept soit employé dans deux ressources, qu'il ne se réduise pas à une entrée d'ontologie, et qu'il change une décision. La première condition crée un problème d'amorçage : un concept nouveau n'a aucun emploi attesté au moment où on l'écrit.
 
 **Réponse.**
+
+non. C'est l'humain qui crée le concept qui détermine si il est pertinent ou non.
+
+Le seul critère est sa compatibilité avec clia ou avec le système où clia est utilisé
 
 ### Q7 - L'affirmation de `INTENTION.md` sur la mobilisation du savoir est-elle maintenue ?
 
@@ -90,11 +158,22 @@ Trois sont critiques parce que le système en dépend : `extreme-smart`, `distil
 
 **Réponse.**
 
+L'agent IA ne semble pas bien comprendre la notion d'intention. Également, l'agent IA ne semble pas bien comprendre le processus de construction et, en particulier, son temps caractéristique.
+
+L'intention est ce à quoi veut parvenir l'acteur. 
+
+Le système clia est en cours de conception et d'implémentation. Il y a nécessairement un écart entre l'intention et l'implémentation. La réalisation d'un système de cette complexité à la frontière de la connaissance et du savoir faire demande un temps non nul...
+
+
+Sur le fond, oui. clia est un système de gestion informationnelle. Les capacités de mobilisation du savoir et de manipulation de l'information en forme le socle. Et c'est, surtout, ce qui le différencie de la majorité des autres méthodes de travail augmenté par IA.
+
 ## Ce qui lèverait cette objection
 
 Une réponse à Q2 et Q3. Q2 résorbe une contradiction interne du jet, Q3 répond au manque fonctionnel le plus mesuré du corpus.
 
 Q7 est de la responsabilité exclusive de l'humain et ne bloque rien, mais elle reste ouverte tant qu'elle n'a pas reçu de réponse.
+
+**État au 2026-08-11.** Une question sur sept porte une réponse, et ce n'est ni Q2 ni Q3. L'objection n'est pas levée. Ce que la réponse Q1 établit est appliqué par `PLN-004` chantier A ; les quatre autres chantiers attendent une réponse.
 
 ## Relations
 
@@ -102,3 +181,4 @@ Q7 est de la responsabilité exclusive de l'humain et ne bloque rien, mais elle 
 - `objecte-a` [RES-007](../ressources/RES-007-concept.md)
 - `objecte-a` [INTENTION.md](../../INTENTION.md)
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md)
+- `reference` [ANL-007](../analyses/ANL-007-interpretation-des-reponses-a-non-004.md)

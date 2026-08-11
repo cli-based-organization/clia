@@ -407,6 +407,21 @@ Il ne valide rien mécaniquement : il fournit des commandes que l'agent exécute
 
 Il ne couvre pas la production des autres types de ressources. Chaque type a son skill, qui renvoie à la partie A de celui-ci pour les règles communes. Six des sept types fondamentaux n'ont pas encore de skill.
 
+## Journalisation
+
+`MET-003` fixe le procédé. La règle qui commande les autres : **chaque information de log est écrite au moment où le travail qu'elle rapporte est fait**, jamais reconstruite à la clôture.
+
+| Moment | Log à écrire |
+|---|---|
+| Avant tout travail | `TSK-01-demande` |
+| Avant de produire | `TSK-02-analyse` |
+| **Pendant**, à chaque lot de livrables | `TSK-03-fait`, un versement par lot |
+| Avant de valider | `TSK-04-validation` |
+| Après les contrôles | `TSK-05-resultat-validation` |
+| À la clôture | `TSK-06-next`, `TSK-07-commit-message` |
+
+Un log ne rapporte qu'une tâche, et il ne se réécrit pas : le type est `point-fixe`.
+
 ## Relations
 
 - `specifie` [RES-001](../../ressources/RES-001-ressource.md)

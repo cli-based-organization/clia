@@ -83,6 +83,21 @@ Les autres types de la famille, `ANL`, `FND` et `MET`, restent en édition `ia`.
 
 Produire du savoir qui ne servira à rien. Une analyse sans question posée est une description. Une fondation sans décision à éclairer est un exercice. Avant de commencer, nommer la décision que le document doit rendre possible.
 
+## Journalisation
+
+`MET-003` fixe le procédé. La règle qui commande les autres : **chaque information de log est écrite au moment où le travail qu'elle rapporte est fait**, jamais reconstruite à la clôture.
+
+| Moment | Log à écrire |
+|---|---|
+| Avant tout travail | `TSK-01-demande` |
+| Avant de produire | `TSK-02-analyse` |
+| **Pendant**, à chaque lot de livrables | `TSK-03-fait`, un versement par lot |
+| Avant de valider | `TSK-04-validation` |
+| Après les contrôles | `TSK-05-resultat-validation` |
+| À la clôture | `TSK-06-next`, `TSK-07-commit-message` |
+
+Un log ne rapporte qu'une tâche, et il ne se réécrit pas : le type est `point-fixe`.
+
 ## Relations
 
 - `derive-de` [skl-001-ressource](../skl-001-ressource/SKILL.md)

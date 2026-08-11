@@ -451,6 +451,19 @@ note_pour_l_humain: >-
   une note.
 EOF
 
+# Le nommage de MET-003 est reconnu, et il prime : il est plus recent.
+mkdir -p "$GDEPOT/.dev/logs/SES-001-t/TSK-001-t"
+cat > "$GDEPOT/.dev/logs/SES-001-t/TSK-001-t/TSK-07-commit-message_2026-01-01-12-00_essai.yaml" <<'EOF'
+type: feat
+scope: essai
+sujet: "un sujet au format MET-003"
+corps: |
+  un corps.
+EOF
+out=$(rungit check done 2>&1)
+assert_contains 'le nommage MET-003 du message est reconnu' 'TSK-07-commit-message' "$out"
+rm -rf "$GDEPOT/.dev/logs/SES-001-t"
+
 out=$(rungit save 2>&1); rc=$?
 assert_rc 'save reussit avec un message prepare' 0 "$rc"
 msg=$(git -C "$GDEPOT" log -1 --format='%s')

@@ -1,0 +1,76 @@
+# Suggestions de prochaines étapes après la tâche 25.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-028 Q1 : les 116 logs de l'ancien format"
+    detail: >-
+      Le dépôt porte deux formats de journal et deux répertoires de session,
+      l'un daté et l'autre numéroté. C'est le mode de défaillance dominant du
+      corpus selon ANL-001. Trois positions : ne rien migrer, migrer les noms
+      en inventant des horodatages que rien ne connaît, ou migrer la
+      structure sans les horodatages.
+
+  - titre: "Trancher NON-028 Q2 : comment vérifier l'écriture au fil de l'eau"
+    detail: >-
+      C'est la règle centrale de MET-003, et elle est déclarative. Trois
+      pistes, dont la troisième est la position actuelle : accepter que la
+      règle repose sur la discipline. C'est ce que NON-005 conteste depuis le
+      2026-08-09.
+
+  - titre: "Trancher NON-028 Q3 : le préfixe TSK du nom de log"
+    detail: >-
+      TSK-01-demande désigne un type de log, non une tâche. Le correctif C4
+      le prescrit littéralement. LOG-01-demande serait cohérent avec le
+      préfixe du type.
+
+  - titre: "Trancher NON-028 Q5 : quand une session devient une SES"
+    detail: >-
+      RES-034 distingue le fichier de session vivant de la ressource qui
+      l'enregistre. Aucun geste ne fait passer de l'un à l'autre.
+
+le_plus_rentable_maintenant:
+  - titre: "Éprouver MET-003 sur une tâche longue"
+    detail: >-
+      La tâche 25 a duré une demi-heure. Le format tient sur une tâche
+      courte ; une tâche longue et ramifiée est le vrai test. C'est là que
+      la tentation de journaliser en bloc à la fin se manifeste, et c'est ce
+      défaut que la méthodologie corrige.
+
+  - titre: "Ajouter le contrôle des horodatages à clia validate"
+    detail: >-
+      Un contrôle simple : dans un répertoire de tâche, les horodatages des
+      logs doivent être distincts et croissants. Des horodatages identiques
+      signalent une reconstruction. Il rejoint les contrôles réclamés depuis
+      six jours.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé. La tâche 25 y ajoute deux contrôles : les horodatages, et le
+      fait qu'un log ne rapporte qu'une tâche.
+
+dette_nommee:
+  - titre: "Deux formats de journal coexistent"
+    detail: >-
+      116 fichiers dans l'ancien, 6 dans le nouveau. Deux répertoires de
+      session, l'un daté et l'autre numéroté. Le journal de cette session est
+      réparti entre les deux.
+
+  - titre: "Trois logs existants violent le correctif C3"
+    detail: >-
+      fait-task-17-19, fait-task-20-21, fait-task-23-24 combinent chacun les
+      logs de plusieurs tâches. Le correctif l'interdit désormais.
+
+  - titre: "Onze tâches ont été journalisées en bloc à la clôture"
+    detail: >-
+      C'est le défaut D4 que cette tâche corrige, et il a été commis par
+      l'agent sur les tâches 14 à 24.
+
+  - titre: "C8 a été appliqué à la main"
+    detail: >-
+      ADR-016 D3 pose que les skills sont dérivables ; rien ne les dérive.
+      Les sept ont été corrigés un par un, ce que la décision déclare
+      provisoire.
+
+  - titre: "Dix règles écrites et non tenues"
+    detail: >-
+      Les neuf de la tâche 22, plus la règle d'écriture au fil de l'eau de
+      MET-003, qui n'est vérifiable par rien.

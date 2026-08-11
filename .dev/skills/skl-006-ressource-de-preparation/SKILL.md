@@ -73,6 +73,21 @@ Pour un ADR, vérifier en outre que chaque décision porte son alternative écar
 
 Décider sans dire ce qui ferait changer d'avis. `ANL-001` mesure au défaut D3 que le corpus compte quatre-vingt-neuf ADR et aucun sur ses quatre ruptures de cap réelles : les décisions y sont abandonnées en silence plutôt que révisées, faute de porte de sortie écrite.
 
+## Journalisation
+
+`MET-003` fixe le procédé. La règle qui commande les autres : **chaque information de log est écrite au moment où le travail qu'elle rapporte est fait**, jamais reconstruite à la clôture.
+
+| Moment | Log à écrire |
+|---|---|
+| Avant tout travail | `TSK-01-demande` |
+| Avant de produire | `TSK-02-analyse` |
+| **Pendant**, à chaque lot de livrables | `TSK-03-fait`, un versement par lot |
+| Avant de valider | `TSK-04-validation` |
+| Après les contrôles | `TSK-05-resultat-validation` |
+| À la clôture | `TSK-06-next`, `TSK-07-commit-message` |
+
+Un log ne rapporte qu'une tâche, et il ne se réécrit pas : le type est `point-fixe`.
+
 ## Relations
 
 - `derive-de` [skl-001-ressource](../skl-001-ressource/SKILL.md)

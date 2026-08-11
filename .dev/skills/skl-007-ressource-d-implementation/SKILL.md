@@ -73,6 +73,21 @@ Vérifier le régime de diffusion : un livrable ne peut pas être plus ouvert qu
 
 Confondre un instrument de travail et un livrable. Une fondation n'est pas un rapport, une analyse n'est pas un article. Le passage de l'un à l'autre demande de réécrire pour un lecteur qui ne sait rien, et non de renommer le fichier.
 
+## Journalisation
+
+`MET-003` fixe le procédé. La règle qui commande les autres : **chaque information de log est écrite au moment où le travail qu'elle rapporte est fait**, jamais reconstruite à la clôture.
+
+| Moment | Log à écrire |
+|---|---|
+| Avant tout travail | `TSK-01-demande` |
+| Avant de produire | `TSK-02-analyse` |
+| **Pendant**, à chaque lot de livrables | `TSK-03-fait`, un versement par lot |
+| Avant de valider | `TSK-04-validation` |
+| Après les contrôles | `TSK-05-resultat-validation` |
+| À la clôture | `TSK-06-next`, `TSK-07-commit-message` |
+
+Un log ne rapporte qu'une tâche, et il ne se réécrit pas : le type est `point-fixe`.
+
 ## Relations
 
 - `derive-de` [skl-001-ressource](../skl-001-ressource/SKILL.md)
