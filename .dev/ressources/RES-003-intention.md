@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, portee, critere-de-satis
 relations-admissibles: [intention, contexte, concept]
 sections: [Le but, La raison, Critère de satisfaction, Critère de trahison, Ce que cette intention exclut, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,18 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `intention`, premier des trois ingrédients de toute demande selon `CLAUDE.md`, et référence de l'objection : « SI IL Y A CONFLIT entre l'intention d'une tâche et l'intention ultime, émettre des objections ».
-
-## Statut de ce document
-
-Premier jet. L'intention est le concept le plus ancien du corpus, présent dès février 2022 dans `noumanity/imagen`, et présent aujourd'hui dans une vingtaine de dépôts. Il est pourtant **latent** au sens de `ANL-001` : il n'existe aucune instance typée, aucune définition, aucun skill. Ce jet réifie une pratique de quatre ans.
-
-## Le problème que ce type résout
-
-`CLAUDE.md` fait de l'intention ultime la référence de l'objection. Or, dans l'état actuel, l'agent ne peut pas s'en servir.
-
-L'`INTENTION.md` de `clia` énonce que le dépôt fournit un cadre de collaboration adapté au DeepTech parce qu'il fournit nativement des capacités de mobilisation du savoir. C'est une affirmation, non un critère. Rien n'y permet de décider si une tâche donnée sert ou trahit cette intention. `ANL-001` a d'ailleurs dû objecter à cette affirmation par une mesure externe, faute de pouvoir la confronter à elle-même.
-
-Le corpus fournit aussi la démonstration négative de la valeur du type. Trois dépôts de consultation partagent le même `INTENTION.md`, au bit près, désignant un client qui n'est pas le leur. Deux dépôts métiers portent comme intention celle du système d'augmentation lui-même. Un log documente l'écrasement d'un `INTENTION.md` par du contenu générique. Le fichier d'intention est le point où les erreurs deviennent visibles, et rien ne les empêche.
 
 ## Ce qu'est une intention
 
@@ -50,7 +38,7 @@ Elle porte quatre choses.
 | **Le critère de satisfaction** | À quoi on reconnaîtra que le but est atteint |
 | **Le critère de trahison** | Ce qui, s'il arrivait, signifierait que l'intention est trahie, même si le travail avance |
 
-Les deux derniers champs sont l'apport de ce jet, et ils sont obligatoires. Le critère de satisfaction permet de clore. Le critère de trahison permet d'objecter, ce qui est la fonction que `CLAUDE.md` assigne à l'intention et que la pratique actuelle ne peut pas remplir.
+Les deux derniers champs sont obligatoires. Le critère de satisfaction permet de clore. Le critère de trahison permet d'objecter, ce qui est la fonction que `CLAUDE.md` assigne à l'intention.
 
 Un critère de trahison bien écrit est spécifique et vérifiable. Exemple, pour l'intention de `clia` : « le système coûte plus de temps qu'il n'en fait gagner », qui est mesurable par le rapport entre les ressources de méthode produites et le travail métier accompli, rapport que `ANL-001` a précisément mesuré comme se dégradant.
 
@@ -69,7 +57,7 @@ Toute intention dérivée doit pouvoir être rattachée à l'intention ultime pa
 
 `INTENTION.md` occupe une position particulière et disputée : c'est le seul fichier qui soit à la fois une ressource par sa nature et un fichier à nom fixe par sa fonction.
 
-Ce jet propose de trancher ainsi : **`INTENTION.md` est l'instance `INT-001`**, et son emplacement dérogatoire à la racine est une propriété déclarée du type, non une exception tacite. La raison est pratique et vérifiable dans le corpus : les fichiers à nom fixe en racine sont ce que les agents lisent effectivement, et une intention que l'agent ne lit pas ne sert à rien.
+**`INTENTION.md` est l'instance `INT-001`.** Son emplacement à la racine est une propriété déclarée du type, non une exception tacite.
 
 La conséquence est que `INTENTION.md` doit porter un frontmatter, ce qu'aucun `INTENTION.md` du corpus ne fait aujourd'hui. C'est un changement visible, à arbitrer : voir `NON-003`.
 
@@ -79,7 +67,7 @@ Une position concurrente est tenable : `INTENTION.md` reste hors du système de 
 
 `humain`, strictement. L'agent lit, cite, commente, objecte, et ne modifie jamais.
 
-Cette règle est la seule du corpus qui soit née d'un dégât documenté, et elle mérite d'être rappelée comme telle plutôt que présentée comme un principe : le premier log du dépôt `commission-scolaire-de-la-capitale` consiste à réparer un `INTENTION.md` écrasé par l'agent avec du contenu générique.
+Cette règle est née d'un dégât documenté : le premier log du dépôt `commission-scolaire-de-la-capitale` consiste à réparer un `INTENTION.md` écrasé par l'agent avec du contenu générique.
 
 Le régime `humain` n'est aujourd'hui protégé par rien d'autre que la règle elle-même. Un fichier en édition humaine exclusive qui a été écrasé une fois et copié à l'identique dans trois dépôts n'est pas protégé : voir `NON-005`.
 
@@ -87,15 +75,15 @@ Le régime `humain` n'est aujourd'hui protégé par rien d'autre que la règle e
 
 `vivant`, versionné en semver, avec une règle propre à ce type.
 
-Un changement **majeur** de l'intention ultime n'est pas une simple montée de version : c'est un changement de cap. Ce jet propose que toute révision majeure de `INT-001` exige une trace écrite de la décision, sous la forme d'un ADR ou, à défaut, d'une section de journal dans l'intention elle-même.
+Un changement **majeur** de l'intention ultime est un changement de cap. Toute révision majeure de `INT-001` exige une trace écrite de la décision : un ADR, ou à défaut une section de journal dans l'intention elle-même.
 
 Cette règle répond au défaut D3 de `ANL-001` : le corpus compte quatre-vingt-neuf ADR et aucun sur les quatre ruptures de cap majeures des douze derniers mois. Un lecteur ne peut reconstituer ni pourquoi `tda` a été abandonné pour `clia`, ni pourquoi la validation par schéma a été perdue.
 
 ## Les trois formes essayées
 
-Le corpus a essayé trois formes d'intention. Ce jet retient la deuxième et garde la troisième ouverte.
+Le corpus a essayé trois formes d'intention. La deuxième est retenue, la troisième reste ouverte.
 
-| Forme | Exemple | Sort dans ce jet |
+| Forme | Exemple | Sort |
 |---|---|---|
 | Prose libre, une phrase à une page | Majoritaire, dont `clia` | Insuffisante : ne porte aucun critère |
 | Sections nommées | `ticket-driven-ai`, cinq sections ; `intentional-doers-governance`, qui numérote `INT-001` | **Retenue**, augmentée des deux critères |

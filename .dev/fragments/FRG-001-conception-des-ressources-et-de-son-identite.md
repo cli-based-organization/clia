@@ -81,7 +81,13 @@ Ce qui est difficile avec le "monde extérieur", c'est qu'on ne contrôle pas le
 
 Aussi, nous adopterons un système hybride fondé sur 
 - 1. un système d'alias auto-cohérent facilement utilisable en interne, et
-- 2. des identifiants complets, mais 
+- 2. des identifiants complets, mais difficiles à lire/mainpuler
+
+## Qui a le droit de créer et modifier une ressource?
+
+## Ressources générables et ressources "vérités"
+
+
 
 
 

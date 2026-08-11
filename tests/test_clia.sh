@@ -404,6 +404,114 @@ out=$( cd "$DEPOT" && CLIA_EXCLUDE_DIRS='' "$CLIA_BIN" res ls 2>/dev/null )
 assert_contains 'sans exclusion, les archives redeviennent visibles' 'aucune' "$out"
 
 # --------------------------------------------------------------------------
+printf '\nclia git : suivi de l historique\n'
+# --------------------------------------------------------------------------
+#
+# Chaque test construit son propre depot git, jamais celui du projet. Le
+# controle T1 se verifie en produisant la faute qu il doit attraper.
+
+GDEPOT="$TMP/gdepot"
+mkdir -p "$GDEPOT/.dev/ressources" "$GDEPOT/.dev/logs/2026-01-01-SES-t"
+git -C "$GDEPOT" init -q .
+git -C "$GDEPOT" config user.email t@t
+git -C "$GDEPOT" config user.name T
+
+gres() { printf -- '---\ntype: ressource\nid: %s\ntitle: "T"\nstatus: draft\n---\n\n# %s - T\n\n%s\n' "$1" "$1" "${2:-corps}"; }
+rungit() { ( cd "$GDEPOT" && CLIA_REPO_ROOT="$GDEPOT" "$CLIA_BIN" git "$@" ) ; }
+
+gres RES-001 > "$GDEPOT/.dev/ressources/RES-001-un.md"
+git -C "$GDEPOT" add -A >/dev/null && git -C "$GDEPOT" commit -qm "initial"
+
+out=$(rungit check clean 2>&1); rc=$?
+assert_rc 'check clean passe sur un depot propre' 0 "$rc"
+assert_contains 'check clean nomme ses controles' 'arbre de travail propre' "$out"
+
+printf 'ligne ajoutee\n' >> "$GDEPOT/.dev/ressources/RES-001-un.md"
+out=$(rungit check clean 2>&1); rc=$?
+assert_rc 'check clean echoue quand un fichier est modifie' 1 "$rc"
+
+out=$(rungit check done 2>&1); rc=$?
+assert_contains 'check done exige un message prepare' 'message de commit prepare' "$out"
+assert_rc 'check done echoue sans message prepare' 1 "$rc"
+
+cat > "$GDEPOT/.dev/logs/2026-01-01-SES-t/commit-message-task-01.yaml" <<'EOF'
+type: feat
+scope: essai
+sujet: "un sujet"
+corps: |
+  un corps.
+note_pour_l_humain: >-
+  une note.
+EOF
+
+out=$(rungit save 2>&1); rc=$?
+assert_rc 'save reussit avec un message prepare' 0 "$rc"
+msg=$(git -C "$GDEPOT" log -1 --format='%s')
+assert_contains 'save rend l entete conventionnel' 'feat(essai): un sujet' "$msg"
+corps=$(git -C "$GDEPOT" log -1 --format='%b')
+assert_contains 'save reprend le corps' 'un corps.' "$corps"
+assert_contains 'save reprend la note pour l humain' "Note pour l'humain" "$corps"
+
+out=$(rungit check clean 2>&1); rc=$?
+assert_rc 'check clean passe apres save' 0 "$rc"
+
+out=$(rungit save 2>&1); rc=$?
+assert_rc 'save echoue quand il n y a rien a commiter' 1 "$rc"
+
+out=$(rungit log RES-001 2>&1)
+assert_contains 'log affiche la colonne du contenu' 'CONTENU' "$out"
+assert_contains 'log affiche le sujet du commit' 'un sujet' "$out"
+
+# L identifiant de contenu affiche est bien celui que git calcule.
+sha=$(git -C "$GDEPOT" rev-parse "HEAD:.dev/ressources/RES-001-un.md")
+assert_contains 'log affiche l identifiant de contenu de git' "${sha:0:12}" "$out"
+
+out=$(rungit log 2>&1); rc=$?
+assert_rc 'log sans argument echoue en 2' 2 "$rc"
+out=$(rungit log RES-999 2>&1); rc=$?
+assert_rc 'log sur une ressource inconnue echoue' 1 "$rc"
+
+out=$(rungit check 2>&1); rc=$?
+assert_rc 'check sans etat echoue en 2' 2 "$rc"
+out=$(rungit check inconnu 2>&1); rc=$?
+assert_rc 'check avec un etat inconnu echoue en 2' 2 "$rc"
+
+# T1 : renommer et reecrire la meme ressource coupe son historique. Git ne
+# signale pas ce cas comme un renommage : il affiche une suppression et une
+# creation. La detection porte donc sur l alias.
+git -C "$GDEPOT" mv .dev/ressources/RES-001-un.md .dev/ressources/RES-001-deux.md
+# Le contenu doit diverger au-dela du seuil de similarite, sinon git detecte
+# le renommage et l historique n est pas coupe : T1 n est alors pas violee.
+seq 1 40 | sed 's/^/aucun recouvrement avec le contenu precedent, ligne /' \
+  > "$GDEPOT/.dev/ressources/RES-001-deux.md"
+git -C "$GDEPOT" add -A >/dev/null
+
+out=$(rungit check done 2>&1); rc=$?
+assert_contains 'check done attrape le renommage avec reecriture' 'T1, RES-001' "$out"
+out=$(rungit save 2>&1); rc=$?
+assert_rc 'save refuse un renommage avec reecriture' 1 "$rc"
+assert_contains 'save nomme la ressource en cause' 'RES-001' "$out"
+
+# Le meme geste en deux commits est accepte : c est la correction prescrite.
+git -C "$GDEPOT" reset -q --hard HEAD
+git -C "$GDEPOT" mv .dev/ressources/RES-001-un.md .dev/ressources/RES-001-trois.md
+out=$(rungit check done 2>&1)
+assert_contains 'un renommage seul ne declenche pas T1' 'ok    aucun renommage' "$out"
+
+# git n est pas disponible partout : la commande le dit au lieu d echouer.
+NONGIT="$TMP/nongit"; mkdir -p "$NONGIT/.dev/ressources"
+out=$( cd "$NONGIT" && CLIA_REPO_ROOT="$NONGIT" "$CLIA_BIN" git check clean 2>&1 ); rc=$?
+assert_rc 'git check hors depot git echoue en 2' 2 "$rc"
+assert_contains 'git check hors depot git le dit' 'pas suivi par git' "$out"
+
+out=$(rungit --help 2>&1)
+assert_contains 'git --help liste les verbes' 'check clean' "$out"
+out=$(rungit check --help 2>&1)
+assert_contains 'git check --help decrit les controles' 'T1' "$out"
+out=$(rungit log --help 2>&1)
+assert_contains 'git log --help explique l identifiant de contenu' 'identifiant de contenu' "$out"
+
+# --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"
 # --------------------------------------------------------------------------
 

@@ -1,0 +1,70 @@
+type: feat
+scope: identite
+sujet: "PREFIX-SEQ est l'alias interne d'une ressource, non son identité"
+corps: |
+  Exécute la tâche 18 de la session du 2026-08-09. L'humain a répondu aux
+  onze questions restantes de NON-001 et a corrigé la réponse à Q1 par la
+  mention « non. voir FRG-001. »
+
+  La correction porte sur un mot, et il change le modèle. ADR-007 appelait
+  identité ce que l'humain appelle alias. FRG-001 distingue deux régimes
+  d'identification, interne et externe, et pose un système hybride fondé sur
+  un système d'alias auto-cohérent utilisable en interne et des identifiants
+  complets. Q4 le confirme : PREFIX-SEQ est l'implémentation par défaut de
+  l'id-interne, non l'identité.
+
+  Ce qui change est le statut de la forme, non sa valeur. Q11 confirme
+  PREFIX-SEQ comme format par défaut. Aucun fichier n'est renommé, aucun
+  renvoi n'est réécrit.
+
+  ADR-007 perd deux de ses cinq décisions. D1 tombe avec la correction. D2,
+  qui interdisait la renumérotation, perd son motif écrit, « c'est ce qui
+  rend D1 possible », et Q5 le remplace par son contraire conditionnel : une
+  modification d'alias met à jour du même coup toutes les références. Une
+  interdiction devient une obligation de propagation, que rien n'outille.
+  D2 était un ajout de l'agent, signalé comme tel à la tâche 13 ; il est
+  retiré avec la prémisse qui le portait. D3, D4 et D5 subsistent.
+
+  ADR-008 instruit sept décisions : les deux régimes, l'alias, la
+  renumérotation conditionnelle, la liberté du slug, l'identité comme
+  oeuvre, l'identifiant intrinsèque fourni par git, et l'identifiant externe
+  laissé ouvert.
+
+  Deux réponses raccordent des travaux antérieurs. Q9 confirme ANL-005 : le
+  suivi de l'historique passe par git, et les six contraintes T1 à T6 de
+  cette analyse deviennent des conditions du régime d'identification plutôt
+  que des recommandations. Q8 tranche une question ouverte depuis FND-002 :
+  l'identité désigne l'oeuvre, le niveau FRBR est déclaré.
+
+  PDC-002 répond à Q11, qui fait de l'ergonomie interne une exigence non
+  négociable. Trois contraintes vérifiables plutôt qu'un énoncé général :
+  lisible, retenable en huit caractères, tapable sans copier-coller. Mesure :
+  92 alias conformes sur 99, les sept écarts étant les atomes de ANL-001.
+
+  NON-001 passe à repondue, effet informatif. C'est la première objection du
+  dépôt à recevoir une réponse complète, sur vingt-deux. Six objections
+  bloquantes subsistent.
+
+  NON-023 est ouverte, effet conditionnel, six questions sur ce que les
+  réponses laissent indéterminé : ce qui porte l'identité de l'oeuvre à
+  l'interne, le sort d'un numéro libéré, la vérification de la propagation,
+  la fonction du champ version, le remplacement partiel d'une décision, et
+  les quatre inconnues de l'identifiant externe.
+
+  RES-001 passe en 2.0.0, bump majeur selon ses propres règles. skl-001 A2 et
+  l'index des ressources sont corrigés : ils affirmaient la position abrogée.
+
+  97 ressources sur 99 valident leur schéma. 91 tests verts. Zéro lien cassé.
+note_pour_l_humain: >-
+  Votre correction a mis MET-002 en défaut à sa première application réelle.
+  DCN-008 corrige deux des cinq décisions de ADR-007 et en conserve trois, et
+  aucun mécanisme du dépôt ne sait le dire : la relation remplace vaut pour
+  un document entier, le champ effet aussi, et MET-002 étape 6 ne connaît que
+  le revirement complet. J'ai annoté l'abrogation décision par décision dans
+  le texte, ce qui est lisible par un humain et par aucun outil. NON-023 Q5
+  le porte.
+  Deux dettes sont créées par cette tâche. L'obligation de propagation d'un
+  alias n'est outillée par rien, ce qui porte à six les règles écrites et non
+  tenues. Et l'abrogation de ADR-007 D2 retire la règle qui interdisait de
+  réattribuer un numéro libéré sans la remplacer : clia res new prend le
+  maximum plus un, donc un numéro libéré sera réattribué en silence.

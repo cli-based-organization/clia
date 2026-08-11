@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, statut-decision, date, d
 relations-admissibles: [adr, decision, ressource, objection, analyse, fondation]
 sections: [Statut, Contexte, Décision en une phrase, Décisions détaillées, Conséquences, Objections ouvertes, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `adr`. C'est le deuxième terme du triplet qui accompagne un type de ressource.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Cinq instances dans ce dépôt, quatre-vingt-neuf dans le corpus. C'est le type le plus employé du corpus après les traces et les tickets, et `ANL-001` établit au défaut D3 son mode de défaillance : les quatre-vingt-neuf ADR du corpus portent sur des questions internes de forme, et aucun sur les quatre ruptures de cap réelles.
 
 ## Ce qu'un ADR porte
 

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, domaine]
 relations-admissibles: [ontologie, concept, ressource]
 sections: [Termes retenus, Termes écartés, Relations admissibles, Zones non couvertes, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,24 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `ontologie`. Sa fonction est de rendre le vocabulaire opposable : quand un mot est fixé par une ontologie, employer un synonyme écarté devient un défaut signalable, et non une variation de style.
-
-## Statut de ce document
-
-Premier jet, sur un concept **amorcé** au sens de `ANL-001` : une instance dans le corpus (`ONT-001-ontologie-du-patrimoine` de `micrologic-clients`), une définition, un skill. Deux travaux antérieurs apportent la théorie : `disruptiva-dev/nty`, qui faisait de l'ontologie un objet de première classe manipulable par CLI, avec des notions de `phore`, d'assignation ontologique et de validateurs ; et `disruptiva-dev/comm-cli`, qui classait ses neuf ressources selon cinq natures (contextuelle, stratégique, tactique, opérationnelle, stylistique).
-
-## Le problème que ce type résout
-
-Le besoin est démontré par une mesure, non par un principe. `ANL-001` établit une dérive lexicale non contrôlée dans le corpus.
-
-| La même chose s'appelle | Dans |
-|---|---|
-| `livrable` et `ressource` | Lignée A et lignée B |
-| `completed` et `complet` | Cinquante-deux logs et deux logs du même dépôt |
-| `améliorations`, `issues`, `tickets`, `needs`, `features` | Cinq dépôts pour un même objet |
-| `session.md`, `.dev/session.md`, `workspace/session.md` | Trois emplacements pour le point d'entrée |
-| `OBJ` et `NON` | Deux préfixes pour l'objection |
-
-Aucun de ces écarts n'a été détecté au moment où il s'est produit. Ils ont été trouvés en comparant cent soixante-six dépôts, ce qu'aucun humain ne fait dans le cours du travail.
 
 ## Ce qu'est une ontologie
 
@@ -57,7 +39,7 @@ Les termes écartés sont l'apport principal. Une ontologie qui n'énumère que 
 
 ## Les deux emplois, et pourquoi ils sont un seul type
 
-Le corpus emploie le mot ontologie de deux manières apparemment distinctes : fixer un lexique, et typer des relations. Ce jet les traite comme un seul type, parce que ce sont les deux faces d'une même opération : nommer les choses, et nommer les liens entre les choses. Séparer les deux produirait deux documents qui devraient se citer à chaque entrée.
+Le mot ontologie couvre deux opérations : fixer un lexique, et typer des relations. Le type les réunit : nommer les choses et nommer les liens entre les choses sont les deux faces d'une même opération.
 
 ## Articulation avec le modèle de ressources
 
@@ -65,7 +47,7 @@ C'est le point d'ingénierie de ce type, et il rend le modèle cohérent.
 
 Chaque définition de type déclare un champ `relations-admissibles`. Ce champ n'est valide que si les relations qu'il nomme sont déclarées par une ontologie. Autrement dit : `RES` déclare quels liens un type peut porter, `ONT` déclare quels liens existent.
 
-Il suit que l'**ontologie du système lui-même** est nécessaire, et qu'elle n'existe pas. C'est la lacune la plus immédiate de ce jet : les sept définitions produites le 2026-08-09 déclarent des relations (`derive-de`, `remplace`, `reference`, `objecte-a`, `repond-a`, `specifie`) que rien ne définit. Le vocabulaire provisoire est écrit dans `RES-001`, ce qui en fait une source parallèle, exactement le défaut que le modèle prétend éviter.
+Il suit que l'**ontologie du système lui-même** est nécessaire, et qu'elle n'existe pas. C'est la lacune la plus immédiate du type : les sept définitions produites le 2026-08-09 déclarent des relations (`derive-de`, `remplace`, `reference`, `objecte-a`, `repond-a`, `specifie`) que rien ne définit. Le vocabulaire provisoire est écrit dans `RES-001`, ce qui en fait une source parallèle, exactement le défaut que le modèle prétend éviter.
 
 ## Portées
 
@@ -78,7 +60,7 @@ Une ontologie de domaine peut déclarer `derive-de` vers l'ontologie du système
 
 ## Frontière avec le concept
 
-C'est la frontière la plus disputée du modèle, et `NON-004` la porte dans son ensemble. La proposition de ce jet est la suivante.
+C'est la frontière la plus disputée du modèle. `NON-004` la porte dans son ensemble.
 
 | Type | Ce qu'il fait | Forme | Longueur typique |
 |---|---|---|---|
@@ -101,7 +83,7 @@ Le vocabulaire est un accord. Il se co-édite.
 
 `nty` avait une ontologie exécutable, avec validateurs. C'est la seule occurrence du corpus où le vocabulaire était vérifié mécaniquement, et elle a été abandonnée en douze jours sans trace de décision.
 
-Ce jet ne réintroduit pas la validation, faute d'outil. Il note que l'ontologie est le type dont la validation serait la moins coûteuse et la plus rentable : détecter l'emploi d'un terme écarté est une recherche textuelle. Voir `NON-005`.
+La validation n'existe pas, faute d'outil. L'ontologie est le type dont elle serait la moins coûteuse : détecter l'emploi d'un terme écarté est une recherche textuelle. Voir `NON-005`.
 
 ## Structure attendue d'une instance
 

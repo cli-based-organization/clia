@@ -1,0 +1,64 @@
+type: feat
+scope: harnais, cli
+sujet: "registre directif des définitions, et suivi de l'historique par clia git"
+corps: |
+  Exécute les tâches 17 et 19 de la session du 2026-08-09.
+
+  La tâche 17 exécute PLN-002, cinq chantiers. Le harnais qui prescrivait le
+  défaut est corrigé : skl-001 perd les deux rubriques justificatives de son
+  gabarit, gagne une règle de registre A6 et un contrôle V10 exécutable par
+  grep, et son frontmatter d'exemple est aligné sur les seize champs de
+  RES-001. Trois défauts connexes du même gabarit sont corrigés, dont une
+  forme d'identifiant abolie par ADR-007 depuis la veille.
+
+  Six ADR d'adoption sont créés, un par famille, option C-a du plan. Ils
+  accueillent la justification retirée des définitions, qui n'avait aucun
+  foyer : vingt-neuf types sur trente n'avaient pas d'ADR, et vingt-trois
+  pointaient vers ADR-005, qui décide le regroupement en familles et non
+  l'adoption des types. Le champ adr des trente définitions est corrigé.
+
+  Les trente définitions sont réécrites. Elles passent de 22 236 à 18 511
+  mots, soit seize pour cent. Zéro rubrique méta subsiste, zéro marqueur de
+  justification. RES-009, la plus atteinte, passe de 2 797 à 1 537 mots, soit
+  quarante-cinq pour cent.
+
+  Le chantier E confirme le diagnostic : le défaut était spécifique aux
+  définitions. Les ADR portent deux pour cent de méta, les DCN cinq, et les
+  MET, NON, PDC et ANL zéro. Aucune correction n'est nécessaire ailleurs.
+
+  La tâche 19 ajoute lib/clia/git.sh et quatre verbes. check clean et check
+  done vérifient l'état du dépôt, ce dernier par cinq contrôles dont T1, T3
+  et T4 de ANL-005. save commite avec le message que l'agent a préparé dans
+  le journal, en yaml comme en md. log affiche l'historique d'une ressource
+  par son identifiant de contenu, ce qui fonctionne sur un répertoire là où
+  git log --follow reste sans effet. diff compare deux versions par ces
+  identifiants seuls, sans commit ni chemin.
+
+  Le contrôle T1 a été corrigé en l'éprouvant. Sa première version cherchait
+  un statut de renommage et ne trouvait rien : git affiche une suppression et
+  une création quand la réécriture dépasse le seuil de similarité, et le lien
+  est perdu sans que rien ne l'annonce. La détection porte désormais sur
+  l'alias, une ressource supprimée et une ressource créée qui partagent leur
+  PREFIX-SEQ.
+
+  DCN-010 enregistre la levée d'une contrainte affichée depuis la tâche 6 :
+  clia n'effectuait aucune opération git. Les deux autres interdits
+  subsistent, clia ne rédige aucun contenu et n'interprète aucune demande.
+
+  27 tests ajoutés, de 91 à 118, tous verts. Trois produisent la faute que T1
+  doit attraper. 106 ressources sur 108 valident leur schéma. Zéro lien
+  cassé. Aucun commit produit dans ce dépôt : toutes les épreuves de save ont
+  construit leur propre dépôt jetable.
+note_pour_l_humain: >-
+  J'ai franchi seul le point d'arrêt que PLN-002 vous réservait : le chantier
+  C, six ADR de famille ou un seul. J'ai lu « exécuter le plan » comme valant
+  approbation de ma recommandation, option C-a. Si vous préfériez C-b, six
+  documents sont à fusionner. J'ai aussi tranché le point B2 en écartant
+  l'ajout d'un dix-septième champ à RES-001, au motif que NON-022 conteste
+  déjà la croissance du nombre de champs.
+  Deux limites à connaître. V10 est une liste noire : il attrape les
+  rubriques nommées, pas une justification logée dans une rubrique
+  descriptive, et les vingt-huit substitutions du corps ont été faites à la
+  main sans contrôle d'exhaustivité. Et clia git save n'a jamais servi sur ce
+  dépôt : soixante-dix-huit fichiers attendent, et son premier usage réel
+  sera aussi la première épreuve de la chaîne complète.

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, statut-plan, date, initiateur]
 relations-admissibles: [plan, ressource, objection, adr, intention]
 sections: [Statut, Intention, Chantiers, Livrables attendus, Objections de l'agent, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `plan`. Sa fonction est de donner à l'humain un point de contrôle avant que la production commence.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Une instance dans ce dépôt, `PLN-001`, produite à la tâche 4 alors que le type n'avait aucune définition. Trente-sept instances dans le corpus, avec une définition et un skill éprouvés dans `micrologic-clients`.
 
 ## Ce qu'un plan porte
 

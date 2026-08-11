@@ -41,7 +41,7 @@ Cinq champs sont communs à tous les types.
 | Champ | Contrainte |
 |---|---|
 | `type` | Le nom du type, en minuscules, tel que sa définition le déclare |
-| `id` | `<PREFIXE>-<SLUG>`, où le slug est celui du nom de fichier, sans le numéro |
+| `id` | `<PREFIX>-<SEQ>`, l'alias interne. Le slug du nom de fichier n'en fait pas partie |
 | `title` | Nom lisible, entre guillemets si le YAML l'exige |
 | `version` | Semver, pour les types au cycle `vivant` uniquement |
 | `status` | `draft`, `stable` ou `deprecated` |
@@ -50,7 +50,9 @@ Les champs propres au type s'ajoutent, et la définition du type les énumère d
 
 ### A2 - Identité et nommage
 
-L'identité est le champ `id`, de la forme `<PREFIX>-<SEQ>` (`ADR-007`). Elle est attribuée à la création et **jamais modifiée** : renuméroter est un changement d'identité.
+Le champ `id`, de la forme `<PREFIX>-<SEQ>`, porte l'**alias interne** de la ressource (`ADR-008` D2). C'est la cible de tout renvoi interne. Ce n'est pas l'identité : l'identité désigne l'oeuvre et aucun champ ne la porte à l'interne (`ADR-008` D5, `NON-023` Q1).
+
+**Un alias peut changer, à condition de propager.** Tout changement d'alias met à jour, dans le même geste, toutes les références internes qui le citent (`ADR-008` D3). Aucune commande ne le fait et aucun contrôle ne le vérifie. Le faire à la main demande deux précautions, établies par la migration de la tâche 13 : traiter les identifiants du plus long au plus court, et employer une frontière de mot.
 
 Le nom de fichier est le même pour tous les types, quel que soit leur cycle de vie.
 
@@ -64,7 +66,7 @@ Le slug est en minuscules, sans accent, mots séparés par des traits d'union. I
 
 Un renvoi vers une autre ressource cite son `id` dans le texte et son chemin dans le lien markdown.
 
-**Ce qui a changé le 2026-08-10.** L'identité était `<PREFIX>-<SLUG>` jusqu'à `ADR-007`, qui l'a renversé. Le motif est que le numéro, attribué une fois, persiste, alors qu'un slug suit un titre révisable.
+**Ce qui a changé le 2026-08-10.** `ADR-007` a d'abord fait du numéro l'identité, en renversant la forme `<PREFIX>-<SLUG>`. `ADR-008` a ensuite abrogé ses D1 et D2 : le numéro est un alias interne, et il peut changer sous condition de propagation. La forme `<PREFIX>-<SEQ>` est inchangée et reste le format par défaut, fixé par `PDC-002`.
 
 ### A3 - Écriture
 
@@ -109,6 +111,32 @@ Le type de ressource demandé n'existe pas, ou sa définition ne couvre pas le c
 
 La production exigerait de trancher une question qui appartient à l'humain. Le trancher soi-même dans une ressource fait passer une décision pour un constat.
 
+### A6 - Registre : directif et factuel
+
+Une ressource énonce **ce qui est**, non pourquoi on l'a décidé.
+
+Le pourquoi appartient à l'`ADR`, règle B1. Le récit de la production appartient au journal de la tâche. Une ressource qui les porte se substitue à deux documents et devient illisible.
+
+**Cinq interdits.**
+
+| Interdit | Exemple de ce qui est proscrit |
+|---|---|
+| Défendre un choix de rédaction | « Ce jet propose », « la position retenue est », « trois positions étaient possibles » |
+| Comparer avec une version antérieure du document | « premier jet », « ce que ce jet change », « la position antérieure » |
+| Raconter la production | « produit le 2026-08-10 à la demande de la tâche 8 » |
+| Justifier une propriété du type | « ce champ mérite justification », « au motif que » |
+| Rapporter un débat non tranché dans le corps | La question va dans une objection, pas dans une digression |
+
+**Deux obligations.**
+
+Les références externes, quand elles sont nécessaires, prennent la forme d'une **bibliographie numérotée** en fin de document, avec un renvoi par numéro dans le texte.
+
+Une mesure citée décrit le type, jamais la décision de l'écrire. `ANL-001` mesure douze numéros de skill sur vingt portant plusieurs noms : ce fait a sa place dans une définition s'il décrit une propriété, dans un `ADR` s'il fonde un choix.
+
+**Ce que la règle ne supprime pas.** La rubrique des points ouverts, exigée par A3, réduite à une table de deux colonnes, question et objection. La rubrique des relations.
+
+Le contrôle est V10.
+
 ## Partie B - Produire une définition de type
 
 Une définition de type est une instance du type `ressource`. Elle vit dans `.dev/ressources/`, porte les quatorze champs de frontmatter, et déclare les propriétés du type qu'elle définit.
@@ -136,7 +164,7 @@ Ce test se passe avant la rédaction, pas après : `ADR-008` du dépôt `microlo
 5. **Énumérer les champs obligatoires.** Les cinq communs, plus ceux que le type exige. Chaque champ ajouté est un coût sur chaque instance, saisi à la main et sans vérification. Ne rendre obligatoire que ce qui sert.
 6. **Poser les frontières.** Nommer explicitement les types voisins et dire ce qui départage. C'est la section que les définitions du corpus omettent le plus souvent, et c'est celle qui évite les recouvrements.
 7. **Écrire les lacunes.** Ce que la définition ne règle pas, et où la question est portée. Ne pas enterrer une question dans une section de lacunes si elle mérite une objection : ouvrir l'objection.
-8. **Valider.** Section Validation ci-dessous, contrôles V1 à V9.
+8. **Valider.** Section Validation ci-dessous, contrôles V1 à V10.
 9. **Mettre à jour l'index.** `.dev/ressources/index.md` est une vue, pas une source. Il doit refléter la nouvelle ligne.
 
 ### B3 - Gabarit d'une définition de type
@@ -144,7 +172,7 @@ Ce test se passe avant la rédaction, pas après : `ADR-008` du dépôt `microlo
 ```
 ---
 type: ressource
-id: RES-<slug>
+id: RES-<SEQ>
 title: "<Nom du type>"
 version: 0.1.0
 status: draft
@@ -152,10 +180,12 @@ prefixe: <XXX>
 emplacement: ".dev/<repertoire>/<XXX>-<SEQ>-<SLUG>.md"
 cycle-de-vie: <vivant | point-fixe | travail>
 edition: <humain | ia | hybride | co-edition>
+famille: <fondamentale | conception | controle | contenu | preparation | implementation>
 champs-obligatoires: [type, id, title, version, status, ...]
 relations-admissibles: [...]
+sections: [...]
 skill: <skl-<SEQ>-<nom> | aucun>
-adr: <ADR-<slug> | aucun>
+adr: <ADR-<SEQ> | aucun>
 statut: <actif | deprecie | non-installe>
 ---
 
@@ -164,10 +194,9 @@ statut: <actif | deprecie | non-installe>
 > Le type en une phrase, qui tient debout seule.
 
 ## Objet
-## Statut de ce document
-## Le problème que ce type résout
 ## Ce qu'est <le type>
 ## Ce que <le type> n'est pas
+## Champs propres
 ## Test d'admission
 ## Cycle de vie et versionnage
 ## Régime d'édition
@@ -177,11 +206,21 @@ statut: <actif | deprecie | non-installe>
 ## Points ouverts
 ```
 
-Les rubriques `Ce que ce n'est pas`, `Frontière avec les types voisins` et `Points ouverts` ne sont pas optionnelles. Elles sont ce qui distingue une définition d'une présentation.
+Seize champs, onze rubriques. Le frontmatter reprend les seize champs obligatoires que `RES-001` déclare.
+
+**Trois rubriques ne sont pas optionnelles** : `Ce que <le type> n'est pas`, `Frontière avec les types voisins` et `Points ouverts`. Elles sont ce qui distingue une définition d'une présentation.
+
+**Onze rubriques descriptives, aucune méta.** Une définition dit ce qu'est le type, ce qu'il n'est pas, ses champs, son cycle de vie, son régime d'édition et la structure de ses instances. Elle ne dit pas pourquoi le type existe : c'est l'`ADR`, règle B1. Elle ne dit pas comment elle a été produite : c'est le journal de la tâche. Voir A6, et le contrôle V10.
+
+`Points ouverts` est une table de deux colonnes, question et objection. Aucune prose.
+
+| Question | Objection |
+|---|---|
+| Ce que la définition ne règle pas, en une ligne | `NON-<SEQ>` |
 
 ## Validation
 
-Neuf contrôles, tous exécutables sans outil. Ils constituent aussi le cahier des charges de la future validation par `clia` (`ADR-001` D9).
+Dix contrôles, tous exécutables sans outil. Ils constituent aussi le cahier des charges de la future validation par `clia` (`ADR-001` D9).
 
 Poser d'abord la variable :
 
@@ -320,6 +359,18 @@ Comparer avec l'empreinte du même fichier dans les dépôts voisins. Une emprei
 
 Motif : c'est le défaut le plus coûteux qu'ait révélé `ANL-001`. Trois dépôts de consultation partagent le même `INTENTION.md` au bit près, désignant un client qui n'est pas le leur, et les mêmes dix-huit logs. Parmi ces logs, celui qui documente l'écrasement d'un `INTENTION.md` par du contenu générique a été copié dans les deux dépôts où l'`INTENTION.md` est justement resté générique.
 
+### V10 - Aucune rubrique méta
+
+```sh
+grep -nE '^## (Statut de ce document|Le problème que ce type résout|Ce que la fondation a changé|Auto-application)' "$F"
+```
+
+Aucune sortie attendue. Une rubrique méta est une rubrique dont le sujet est le document lui-même, ou la décision de l'écrire, plutôt que ce qu'il définit.
+
+La liste ci-dessus est close. Elle ne détecte pas une justification logée dans une rubrique descriptive, ce que `NON-023` ne couvre pas et que `PLN-002` déclare comme limite du contrôle.
+
+Motif : `ANL-004` mesure que 20,8 pour cent du texte des trente définitions est logé dans ces rubriques, et que les deux premières sont reprises par 30 définitions sur 30. Elles étaient prescrites par ce skill jusqu'au 2026-08-10. Voir A6.
+
 ### Boucle sur un répertoire
 
 ```sh
@@ -366,6 +417,6 @@ Il ne couvre pas la production des autres types de ressources. Chaque type a son
 
 | Question | Objection |
 |---|---|
-| Les contrôles V1 à V9 doivent-ils devenir une commande `clia` | `NON-005` Q4 |
+| Les contrôles V1 à V10 doivent-ils devenir une commande `clia` | `NON-005` Q4 |
 | Le vocabulaire de relations de A4 doit vivre dans une ontologie | `NON-004` Q2 |
 | Le nombre de champs obligatoires est-il tenable sans validation | `NON-002` Q4, `NON-005` Q6 |

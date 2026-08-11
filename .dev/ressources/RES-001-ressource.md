@@ -2,7 +2,7 @@
 type: ressource
 id: RES-001
 title: "Ressource"
-version: 1.0.0
+version: 2.0.0
 status: draft
 prefixe: RES
 emplacement: ".dev/ressources/RES-<SEQ>-<SLUG>.md"
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, prefixe, emplacement, cy
 relations-admissibles: [ressource, adr, decision]
 sections: [Objet, Ce qu'est une ressource, Identité, Cycle de vie et versionnage, Régimes d'édition, Frontmatter, Relations, Points ouverts]
 skill: skl-001-ressource
-adr: ADR-001
+adr: ADR-009
 statut: actif
 ---
 
@@ -28,12 +28,6 @@ Ce document définit ce que `clia` appelle une **ressource**, et fixe la forme q
 Il est la source de vérité du type `ressource`. Rien de ce qu'il porte n'est déclaré ailleurs.
 
 Ce qu'il n'est pas : ni la décision d'introduire ce type, qui appartient à [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md), ni le processus de production d'une définition, qui appartient à [skl-001-ressource](../skills/skl-001-ressource/SKILL.md). Le triplet de ce type est complet depuis le 2026-08-09 ; les six autres types fondamentaux n'ont encore ni décision ni processus.
-
-## Statut de ce document
-
-Premier jet, produit le 2026-08-09 à partir des constats de `ANL-001-observation-corpus-repos-et-pratiques`. Il s'appuie sur `RES-001-ressource.md` du dépôt `noumanity-consultation/micrologic-clients`, qui est l'état de l'art du corpus, et s'en écarte sur un point : l'identité. La justification de cet écart est donnée plus bas.
-
-Les questions que ce jet laisse ouvertes sont portées par les objections `NON-001` à `NON-008`, et non enterrées dans une section de lacunes.
 
 ## Ce qu'est une ressource
 
@@ -69,7 +63,7 @@ Une ressource a un **coût**. Elle se produit, se relit, se maintient, se renum�
 
 | Invariant | Retenu | Comment, ou pourquoi pas |
 |---|---|---|
-| I1 Identité stable | **Oui**, par le champ `id` de forme `<PREFIX>-<SEQ>` | Le numéro est attribué à la création et jamais modifié : c'est lui qui persiste. Voir la section « Identité » |
+| I1 Identité stable | **Non à l'interne**, oui à l'externe | À l'interne, le champ `id` porte un alias modifiable sous condition de propagation. L'identité stable relève du régime externe, non fixé. Voir la section « Identité » |
 | I2 Type comme contrat | **Oui**, partiellement | Le type est déclaré et ses champs obligatoires sont écrits en un seul endroit. La vérification reste humaine, faute d'outil. Voir `NON-005` |
 | I3 Représentation distincte | **Oui**, partiellement | Une ressource peut être publiée sous une autre forme. La relation entre les deux se déclare, elle n'est pas outillée |
 | I4 Désiré et constaté | **Non**, transposé | Pas de dualité déclarative. Les sections « Points ouverts » et les objections en tiennent lieu |
@@ -79,26 +73,48 @@ Une ressource a un **coût**. Elle se produit, se relit, se maintient, se renum�
 
 ## Identité
 
-C'est le point où ce jet s'écarte de l'état de l'art, et l'écart est fondé sur une mesure.
+L'identification se fait à deux niveaux, fixés par `ADR-008` D1.
 
-`RES-001` de `micrologic-clients` écarte l'invariant d'identité stable et pose que l'identité d'une ressource est son chemin. Le calcul est défendable pour un dépôt isolé de faible volume, et le document lui-même en donne le coût constaté : renommer un préfixe a demandé six corrections manuelles.
+| Régime | Portée | Contrainte | Porteur |
+|---|---|---|---|
+| **Interne** | Le dépôt | Relatif et auto-cohérent | L'alias, `<PREFIX>-<SEQ>` par défaut |
+| **Externe** | Hors du dépôt | Complet | Non fixé, `ADR-008` D7 |
 
-Ce calcul ne tient pas pour `clia`, dont l'objet est d'équiper plusieurs dépôts. `ANL-001` le mesure : dans le corpus, douze numéros de skill sur vingt portent plusieurs noms distincts selon le dépôt, `skl-004` en portant cinq et `skl-006` quatre. Un dépôt porte sept ADR dont trois paires de doublons de titre. Le numéro de séquence n'est donc pas un identifiant, c'est un ordre d'apparition local.
+### L'alias interne
 
-**Décision en vigueur, depuis `DCN-007` et `ADR-007` du 2026-08-10.** L'identité d'une ressource est le champ `id`, de la forme `<PREFIX>-<SEQ>`. Exemples : `RES-001`, `NON-014`, `ADR-006`.
+`<PREFIX>-<SEQ>` désigne une ressource à l'intérieur du dépôt. Exemples : `RES-001`, `NON-014`, `ADR-006`.
 
-Cette décision **renverse** la position antérieure, qui faisait de l'identité le couple préfixe et slug. Son motif est écrit dans `ADR-007` : le numéro est attribué à la création et ne change jamais, alors qu'un slug suit un titre révisable. Ce qui persiste est donc le numéro.
+C'est un **alias**, non l'identité. `ADR-008` D2.
 
 | Propriété | Porteur | Rôle |
 |---|---|---|
-| Identité | Champ `id`, `<PREFIX>-<SEQ>` | Cible de tout renvoi. Attribué à la création, jamais modifié |
-| Libellé | Slug du nom de fichier | Lisible, révisable sans effet sur l'identité |
+| Alias interne | Champ `id`, `<PREFIX>-<SEQ>` | Cible de tout renvoi interne |
+| Libellé | Slug du nom de fichier | Lisible, révisable sans effet |
 | Nom canonique du type | Slug du nom de fichier d'une définition | Ce que porte le champ `type` des instances |
 | Localisation | Chemin | Déductible du type et du nom |
+| Identifiant intrinsèque | Identifiant de contenu git | Suivi de l'historique, attestation des modifications |
 
-Trois propriétés en découlent. Corriger un slug ne casse aucun renvoi. Déplacer un fichier ne casse aucun renvoi. **Renuméroter est interdit** : le numéro est l'identité, et une renumérotation est un changement d'identité, traité par `remplace` et `est-remplacee-par`.
+Trois règles.
 
-L'identifiant est **relatif au dépôt**. `RES-001` ne désigne la même chose que dans un dépôt donné. La portée inter-dépôts reste ouverte : voir `NON-001` Q2 et Q10.
+**Corriger un slug n'a aucune conséquence.** Le slug ne participe pas à l'alias. `ADR-008` D4.
+
+**Déplacer un fichier ne casse aucun renvoi.** Les renvois ciblent l'alias.
+
+**Changer un alias est permis, à condition de propager.** Tout changement met à jour, dans le même geste, toutes les références internes qui le citent. `ADR-008` D3. Aucune commande ne le fait et aucun contrôle ne le vérifie : `NON-023` Q3.
+
+L'alias est **relatif au dépôt**. `RES-001` ne désigne la même chose que dans un dépôt donné.
+
+### L'identité
+
+L'identité désigne l'**oeuvre**. `ADR-008` D5.
+
+Aucun champ ne la porte à l'interne. `NON-023` Q1.
+
+### L'ergonomie
+
+L'alias satisfait trois contraintes vérifiables : lisible, retenable en huit caractères au plus, tapable sans copier-coller. `PDC-002`.
+
+L'exigence est opposable. Un arbitrage qui l'affaiblit produit une objection.
 
 ## Cycle de vie et versionnage
 
@@ -112,7 +128,9 @@ Trois classes. Le cycle de vie commande le nommage et le versionnage.
 
 Règles de semver pour les ressources vivantes. Majeur : changement incompatible du sens ou du contrat. Mineur : ajout rétrocompatible. Correctif : clarification sans effet sémantique.
 
-**Réserve reprise et assumée.** La règle d'immuabilité du point fixe n'a été tenue dans aucun dépôt du corpus, et `RES-001` de `micrologic-clients` le reconnaît explicitement. Ce jet la conserve comme règle et signale l'écart plutôt que de le dissimuler, mais refuse de laisser la question ouverte indéfiniment : trois positions sont tenables, l'appliquer, l'abandonner, ou la remplacer par un versionnage, et la position actuelle n'en est pas une. Voir `NON-005`.
+**Le versionnage relève de la publication externe.** `ADR-008` D5. À l'interne, les modifications sont tracées par l'historique, dont `ANL-005` établit qu'il fournit un identifiant de contenu par version et le diff entre deux d'entre elles. La fonction interne du champ `version` est ouverte : `NON-023` Q4.
+
+**Réserve reprise et assumée.** La règle d'immuabilité du point fixe n'a été tenue dans aucun dépôt du corpus, et `RES-001` de `micrologic-clients` le reconnaît explicitement. La règle est conservée et l'écart est signalé. Trois positions sont tenables : l'appliquer, l'abandonner, ou la remplacer par un versionnage. Voir `NON-005`.
 
 ## Régimes d'édition
 
@@ -156,7 +174,7 @@ La cohabitation, dans un même frontmatter, des métadonnées de la définition 
 
 Une relation est un renvoi typé d'une ressource vers une autre, écrit dans une section `## Relations` du corps du document, sous forme de lien markdown accompagné du nom de la relation et de l'`id` de la cible.
 
-Vocabulaire de départ, hérité de `resource-types.yaml` de `clia` et réduit à ce que ce jet emploie effectivement.
+Vocabulaire hérité de `resource-types.yaml` de `clia`, réduit à ce qui est effectivement employé.
 
 | Relation | Sens |
 |---|---|
@@ -185,7 +203,7 @@ Trois documents accompagnent un type. Ce qui va dans lequel :
 
 Test pratique, repris de `micrologic-clients` : un passage qui cesserait d'être vrai en changeant d'avis relève de la décision ; un passage qui décrit une suite d'actions relève du processus ; un passage qui décrit une propriété du type telle qu'elle est aujourd'hui relève de la définition.
 
-Ce triplet a un coût, et le coût est le sujet de `NON-002` : sept types font vingt-et-un documents, vingt-sept types en font quatre-vingt-un. Ce jet ne produit que les définitions, sciemment.
+Ce triplet a un coût, sujet de `NON-002` : sept types font vingt-et-un documents, trente types en font quatre-vingt-dix.
 
 ## Ce qui n'est pas une ressource
 
@@ -199,18 +217,13 @@ Ce triplet a un coût, et le coût est le sujet de `NON-002` : sept types font v
 
 Le statut de `INTENTION.md` est traité par `RES-003` et n'est pas tranché ici : c'est le seul fichier de racine dont la nature est disputée.
 
-## Auto-application
-
-Cette définition est une instance du type qu'elle définit. Elle porte les quatorze champs obligatoires, vit à l'emplacement qu'elle déclare, suit la nomenclature qu'elle fixe, et déclare le skill et l'ADR qui l'accompagnent effectivement.
-
-L'auto-application est une contrainte et non une élégance : un modèle dont le document central échappe à ses propres règles n'est pas un modèle.
-
 ## Relations
 
 - `reference` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/index.md)
 - `derive-de` [ADR-001](../adr/ADR-001-adoption-de-la-notion-de-ressource.md)
 - `derive-de` [ADR-004](../adr/ADR-004-nature-composable-de-la-ressource.md)
 - `derive-de` [ADR-005](../adr/ADR-005-regroupement-fonctionnel-des-ressources.md)
+- `derive-de` [ADR-008](../adr/ADR-008-regime-d-identification-a-deux-niveaux.md)
 - `reference` [skl-001-ressource](../skills/skl-001-ressource/SKILL.md)
 
 ## Points ouverts
@@ -219,7 +232,12 @@ Portés par des objections, non enterrés ici.
 
 | Question | Objection |
 |---|---|
-| Forme du champ `id`, collisions entre dépôts, coût de la discipline de renvoi | `NON-001` |
+| Ce qui porte l'identité de l'oeuvre à l'interne | `NON-023` |
+| Sort d'un numéro libéré, l'interdiction de renuméroter étant levée | `NON-023` |
+| Vérification de la propagation d'un changement d'alias | `NON-023` |
+| Fonction interne du champ `version` | `NON-023` |
+| Forme de l'identifiant externe | `NON-023` |
+| Redondance du champ `id` avec le nom de fichier | `NON-019` |
 | Coût du triplet définition, décision, processus ; seuil d'admission d'un type | `NON-002` |
 | Absence de validation mécanique ; règles écrites et non tenues | `NON-005` |
 | Portée du modèle : textuel seulement, ou aussi les assets et les données | `NON-006` |

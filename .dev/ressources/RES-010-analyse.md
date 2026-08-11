@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, sujet]
 relations-admissibles: [analyse, fondation, fait, contexte, objection, ressource]
 sections: [Objet, Méthode, Constats, Réponse à la question posée, Limites, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-005
+adr: ADR-011
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `analyse`. Sa fonction est de produire du savoir sur ce qui est, par opposition à la fondation qui produit du savoir sur ce que d'autres ont établi.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Le type est le mieux éprouvé de la famille : trois instances dans ce dépôt, vingt-huit dans le corpus, et une décision antérieure qui le sépare de la fondation.
 
 ## Ce qu'est une analyse
 

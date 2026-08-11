@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, origine, date-de-captation, explo
 relations-admissibles: [fragment, decision, fait, concept, analyse, fondation, intention]
 sections: [Objet, Le fragment, Origine, Ce qui en a été tiré, Ce qui reste à en tirer, Relations]
 skill: skl-004-ressource-de-contenu
-adr: ADR-005
+adr: ADR-010
 statut: actif
 ---
 
@@ -24,18 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `fragment`. Sa fonction est d'élargir les moyens par lesquels l'humain fournit de l'information au système, sans passer par le point d'entrée de session et sans le mécanisme de traitement que celui-ci impose.
-
-## Statut de ce document
-
-Premier jet, produit le 2026-08-10 à la demande de la tâche 8. Le type est nouveau. Il a un antécédent partiel dans le corpus : le répertoire `source-material`, présent dans dix dépôts observés par `ANL-001`, dont `intentional-doers-governance` où il porte un `SRCM-001` conservé verbatim.
-
-## Le problème que ce type résout
-
-La demande le formule directement : le point d'entrée unique répond à un besoin réel, l'entrée conventionnée et la journalisation des demandes, et il est contraignant parce qu'il rattache toute entrée à un mécanisme de traitement unique.
-
-`ANL-001` documente le coût de cette contrainte. Onze dépôts de technotes, dont six sans aucun fichier versionné, parce que le seul contenant disponible était disproportionné pour deux commandes GPG. La doctrine de gestion des secrets de `jvtrudel/technotes.secrets` tient en trois lignes justes, et elle n'est pas versionnée. Le seuil d'entrée était trop haut.
-
-Le fragment abaisse ce seuil. Il permet de capter une idée, un extrait, une formulation, une note, sans décider d'avance ce qu'on en fera.
 
 ## Ce qu'est un fragment
 

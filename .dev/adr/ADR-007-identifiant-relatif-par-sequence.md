@@ -20,6 +20,8 @@ skill-associe: skl-001-ressource
 
 > Acte que l'identité d'une ressource est `<PREFIX>-<SEQ>`, relative au dépôt, attribuée à la création et jamais modifiée. Cette décision **renverse** `ADR-001` D3, qui faisait de l'identité le couple préfixe et slug, et abolit le nommage daté.
 
+> **Abrogation partielle du 2026-08-10.** `ADR-008` abroge D1 et D2 : `<PREFIX>-<SEQ>` est l'alias interne et non l'identité, et un alias peut changer à condition de propager. D3, D4 et D5 subsistent. Ce résumé et la section « Décision, en une phrase » décrivent l'état antérieur ; ils sont conservés tels quels, une décision enregistrée ne se réécrivant pas.
+
 ## Statut de cette décision
 
 `propose` quant à sa rédaction. La décision de fond est prise par l'humain dans la tâche 13, classée `[bogue]`, dont l'énoncé est direct : à l'interne d'un dépôt `clia`, toutes les ressources doivent être référençables par `<PREFIX>-<SEQ>`, et toute référence à `<PREFIX>-<DATE>` et `<PREFIX>-<SLUG>` doit être éliminée.
@@ -60,6 +62,8 @@ Elle est cohérente avec `NON-014`, qui constate que `clia` a abandonné l'unici
 
 ### D1 - L'identité est `<PREFIX>-<SEQ>`
 
+> **Abrogé le 2026-08-10 par `ADR-008` D2.** `<PREFIX>-<SEQ>` est l'alias interne d'une ressource, non son identité. La forme et son emploi comme cible de tout renvoi interne sont conservés ; seul son statut change. Motif dans `DCN-008`, réponses Q1 et Q4.
+
 **Décision.** Le champ `id` prend la forme `<PREFIX>-<SEQ>`, où `<SEQ>` est une séquence à trois chiffres. Un atome de composite prend la forme `<PREFIX>-<SEQ>-<NN>`.
 
 **Motif.** Reprise de `FRG-001` : ce qui persiste est l'identité. Le numéro est attribué une fois, le slug suit un titre révisable.
@@ -67,6 +71,8 @@ Elle est cohérente avec `NON-014`, qui constate que `clia` a abandonné l'unici
 **Ce que la décision abroge.** `ADR-001` D3, entièrement.
 
 ### D2 - Renuméroter est interdit
+
+> **Abrogé le 2026-08-10 par `ADR-008` D3.** Renuméroter est permis, à condition que le changement propage la mise à jour à toutes les références internes. Cette décision était un ajout de l'agent, et son motif tombe avec D1. La conséquence sur les numéros libérés tombe avec elle : voir `NON-023` Q2.
 
 **Décision.** Une ressource ne change jamais de numéro. Une renumérotation est un changement d'identité, traité par `remplace` et `est-remplacee-par`, jamais par une réécriture silencieuse.
 

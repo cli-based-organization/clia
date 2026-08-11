@@ -1,0 +1,87 @@
+# Suggestions de prochaines étapes après les tâches 17 et 19.
+
+a_faire_par_l_humain:
+  - titre: "Activer la signature des commits"
+    detail: >-
+      T4 est le seul contrôle de clia git check done qui échoue. Trois lignes
+      de configuration, la clé id_ed25519 étant présente et la clé GPG
+      expirée depuis le 2026-06-18. Tant qu'elle est absente, l'historique
+      atteste la cohérence d'une suite de versions, non l'auteur ni la date.
+    commandes:
+      - "git config gpg.format ssh"
+      - "git config user.signingkey ~/.ssh/id_ed25519.pub"
+      - "git config commit.gpgsign true"
+
+  - titre: "Approuver ou amender les six ADR d'adoption"
+    detail: >-
+      ADR-009 à ADR-014 portent statut-decision propose. Ils accueillent la
+      justification retirée des trente définitions. Si l'option C-b, un ADR
+      unique, est préférée, six documents sont à fusionner.
+
+  - titre: "Trancher NON-023 Q1 et Q3"
+    detail: >-
+      Inchangé depuis la tâche 18. Q1 dit ce que le système identifie, Q3
+      outille l'obligation de propagation.
+
+  - titre: "Six objections bloquantes restent sans réponse"
+    detail: "NON-002, NON-005, NON-009, NON-014, NON-017, NON-018."
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      C'est désormais le seul grand manque d'outillage. clia git a montré la
+      voie : un module, des contrôles nommés, des tests qui produisent la
+      faute qu ils doivent attraper.
+    contient:
+      - "V1 à V10 de skl-001, dont V10 ajouté par la tâche 17"
+      - "la validation de schéma CUE, qui tourne encore dans un script jeté"
+      - "le contrôle de dérivation du champ effet, MET-002 étape 6"
+      - "V-E1 et V-E2 de PDC-002, jeu de caractères et longueur des alias"
+      - "le contrôle de sections, qui a trouvé le conflit RES-011 contre MET-001"
+
+  - titre: "Implémenter clia res renumber"
+    detail: >-
+      ADR-008 D3 autorise le changement d alias à condition de propager, et
+      rien ne le fait. Le cahier des charges est écrit et éprouvé par la
+      migration de la tâche 13.
+
+  - titre: "Faire de clia git save le geste de fin de tâche"
+    detail: >-
+      La commande existe et n a jamais servi sur ce dépôt : soixante-dix-huit
+      fichiers attendent. Le premier usage réel est aussi la première épreuve
+      de la chaîne complète, journal puis check done puis save.
+
+dette_nommee:
+  - titre: "V10 est une liste noire"
+    detail: >-
+      Il détecte les rubriques nommées, non une justification logée dans une
+      rubrique descriptive. Les vingt-huit substitutions de la tâche 17 ont
+      été faites à la main, sans contrôle qui garantisse leur exhaustivité.
+
+  - titre: "Le générateur d'artefacts n'existe toujours pas"
+    detail: >-
+      Les schémas et gabarits portent « Généré depuis RES-xyz. Ne pas éditer
+      à la main », et aucun générateur n'est versionné. ressource.template.md
+      a été édité à la main aujourd'hui, ce que son propre en-tête interdit.
+
+  - titre: "clia res new produit toujours un frontmatter faux"
+    detail: >-
+      Inchangé depuis la tâche 14. type vaut 009 au lieu de decision, id
+      porte un slug. lib/clia/resource.sh lignes 298 et 310. Le bogue touche
+      toute ressource créée depuis le 2026-08-10.
+
+  - titre: "Sept règles écrites et non tenues"
+    detail: >-
+      Les six de la tâche 18, plus V10 qui est écrit et non outillé.
+      NON-005 conteste l accumulation depuis le 2026-08-09.
+
+  - titre: "DCN-010 n'a pas d'ADR qui l'instruise"
+    detail: >-
+      ANL-005 porte les recommandations et les contraintes, et la décision y
+      renvoie. C'est le seul cas du dépôt où une DCN n'a pas d'ADR.
+
+  - titre: "CLAUDE.md n'a toujours pas été touché"
+    detail: >-
+      Sa table annonce vingt-sept types là où trente sont définis, et deux
+      commandes qui n existent pas. Il ignore clia git. PLN-001 chantier A
+      attend depuis le 2026-08-09.

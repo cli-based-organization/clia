@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, initiateur, effet, etat, porte-su
 relations-admissibles: [objection, ressource, intention, contexte, fait, ontologie, concept, analyse]
 sections: [Journal, Ce qui est contesté, Pourquoi cela ne peut pas rester implicite, Questions, Ce qui lèverait cette objection, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `objection`, mécanisme central de la gouvernance de `clia`. `CLAUDE.md` en fait une obligation de l'agent : « SI IL Y A CONFLIT entre l'intention d'une tâche et l'intention ultime, émettre des objections ».
-
-## Statut de ce document
-
-Premier jet, mais sur une base solide. L'objection est le mécanisme le plus éprouvé du corpus après la ressource elle-même : institué par la gouvernance objection-sociocratique de `intentional-doers-governance` en juillet 2026, réifié dans `micrologic-clients` avec une définition, quatre instances, un skill, un gabarit et un régime hybride à propriété par bloc, et pratiqué réellement dans les sessions de `clia`, dont une tâche entière s'intitule « traitement des objections » et répond à quatre objections numérotées.
 
 ## Ce qu'est une objection
 
@@ -110,7 +106,7 @@ Une objection n'est jamais supprimée, même caduque. La supprimer, c'est perdre
 
 ## Le préfixe
 
-Ce jet retient `NON`, conformément à la liste de la session du 2026-08-09 et à `CLAUDE.md`.
+Le préfixe est `NON`, fixé par `DCN-008`, réponse Q3.
 
 Un écart est à signaler : l'usage établi dans le corpus est `OBJ`, avec quatre instances existantes dans `micrologic-clients` et une définition `RES-011-objection`. `ANL-001` établit par ailleurs qu'un changement de préfixe coûte cher, et donne le cas mesuré du passage de `RES` à `DOS` qui a demandé six corrections manuelles.
 

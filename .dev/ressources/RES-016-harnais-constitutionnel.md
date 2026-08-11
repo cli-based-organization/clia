@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, decision, objection]
 sections: [Principe, Règles impératives, Classification des documents, Arbitrage]
 skill: skl-005-ressource-de-controle
-adr: ADR-005
+adr: ADR-012
 statut: non-installe
 ---
 
@@ -24,10 +24,6 @@ statut: non-installe
 ## Objet
 
 Définit le type du fichier `CONSTITUTION.md`. Sa fonction est de porter le petit nombre de règles qu'aucune autre consigne ne peut lever.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10, et le type est déclaré `non-installe` : ce dépôt n'a pas de `CONSTITUTION.md` actif. Le fichier a été archivé le 2026-08-08 par le refactor, et son contenu a été repris par `ADR-002`.
 
 ## Ce que le corpus enseigne sur ce type
 

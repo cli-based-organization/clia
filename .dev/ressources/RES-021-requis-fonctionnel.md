@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, specification-parente]
 relations-admissibles: [requis, specification, usage, comportement, code]
 sections: [Objet, Le requis, Spécification parente, Critère de satisfaction, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `requis fonctionnel`. Sa fonction est de rendre une spécification exigible dans un contexte précis.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt, treize requis de toutes natures dans le corpus.
 
 ## La traçabilité obligatoire
 

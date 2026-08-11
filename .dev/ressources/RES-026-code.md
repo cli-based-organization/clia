@@ -13,7 +13,7 @@ champs-obligatoires: ["aucun, le code ne porte pas de frontmatter"]
 relations-admissibles: [code, specification, requis, comportement, bug]
 sections: ["aucune, la structure du code suit son langage"]
 skill: skl-007-ressource-d-implementation
-adr: ADR-005
+adr: ADR-014
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `code`. Sa fonction est de rattacher au modèle de ressources un objet qui échappe à toutes les conventions de forme des autres types.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Le type est instancié depuis la tâche 6 : `bin/clia`, trois modules sous `lib/clia/`, et `tests/test_clia.sh`, soit 1 596 lignes de bash.
 
 ## Ce qui rend ce type possible
 

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, sujet, date-de-constat, diffusion
 relations-admissibles: [fait, contexte, analyse, ontologie, concept]
 sections: [Portée et date d'arrêt, Faits, Faits contestés, Ce qui n'a pas pu être établi, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,12 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `faits`. Sa fonction dans le système est de séparer nettement ce qui est établi de ce qui est affirmé, afin que les affirmations puissent être soutenues et contestées.
-
-## Statut de ce document
-
-Premier jet, sur un concept **latent** au sens de `ANL-001` : zéro instance dans tout le corpus, un répertoire `.dev/fait` vide dans `disruptiva-dev/comm-cli`, mais une base théorique récente et sérieuse dans `micrologic-clients`, avec deux essais de fondation datés du 2026-08-08 (`journalisation-et-preuve-des-faits-prives`, `persuasion-preuve-et-auditoires`) et deux analyses (`collecte-et-stockage-des-faits-dans-les-depots`, `capacite-du-modele-a-prouver-le-fit`).
-
-Le besoin qui a fait naître ce travail est métier et concret : prouver l'adéquation d'un candidat à un poste demande des faits, pas des affirmations.
 
 ## Ce qu'est un fait
 
@@ -58,7 +52,7 @@ C'est la partie utile de la définition, parce que la confusion est facile et co
 
 Un fichier par fait serait ingérable, et c'est probablement ce qui a empêché le type d'exister : le corpus produit des centaines de constats et n'a créé qu'un répertoire vide.
 
-Ce jet propose donc que l'unité de fichier soit le **recueil**, et l'unité de sens le **fait**.
+L'unité de fichier est le **recueil**, l'unité de sens le **fait**.
 
 Une ressource `FCT` porte un sujet, déclaré par son champ `sujet`, et contient les faits établis sur ce sujet. Chaque fait y est numéroté `F<NN>`, ce qui donne à chacun une adresse citable de la forme `FCT-001#F03`.
 
@@ -95,7 +89,7 @@ Le corpus donne la raison d'être de ce champ. Deux dépôts gèrent des documen
 
 La question est de savoir si un fait doit être une ressource, ou s'il suffit que chaque document déclare ses sources dans son frontmatter.
 
-Ce jet propose que les deux coexistent, avec un critère de départage.
+Les deux coexistent, avec un critère de départage.
 
 Un énoncé reste un **champ de provenance** du document qui l'emploie s'il ne sert qu'à ce document.
 

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, diffusion]
 relations-admissibles: [rapport, fondation, analyse, fait, publication]
 sections: [Objet, Résultats, Méthode, Discussion, Sources, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-005
+adr: ADR-014
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `rapport`. Sa fonction est de porter vers l'extérieur ce que le travail interne a établi.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt.
 
 ## Ce qui distingue ce type de ses voisins internes
 

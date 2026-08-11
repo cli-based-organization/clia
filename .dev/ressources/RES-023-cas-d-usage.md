@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, acteur-principal, niveau
 relations-admissibles: [usage, acteur, requis, specification, comportement]
 sections: [Objet, Acteur et but, Déroulement nominal, Variantes et échecs, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `usage`. Sa fonction est d'ancrer la conception dans un but réel plutôt que dans une liste de fonctions.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Le type était prévu par le `resource-types.yaml` archivé, avec un champ `acteur-principal` et un champ `niveau`, et trois relations typées le concernant : `utilise`, `satisfait`, `realise`.
 
 ## Ce qu'un cas d'usage porte
 

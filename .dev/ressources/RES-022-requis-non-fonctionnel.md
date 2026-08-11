@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, qualite, specification-p
 relations-admissibles: [requis, specification, principe, code]
 sections: [Objet, Le requis, Qualité visée, Comment le mesurer, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `requis non fonctionnel`. Sa fonction est de rendre exigible une qualité qui, sans lui, reste une intention.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt.
 
 ## La mesurabilité, qui est la difficulté propre du type
 

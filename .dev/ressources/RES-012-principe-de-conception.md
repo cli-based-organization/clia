@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, portee]
 relations-admissibles: [principe, ressource, adr, concept, objection]
 sections: [Objet, Le principe, Ce qu'il exclut, Comment le vérifier, Conséquence d'une violation, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-005
+adr: ADR-011
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `principe`. Sa fonction est de rendre opposable une exigence qui traverse tous les types de ressources et tous les composants.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Trois répertoires de principes existent dans le corpus, et la meilleure matière n'est pas typée : les quatre principes directeurs de `cli-based-organization/linux-inspect`, universalité, adaptabilité, non-intrusivité, réflexivité, sont plus opérationnels que la plupart des principes produits ensuite et n'ont jamais été promus.
 
 ## Ce qu'est un principe
 
@@ -43,7 +39,7 @@ Il porte quatre choses. Un énoncé qui tient en une phrase. Ce qu'il exclut, fo
 
 ## La violation est un défaut
 
-Décision reprise du `CLAUDE.md` archivé de ce dépôt : le non-respect d'un principe de conception est un bogue. Cette règle donne au type sa force et son coût. Sa force, parce qu'un principe devient opposable. Son coût, parce qu'elle suppose un moyen de détecter la violation, et que ce dépôt n'a aucune validation mécanique.
+Le non-respect d'un principe de conception est un bogue, règle reprise du `CLAUDE.md` archivé. Elle rend un principe opposable, et elle suppose un moyen de détecter la violation que ce dépôt n'a pas.
 
 Un principe sans moyen de vérification est une exhortation. La rubrique « Comment le vérifier » est donc obligatoire, et elle peut valoir « aucun moyen aujourd'hui », ce qui est un aveu utile.
 

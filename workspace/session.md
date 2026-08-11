@@ -309,6 +309,33 @@ faire une analyse (ANL) du sujet. Quelles seraient les autres options jouables p
 
 Terminer l'analyse avec des recommandations.
 
+## 17. [implémentation] Exécuter le plan PLN-002
+
+## 18. [traitement des objections] prendre en compte des réponses à NON-001
+
+## 19. [implémentation] Mettre en place la mécanique de suivie de l'historique des ressources
+
+se baser sur ANL-005. Ne pas couvrir le cas où une ressource est un repo
+
+D'abord, fournir un script de vérification de l'état du repo:
+
+```sh
+clia git check STATE  # vérifie que l'état du repo est conforme. STATE = clean | done
+clia git save  # commit les modifications en utilisant le fichier log: commit-message-task-<SEQ>.md
+clia git log RESSOURCE  # affiche l'historique de la ressource
+```
+
+## 20. [bogue] seul les humains peuvent prendre des décisions
+
+Interdire (CONSTITUTION.md) aux agents IA de créer ou de modifier une décision.
+
+Les agents IA peuvent faire des recommentations, mais c'est uniquement les humains qui peuvent prendre des décisions.
+
+le cli clia génère un template. L'humain l'édite. L'historique est suivie par git grâce à clia git save.
+
+Interdire aux agents IA d'utiliser la commande `clia git save`
+
+## 21. [traitement des objections] prendre en compte des réponses à NON-002
 
 ## x. [conception] Amélioration de la notion de ressource
 

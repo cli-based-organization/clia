@@ -4,8 +4,8 @@ id: NON-001
 title: "Identité, nommage et préfixes des ressources"
 status: draft
 initiateur: agent
-effet: bloquant
-etat: partiellement-repondue
+effet: informatif
+etat: repondue
 porte-sur: [RES-001, RES-004, ADR-001]
 ---
 
@@ -20,6 +20,8 @@ porte-sur: [RES-001, RES-004, ADR-001]
 - 2026-08-10 : cinq questions ajoutées, Q8 à Q12, à partir de `FND-002` et `ANL-003`. Le champ `porte-sur` est étendu.
 - 2026-08-10 : deuxième preuve empirique. La collision de numéros annoncée par Q7 s'est produite en situation réelle, moins de vingt-quatre heures après avoir été posée. Voir la section « Deuxième preuve : la collision annoncée ».
 - 2026-08-10 : **Q1 répondue par l'humain**, tâche 13, actée par `DCN-007` et `ADR-007`. L'identité est `<PREFIX>-<SEQ>`, ni le slug ni le chemin. Q7 est répondue de fait : c'est `clia` qui attribue le numéro. L'état passe à `partiellement-repondue` : Q2, Q4, Q6 et Q10 restent ouvertes.
+- 2026-08-10 : **les onze questions restantes répondues par l'humain**, et Q1 corrigée par la mention « non. voir FRG-001. » Les douze questions portent une réponse. L'état passe à `repondue`.
+- 2026-08-10 : traitement des réponses, tâche 18. Enregistrées par `DCN-008`, instruites par `ADR-008`. La correction principale porte sur Q1 : `<PREFIX>-<SEQ>` est l'**alias interne**, non l'identité. `ADR-007` D1 et D2 sont abrogés, D3 à D5 subsistent. Q11 produit `PDC-002`. Les conséquences non tranchées sont portées par `NON-023`.
 
 ## Ce qui est contesté
 
@@ -95,11 +97,15 @@ Exemple concret : `INT-intention-ultime` dans quinze dépôts désigne quinze in
 
 **Réponse.**
 
+l'identité n'est pas <PREFIXE>-<SLUG>
+
 ### Q3 - `NON` ou `OBJ` pour l'objection, et qui paie la migration ?
 
 `CLAUDE.md` dit `NON`. L'usage établi dit `OBJ`. `ANL-001` mesure qu'un changement de préfixe a déjà coûté six corrections manuelles dans un seul dépôt. Trois positions : imposer `NON` partout, revenir à `OBJ`, ou déclarer que `NON` est le préfixe de `clia` et `OBJ` un synonyme écarté inscrit à l'ontologie.
 
 **Réponse.**
+
+utiliser NON comme préfix pour les objections
 
 ### Q4 - Le numéro de séquence doit-il rester dans le nom de fichier ?
 
@@ -107,11 +113,17 @@ S'il ne porte plus l'identité, il ne sert plus qu'à l'ordre de lecture et à l
 
 **Réponse.**
 
+Le système d'identifiant interne n'a besoin que d'être relatif et auto-cohérent.
+
+<PREFIX>-<SEQ> est l'implémentation par défaut de l'id-interne/alias de l'identifiant.
+
 ### Q5 - Que devient un renvoi par numéro déjà écrit ?
 
 `CLAUDE.md` en contient vingt-sept triplets. Les archives de `clia` en contiennent des centaines. Faut-il les migrer, les laisser en place comme renvois historiques assumés, ou les traiter au fil de l'eau lorsqu'un document est touché ?
 
 **Réponse.**
+
+Pour les références externe, nous allons utiliser un identifiant plus "robuste". Mais les modifications internes de l'alias/identifiant doit modifier du même coup toutes les références
 
 ### Q6 - Un renommage de slug est-il un changement d'identité ou une correction ?
 
@@ -119,11 +131,15 @@ S'il ne porte plus l'identité, il ne sert plus qu'à l'ordre de lecture et à l
 
 **Réponse.**
 
+Le slug n'a rien à voir avec l'identifiant, il n'est là que pour aider les humains à se repérer. On peut changer le slug sans conséquense. D'autant plus que le slug n'est jamais utilisé dans le iid.
+
 ### Q7 - Qui attribue le numéro de séquence ?
 
 Aujourd'hui, personne : l'agent le déduit du contenu du répertoire, ce qui produit des collisions dès que deux travaux avancent en parallèle. Faut-il que ce soit `clia`, ce qui reporte la question à la session d'outillage, ou l'humain, ou une règle qui rende les collisions inoffensives ?
 
 **Réponse.**
+
+le cli clia avec `clia res new TYPE DESCRIPTION`
 
 ### Q8 - L'identité désigne-t-elle l'oeuvre, ou la version ?
 
@@ -133,6 +149,8 @@ La suggestion S2 de `ANL-003` propose que l'`id` désigne l'oeuvre, le champ `ve
 
 **Réponse.**
 
+l'oeuvre. La version est défini par le mécanisme de publication externe. À l'interne, les modifications sont traçables par l'historique.
+
 ### Q9 - Faut-il un identifiant intrinsèque, et pour quel usage exactement ?
 
 Ajoutée le 2026-08-10. `FND-002` établit que seul l'identifiant intrinsèque, calculable depuis l'objet, est vérifiable sans son émetteur, et que la citation exige une information de fixité portée à côté du nom.
@@ -141,6 +159,8 @@ Ajoutée le 2026-08-10. `FND-002` établit que seul l'identifiant intrinsèque, 
 
 **Réponse.**
 
+l'identifiant intrinsèque est utile pour suivre l'historique et attester des modificaitons. (git)
+
 ### Q10 - Le format d'un identifiant de dépôt, et que faire quand le dépôt n'a pas d'adresse ?
 
 Ajoutée le 2026-08-10. La suggestion S3 de `ANL-003` propose une identité globale de la forme `<origine>:<PREFIXE>-<SLUG>`, par extension du noyau et non par remplacement, ce qui est le mécanisme du SWHID et du GroupVersionKind de Kubernetes selon `FND-002`.
@@ -148,6 +168,17 @@ Ajoutée le 2026-08-10. La suggestion S3 de `ANL-003` propose une identité glob
 Reste à décider ce que vaut `<origine>`. Trois options : le nom du répertoire local, gratuit et fragile ; un identifiant déclaré dans un fichier du dépôt, qui coûte une convention ; l'URL du remote, la plus juste et absente pour quatre-vingt-quatorze dépôts sur cent soixante-six.
 
 **Réponse.**
+
+Il s'agit de l'identifiant externe.
+
+C'est une question complexe pour laquelle je n'ai pas de solution définitive. Mais voici une tentative =>
+
+clia://<author|personne qui partage>@<repo>/<origin>:<PREFIX>-<UUID>/<hash-version>
+
+origine étant l'instance du repo.
+
+Ceci implique que => chaque instance du repo doit avoir un identifiant (éphémère)
+
 
 ### Q11 - L'ergonomie est-elle une exigence opposable ?
 
@@ -159,6 +190,10 @@ Une exigence non écrite est une exigence qui perd tous les arbitrages.
 
 **Réponse.**
 
+L'ergonomie interne est une exigence non négociable. Parce que nous concevont un CLI utilisable par un humain. Il est impensable de devoir manipuler des strings incompréhensibles pour un humain pour faire référence à une ressource. 
+
+Le format par défaut est décidé: PREFIX-SEQ
+
 ### Q12 - Corriger un slug et changer de sujet sont-ils la même opération ?
 
 Ajoutée le 2026-08-10, et elle précise Q6. `RES-001` traite tout renommage de slug comme un changement d'identité, avec `remplace` et `est-remplacee-par`. Corriger une coquille crée donc une ressource morte.
@@ -167,13 +202,15 @@ La suggestion S7 de `ANL-003` propose de séparer les deux : une correction cons
 
 **Réponse.**
 
+non. le slug n'a rien à voir avec l'identité. Donc, un changement de slug ne provoque pas de changement d'identité.
+
 ## Ce qui lèverait cette objection
 
-Une réponse aux questions Q1, Q2 et Q3, qui sont les trois qui engagent la forme des renvois. Q4 à Q7 peuvent rester ouvertes sans bloquer, à condition que Q1 soit tranchée.
+**Levée le 2026-08-10.** Les douze questions portent une réponse de l'humain. Les réponses sont enregistrées par `DCN-008` et instruites par `ADR-008`.
 
-Parmi les questions ajoutées le 2026-08-10, Q8 et Q11 sont les moins coûteuses à trancher et les plus structurantes : la première fixe ce que l'identité désigne, la seconde protège la propriété que le système a déjà.
+L'effet passe de `bloquant` à `informatif` : l'objection ne bloque plus rien et reste lisible comme registre des questions posées et des réponses reçues.
 
-Si Q1 est tranchée en faveur du champ `id`, l'objection passe en `conditionnel` et les sept définitions restent valides. Si Q1 est tranchée en faveur du chemin, les sept définitions doivent être révisées et leur champ `id` retiré.
+Une réponse est déclarée non définitive par son auteur, celle de Q10 sur l'identifiant externe. Elle est enregistrée comme orientation par `ADR-008` D7, et ce qu'elle laisse ouvert est porté par `NON-023`, non par cette objection.
 
 ## Relations
 
@@ -182,3 +219,4 @@ Si Q1 est tranchée en faveur du champ `id`, l'objection passe en `conditionnel`
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md)
 - `derive-de` [ANL-003](../analyses/ANL-003-systeme-d-identifiants-de-clia.md)
 - `reference` [FND-002](../fondations/FND-002-identifiants-dans-les-systemes-decentralises.md)
+- `reference` [NON-023](NON-023-consequences-du-regime-a-deux-niveaux.md)

@@ -49,11 +49,34 @@ Une position intermédiaire existe : la définition est obligatoire, le skill n'
 
 **Réponse.**
 
+Le triplet n'était d'une tentative... l'évolution récente pointe vers une situation bien pire!
+
+Il faut rappeller ici l'objectif: concevoir un système de collaboration entre agents humains, IA et automatismes (cli). 
+
+La notion de type n'est pas le bon concept. Ce qui est structurant, c'est => ressource (RES) ou non-RES.
+
+Tout le système est structuré autour de la manipulation conforme des ressources.
+
+Les ressources sont définies pas un fichiers RES. chaque nouvelle ressource est un "type de ressource".
+
+Les skills encadrent la manipulation spécialisée des ressources. Si un traitement générique est possible, on peut se contenter d'un skill commun à une catégorie de ressource. En fait, les skills sont des ressources générés ils ne font pas autorité et sont entièrement dérivables de RES, ADR, SPC et REQ
+
+
+un paquet de scripts et de fichiers cuelang (ou autre pour la validation) peuvent être nécessaires pour manipuler une ressource adéquatement.
+
+
+Questions ouvertes... est-ce que les logs sont des ressources? J'aurais tendance à dire oui. Mais je n'en suis pas certain.
+
+
 ### Q2 - Quel est le seuil au-delà duquel un type ne se justifie pas ?
 
 Aucun critère n'existe aujourd'hui. Candidats : le type a au moins deux instances prévues dans les six mois ; sa production est plus rapide que ce qu'elle fait gagner ; son absence a causé un dégât identifiable. Faut-il un test d'admission pour les types, comme `RES-007` en propose un pour les concepts ?
 
 **Réponse.**
+
+le type n'est pas le bon concept. C'est un type de ressource.
+
+Un nouveau type de ressource est créer lorsque le besoin s'en fait ressentir.
 
 ### Q3 - Faut-il vingt-sept types, ou faut-il commencer par sept et n'ajouter que sous pression d'un besoin constaté ?
 
@@ -61,11 +84,17 @@ Aucun critère n'existe aujourd'hui. Candidats : le type a au moins deux instanc
 
 **Réponse.**
 
+Faire les types de ressource demandé et ne pas contester. clia est un système de gestion de ressource de différent types. Les types vont évoluer... mais il y aura toujours autant de types nécessaire pour y encoder les contenus informationnels dont nous avons besoin de manipuler.
+
 ### Q4 - Le nombre de champs de frontmatter obligatoires est-il tenable sans outil ?
 
 Quatorze champs pour une définition de type, saisis à la main, sans validation. `ANL-001` mesure que la seule règle de statut a déjà dérivé, avec `completed` dans cinquante-deux logs et `complet` dans deux autres. Faut-il réduire les champs obligatoires au strict minimum jusqu'à ce que `clia` puisse les vérifier ?
 
 **Réponse.**
+
+C'est un travail qui reste à faire... les types frontmatter ne sont pas tout à fait satisfaisant. Nous y viendrons plus tard.
+
+Mais oui, ce sera la responsabilité de clia de les vérifier et de les manipuler.
 
 ### Q5 - Qui paie le coût de la journalisation à sept fichiers par requête ?
 
@@ -73,17 +102,26 @@ Le harnais actuel prescrit `demande.md`, `commit-message.yaml`, `analyse.md`, `f
 
 **Réponse.**
 
+La traçabilité et la lisibilité des agents IA est une caractéristique centrale du système. À terme ce coût génère une ressource plus importante que ce qu'elle coute.
+
 ### Q6 - La table des types doit-elle vivre dans `CLAUDE.md` ou dans `.dev/ressources/index.md` ?
 
 Les deux portent aujourd'hui la même information. `ANL-001` établit que la duplication non tenue est le mode de défaillance dominant du corpus : trente-trois `CLAUDE.md` pour dix-huit contenus, trois `INTENTION.md` identiques désignant le mauvais client. Une des deux tables doit devenir une vue déclarée de l'autre. Laquelle est la source ?
 
 **Réponse.**
 
+La source de vérité des ressources sont les fichiers RES. Dans le harnais IA, seul un skill d'interprétation des demandes devrait expliquer comment identifier la RES livrable.
+
+
+
 ### Q7 - Les critères de satisfaction et de trahison de `RES-003` sont-ils exigibles ?
 
 `RES-003` les rend obligatoires. Ils sont ce qui rend l'objection instruisible, et ils sont difficiles à écrire : formuler un critère de trahison demande de nommer son propre échec. Le risque est qu'ils soient renseignés pour la forme, ce qui serait pire que leur absence.
 
 **Réponse.**
+
+
+Le critère de trahison est intéressant. à garder dans le template de génération de RES-003. Mais ce n'est pas obligatoire.
 
 ## Ce qui lèverait cette objection
 

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, sujet, methodologie]
 relations-admissibles: [fondation, analyse, concept, ontologie, ressource]
 sections: [Objet et méthode, Corps de la revue, Ce que la recherche établit, Sources, Limites, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-005
+adr: ADR-011
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `fondation`. Sa fonction est de faire entrer du savoir extérieur dans le système sous une forme citable et vérifiable.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Deux instances dans ce dépôt, cinquante-deux dans le corpus. C'est le type le plus employé du corpus après les traces.
 
 ## Ce qu'est une fondation
 

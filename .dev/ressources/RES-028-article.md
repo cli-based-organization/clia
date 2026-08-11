@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, publication]
 relations-admissibles: [article, rapport, fondation, concept, publication]
 sections: [Objet, Corps, Références, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-005
+adr: ADR-014
 statut: actif
 ---
 
@@ -24,12 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `article`. Sa fonction est de rattacher au modèle un livrable dont la forme est imposée de l'extérieur.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Le corpus en compte un cas exemplaire : `jvtrudel/ecrits`, treize fichiers dont un article publié sur LinkedIn en novembre 2025, avec son lien de publication.
-
-`ANL-001` relève que c'est le **seul dépôt de savoir du corpus qui fonctionne**, et qu'il fonctionne précisément parce qu'il est orienté publication : le livrable a un destinataire, une date et un lien.
 
 ## Ce que ce type enseigne au reste du modèle
 

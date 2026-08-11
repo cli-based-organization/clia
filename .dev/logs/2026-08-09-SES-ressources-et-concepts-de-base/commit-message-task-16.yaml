@@ -1,0 +1,66 @@
+type: docs
+scope: tracabilite
+sujet: "l'historique d'une ressource est la suite de ses identifiants de contenu"
+corps: |
+  Exécute la tâche 16 de la session du 2026-08-09. Trois questions : peut-on
+  conserver l'historique d'un fichier et d'un répertoire depuis git, quelles
+  contraintes le garantissent, et quelles autres options donnent une chaîne
+  de modifications et le diff entre versions.
+
+  Onze expériences, sept sur un dépôt jetable et quatre sur ce dépôt, avec
+  git 2.39.5. Chaque chiffre de l'analyse est une sortie de commande.
+
+  La réponse est positive pour les deux formes, par une voie que la question
+  ne suggérait pas. git log --follow ne fonctionne que pour un fichier
+  unique, ce que sa documentation énonce en toutes lettres. Sur un
+  répertoire, l'option est acceptée, ne fait rien, et ne le signale pas :
+  cinq commits avec, cinq sans. Après renommage d'un répertoire, son
+  historique par chemin tombe à un commit tandis que celui de chacun de ses
+  fichiers en garde quatre.
+
+  La voie qui couvre les trois formes d'implémentation de ADR-004 est
+  l'identité de contenu. Tout chemin porte un identifiant, blob pour un
+  fichier, tree pour un répertoire, et git rev-parse le retourne. Trois
+  propriétés mesurées : déterministe, un contenu restauré produit le même
+  identifiant ; indépendante du chemin, un répertoire déplacé garde le sien ;
+  indépendante de l'histoire. Le diff entre deux versions s'obtient de deux
+  identifiants seuls, sans commit ni chemin.
+
+  Deux hypothèses de départ sont réfutées par la mesure. Abaisser le seuil de
+  similarité ne récupère pas un historique rompu : à un pour cent comme à
+  dix, un commit au lieu de quatre. Et le renommage d'un répertoire ne change
+  pas son identité.
+
+  Six contraintes. Un commit ne renomme pas et ne réécrit pas la même
+  ressource, geste qui coupe la chaîne définitivement. Un renommage passe par
+  git mv. L'historique de la branche principale n'est jamais réécrit, seule
+  contrainte dont la violation est irréversible : un écrasement fait passer
+  huit commits à deux et l'historique d'un fichier de quatre à un. Tout
+  commit est signé, seule contrainte non tenue, zéro sur huit. Un commit ne
+  touche qu'une ressource. Un changement de forme d'implémentation a son
+  commit dédié.
+
+  Sept options examinées, deux retenues et une conditionnelle. Les commits
+  signés SSH, dont la clé est déjà présente, la clé GPG étant expirée depuis
+  le 2026-06-18. Les tags signés pour les versions publiées. Et
+  OpenTimestamps si une date doit être opposable à un tiers, ce qu'aucune
+  ressource n'exige aujourd'hui. Aucune option ne remplace git pour la chaîne
+  et le diff : les deux existent nativement.
+
+  Sept recommandations, dont la première est de ne rien construire par-dessus
+  git.
+
+  Aucune recommandation n'est appliquée : la signature n'est pas activée,
+  aucun harnais n'est modifié, aucune commande n'est implémentée. 91 tests
+  verts.
+note_pour_l_humain: >-
+  Votre prémisse « git est un blockchain » est exacte sur le mécanisme et
+  inexacte sur le nom, et l'écart porte précisément sur ce qui compte ici.
+  Git partage avec une blockchain le chaînage par hachage et l'adressage par
+  contenu, ce qui suffit à la chaîne de modifications et au diff. Il lui
+  manque le consensus, l'horodatage vérifiable, la date d'un commit étant
+  déclarative et modifiable, et la non-réécriture de l'histoire, que la
+  mesure confirme. Sans signature, l'historique atteste la cohérence d'une
+  suite de versions, non l'auteur ni la date de chacune. C'est l'unique écart
+  entre ce que la tâche suppose et ce que le dépôt possède, et il se ferme
+  par trois lignes de git config.

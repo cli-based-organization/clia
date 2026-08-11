@@ -106,7 +106,7 @@ Cinq propositions de conception ne sont pas des reprises de l'état de l'art, et
 
 | Apport | Où | Fondé sur |
 |---|---|---|
-| L'identité est le champ `id`, de la forme `<PREFIXE>-<SLUG>`, et non le numéro de séquence | `RES-001` | D1 : douze numéros de skill sur vingt portent plusieurs noms |
+| L'identification se fait à deux niveaux : un alias interne `<PREFIX>-<SEQ>`, et un identifiant externe non fixé | `RES-001` | D1 : douze numéros de skill sur vingt portent plusieurs noms. Forme arrêtée par `ADR-008` |
 | L'intention porte un critère de satisfaction **et** un critère de trahison | `RES-003` | L'objection pour conflit d'intention est aujourd'hui impossible à instruire |
 | L'objection déclare son effet : bloquant, conditionnel ou informatif | `RES-004` | La règle « aucune exécution tant qu'une objection est ouverte » rend le travail impossible |
 | L'unité de fichier des faits est le recueil par sujet, l'unité de sens le fait atomique | `RES-005` | Zéro instance `FCT` dans le corpus, malgré un besoin théorisé : la granularité était l'obstacle |

@@ -25,11 +25,19 @@ statut: {{statut}}
 
 À rédiger.
 
-## Ce qu'est une ressource
+## Ce qu'est {{titre}}
 
 À rédiger.
 
-## Identité
+## Ce que {{titre}} n'est pas
+
+À rédiger.
+
+## Champs propres
+
+À rédiger.
+
+## Test d'admission
 
 À rédiger.
 
@@ -37,18 +45,21 @@ statut: {{statut}}
 
 À rédiger.
 
-## Régimes d'édition
+## Régime d'édition
 
 À rédiger.
 
-## Frontmatter
+## Frontière avec les types voisins
+
+À rédiger.
+
+## Structure attendue d'une instance
 
 À rédiger.
 
 ## Relations
 
-
-
 ## Points ouverts
 
-À rédiger.
+| Question | Objection |
+|---|---|

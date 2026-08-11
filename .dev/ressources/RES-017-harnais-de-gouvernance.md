@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, objection, decision]
 sections: [Cycle de décision, Objection, Arbitrage, Rôles]
 skill: skl-005-ressource-de-controle
-adr: ADR-005
+adr: ADR-012
 statut: non-installe
 ---
 
@@ -25,15 +25,11 @@ statut: non-installe
 
 Définit le type du fichier `GOUVERNANCE.md`, annoncé par `CLAUDE.md` et jamais produit.
 
-## Statut de ce document
-
-Premier jet du 2026-08-10, type déclaré `non-installe`. Le fichier n'existe pas et n'a jamais existé dans ce dépôt.
-
 ## La question que ce type pose
 
 Son contenu recoupe celui du harnais constitutionnel et celui de `ADR-002`. Trois documents porteraient alors le même objet, ce qui est exactement le défaut de source parallèle que `ANL-001` mesure au défaut D2.
 
-Ce jet ne tranche pas et rend la question visible : soit la gouvernance vit dans la constitution, soit la constitution se réduit aux règles impératives et la gouvernance prend le cycle. La deuxième répartition est la plus claire et elle demande de produire deux fichiers là où le corpus n'en tenait qu'un.
+La question n'est pas tranchée : soit la gouvernance vit dans la constitution, soit la constitution se réduit aux règles impératives et la gouvernance prend le cycle. La deuxième répartition demande deux fichiers là où le corpus n'en tenait qu'un.
 
 ## Ce qu'il porterait
 

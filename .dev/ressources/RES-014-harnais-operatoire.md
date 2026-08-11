@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, decision, intention]
 sections: [Prise en charge de la demande, Méthodologie, Directives]
 skill: skl-005-ressource-de-controle
-adr: ADR-005
+adr: ADR-012
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type du fichier `CLAUDE.md`. Son nom est imposé par l'outil, non par ce dépôt : c'est ce que l'agent lit sans qu'on le lui demande.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Le fichier existe et il est en défaut : `ANL-001` établit au défaut D8 qu'il prescrit un système qui n'existe pas, avec vingt-sept types annoncés dont vingt-et-un sans instance et quinze triplets de marque-places.
 
 ## Pourquoi un harnais n'est pas une ressource ordinaire
 

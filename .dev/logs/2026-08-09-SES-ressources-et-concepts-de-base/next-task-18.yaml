@@ -1,0 +1,92 @@
+# Suggestions de prochaines étapes après la tâche 18.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-023 Q1 : ce qui porte l'identité de l'oeuvre à l'interne"
+    detail: >-
+      ADR-008 D5 pose que l'identité désigne l'oeuvre, D2 pose que l'alias ne
+      la porte pas. Rien ne dit ce qui la porte. Le dépôt ne peut donc pas
+      reconnaître deux copies d'une même oeuvre. Trois positions : un UUID
+      attribué à la création, comme la forme de Q10 le suppose ; aucune
+      représentation interne, l'identité n'apparaissant qu'à la publication ;
+      ou l'alias la porte de fait, ce qui revient à ADR-007 D1 sous un autre
+      nom.
+
+  - titre: "Trancher NON-023 Q3 : la propagation d'un changement d'alias"
+    detail: >-
+      ADR-008 D3 autorise le changement d'alias à condition de propager. Rien
+      ne l'exécute, rien ne le vérifie. Faut-il implémenter clia res renumber
+      avant d'autoriser D3, ou accepter un intervalle où la règle est écrite
+      et non tenue ?
+
+  - titre: "Relire NON-014, qui porte sur le même sujet que NON-001"
+    detail: >-
+      Le trilemme de nommage. Bloquante depuis le 2026-08-10 et non relue à
+      l'occasion de cette tâche. ADR-008 pourrait y répondre partiellement :
+      le trilemme se pose différemment quand l'identifiant interne est un
+      alias modifiable plutôt qu'une identité.
+
+  - titre: "Trancher NON-023 Q5 : le remplacement partiel d'une décision"
+    detail: >-
+      DCN-008 corrige deux des cinq décisions de ADR-007 et en conserve
+      trois. Ni la relation remplace, ni le champ effet, ni MET-002 étape 6
+      ne savent le dire. Le traitement retenu, une annotation dans le texte,
+      est lisible par un humain et par aucun outil.
+
+  - titre: "Cinq objections bloquantes restent sans réponse"
+    detail: "NON-002, NON-005, NON-009, NON-017, NON-018."
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Réclamé depuis six jours. La tâche 18 y ajoute trois contrôles, tous
+      simples et tous spécifiés.
+    contient:
+      - "V-E1 et V-E2 de PDC-002 : jeu de caractères et longueur des alias"
+      - "V-E3 : toute commande qui prend une ressource accepte PREFIX-SEQ"
+      - "le contrôle de dérivation du champ effet, MET-002 étape 6, tâche 14"
+      - "V10 de ANL-004, absence de rubrique méta, tâche 15"
+      - "les contrôles T1 et T3 de ANL-005, tâche 16"
+
+  - titre: "Implémenter clia res renumber"
+    detail: >-
+      Le cahier des charges est écrit et éprouvé. La migration de la tâche 13
+      a fait ce travail à la main sur quatre-vingt-trois identifiants, avec
+      deux précautions consignées : traiter les identifiants du plus long au
+      plus court, et employer une frontière de mot. La commande rend
+      applicable ADR-008 D3.
+
+  - titre: "Éprouver MET-002 sur le cas qui vient de le mettre en défaut"
+    detail: >-
+      Sa première application réelle a échoué pour un motif non prévu. Le
+      document porte une rubrique « Éprouvé sur » qui déclarait le mécanisme
+      non testé ; elle peut maintenant porter un cas.
+
+dette_nommee:
+  - titre: "Six règles écrites et non tenues"
+    detail: >-
+      Les cinq de la tâche 14, plus l'obligation de propagation de ADR-008
+      D3. NON-005 conteste l'accumulation depuis le 2026-08-09, et elle reste
+      bloquante.
+
+  - titre: "Le sort d'un numéro libéré n'est plus réglé"
+    detail: >-
+      ADR-007 D2 posait qu'un numéro libéré n'est jamais réattribué. Son
+      abrogation retire la règle sans la remplacer. clia res new prend le
+      maximum plus un : un numéro libéré par la suppression de la dernière
+      ressource d'un type sera réattribué en silence. NON-023 Q2, et
+      NON-019 Q5 le relevait déjà.
+
+  - titre: "Le champ version perd sa fonction interne sans être retiré"
+    detail: >-
+      ADR-008 D5 renvoie le versionnage à la publication externe. Le champ
+      reste obligatoire dans la majorité des types. NON-023 Q4, et NON-022 Q1
+      le proposait déjà au retrait pour un autre motif.
+
+  - titre: "clia res new produit toujours un frontmatter faux"
+    detail: >-
+      Inchangé depuis la tâche 14. type vaut 009 au lieu de decision, id
+      porte un slug au lieu du numéro. lib/clia/resource.sh lignes 298 et
+      310.
+
+  - titre: "Trois plans non exécutés coexistent"
+    detail: "PLN-001, PLN-002, et le chantier R2 de ANL-005."

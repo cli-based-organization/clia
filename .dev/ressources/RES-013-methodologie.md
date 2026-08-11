@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, domaine]
 relations-admissibles: [methodologie, skill, concept, fondation, ressource]
 sections: [Objet, Quand l'employer, Le procédé, Ce qui peut échouer, Éprouvé sur, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-005
+adr: ADR-011
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `methodologie`. Sa fonction est de conserver un procédé qui a fonctionné, afin qu'il soit rejouable.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Trois dans le corpus, dans `micrologic-clients` : entrevue de CV, analyse de fit, entrevue de journalisation.
 
 ## Ce qu'est une méthodologie
 

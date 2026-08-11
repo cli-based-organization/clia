@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, portee, peremption]
 relations-admissibles: [contexte, intention, fait, ontologie, concept, analyse]
 sections: [Situation, Historique, Acteurs, Contraintes, Constats et mesures, Ce qui n'est pas su, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,18 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `contexte`, deuxième des trois ingrédients de toute demande selon `CLAUDE.md` : l'intention dit le pourquoi, le contexte dit la situation, la spécification du livrable dit la forme attendue.
-
-## Statut de ce document
-
-Premier jet. Le contexte est, dans le corpus observé, un concept **latent** : `ANL-001` n'en trouve aucune instance typée, alors qu'il est actif dans la pratique depuis un an sous la forme d'une rubrique du fichier de session. Ce jet est donc une réification, non une consolidation, et il repose sur moins de matière que `RES-001`.
-
-## Le problème que ce type résout
-
-Le contexte existe aujourd'hui comme section `# CONTEXTE` du fichier de session. Il y est réellement renseigné : la session du 2026-07-31 de `clia` explique en trois phrases l'historique d'un an de travail, l'état d'usage minimal du système et l'objectif de stabilisation.
-
-Mais la session est éphémère par destination. Ce qui est écrit dans sa rubrique de contexte disparaît de la vue à la clôture, alors que ce qui y est écrit est durable : un historique d'un an, des parties prenantes, un état de système. À chaque nouvelle session, l'humain réécrit une partie du même contexte, et l'agent redécouvre le reste.
-
-Le régime de travail observé aggrave ce coût. `ANL-001` mesure des vagues de travail intense séparées de creux de plusieurs mois, et trente-six pour cent des commits entre 21h et 6h. Le coût de reprise est la contrainte dominante, et il est aujourd'hui payé en entier à chaque reprise.
 
 ## Ce qu'est un contexte
 
@@ -109,7 +97,7 @@ Ce partage est le premier emploi réel du régime hybride dans `clia`, et rien n
 
 ## Frontière avec les autres types
 
-C'est là que ce jet est le plus fragile, et `NON-003` porte la question dans son ensemble.
+C'est la frontière la plus fragile du type. `NON-003` la porte dans son ensemble.
 
 | Type voisin | Frontière proposée | Fragilité |
 |---|---|---|
@@ -120,11 +108,11 @@ C'est là que ce jet est le plus fragile, et `NON-003` porte la question dans so
 
 ## L'affect
 
-`CLAUDE.md` demande de comprendre « comment se sent l'humain ». Ce jet ne le range pas dans le contexte, et la raison est de principe.
+`CLAUDE.md` demande de comprendre « comment se sent l'humain ». L'affect n'entre pas dans le contexte.
 
 Une ressource est versionnée, partageable et opposable. L'état émotionnel d'une personne n'a aucune de ces trois propriétés : le versionner en fait un dossier, le partager le rend indiscret, l'opposer le rend une arme. La demande de `CLAUDE.md` reste légitime, mais elle porte sur une qualité d'attention de l'agent dans la conversation, non sur un objet à produire.
 
-Ce jet propose donc : l'affect n'est pas une ressource, il reste dans la conversation et, s'il doit apparaître, dans la rubrique de contexte de la session, qui est éphémère. La question est portée par `NON-003`, avec ses conséquences.
+L'affect n'est pas une ressource. Il reste dans la conversation et, s'il doit apparaître, dans la rubrique de contexte de la session, qui est éphémère. `NON-003` porte la question.
 
 ## Structure attendue d'une instance
 

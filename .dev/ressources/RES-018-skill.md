@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, name, version, status, description]
 relations-admissibles: [skill, ressource, methodologie, principe]
 sections: [Quand invoquer, Procédure, Gabarit, Validation, Erreurs fréquentes, Relations]
 skill: skl-005-ressource-de-controle
-adr: ADR-005
+adr: ADR-012
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `skill`. C'est le troisième terme du triplet qui accompagne un type de ressource, aux côtés de la définition et de la décision.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Une instance dans ce dépôt, `skl-001-ressource`, et son histoire est instructive : il a été corrigé deux fois par son propre usage, à la tâche 3 sur l'exclusion des blocs de code et à la tâche 4 sur la distinction entre mention et emploi d'un marqueur.
 
 ## Ce qu'un skill porte
 

@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, terme-ontologique, origi
 relations-admissibles: [concept, ontologie, fondation, analyse, intention]
 sections: [Ce que nomme ce concept, Origine, Ce qu'il permet de voir, Ce qu'il exclut, Emplois attestés, Limites et cas frontières, Relations]
 skill: skl-002-ressource-fondamentale
-adr: aucun
+adr: ADR-009
 statut: actif
 ---
 
@@ -24,28 +24,6 @@ statut: actif
 ## Objet
 
 Ce document définit le type `concept`. Sa fonction est de conserver les idées que le travail produit, afin qu'elles cessent d'être perdues avec le dépôt qui les portait.
-
-## Statut de ce document
-
-Premier jet, et le plus fragile des sept. `ANL-001` classe le concept comme **absent** : aucune instance, aucun répertoire, aucun skill, aucune mention dans le corpus hors du `CLAUDE.md` de `clia`. Ce jet ne consolide rien ; il propose un type que rien n'a éprouvé.
-
-Une prudence particulière s'impose donc, et elle est intégrée à la définition sous la forme d'un seuil d'admission strict.
-
-## Le problème que ce type résout
-
-Le corpus produit des concepts en abondance et les perd. `ANL-001` en relève sept, tous formulés dans un dépôt, tous employés, aucun n'ayant de document propre.
-
-| Concept | Origine | État aujourd'hui |
-|---|---|---|
-| Topologie de style | `la-isla-disruptiva/ptyle`, 2023 | Plus cité nulle part |
-| Phore | `disruptiva-dev/nty`, 2026-03 | Plus cité nulle part |
-| Pilier de communication | `disruptiva-dev/comm-cli`, 2026-05 | Spécifié dans un dépôt jamais implémenté, absent du dépôt qui porte son nom |
-| Distillation | `noumanity-dev/ticket-driven-ai`, 2026-06 | Cité dans une table de zones, non élaboré |
-| Extreme-smart | `nou-methodologies-ia`, 2026-03 | Un ADR y renvoie, la notion elle-même n'est pas écrite |
-| Réflexivité | `cli-based-organization/linux-inspect`, 2026-06 | Un des quatre principes directeurs, jamais promu |
-| Objection sociocratique | `intentional-doers-governance`, 2026-07 | Mécanisme central de la méthode, adopté sans essai de fondation dédié |
-
-Ces sept idées vivent dans un README, une section de constitution ou un titre d'ADR. Elles ne sont ni citables, ni contestables, ni réutilisables. Le type `concept` existe pour cela.
 
 ## Ce qu'est un concept
 
@@ -64,7 +42,7 @@ Les deux dernières rubriques sont obligatoires, et elles sont ce qui distingue 
 
 ## Seuil d'admission
 
-C'est la partie normative de ce document, et elle existe parce que `ANL-001` établit au défaut D4 que le système consacre une part croissante de son énergie à se décrire. `CPT` est, de tous les types annoncés, le plus susceptible de proliférer : rien ne borne naturellement le nombre d'idées qu'on peut élaborer.
+`CPT` est le type le plus susceptible de proliférer : rien ne borne naturellement le nombre d'idées qu'on peut élaborer. `ANL-001` établit au défaut D4 que le système consacre une part croissante de son énergie à se décrire.
 
 Un concept ne s'ouvre que si les trois conditions sont réunies.
 
@@ -76,7 +54,7 @@ La première condition a une conséquence utile : elle rend le champ `emplois-at
 
 ## Critère de clôture
 
-Le corpus montre une propension à produire de longs documents sur des sujets ouverts. Ce jet borne donc explicitement.
+La longueur est bornée.
 
 Un concept est **clos** quand il énonce ses limites et ses cas frontières. Ce n'est pas quand le sujet est épuisé : un sujet ne s'épuise pas.
 
@@ -84,7 +62,7 @@ Longueur indicative : une à trois pages. Au-delà, deux hypothèses sont plus p
 
 ## Frontière avec les types voisins
 
-`NON-004` porte la question dans son ensemble. La proposition de ce jet :
+`NON-004` porte la question dans son ensemble.
 
 | Type | Sur quoi il porte | Ce qu'il produit |
 |---|---|---|
@@ -111,7 +89,7 @@ Ce rattachement obligatoire a une fonction précise : il empêche qu'un concept 
 
 ## Instances candidates
 
-Ce jet ne produit aucune instance. Les sept concepts orphelins recensés plus haut sont les candidats naturels, et trois d'entre eux paraissent prioritaires parce que le système en dépend aujourd'hui sans les avoir écrits : `extreme-smart`, `distillation` et `objection sociocratique`.
+Aucune instance n'existe. Les sept concepts orphelins recensés plus haut sont les candidats, dont trois dont le système dépend sans les avoir écrits : `extreme-smart`, `distillation` et `objection sociocratique`.
 
 ## Structure attendue d'une instance
 

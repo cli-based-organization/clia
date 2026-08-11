@@ -62,6 +62,7 @@ Usage : clia [option] <ressource> <verbe> [arguments]
 
 Ressources :
   resource, res, r        gerer les ressources du depot
+  git, g                  suivre l'historique des ressources
   configuration, config, c  gerer la configuration de l'utilisateur
 
 Options :
@@ -72,11 +73,12 @@ Options :
 
 Aide d'une ressource :
   clia resource --help
+  clia git --help
   clia config --help
 
-clia est deterministe : il cree, liste, affiche et valide. Il ne redige
-aucun contenu, n'interprete aucune demande et n'effectue aucune operation
-git. Ces trois choses appartiennent a l'humain et a l'agent IA.
+clia est deterministe : il cree, liste, affiche, valide, et commite ce que
+l'agent a prepare. Il ne redige aucun contenu et n'interprete aucune
+demande : ces deux choses appartiennent a l'humain et a l'agent IA.
 EOF
 }
 
@@ -135,6 +137,10 @@ main() {
     resource|res|r)
       . "$CLIA_LIB_DIR/resource.sh"
       clia_resource_main "$@" ;;
+    git|g)
+      . "$CLIA_LIB_DIR/resource.sh"
+      . "$CLIA_LIB_DIR/git.sh"
+      clia_git_main "$@" ;;
     configuration|config|c)
       . "$CLIA_LIB_DIR/config.sh"
       clia_config_main "$@" ;;

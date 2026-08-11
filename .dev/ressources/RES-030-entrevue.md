@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, interlocuteur, objet-de-l-e
 relations-admissibles: [entrevue, fragment, fait, decision, patrimoine]
 sections: [Objet, Cadre, Échange, Ce qui en ressort, Relations]
 skill: skl-004-ressource-de-contenu
-adr: ADR-005
+adr: ADR-010
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `entrevue`. Sa fonction est d'extraire un savoir qui n'existe que dans la tête de quelqu'un.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Le type est défini dans `micrologic-clients` sous le nom `RES-010-entrevue`, avec un régime hybride, et `ANL-001` relève qu'il n'y a **jamais été éprouvé** : sa définition n'a aucune instance.
 
 ## Pourquoi ce type appartient à la famille contenu
 

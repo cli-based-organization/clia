@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, evenement]
 relations-admissibles: [presentation, article, concept, fondation, publication]
 sections: [Objet, Message principal, Déroulé, Sources, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-005
+adr: ADR-014
 statut: actif
 ---
 
@@ -25,10 +25,6 @@ statut: actif
 
 Définit le type `presentation`. Sa fonction est de rattacher au modèle un livrable dont la production est mécanique et le rendu binaire.
 
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt. Le corpus en compte plusieurs, tous instructifs : `noumanity-formation/linux-and-quantum-computers` avec dix-huit sources LaTeX et dix PDF, `noumanity-quantum-roadmap` avec trente-deux sources et onze PDF, et `intentional-doers-governance` avec sa chaîne de rendu en Lua.
-
 ## Le composite, appliqué pour la première fois
 
 Ce type est le meilleur cas d'application de `ADR-004`. Une présentation est un composite dont les atomes sont : le message, le déroulé, les sources de rendu, les assets, et le rendu produit.
@@ -39,7 +35,7 @@ Son entrée conventionnelle est `index.md`, conformément à `ADR-004` D5.
 
 Le rendu produit mécaniquement doit-il être versionné aux côtés de ses sources ? `ANL-001` mesure que trois dépôts du corpus le font sans qu'aucune règle ne tranche. `NON-006` Q2 porte la question, et elle n'a pas de réponse.
 
-Ce jet propose une position : la source et la recette sont des atomes de la présentation ; le rendu est une manifestation au sens FRBR, et il n'a pas à être versionné s'il est reproductible. Il doit l'être s'il a été diffusé, parce qu'alors il est ce que le destinataire a reçu.
+La source et la recette sont des atomes de la présentation. Le rendu est une manifestation au sens FRBR : il n'est pas versionné s'il est reproductible, et il l'est s'il a été diffusé, auquel cas il est ce que le destinataire a reçu.
 
 ## Cycle de vie et édition
 

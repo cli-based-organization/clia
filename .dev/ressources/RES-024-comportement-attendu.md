@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, verifie]
 relations-admissibles: [comportement, requis, specification, usage, code, bug]
 sections: [Objet, Situation, Comportement attendu, Comment le vérifier, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -25,17 +25,13 @@ statut: actif
 
 Définit le type `comportement`. Sa fonction est de rendre vérifiable une exigence, en la ramenant à un cas concret.
 
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt sous ce type, et pourtant le type est le plus employé de fait : les soixante-six assertions de `tests/test_clia.sh` sont des comportements attendus, écrits directement en bash sans passer par une ressource.
-
 ## Ce qu'il porte
 
 La situation, décrite de manière reproductible. Le comportement attendu, formulé de manière binaire : il se produit ou non. Le moyen de le vérifier. Et ce qu'il vérifie, par le champ `verifie` qui renvoie à un requis ou à une spécification.
 
 ## La question que le type pose immédiatement
 
-Les soixante-six assertions de la suite de tests existent et fonctionnent. Faut-il en produire soixante-six ressources ? Ce jet répond non : un comportement attendu se justifie quand il porte une exigence que le test seul ne dit pas, typiquement le motif de l'exigence et son rattachement à un requis.
+Les assertions de la suite de tests existent et fonctionnent. Un comportement attendu ne double pas un test : il n'est produit que lorsqu'il porte une exigence que le test seul ne dit pas, son motif et son rattachement à un requis.
 
 C'est l'application du même critère que celui du fait : on ne consigne que ce qui est réutilisé ou contesté.
 

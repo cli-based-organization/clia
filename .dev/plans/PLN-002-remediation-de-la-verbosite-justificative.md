@@ -3,7 +3,7 @@ type: plan
 id: PLN-002
 title: "Remédiation de la verbosité justificative des définitions de type"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-10
 initiateur: agent
 porte-sur: [skl-001-ressource, RES-001, ressource.template.md]
@@ -11,11 +11,15 @@ porte-sur: [skl-001-ressource, RES-001, ressource.template.md]
 
 # PLN-002 - Remédiation de la verbosité justificative des définitions de type
 
-> Cinq chantiers pour retirer la justification des trente définitions `RES` et empêcher son retour. Le chantier C exige une décision de l'humain et bloque le chantier D. Ce plan n'est pas exécuté.
+> Cinq chantiers pour retirer la justification des trente définitions `RES` et empêcher son retour. Exécuté le 2026-08-10 par la tâche 17.
 
 ## Statut
 
-`propose`. Aucun chantier n'est engagé.
+`execute`, le 2026-08-10, par la tâche 17 de la session.
+
+Les cinq chantiers sont exécutés. Le chantier C a été tranché par l'agent, option C-a, six `ADR` de famille, conformément à sa recommandation : l'humain a demandé l'exécution du plan sans écarter cette recommandation.
+
+`ADR-015` porte le résultat mesuré et `DCN-009` enregistre la décision.
 
 Le diagnostic, les mesures et le correctif sont dans `ANL-004`. Ce plan ordonne l'application du correctif.
 

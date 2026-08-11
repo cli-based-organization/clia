@@ -1,0 +1,83 @@
+# Suggestions de prochaines étapes après la tâche 16.
+
+le_plus_rentable_maintenant:
+  - titre: "Activer la signature SSH des commits"
+    detail: >-
+      Contrainte T4, la seule des six qui soit à la fois non tenue et
+      résoluble par configuration. Zéro commit signé sur huit. La clé
+      id_ed25519 est présente, la clé GPG est expirée depuis le 2026-06-18.
+    commandes:
+      - "git config gpg.format ssh"
+      - "git config user.signingkey ~/.ssh/id_ed25519.pub"
+      - "git config commit.gpgsign true"
+    remarque: >-
+      Sans elle, la chaîne de hachages atteste la cohérence d'une suite de
+      versions, non l'auteur ni la date de chacune. C'est l'écart exact entre
+      ce que la tâche 16 suppose et ce que le dépôt possède.
+
+  - titre: "Implémenter clia res log et clia res diff"
+    detail: >-
+      Recommandation R4. Les deux sont des enveloppes de commandes
+      existantes : la suite des identifiants de contenu par commit, et
+      git diff entre deux identifiants d'arbre. Elles rendent utilisable un
+      mécanisme qui existe déjà et qu'aucune commande n'expose.
+
+  - titre: "Écrire les six contraintes T1 à T6 dans un harnais"
+    detail: >-
+      Recommandation R2. Ce sont des règles d'écriture de commit, pas de
+      rédaction. Aucun harnais ne les porte, et aucun skill de commit
+      n'existe. Trois plans non exécutés coexistent déjà : PLN-001, PLN-002,
+      et ce chantier.
+
+a_faire_par_l_humain:
+  - titre: "Trancher R6 : faut-il un ancrage externe"
+    detail: >-
+      OpenTimestamps ne devient utile que si une date doit être opposable à
+      un tiers. Aucune ressource du dépôt n'est aujourd'hui dans ce cas. La
+      question se posera au premier livrable partagé hors du dépôt.
+
+  - titre: "Trancher le chantier C de PLN-002"
+    detail: "Inchangé depuis la tâche 15. Bloque la réécriture des trente définitions."
+
+  - titre: "Trancher NON-022 Q1 et NON-020 Q1"
+    detail: "Inchangé depuis la tâche 15."
+
+controles_a_implementer:
+  - titre: "Détection d'un commit qui renomme et réécrit la même ressource"
+    detail: >-
+      Contrainte T1. Le geste coupe l'historique définitivement : quatre
+      versions deviennent une, et aucun seuil de similarité ne les récupère.
+      Détectable par git log --diff-filter=R --stat.
+
+  - titre: "Détection d'une réécriture d'histoire"
+    detail: >-
+      Contrainte T3, la seule dont la violation est irréversible. Un
+      écrasement de commits fait passer huit commits à deux et l'historique
+      d'un fichier de quatre à un. Détectable par comparaison de
+      l'identifiant du commit racine et du nombre de commits avec la
+      référence distante.
+    remarque: >-
+      Ces deux contrôles rejoignent clia validate, réclamé depuis cinq jours,
+      avec V10 de la tâche 15 et la dérivation du champ effet de la tâche 14.
+
+dette_nommee:
+  - titre: "T6 est déduite et non mesurée"
+    detail: >-
+      Le cas d'une ressource qui change de forme, un fichier devenu
+      répertoire, n'a pas été construit. ADR-004 autorise les trois formes
+      et rien ne mesure le coût du passage de l'une à l'autre.
+
+  - titre: "Le recouvrement entre l'historique git et le log.md d'OKF n'est pas arbitré"
+    detail: >-
+      OKF prévoit un log.md par concept. ANL-006, archivée, relève le
+      recouvrement sans le trancher. La tâche 16 donne OKF comme motif de
+      l'implémentation sur système de fichiers, sans poser la question.
+
+  - titre: "Trois plans non exécutés coexistent"
+    detail: "PLN-001 depuis le 2026-08-09, PLN-002 depuis hier, et R2 depuis aujourd'hui."
+
+  - titre: "Cinq règles écrites et non tenues, plus six contraintes non écrites"
+    detail: >-
+      Les cinq de la tâche 14, auxquelles la tâche 16 ajoute T1 à T6, qui ne
+      sont écrites nulle part. NON-005 conteste l'accumulation depuis le
+      2026-08-09.

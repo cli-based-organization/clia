@@ -43,7 +43,7 @@ La distinction interne à la famille tient à l'origine du contenu. Si le conten
 4. **Rédiger**, section par section, dans l'ordre déclaré.
 5. **Renseigner les champs marqués `À RENSEIGNER`.** Ils sont posés par l'outil et leur valeur dépend du contenu.
 6. **Déclarer les relations.** Vocabulaire admis dans `skl-001` règle A4, restreint par le champ `relations-admissibles` du type.
-7. **Valider.** Contrôles V1 à V9 de `skl-001`, plus le contrôle propre à cette famille ci-dessous, plus la validation de schéma.
+7. **Valider.** Contrôles V1 à V10 de `skl-001`, plus le contrôle propre à cette famille ci-dessous, plus la validation de schéma.
 
 ## Validation de schéma
 

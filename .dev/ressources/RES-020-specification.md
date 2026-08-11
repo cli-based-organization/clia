@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status]
 relations-admissibles: [specification, requis, usage, comportement, adr]
 sections: [Objet, Comportement observable, Interfaces, Ce qui est hors périmètre, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-005
+adr: ADR-013
 statut: actif
 ---
 
@@ -24,10 +24,6 @@ statut: actif
 ## Objet
 
 Définit le type `specification`. Sa fonction est de fixer ce qu'un objet doit faire avant de décider comment il le fera.
-
-## Statut de ce document
-
-Premier jet du 2026-08-10. Aucune instance dans ce dépôt, douze dans le corpus. Le type est éprouvé dans `ticket-driven-ai`, qui en fait un livrable outillé avec sa garde propre.
 
 ## La garde d'agnosticisme
 
