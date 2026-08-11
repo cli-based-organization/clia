@@ -8,6 +8,8 @@ instance: "human:jvtrudel"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: en-vigueur
+attestation: interne
+diffusion: public
 ---
 
 # DCN-001 - La ressource est un ensemble composable et atomique d'informations
@@ -29,6 +31,10 @@ Trois énoncés, repris de la tâche 9 de `workspace/session.md`.
 **Sur la composition.** Une ressource est composable et atomique. On peut construire une ressource à partir d'un assemblage d'autres ressources, et chaque composant d'une ressource est un atome, c'est-à-dire une petite ressource qui fait partie d'une autre.
 
 **Sur la propriété holographique.** Le titre de la tâche nomme une propriété holographique des ressources sans la définir. `ADR-004` D4 en retient la lecture suivante : chaque atome est auto-cohérent au même titre que le composite, donc lisible seul. Cette lecture est une interprétation de l'agent, et elle est signalée comme telle dans l'ADR et portée par `NON-016`.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

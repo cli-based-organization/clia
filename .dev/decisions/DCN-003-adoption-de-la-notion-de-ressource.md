@@ -8,6 +8,8 @@ instance: "aucune : décision non actée"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: proposee
+attestation: interne
+diffusion: public
 ---
 
 # DCN-003 - Adoption de la notion de ressource
@@ -25,6 +27,10 @@ Ce document est produit à la demande de la tâche 8 de la session du 2026-08-09
 `clia` adopte la ressource comme unité du travail : un fichier markdown à frontmatter YAML typé, dont un type déclaré gouverne la forme, dont l'identité est stable et indépendante de son emplacement, et qui fait foi par opposition à la conversation. Chaque type se définit dans une ressource dédiée, s'acte dans un ADR et se produit selon un skill, ces trois documents étant complétés type par type.
 
 Neuf décisions détaillées, D1 à D9. Sa décision D2 est partiellement abrogée par `ADR-004`, qui définit la ressource par ses propriétés et non par son support.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

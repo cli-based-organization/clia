@@ -1,0 +1,105 @@
+# Suggestions de prochaines étapes après la tâche 14.
+
+bogue_a_corriger_en_priorite:
+  - titre: "clia res new produit un frontmatter faux depuis le 2026-08-09"
+    detail: >-
+      Deux valeurs sont fausses à la création : type vaut 009 au lieu de
+      decision, et id vaut DCN-<slug> au lieu de DCN-008. Ce sont deux
+      régressions de la tâche 13 : la migration a changé la forme des
+      identifiants, la commande ne l'a pas suivie. Toute ressource créée
+      depuis est non conforme dès sa naissance, ce qui explique en partie
+      l'état de FRG-001 et de NON-013.
+    emplacements:
+      - "lib/clia/resource.sh:298 - le type est dérivé de l'id de la définition, dont le suffixe est désormais un numéro. Il doit venir du nom de fichier de la définition"
+      - "lib/clia/resource.sh:310 - l'id est composé du slug au lieu du discriminant, ce qui produit la forme <PREFIX>-<SLUG> abolie par DCN-007"
+    remarque: >-
+      Le commentaire des lignes 295-296 est devenu faux le 2026-08-09 et
+      affirme encore que l'id d'une définition porte le slug canonique.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-022 Q1 : onze champs obligatoires sont-ils tenables ?"
+    detail: >-
+      RES-009 v0.2.0 alourdit le type de 22 pour cent au nom d'une fondation
+      dont l'apport 7 dit que la charge est la cause mesurée d'abandon. Le
+      dépôt compte sept DCN, ce qui le place exactement dans la zone où
+      Rösch et al. mesurent l'arrêt. La troisième position proposée retire
+      version en compensation, et elle touche un champ commun à tous les types.
+
+  - titre: "Trancher NON-020 Q1 : le seuil de dix sources par question"
+    detail: >-
+      Aucune des deux fondations du dépôt ne l'a jamais approché. FND-003
+      atteint 6,4 au prix d'une tâche entière, en cherchant à l'atteindre.
+      Un seuil que rien ne satisfait ne discrimine plus rien.
+
+  - titre: "Trancher NON-020 Q5 : sections déclarées ou structure imposée"
+    detail: >-
+      Les trois fondations du dépôt échouent au contrôle de sections, parce
+      que RES-011 en déclare six et que MET-001 en impose dix autres. La
+      question porte sur les trente types, pas seulement sur la fondation :
+      le champ sections est-il un minimum ou une structure ?
+
+  - titre: "Trancher NON-021 Q1 : quand une décision exige-t-elle une recherche préalable"
+    detail: >-
+      ADR-007 et RES-009 reproduisent deux prescriptions de Nygard publiées
+      en 2011, découvertes par hasard le lendemain de la décision. Ici le
+      coût a été nul, la source confortant la décision. Il aurait été de
+      quatre-vingt-trois fichiers si elle l'avait contredite.
+
+  - titre: "Les sept questions de NON-019 restent ouvertes"
+    detail: "Inchangé depuis la tâche 13. Q1 et Q2 lèveraient l'objection."
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Réclamé depuis quatre jours, et la tâche 14 y ajoute un contrôle
+      précis et facile : comparer l'ensemble des cibles des relations
+      remplace à l'ensemble des DCN portant effet remplacee. C'est ce qui
+      rend vérifiable le seul apport structurel de cette tâche. La chaîne
+      de validation a de nouveau tourné à la main aujourd'hui, sur 92
+      fichiers, et a trouvé un bogue du CLI et un conflit de définitions.
+    contient:
+      - "le contrôle de dérivation de effet, MET-002 étape 6"
+      - "le contrôle de sections, qui a trouvé le conflit RES-011 contre MET-001"
+      - "la validation de schéma, qui tourne déjà mais dans un script jeté"
+
+  - titre: "Éprouver MET-002 étape 6 sur un cas réel"
+    detail: >-
+      Le mécanisme central de la tâche n'a aucun cas : aucune DCN n'en
+      remplace une autre. Le premier revirement est le moment où il faudra
+      relire MET-002, et c'est aussi le seul moyen de savoir si la règle
+      tient. Un candidat existe déjà : DCN-003 spécifie ADR-001, dont le
+      D3 a été abrogé par ADR-007.
+
+dette_nommee:
+  - titre: "Cinq règles écrites et non tenues"
+    detail: >-
+      Les quatre de next-task-13.yaml, plus la dérivation de effet posée
+      par RES-009 R3 et spécifiée par MET-002 étape 6. NON-005 conteste
+      cette accumulation depuis le 2026-08-09, NON-022 Q3 porte la
+      cinquième.
+
+  - titre: "Le générateur d'artefacts n'est pas versionné"
+    detail: >-
+      Les schémas et gabarits portent l'en-tête « Généré depuis RES-xyz.
+      Ne pas éditer à la main », et aucun générateur n'existe dans le
+      dépôt. Les trois artefacts du type decision ont donc été édités à
+      la main aujourd'hui, ce que leur propre en-tête interdit.
+
+  - titre: "MET-001 n'a pas sa section Quand l'employer"
+    detail: >-
+      Déclarée obligatoire par RES-013, absente du fichier. Non
+      conformité simple, sans rapport avec le conflit de sections des
+      fondations.
+
+  - titre: "Deux fichiers de l'humain restent non conformes"
+    detail: >-
+      FRG-001 et NON-013, avec des champs À RENSEIGNER. Inchangé depuis
+      la tâche 13. Le bogue de clia res new en donne une cause partielle.
+
+  - titre: "CLAUDE.md n'a toujours pas été touché"
+    detail: >-
+      Sa table des types annonce vingt-sept types là où trente sont
+      définis, et il documente deux commandes qui n'existent pas. Le
+      chantier A de PLN-001 reste suspendu. NON-021 Q3 propose d'y
+      inscrire l'exigence de recherche préalable, ce qui donne une
+      raison de plus d'ouvrir ce chantier.

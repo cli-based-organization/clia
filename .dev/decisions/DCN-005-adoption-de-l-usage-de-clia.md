@@ -8,6 +8,8 @@ instance: "aucune : décision non actée"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: proposee
+attestation: interne
+diffusion: public
 ---
 
 # DCN-005 - Adoption de l'usage d'un CLI extensible
@@ -25,6 +27,10 @@ Ce document est produit à la demande de la tâche 8 de la session du 2026-08-09
 Le système comporte un CLI déterministe et générique, `clia`, troisième agent aux côtés de l'humain et de l'agent IA. Il est conçu selon le modèle orienté ressources et extensible par type. Sa fonction est de garantir ce qui doit être garanti : l'intégrité du système d'information, les transitions d'état, l'installation, la validation. Il reste dans ce dépôt tant que la méthode et l'outil changent ensemble, et il en sortira selon un critère écrit.
 
 Neuf décisions détaillées, D1 à D9, dont D4 porte son propre critère de renversement.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

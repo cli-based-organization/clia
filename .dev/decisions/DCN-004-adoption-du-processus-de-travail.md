@@ -8,6 +8,8 @@ instance: "aucune : décision non actée"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: proposee
+attestation: interne
+diffusion: public
 ---
 
 # DCN-004 - Adoption du processus de travail collaboratif
@@ -25,6 +27,10 @@ Ce document est produit à la demande de la tâche 8 de la session du 2026-08-09
 Le travail se fait par sessions portant chacune une intention, un ou plusieurs livrables et un critère de convergence. Toute demande y est d'abord analysée puis journalisée. La production est faite de ressources typées. Le comportement de l'agent IA est encadré par un ensemble conventionné de harnais. Tout désaccord, ambiguïté ou déviation par rapport à l'intention ultime est signalé au moment où il est identifié par une objection, que l'humain comme l'agent peuvent émettre. Et la journalisation est obligatoire, sans exception.
 
 Huit décisions détaillées, D1 à D8. Sa décision D6 rompt avec la règle absolue de non-exécution sous objection ouverte héritée du `CONSTITUTION.md` archivé.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

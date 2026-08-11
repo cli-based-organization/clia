@@ -1,0 +1,60 @@
+type: docs
+scope: definitions
+sujet: "diagnostic de la verbosité justificative des définitions de type"
+corps: |
+  Exécute la tâche 15 de la session du 2026-08-09, classée bogue. La demande
+  vise un défaut produit par l'agent : les définitions RES justifient au lieu
+  de prescrire.
+
+  Trois mesures sur les trente définitions, toutes reproductibles par
+  relecture. Un cinquième du texte, 3 724 mots sur 17 922, est logé dans des
+  rubriques qui portent sur le document et non sur le type défini. Cent
+  quarante-six marqueurs lexicaux de justification, densité 6,6 pour mille
+  mots. Les cinq définitions les plus atteintes dépassent 22 pour cent, dont
+  RES-009, produit le jour même à la tâche 14.
+
+  La troisième mesure tranche entre deux diagnostics incompatibles. Les deux
+  rubriques méta du gabarit skl-001 B3 sont reprises par 30 définitions sur
+  30, au titre exact. Les sept rubriques descriptives du même gabarit sont
+  reprises entre 1 et 13 fois sur 30, sous des titres variables. Le harnais
+  est suivi là où il justifie et reformulé là où il prescrit.
+
+  L'agent applique le harnais. Le défaut y est prescrit.
+
+  La contradiction tient dans un seul document. skl-001 B1 ligne 122 assigne
+  le pourquoi à l'ADR. skl-001 B3 ligne 168 prescrit « Le problème que ce type
+  résout » dans la définition. Quarante-cinq lignes d'écart, aucun arbitrage.
+
+  Deuxième cause, structurelle : le foyer désigné par B1 n'existe pas.
+  Vingt-neuf types sur trente n'ont aucun ADR qui décide leur adoption, et les
+  vingt-trois qui désignent ADR-005 désignent une décision qui règle le
+  regroupement en familles. Troisième cause : skl-001 A3 porte cinq règles
+  d'écriture, trois de typographie et deux de fond, aucune de registre.
+
+  Cinq correctifs. Retirer les deux rubriques méta du gabarit. Aligner B3 sur
+  B1. Créer le foyer de la justification. Ajouter une règle de registre, avec
+  bibliographie numérotée pour les références externes. Ajouter le contrôle
+  V10, exécutable par grep sur les titres de niveau 2.
+
+  PLN-002 ordonne cinq chantiers et trois points d'arrêt. Le chantier C,
+  l'ouverture du foyer, exige une décision de l'humain et bloque la réécriture
+  des trente définitions. Le chantier A ne dépend de rien. La première
+  définition réécrite sera RES-009, et son coût réel commandera l'engagement
+  des deux vagues suivantes.
+
+  Deux défauts connexes trouvés dans le même gabarit, sans rapport avec la
+  verbosité : il prescrit id: RES-<slug>, forme abolie par ADR-007, et montre
+  quatorze champs là où RES-001 en déclare seize.
+
+  Aucun harnais, aucune définition, aucun code n'est modifié : la demande
+  porte sur un diagnostic et un plan. 91 tests verts.
+note_pour_l_humain: >-
+  Le correctif a été appliqué aux deux documents qui le proposent : zéro
+  rubrique méta, zéro marqueur de justification en usage. C'est une
+  auto-application, pas une épreuve. Les deux livrables sont neufs et
+  n'avaient aucune dette à corriger. Le coût réel de réécriture d'une
+  définition existante reste inconnu, et c'est ce que mesure le chantier D1.
+  Une décision vous revient avant toute réécriture : où va la justification
+  retirée. Sans elle, 3 724 mots sont perdus, dont la date de production et le
+  numéro de tâche de chacune des trente définitions, qui n'existent sous forme
+  structurée nulle part ailleurs.

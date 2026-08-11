@@ -8,6 +8,8 @@ instance: {{instance}}
 date-de-decision: {{date_de_decision}}
 portee: {{portee}}
 effet: {{effet}}
+attestation: {{attestation}}
+diffusion: {{diffusion}}
 ---
 
 # DCN-{{discriminant}} - {{titre}}
@@ -21,6 +23,10 @@ effet: {{effet}}
 ## La décision
 
 À rédiger.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

@@ -69,6 +69,14 @@ Un échec signale un champ absent, mal orthographié, ou dont la valeur sort de 
 
 Vérifier aussi que l'origine est renseignée : une matière sans provenance n'est pas citable.
 
+## Contrôle propre au type Décision
+
+Depuis `RES-009` v0.2.0, du 2026-08-10, une décision ne se renverse pas en éditant l'existante.
+
+**Ne jamais passer `effet` à `remplacee` comme geste de changement.** Produire une nouvelle `DCN` qui déclare `remplace` vers l'ancienne et qui remplit sa section « Motivation du changement ». Le champ `effet: remplacee` est alors le report d'un fait lisible dans le dépôt, non une information saisie.
+
+Le procédé complet, ses neuf étapes et ses sept modes d'échec vivent dans `MET-002`. Le lire avant de produire ou de changer une `DCN`.
+
 ## Le piège de cette famille
 
 Améliorer ce qu'on capte. C'est le réflexe naturel d'un agent rédacteur, et il détruit la valeur de cette famille. La règle est absolue : l'agent n'édite jamais le bloc de matière, il produit une ressource dérivée qui déclare `derive-de`.
@@ -77,3 +85,4 @@ Améliorer ce qu'on capte. C'est le réflexe naturel d'un agent rédacteur, et i
 
 - `derive-de` [skl-001-ressource](../skl-001-ressource/SKILL.md)
 - `derive-de` [ADR-005](../../adr/ADR-005-regroupement-fonctionnel-des-ressources.md)
+- `reference` [MET-002](../../methodologies/MET-002-enregistrement-et-suivi-d-une-decision.md)

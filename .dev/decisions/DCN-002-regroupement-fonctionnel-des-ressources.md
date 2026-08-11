@@ -8,6 +8,8 @@ instance: "human:jvtrudel"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: en-vigueur
+attestation: interne
+diffusion: public
 ---
 
 # DCN-002 - Les ressources sont regroupées selon leur fonction
@@ -31,6 +33,10 @@ Reprise mot pour mot de la tâche 8 de `workspace/session.md` :
 > - d'implémentation (COD, PRS, ...)
 
 Six familles. Deux d'entre elles reçoivent des exemples dans l'énoncé, les quatre autres non.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

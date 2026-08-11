@@ -1,0 +1,73 @@
+# Suggestions de prochaines étapes après la tâche 15.
+
+decision_qui_bloque:
+  - titre: "Trancher le chantier C de PLN-002 : où va la justification"
+    detail: >-
+      Le chantier D, la réécriture des trente définitions, ne peut pas
+      commencer sans cette réponse. Deux options. C-a, six ADR d'adoption,
+      un par famille de ADR-005. C-b, un ADR unique pour les trente types.
+      Recommandation de l'agent : C-a, le découpage existe déjà et un ADR de
+      trente types ne serait relu par personne.
+    consequence_si_non_tranche: >-
+      Les 3 724 mots retirés des définitions sont perdus, dont la date de
+      production et le numéro de tâche de chacune des trente, qui n'existent
+      sous forme structurée nulle part ailleurs.
+
+le_plus_rentable_maintenant:
+  - titre: "Exécuter le chantier A de PLN-002"
+    detail: >-
+      Sept éditions dans un seul fichier, skl-001. Sans dépendance, sans
+      décision humaine requise. Tant qu'il n'est pas fait, toute définition
+      écrite reproduit le défaut, y compris celles que la tâche 14 vient de
+      produire.
+
+  - titre: "Implémenter clia validate, avec V10"
+    detail: >-
+      Réclamé depuis cinq jours. La tâche 15 y ajoute un contrôle par grep
+      sur les titres de niveau 2, et la tâche 14 y ajoutait le contrôle de
+      dérivation du champ effet. Trois chaînes de validation ont tourné à la
+      main en deux jours, chacune dans un script jeté.
+
+  - titre: "Corriger le champ adr des trente définitions"
+    detail: >-
+      Vingt-trois pointent vers ADR-005, qui décide le regroupement en
+      familles et non l'adoption des types. Le champ est faux depuis le
+      2026-08-10. La correction fait partie du chantier C et n'a de sens
+      qu'avec lui.
+
+defauts_connexes_trouves:
+  - titre: "skl-001 B3 ligne 147 prescrit id: RES-<slug>"
+    detail: >-
+      Forme abolie par ADR-007 le 2026-08-09. Troisième trace de la migration
+      de la tâche 13 restée en place, après les deux régressions de
+      clia res new portées par next-task-14.yaml.
+
+  - titre: "skl-001 B3 montre quatorze champs, RES-001 en déclare seize"
+    detail: "Manquent famille et sections. Porté par le chantier A6."
+
+  - titre: "ressource.template.md porte la structure d'une instance"
+    detail: >-
+      Ses huit rubriques sont celles que RES-001 déclare pour ses instances,
+      non celles d'une définition. Une définition créée par clia res new
+      ressource reçoit donc la mauvaise structure. Porté par le chantier B.
+
+dette_nommee:
+  - titre: "Deux plans non exécutés coexistent"
+    detail: >-
+      PLN-001 attend depuis le 2026-08-09, PLN-002 depuis aujourd'hui. Les
+      deux portent sur les harnais. PLN-001 chantier A réécrit CLAUDE.md,
+      PLN-002 chantier A réécrit skl-001.
+
+  - titre: "Le défaut n'est mesuré que sur les définitions RES"
+    detail: >-
+      Repéré sans mesure dans les ADR, les MET et les NON. Le chantier E de
+      PLN-002 produit le chiffre, sans dépendance et sans réécriture.
+
+  - titre: "V10 est un contrôle par liste noire"
+    detail: >-
+      Il détecte les rubriques nommées. Il ne détecte pas une justification
+      logée dans une rubrique descriptive, ce qui est le cas de la majorité
+      des 146 marqueurs mesurés.
+
+  - titre: "Cinq règles écrites et non tenues"
+    detail: "Inchangé depuis la tâche 14. NON-005 conteste depuis le 2026-08-09."

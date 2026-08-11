@@ -270,6 +270,45 @@ L'objectif de cette rechserche est de mieux comprendre les pratiques de document
 
 Afin d'enrichir la ressource DCN introduit à la tâche 8 et, surtout, nos méthodologies de travail avec cette ressource.
 
+## 15. [bogue] La rédaction des ressources (RES) est trop verbeuse et se justifie trop
+
+Les ressources RES devraient être décrites de manière diractive et factuelle.
+
+Or, l'agent IA justifie sans cesse ses décisions comme s'il avait peur des reproches...
+À la limite, si des références externes sont nécessaires, les écrires sous la forme d'une bibliographie (liste numérotée de références externe). Mais NE PAS EXPLIQUER POURQUOI ON A PRIS UNE DÉCISION.
+
+Diagnostiquer ce problème. En trouver la cause et proposer un correctif. 
+
+Faire un plan de rémédiation incluant (sans s'y limiter):
+- 1. la correction des harnais pertinents
+- 2. la correction des ressources RES
+
+## 16. [conception] traçabilité de l'historique des ressources
+
+Dans une implémentation sur système de fichier (nécessaire pour être compatible à OKF), une ressource est soit:
+- un fichier,
+- un répertoire contenant des fichiers et répertoires, ou bien
+- un repo git
+
+Le cas limite où la ressource est un repo git, il suffit de signer tout les commits pour avoir une traçabilité complète de l'histoire de la ressources.
+
+Ceci est possible parce que: 
+- 1. git est un blockchain
+- 2. pour toute la chaine des modification il est possible d'avoir le diff de toutes les modifications
+
+
+Est-ce possible de conserver l'historique
+- 1. d'un fichier et
+- 2. d'un répertoire contenant des fichiers et des sous-répertoires
+
+à partir des infos de git (à la racine du repo qui contient la ressource).
+
+Y a-t-il des contraintes à respecter pour s'assurer qu'on pourra suivre l'historique individuelle de chaque ressources
+
+faire une analyse (ANL) du sujet. Quelles seraient les autres options jouables pour avoir un blockchain de la suite des modifications et de connaitre le diff entre chaques nouvelles versions.
+
+Terminer l'analyse avec des recommandations.
+
 
 ## x. [conception] Amélioration de la notion de ressource
 

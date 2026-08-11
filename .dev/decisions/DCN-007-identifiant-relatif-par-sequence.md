@@ -8,6 +8,8 @@ instance: "human:jvtrudel"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: en-vigueur
+attestation: interne
+diffusion: public
 ---
 
 # DCN-007 - L'identifiant interne d'une ressource est `<PREFIX>-<SEQ>`
@@ -29,6 +31,14 @@ Reprise de la tâche 13 de `workspace/session.md`, classée `[bogue]` :
 > Corriger les noms de fichier et les références.
 
 Le classement en `[bogue]` est significatif : pour l'humain, ce n'était pas une question ouverte mais un défaut à corriger.
+
+## Motivation du changement
+
+Cette décision ne remplace aucune `DCN`, et elle renverse une position antérieure de l'agent, `ADR-001` D3, qui posait que l'identité d'une ressource est `<PREFIXE>-<SLUG>`.
+
+Ce que cette position tenait pour acquis et qui ne l'est plus : que le numéro de séquence se renumérote. Le fondement était mesuré, `ANL-001` relevant douze numéros de skill sur vingt portant plusieurs noms selon le dépôt. Le renversement ne conteste pas la mesure : il pose que la renumérotation est interdite, ce qui rend le numéro stable et donc apte à porter l'identité.
+
+Section ajoutée le 2026-08-10 par la migration vers `RES-009` v0.2.0, qui rend cette rubrique obligatoire.
 
 ## Qui a décidé
 

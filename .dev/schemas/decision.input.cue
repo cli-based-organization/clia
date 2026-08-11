@@ -1,6 +1,6 @@
 // decision.input.cue - Donnees a fournir au gabarit decision.template.md
 //
-// Genere depuis RES-009-decision.md le 2026-08-10. Ne pas editer a la main.
+// Genere depuis RES-009-decision.md v0.2.0 le 2026-08-10. Ne pas editer a la main.
 
 package clia
 
@@ -13,4 +13,6 @@ package clia
 	date_de_decision: string & !=""
 	portee:       string & !=""
 	effet:        string & !=""
+	attestation:  string & !=""
+	diffusion:    string & !=""
 }

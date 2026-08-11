@@ -8,6 +8,8 @@ instance: "human:jvtrudel"
 date-de-decision: 2026-08-09
 portee: systeme
 effet: en-vigueur
+attestation: interne
+diffusion: public
 ---
 
 # DCN-006 - La spécification du système est strictement distincte de son implémentation
@@ -25,6 +27,10 @@ Reprise de la tâche 10 de `workspace/session.md`, dont l'énoncé tient dans so
 > Distinguer de manière stricte la spécification du système `clia` de son implémentation.
 
 L'adverbe **strictement** est ce qui distingue cette décision d'un simple rangement. Il exige que la frontière soit vérifiable et qu'aucun artefact ne soit des deux côtés.
+
+## Motivation du changement
+
+Sans objet, cette décision n'en remplace aucune.
 
 ## Qui a décidé
 

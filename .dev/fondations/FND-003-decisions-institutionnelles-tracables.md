@@ -398,9 +398,9 @@ Trente-deux sources, dont trente portent une URL. Chaque entrée porte sa nature
 
 ## Limites de cette recherche
 
-**La densité est insuffisante**, mesurée à l'étape 10 : 4,8 sources par question au lieu de dix, une page par question au lieu de deux à quatre. C'est le même défaut que `FND-002`, et il est cette fois mesuré et déclaré plutôt que constaté après coup.
+**La densité est insuffisante**, mesurée à l'étape 10 : 6,4 sources par question au lieu de dix, 1,8 page par question au lieu de deux à quatre. C'est le même défaut que `FND-002`, et il est cette fois mesuré et déclaré plutôt que constaté après coup. `NON-020` conteste le seuil lui-même, qu'aucune des deux fondations du dépôt n'a jamais approché.
 
-**La source fondatrice du champ des ADR n'a pas été consultée directement.** Le billet de Nygard de 2011 est cité par une source secondaire. Pour une revue qui reproche à ses prédécesseurs de ne pas citer leurs sources, c'est une faiblesse.
+**Trois sources primaires n'ont pas été consultées directement.** Le document de travail de 1970 de Kunz et Rittel, dont aucun exemplaire librement accessible n'a été trouvé ; la norme ISO 15489-1:2016, payante ; et l'article de 1988 sur gIBIS, dont l'éditeur refuse les requêtes automatisées. Les trois sont citées par des sources qui les reproduisent, et signalées comme rapportées en bibliographie. Le champ du design rationale est donc établi ici sur du rapporté, ce qui est une faiblesse pour une revue qui reproche à ses prédécesseurs de ne pas remonter aux sources.
 
 **Trois attributions d'auteurs sont incertaines**, signalées aux entrées 10, 12 et 13 de la bibliographie.
 
@@ -414,5 +414,6 @@ Trente-deux sources, dont trente portent une URL. Chaque entrée porte sa nature
 
 - `derive-de` [MET-001](../methodologies/MET-001-recherche-de-fondation.md)
 - `specifie` [RES-009](../ressources/RES-009-decision.md)
+- `specifie` [MET-002](../methodologies/MET-002-enregistrement-et-suivi-d-une-decision.md)
 - `reference` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/index.md)
 - `reference` [RES-004](../ressources/RES-004-objection.md)

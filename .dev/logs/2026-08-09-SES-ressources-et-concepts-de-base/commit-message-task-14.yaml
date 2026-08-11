@@ -1,0 +1,79 @@
+type: feat
+scope: decision
+sujet: "le changement d'une décision devient un acte motivé, non un état à tenir"
+corps: |
+  Termine la tâche 14 de la session du 2026-08-09. FND-003, la recherche de
+  fondation, avait été produite et laissée sans exploitation ni journal. Or
+  l'énoncé désigne l'exploitation comme le livrable principal : enrichir la
+  ressource DCN et, surtout, les méthodologies de travail avec elle.
+
+  Le résultat central de la fondation condamne le mécanisme du premier jet de
+  RES-009. Le changement d'une décision y reposait sur le champ effet, et la
+  littérature établit que ce champ n'est jamais mis à jour. Ce dépôt n'a pas
+  besoin de croire la source : ANL-001 mesure déjà ce que devient une
+  information tenue à la main, completed dans cinquante-deux logs et complet
+  dans deux du même dépôt.
+
+  Le droit du précédent fournit l'alternative, et FND-003 la formule ainsi :
+  un état se met à jour ou s'oublie, un acte laisse une trace même s'il est
+  incomplet. RES-009 v0.2.0 la transpose en trois règles. Un revirement
+  produit une nouvelle DCN qui déclare remplace. Cette DCN motive le
+  changement, dans une section désormais obligatoire. Et effet remplacee
+  devient dérivable, donc vérifiable : une décision est remplacée si et
+  seulement si une autre déclare remplace vers elle. Cette dernière règle
+  n'introduit rien de neuf, elle applique ADR-003 D7 à un type qui y faisait
+  exception.
+
+  Deux champs sont ajoutés. attestation, à quatre valeurs, dit sur quelle foi
+  l'enregistrement est tenu pour fidèle : c'est le cinquième élément qu'exige
+  l'archivistique et que les six autres domaines négligent. diffusion, repris
+  de RES-005, porte le facteur politique que Horner et Atwood identifient et
+  qu'aucun format ne résout. Une frontière est ajoutée : la décision n'est pas
+  sa délibération, faute de quoi un régime de diffusion unique s'impose aux
+  deux, et c'est toujours le plus restrictif qui gagne.
+
+  MET-002 est le livrable que la demande désignait comme principal. Neuf
+  étapes, dont chacune porte son contrôle ou déclare qu'elle n'en a pas.
+  L'étape 3 est celle qui rend le procédé soutenable : une DCN se dérive d'un
+  ADR accepté, d'une objection tranchée, d'un fragment ou d'un document
+  externe, jamais d'une saisie dédiée. C'est la conséquence directe du
+  résultat de Horner et Atwood, pour qui ce n'est pas la capture qui échoue
+  mais la capture qui interrompt.
+
+  Les sept DCN du dépôt sont migrées : quarante-six insertions, aucune
+  suppression, aucune teneur touchée. DCN-007 reçoit une motivation rédigée
+  plutôt que la formule d'usage : elle ne remplace aucune DCN mais renverse
+  ADR-001 D3, et la section dit ce que la position antérieure tenait pour
+  acquis et qui ne l'est plus.
+
+  Trois objections sont ouvertes, treize questions. NON-020 conteste le seuil
+  de dix sources par question de MET-001, qu'aucune des deux fondations du
+  dépôt n'a jamais approché ; sa Q5 relève un conflit mesuré entre les
+  sections déclarées par RES-011 et la structure imposée par MET-001, auquel
+  les trois fondations échouent. NON-021 constate que ADR-007 et RES-009
+  reproduisent deux prescriptions publiées par Nygard en 2011, découvertes par
+  hasard le lendemain, et que rien dans le processus de travail n'aurait
+  permis de le savoir avant de décider. NON-022 est dirigée contre le livrable
+  de cette tâche.
+
+  FND-003 est corrigée sur deux incohérences internes : les chiffres de ses
+  limites contredisaient sa propre mesure d'étape 10, et une limite affirmait
+  que la source fondatrice n'avait pas été consultée alors que l'étape 9
+  relate le contraire. Aucune affirmation sourcée n'est touchée.
+
+  90 ressources sur 92 valident leur schéma, les deux échecs étant les
+  fichiers de l'humain laissés intacts. 91 tests verts. Zéro lien cassé.
+note_pour_l_humain: >-
+  NON-022 est dirigée contre ce que je viens de produire, avec ses chiffres :
+  RES-009 passe de neuf à onze champs obligatoires au nom d'une fondation dont
+  l'apport 7 dit que la charge est la cause mesurée d'abandon, et le contrôle
+  qui devait rendre le nouveau mécanisme vérifiable n'existe pas. Tant qu'il
+  n'existe pas, le mécanisme neuf a en pratique le défaut de l'ancien. Son
+  apport central, l'étape 6 de MET-002, n'a aucun cas d'épreuve : aucune DCN
+  n'en remplace une autre.
+  Par ailleurs, la validation a trouvé un bogue sans rapport avec la tâche :
+  clia res new produit un frontmatter faux depuis le 2026-08-09, type valant
+  009 au lieu de decision et id portant un slug au lieu du numéro. Deux
+  régressions de la tâche 13, aux lignes 298 et 310 de resource.sh. Non
+  corrigées, la tâche 14 n'étant pas un correctif du CLI, mais toute ressource
+  créée entre-temps est non conforme dès sa création.
