@@ -1,0 +1,68 @@
+# Suggestions de prochaines étapes après la tâche 28.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-029 Q1 : type unique ou catégorie de registres"
+    detail: >-
+      L'énoncé parle d'une catégorie et écrit REG_TYPE-<SEQ>.
+      L'implémentation retient un type unique REG avec un champ registre-de.
+      La question engage les trois registres à venir : dette, bogues, tâches
+      à faire. Elle se tranche avant de les créer, non après.
+
+  - titre: "Trancher NON-029 Q2 : REG-001 doit-il être dérivé"
+    detail: >-
+      Le registre reprend le titre et l'effet de chaque DCN. L'information
+      existe deux fois, et ANL-001 mesure que la duplication non tenue est le
+      mode de défaillance dominant du corpus.
+
+  - titre: "Renommer FRG-2026-08-11, ou le laisser"
+    detail: >-
+      Le fichier porte un identifiant daté que ADR-007 D4 abolit. Il a été
+      créé par vous avec la version bogée de clia res new. Je ne l'ai ni
+      renommé ni modifié : il vous appartient. Le bogue est corrigé, les
+      prochains fichiers seront séquencés.
+
+  - titre: "Renseigner les gabarits en attente"
+    detail: "DCN-011, DCN-012, DCN-013, FRG-001, FRG-2026-08-11, NON-013."
+
+le_plus_rentable_maintenant:
+  - titre: "Créer les trois registres restants"
+    detail: >-
+      Demandés par NON-004 Q4, portés par PLN-005 chantier D. La matière du
+      registre de dette existe déjà : la rubrique dette_nommee de chaque log
+      next, tenue depuis la tâche 13, recense une dizaine d'entrées.
+    depend_de: "NON-029 Q1"
+
+  - titre: "Ajouter le contrôle de cohérence des registres à clia validate"
+    detail: >-
+      Deux contrôles simples : chaque item pointe vers une ressource qui
+      existe, et un registre saisie ne diverge pas des ressources qu'il
+      liste. Le second rend vérifiable la quatrième obligation de
+      propagation.
+
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis sept jours. La tâche 28 y ajoute deux contrôles.
+
+dette_nommee:
+  - titre: "Quatre obligations de propagation, aucune outillée"
+    detail: >-
+      Les alias par ADR-008 D3, le remplacement des décisions par RES-009 R3,
+      la mise à jour du savoir vers ses ressources générées par NON-004 Q3,
+      et désormais la tenue des registres saisis.
+
+  - titre: "Un test codifiait un bogue pendant deux jours"
+    detail: >-
+      un type point-fixe est nomme par date vérifiait la forme que ADR-007 D4
+      abolit, et passait au vert. La migration de la tâche 13 avait corrigé
+      les fichiers, pas le générateur ni son test. Rien ne garantit qu'aucun
+      autre test ne codifie une règle abrogée.
+
+  - titre: "REG-001 invente un statut"
+    detail: >-
+      Trois décisions portent des champs À RENSEIGNER, et le registre leur
+      attribue le statut a-renseigner, qui n'est pas une valeur du champ
+      effet. Un registre qui invente des valeurs cesse d'être une vue.
+      NON-029 Q3.
+
+  - titre: "Cinq plans coexistent, quatre non exécutés"
+    detail: "Inchangé depuis la tâche 27."

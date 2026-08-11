@@ -3,7 +3,7 @@ type: plan
 id: PLN-004
 title: "Ajustement de clia aux réponses de NON-004"
 status: draft
-statut-plan: propose
+statut-plan: abandonne
 date: 2026-08-11
 initiateur: agent
 porte-sur: [RES-006, RES-007, ISU-001, NON-004]
@@ -15,7 +15,11 @@ porte-sur: [RES-006, RES-007, ISU-001, NON-004]
 
 ## Statut
 
-`propose`. Aucun chantier n'est engagé.
+`abandonne` le 2026-08-11, **remplacé par `PLN-005`**.
+
+Ce plan a été produit quand une seule des sept questions de `NON-004` portait une réponse. Les sept en portent une désormais, et six changent ce que le plan ordonnait.
+
+Il est conservé comme trace de ce qui était planifiable à ce moment. Aucun de ses chantiers n'a été engagé.
 
 L'interprétation et les mesures sont dans `ANL-007`. Ce plan ordonne l'ajustement.
 
@@ -166,6 +170,7 @@ Avant C, D, E et F : quatre réponses manquent.
 ## Relations
 
 - `derive-de` [ANL-007](../analyses/ANL-007-interpretation-des-reponses-a-non-004.md)
+- `est-remplacee-par` [PLN-005](PLN-005-ajustement-au-savoir-relationnel.md)
 - `reference` [RES-006](../ressources/RES-006-ontologie.md)
 - `reference` [RES-007](../ressources/RES-007-concept.md)
 - `reference` [PLN-003](PLN-003-mise-en-conformite-avec-dcn-013.md)

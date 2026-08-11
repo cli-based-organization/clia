@@ -383,7 +383,7 @@ Correctifs proposés:
 - générer les skills en prenant en compte la méthode MET de journalisation
 
 
-## [bogue] toujours relire la tâche avant de l'exécuter
+## 26. [bogue] toujours relire la tâche avant de l'exécuter
 
 ### Incident
 
@@ -410,6 +410,50 @@ Les fichieres SES sont écrits par des humains. Par conséquent, ils ne sont pas
 Faire une analyse ANL qui interprète les réponses à NON-004 et en décrit les implications et conséquences.
 
 Proposer un plan d'ajustement de clia pour tenir compte des réponses de NON-004.
+
+## 28. [implémenttion] Registres et outillage
+
+Les registres sont une catégorie de ressource qui permet de contenir une liste de ressources.
+
+Créer, si elle n'existe pas déjà, un registre des décisions.
+
+
+Et ajouter une classe de commandes pour instrumenter les registres:
+
+```sh
+clia registre|reg CMD [OPTIONS...] [ARGS...]
+
+clia reg ls   # donner la liste des registres
+clia reg ls REG_TYPE-<SEQ>  # donner la liste des items d'un registre => SEQ RESSOURCE_ALIAS  description  status
+
+clia reg show|edit REG_TYPE-<SEQ> SEQ 
+
+```
+
+## 29. [implémentation] PLN-005
+
+Réévaluer PLN-005 au regard de PDC-003
+
+Partir de la liste des livrables identifier.
+
+Si il y a des problématiques non-smart, ouvrir un issue pour chaque thématique de problème.
+
+Pour chaque issue ouvert, décrire la problématique dans l'issue. Pour chaque ISU, ouvrir des objection dans une ressource NON. et établir une relation entre ISU et NON.
+
+Également, établir une relation enre ISU et les livrables bloqués ou impactés.
+
+L'humain peut apporter des informations à un ISU en lui écrivant des FRG à l'intérique de ISU. Ou bien en y liant un FRG ou n"importe quelle autre ressource
+
+À chaque nouvel informaiton, on peut réévaluer l'implémentabilité ou le caractère smart des livrables cibles.
+
+
+TODO: écrire cette procédure dans une nouvelle MET.
+
+Une fois que tous les ISU et les objections émises ont été créés, implémenter ce qui peut être implémenter de PLN-005
+
+
+
+
 
 
 ## x. [conception] Amélioration de la notion de ressource

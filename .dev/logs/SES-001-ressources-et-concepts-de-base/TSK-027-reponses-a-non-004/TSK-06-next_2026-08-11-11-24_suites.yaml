@@ -1,0 +1,79 @@
+# Suggestions de prochaines étapes après la tâche 27.
+
+le_plus_rentable_maintenant:
+  - titre: "Exécuter le chantier A de PLN-005 : corriger la méthode"
+    detail: >-
+      Premier, et il ne produit aucun document. Trois réponses reprochent à
+      l'agent de confondre ce qui est constaté avec ce qui fait autorité.
+      Deux règles à écrire dans skl-001 : une observation est une hypothèse,
+      et un écart entre une intention et son implémentation n'est pas un
+      démenti. Tant qu'il n'est pas fait, chaque chantier suivant reproduit
+      le défaut.
+
+  - titre: "Produire ONT-001"
+    detail: >-
+      Demandé explicitement par la réponse Q2. Il conditionne cinq des neuf
+      chantiers, porte le vocabulaire de relations aujourd'hui logé dans
+      RES-001 par défaut, et trace les deux frontières demandées :
+      information contre savoir, concept contre relation.
+
+  - titre: "Ajuster RES-007 : retirer le test d'admission"
+    detail: >-
+      Réponse Q6 : c'est l'humain qui crée le concept qui détermine s'il est
+      pertinent, et le seul critère est la compatibilité avec le système.
+      Deux éditions, aucune dépendance.
+
+  - titre: "Créer le type REG et le registre de dette"
+    detail: >-
+      Demandé par la réponse Q4. La matière existe déjà : la rubrique
+      dette_nommee de chaque log next, tenue depuis la tâche 13, recense dix
+      règles écrites et non tenues et une dizaine d'autres dettes.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-027 Q1 avant le chantier E"
+    detail: >-
+      La réponse Q4 demande un PDC sur la distillation. CONSTITUTION.md C1
+      réserve la création d'un PDC à l'humain, et la question de savoir si
+      l'agent peut en produire un premier jet non actif est ouverte depuis la
+      tâche 23.
+
+  - titre: "Trancher le chantier H : le cycle de vie collectif"
+    detail: >-
+      La réponse Q4 pose que le cycle de vie des ressources n'est pas
+      individuel mais collectif. RES-001 attribue à chaque ressource un cycle
+      individuel. Aucune réponse ne dit par quoi le remplacer.
+
+  - titre: "Renseigner les quatre gabarits en attente"
+    detail: "DCN-011, DCN-012, DCN-013, plus FRG-001 et NON-013."
+
+  - titre: "Quatre objections bloquantes restent sans réponse"
+    detail: "NON-005, NON-009, NON-014, NON-017, NON-018, plus NON-024."
+
+dette_nommee:
+  - titre: "Trois familles de documents sont déclarées dérivées, aucune n'est outillée"
+    detail: >-
+      ADR-016 D3 pour les skills, ADR-017 D5 pour les ADR, et la réponse Q5
+      pour les analyses. ANL-008 est elle-même une analyse écrite à la main
+      alors qu'elle devrait être générée.
+
+  - titre: "Trois obligations de propagation, aucune outillée"
+    detail: >-
+      Les alias par ADR-008 D3, le remplacement des décisions par RES-009 R3,
+      et désormais la mise à jour du savoir vers les ressources générées par
+      la réponse Q3.
+
+  - titre: "Le cycle de vie collectif met en cause RES-001 sans remplaçant"
+    detail: >-
+      Le modèle attribue trois cycles individuels. La réponse Q4 pose un
+      cycle collectif et ne dit pas comment le représenter.
+
+  - titre: "L'espace actif n'est défini nulle part"
+    detail: >-
+      CLAUDE.md le mentionne en une ligne. La réponse Q4 le déclare plus
+      important qu'il n'y paraît, incarnation d'une contextualité
+      informationnelle dans un espace plus large.
+
+  - titre: "Cinq plans coexistent, quatre non exécutés"
+    detail: >-
+      PLN-001 en attente, PLN-002 exécuté, PLN-003 proposé, PLN-004 abandonné
+      et remplacé, PLN-005 proposé.

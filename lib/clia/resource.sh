@@ -68,7 +68,7 @@ minuscules, accents translitteres, separateurs reduits a un trait d'union.
   -> .dev/objections/NON-006-portee-du-systeme.md
 
 Ce que la commande fait :
-  - attribue le discriminant selon le cycle de vie declare par le type,
+  - attribue le numero de sequence suivant du type,
     une sequence a trois chiffres ou une date ISO ;
   - pose les champs que la definition declare obligatoires, en marquant
     "À RENSEIGNER" ceux dont la valeur depend du contenu ;
@@ -270,13 +270,15 @@ clia_resource_new() {
 
   mkdir -p "$dir"
 
-  # Le nommage suit le cycle de vie declare par la definition du type.
-  # RES-001 : sequence pour vivant et travail, date pour point-fixe.
+  # ADR-007 D4 : le nommage date est aboli. Tous les types se nomment
+  # <PREFIX>-<SEQ>-<SLUG>.md, quel que soit leur cycle de vie. Le cycle ne
+  # commande plus que le versionnage.
+  #
+  # Bogue constate le 2026-08-11 : la forme datee subsistait pour les types
+  # point-fixe, et elle a produit FRG-2026-08-11, non conforme des sa
+  # creation, sur un fichier de l'humain.
   local discriminant
-  case "$cycle" in
-    point-fixe) discriminant=$(date +%Y-%m-%d) ;;
-    *)          discriminant=$(clia_resource_next_seq "$dir" "$prefixe") ;;
-  esac
+  discriminant=$(clia_resource_next_seq "$dir" "$prefixe")
 
   local file="$dir/${prefixe}-${discriminant}-${slug}.md"
   if [[ -e "$file" ]]; then

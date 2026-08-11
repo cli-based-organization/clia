@@ -1,0 +1,48 @@
+type: feat
+scope: registres
+sujet: "type Registre, registre des décisions, et commandes clia reg"
+corps: |
+  Exécute la tâche 28 de la session du 2026-08-09.
+
+  Un registre contient une liste de ressources et ne porte aucun contenu
+  propre : ce qu'il dit d'une ressource est repris de cette ressource. C'est
+  une vue, et son champ tenue décide de sa valeur : saisie ou derivee.
+
+  RES-035 définit le type, préfixe REG, cycle travail, édition hybride. La
+  rubrique Ce que le registre ne contient pas est obligatoire : un registre
+  lu comme exhaustif alors qu'il ne l'est pas est pire que pas de registre.
+
+  REG-001 registre les treize décisions du dépôt. Sa rubrique de silences
+  déclare qu'aucune n'est approuvée, que trois portent des champs à
+  renseigner, qu'il est tenu à la main, et qu'il ne porte aucune décision
+  d'architecture.
+
+  Trois verbes : reg ls liste les registres ou les items d'un registre, reg
+  show affiche un item puis la ressource qu'il désigne, reg edit ouvre cette
+  ressource. Un item est une ligne de tableau : l'éditer n'aurait pas
+  d'intérêt, et l'aide dit comment corriger une description.
+
+  La lecture du tableau reconnaît une ligne de données à son premier champ,
+  un numéro sur trois chiffres, plutôt qu'en sautant les deux premières
+  lignes. Un test vérifie que le séparateur n'est pas pris pour un item.
+
+  Un bogue a été découvert par le contrôle de schéma et corrigé. clia res new
+  attribuait un discriminant daté aux types point-fixe, alors que ADR-007 D4
+  abolit cette forme depuis le 2026-08-09. Il a produit FRG-2026-08-11, non
+  conforme dès sa création, sur un fichier de l'humain. Un test codifiait
+  l'ancien comportement et passait au vert : la migration de la tâche 13
+  avait corrigé les fichiers du dépôt, pas le générateur ni son test.
+
+  144 tests verts, contre 125 avant. 131 ressources sur 137 valident leur
+  schéma.
+note_pour_l_humain: >-
+  Le fichier FRG-2026-08-11 que vous avez créé porte un identifiant daté que
+  ADR-007 D4 abolit. Ce n'est pas votre erreur : clia res new produisait
+  encore cette forme pour les types point-fixe, et un test la codifiait. J'ai
+  corrigé les deux. Je n'ai ni renommé ni modifié votre fichier.
+  Deux choses vous appartiennent. L'énoncé parle des registres comme d'une
+  catégorie et écrit REG_TYPE-<SEQ> ; j'ai retenu un type unique avec un
+  champ registre-de, ce qui est une interprétation. Elle engage les trois
+  registres restants, donc elle se tranche avant de les créer. Et REG-001 est
+  tenu à la main : c'est la quatrième obligation de propagation que rien ne
+  vérifie dans ce dépôt.

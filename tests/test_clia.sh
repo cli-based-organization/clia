@@ -240,13 +240,16 @@ fi
 run_out res new chose "Deuxième chose" >/dev/null
 assert_file 'la sequence s incremente' "$DEPOT/.dev/choses/CHO-002-deuxieme-chose.md"
 
-# Un type point-fixe est nomme par date, sans version.
-today=$(date +%Y-%m-%d)
+# ADR-007 D4 : le nommage date est aboli, y compris pour les types
+# point-fixe. Ce test attendait la forme datee jusqu'au 2026-08-11, ce qui
+# codifiait le bogue que FRG-2026-08-11 a revele.
 run_out res new traces "Un relevé" >/dev/null
-assert_file 'un type point-fixe est nomme par date' \
-  "$DEPOT/.dev/traces/TRC-${today}-un-releve.md"
-content=$(cat "$DEPOT/.dev/traces/TRC-${today}-un-releve.md")
+assert_file 'un type point-fixe recoit un numero de sequence' \
+  "$DEPOT/.dev/traces/TRC-001-un-releve.md"
+content=$(cat "$DEPOT/.dev/traces/TRC-001-un-releve.md")
 assert_not_contains 'un type point-fixe ne porte pas de version' 'version:' "$content"
+assert_not_contains 'aucun nommage date ne subsiste' "$(date +%Y-%m-%d)" \
+  "$(ls "$DEPOT/.dev/traces/")"
 
 # Refus d un slug deja employe.
 run res new chose "Première chose à faire" >/dev/null 2>&1
@@ -547,6 +550,90 @@ out=$(rungit check --help 2>&1)
 assert_contains 'git check --help decrit les controles' 'T1' "$out"
 out=$(rungit log --help 2>&1)
 assert_contains 'git log --help explique l identifiant de contenu' 'identifiant de contenu' "$out"
+
+# --------------------------------------------------------------------------
+printf '\nclia registre\n'
+# --------------------------------------------------------------------------
+#
+# Le depot de test recoit sa propre definition de type registre et une
+# instance, pour que les tests ne dependent pas du contenu du depot reel.
+
+mkdir -p "$DEPOT/.dev/registres"
+cat > "$DEPOT/.dev/ressources/RES-900-registre.md" <<'EOF'
+---
+type: ressource
+id: RES-900
+title: "Registre"
+status: draft
+prefixe: REG
+emplacement: ".dev/registres/REG-<SEQ>-<SLUG>.md"
+cycle-de-vie: travail
+edition: hybride
+statut: actif
+---
+EOF
+cat > "$DEPOT/.dev/registres/REG-001-registre-d-essai.md" <<'EOF'
+---
+type: registre
+id: REG-001
+title: "Registre d essai"
+status: draft
+registre-de: choses
+tenue: saisie
+---
+
+# REG-001 - Registre d essai
+
+## Items
+
+| SEQ | RESSOURCE | DESCRIPTION | STATUS |
+|---|---|---|---|
+| 001 | CHO-001 | La premiere chose | ouvert |
+| 002 | CHO-002 | La deuxieme chose | ferme |
+
+## Ce que le registre ne contient pas
+
+Rien.
+EOF
+
+out=$(run_out reg ls)
+assert_contains 'reg ls affiche le registre' 'REG-001' "$out"
+assert_contains 'reg ls affiche le mode de tenue' 'saisie' "$out"
+assert_contains 'reg ls compte les items' '2' "$out"
+
+out=$(run_out reg ls REG-001)
+assert_contains 'reg ls REG affiche les items' 'CHO-001' "$out"
+assert_contains 'reg ls REG affiche la description' 'La premiere chose' "$out"
+assert_contains 'reg ls REG affiche le statut' 'ferme' "$out"
+assert_not_contains 'reg ls REG ne prend pas le separateur pour un item' '---|---' "$out"
+
+# Le registre se designe aussi par son numero seul.
+out=$(run_out reg ls 1)
+assert_contains 'reg ls accepte le numero seul' 'CHO-001' "$out"
+
+# show affiche l item puis la ressource designee.
+out=$(run_out reg show REG-001 1)
+assert_contains 'reg show affiche l item' 'La premiere chose' "$out"
+assert_contains 'reg show affiche la ressource designee' 'Première chose' "$out"
+
+out=$(run_out reg show REG-001 001)
+assert_contains 'reg show accepte le numero a trois chiffres' 'La premiere chose' "$out"
+
+run reg ls REG-999 >/dev/null 2>&1
+assert_rc 'reg ls sur un registre inconnu echoue' 1 "$?"
+run reg show REG-001 99 >/dev/null 2>&1
+assert_rc 'reg show sur un item inconnu echoue' 1 "$?"
+run reg show REG-001 >/dev/null 2>&1
+assert_rc 'reg show sans numero echoue en 2' 2 "$?"
+run reg inconnu >/dev/null 2>&1
+assert_rc 'un verbe de registre inconnu echoue en 2' 2 "$?"
+
+out=$(run_out reg --help)
+assert_contains 'reg --help liste les verbes' 'show REG-<SEQ>' "$out"
+out=$(run_out reg ls --help)
+assert_contains 'reg ls --help explique le mode de tenue' 'derive au premier oubli' "$out"
+out=$(run_out reg show --help)
+assert_contains 'reg show --help dit que l item est un renvoi' 'renvoi' "$out"
 
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

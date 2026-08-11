@@ -1,0 +1,63 @@
+type: docs
+scope: savoir
+sujet: "le savoir est une relation entre un acteur et une information"
+corps: |
+  Exécute la tâche 27 de la session du 2026-08-09. Les sept questions de
+  NON-004 portent désormais une réponse ; une seule en avait une quand
+  ANL-007 a été produite.
+
+  Trois réponses portent un reproche de méthode plutôt qu'une décision de
+  conception. L'agent traite le savoir comme un volume dont le seul problème
+  serait le calibre du contenant. Il prend ce qui est observé pour une
+  vérité, saute trop vite aux conclusions et gère mal l'incertitude. Il
+  comprend mal la notion d'intention et le temps caractéristique d'un
+  processus de construction.
+
+  ANL-008 rapporte chaque reproche à ce qu'il vise dans le texte de l'agent :
+  la formulation de la question Q3, l'emploi normatif de ANL-001 jusqu'à
+  proposer de reclasser les fondations d'un autre dépôt, et le traitement de
+  l'écart entre INTENTION.md et l'état du système comme un démenti.
+
+  Sur le fond, la réponse Q3 pose que le savoir est une forme particulière de
+  relation entre un acteur et une information, et qu'il dépend du contexte
+  sous plusieurs déclinaisons dont l'acteur et son état. Technote et
+  fondation ne diffèrent donc pas par la taille mais par l'usage et
+  l'acteur : la première guide l'action concrète, la seconde établit un socle
+  pour un travail intellectuel.
+
+  Une ressource peut être hybride, source et générée, le rôle étant
+  contextuel. L'analyse devient une ressource générée à partir de fondations
+  et d'une question, ce qui fait la troisième famille de documents déclarée
+  dérivée après les skills et les ADR. Aucune n'est outillée, et ANL-008 est
+  elle-même écrite à la main.
+
+  La ressource n'est qu'un réceptacle matérialisé d'une idée, et son cycle de
+  vie est collectif, non individuel. Cela met en cause le modèle de RES-001
+  sans qu'aucune réponse ne dise par quoi le remplacer.
+
+  Le seuil d'admission des concepts est supprimé : c'est l'humain qui crée le
+  concept qui détermine sa pertinence, et le seul critère est la
+  compatibilité avec le système. L'affirmation de INTENTION.md sur la
+  mobilisation du savoir est maintenue.
+
+  PLN-005 ordonne neuf chantiers et remplace PLN-004, abandonné. Le premier
+  ne produit aucun document : il corrige la méthode. Le second, ONT-001, en
+  conditionne cinq.
+
+  NON-004 passe à repondue, effet informatif. C'est la troisième objection du
+  dépôt à être levée sur vingt-huit.
+
+  125 tests verts. 127 ressources sur 132 valident leur schéma.
+note_pour_l_humain: >-
+  Vos trois reproches portent sur ma méthode, pas sur la conception, et je
+  les ai traités en premier dans l'analyse. J'ai proposé qu'ils relèvent d'un
+  même défaut, confondre ce qui est constaté avec ce qui fait autorité. C'est
+  une lecture qui m'arrange : elle ramène trois critiques distinctes à une
+  seule et la rend plus facile à corriger. Je l'ai signalée comme telle.
+  Le chantier A de PLN-005 en tire deux règles pour skl-001, et je dois
+  reconnaître qu'écrire deux règles ne corrige pas une disposition : rien ne
+  vérifiera qu'un constat n'est pas employé comme norme.
+  Une chose utile est sortie de MET-003 : le log de demande de cette tâche a
+  été écrit avant toute exploration, et il déclarait ne pas savoir si vous
+  aviez répondu depuis. Écrit après coup, il aurait présenté la conclusion
+  comme évidente.

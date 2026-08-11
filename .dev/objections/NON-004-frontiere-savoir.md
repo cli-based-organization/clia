@@ -4,8 +4,8 @@ id: NON-004
 title: "Frontière entre Ontologie, Concept, Fondation et Analyse"
 status: draft
 initiateur: agent
-effet: conditionnel
-etat: ouverte
+effet: informatif
+etat: repondue
 porte-sur: [RES-006, RES-007]
 ---
 
@@ -17,7 +17,8 @@ porte-sur: [RES-006, RES-007]
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
 - 2026-08-10 : **Q1 répondue par l'humain.** Le concept a deux formes selon son usage attendu, et une demande explicite en découle : documenter un `ISU` sur la définition d'une ressource dans un document ressource.
-- 2026-08-11 : traitement de la réponse, tâche 25. Interprétée par `ANL-007`, ajustement ordonné par `PLN-004`, et `ISU-001` ouverte comme demandé. **L'objection reste ouverte** : Q2 à Q7 sont sans réponse, dont Q2 et Q3 que cette objection désigne comme celles qui la lèveraient.
+- 2026-08-11 : traitement partiel, une seule réponse connue. Interprétée par `ANL-007`, ajustement ordonné par `PLN-004`, et `ISU-001` ouverte comme demandé.
+- 2026-08-11 : **les six questions restantes répondues par l'humain.** Trois d'entre elles portent un reproche de méthode à l'agent. Traitement complet, tâche 27 : `ANL-008` remplace `ANL-007`, `PLN-005` remplace `PLN-004`. L'état passe à `repondue`, l'effet à `informatif`.
 
 ## Ce qui est contesté
 
@@ -173,7 +174,13 @@ Une réponse à Q2 et Q3. Q2 résorbe une contradiction interne du jet, Q3 répo
 
 Q7 est de la responsabilité exclusive de l'humain et ne bloque rien, mais elle reste ouverte tant qu'elle n'a pas reçu de réponse.
 
-**État au 2026-08-11.** Une question sur sept porte une réponse, et ce n'est ni Q2 ni Q3. L'objection n'est pas levée. Ce que la réponse Q1 établit est appliqué par `PLN-004` chantier A ; les quatre autres chantiers attendent une réponse.
+**Levée le 2026-08-11.** Les sept questions portent une réponse.
+
+Q2 et Q3, que cette objection désignait comme décisives, sont répondues. Q2 demande de produire `ONT-001` ; Q3 écarte la prémisse de la question et redéfinit le savoir comme une relation entre un acteur et une information.
+
+Trois réponses portent un reproche de méthode plutôt qu'une décision de conception. `ANL-008` C1 les traite, et `PLN-005` chantier A en tire deux règles.
+
+L'effet passe de `conditionnel` à `informatif`. Les neuf chantiers d'ajustement sont ordonnés par `PLN-005`.
 
 ## Relations
 
@@ -181,4 +188,4 @@ Q7 est de la responsabilité exclusive de l'humain et ne bloque rien, mais elle 
 - `objecte-a` [RES-007](../ressources/RES-007-concept.md)
 - `objecte-a` [INTENTION.md](../../INTENTION.md)
 - `derive-de` [ANL-001](../analyses/ANL-001-observation-corpus-repos-et-pratiques/analyse-critique.md)
-- `reference` [ANL-007](../analyses/ANL-007-interpretation-des-reponses-a-non-004.md)
+- `reference` [ANL-008](../analyses/ANL-008-le-savoir-est-une-relation-entre-un-acteur-et-une-information.md)
