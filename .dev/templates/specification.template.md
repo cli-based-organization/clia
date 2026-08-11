@@ -1,6 +1,6 @@
 ---
 type: specification
-id: SPC-{{slug}}
+id: SPC-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

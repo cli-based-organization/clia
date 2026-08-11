@@ -1,6 +1,6 @@
 ---
 type: analyse
-id: ANL-{{slug}}
+id: ANL-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

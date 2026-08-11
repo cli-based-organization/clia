@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-fondation
+id: RES-011
 title: "Recherche de fondation"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, sujet, methodologie]
 relations-admissibles: [fondation, analyse, concept, ontologie, ressource]
 sections: [Objet et méthode, Corps de la revue, Ce que la recherche établit, Sources, Limites, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

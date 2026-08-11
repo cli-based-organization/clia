@@ -1,6 +1,6 @@
 ---
 type: principe-de-conception
-id: PDC-{{slug}}
+id: PDC-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

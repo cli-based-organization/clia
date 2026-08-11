@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-intention
+id: RES-003
 title: "Intention"
 version: 0.1.0
 status: draft

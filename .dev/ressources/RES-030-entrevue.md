@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-entrevue
+id: RES-030
 title: "Entrevue"
 version: 0.1.0
 status: draft
 prefixe: ENT
-emplacement: ".dev/entrevues/ENT-<DATE>-<SLUG>.md"
+emplacement: ".dev/entrevues/ENT-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
 edition: hybride
 famille: contenu
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, interlocuteur, objet-de-l-e
 relations-admissibles: [entrevue, fragment, fait, decision, patrimoine]
 sections: [Objet, Cadre, Échange, Ce qui en ressort, Relations]
 skill: skl-004-ressource-de-contenu
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

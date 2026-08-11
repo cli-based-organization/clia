@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-de-conception
+id: skl-003
 name: skl-003-ressource-de-conception
 version: 0.1.0
 status: draft

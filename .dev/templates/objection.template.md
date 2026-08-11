@@ -1,6 +1,6 @@
 ---
 type: objection
-id: NON-{{slug}}
+id: NON-{{discriminant}}
 title: "{{titre}}"
 status: draft
 initiateur: {{initiateur}}

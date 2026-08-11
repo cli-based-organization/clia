@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-adoption-de-l-usage-de-clia
+id: ADR-003
 title: "Adoption de l'usage d'un CLI extensible, clia"
 version: 0.1.0
 status: draft
@@ -8,10 +8,10 @@ statut-decision: propose
 date: 2026-08-09
 decideurs: ["human:jvtrudel (à statuer)", "claude-opus-5 (rédaction)"]
 sources:
-  - FND-usage-des-cli-et-leur-renouveau
-  - ANL-localisation-du-cli-clia
+  - FND-001
+  - ANL-002
   - ANL-001-observation-corpus-repos-et-pratiques
-  - ADR-adoption-du-processus-de-travail
+  - ADR-002
   - "CONSTITUTION.md et resource-types.yaml, archivés dans .dev/archives/"
 definition-associee: aucune
 skill-associe: aucun

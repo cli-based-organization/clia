@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-nature-composable-de-la-ressource
+id: ADR-004
 title: "Nature composable et atomique de la ressource"
 version: 0.1.0
 status: draft
@@ -9,11 +9,11 @@ date: 2026-08-10
 decideurs: ["human:jvtrudel (décideur)", "claude-opus-5 (rédaction)"]
 sources:
   - "workspace/session.md, tâche 9 du 2026-08-09"
-  - ADR-adoption-de-la-notion-de-ressource
-  - RES-ressource
-  - NON-granularite-de-la-ressource
-  - ANL-systeme-d-identifiants-de-clia
-definition-associee: RES-ressource
+  - ADR-001
+  - RES-001
+  - NON-012
+  - ANL-003
+definition-associee: RES-001
 skill-associe: skl-001-ressource
 ---
 

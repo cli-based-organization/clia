@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-frontiere-contexte-intention-faits
+id: NON-003
 title: "Frontière entre Contexte, Intention et Faits"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-contexte, RES-intention, RES-fait]
+porte-sur: [RES-002, RES-003, RES-005]
 ---
 
 # NON-003 - Frontière entre Contexte, Intention et Faits

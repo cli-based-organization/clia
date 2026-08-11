@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-statut-de-la-session-et-convergence
+id: NON-009
 title: "Statut de la session et critère de convergence"
 status: draft
 initiateur: agent
 effet: bloquant
 etat: ouverte
-porte-sur: [ADR-adoption-du-processus-de-travail, ADR-adoption-de-la-notion-de-ressource, RES-intention]
+porte-sur: [ADR-002, ADR-001, RES-003]
 ---
 
 # NON-009 - Statut de la session et critère de convergence

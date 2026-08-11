@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-regime-de-travail
+id: NON-008
 title: "Régime de travail, échelles et arbitrage"
 status: draft
 initiateur: agent
 effet: informatif
 etat: ouverte
-porte-sur: [RES-objection, RES-intention]
+porte-sur: [RES-004, RES-003]
 ---
 
 # NON-008 - Régime de travail, échelles et arbitrage

@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-regroupement-fonctionnel-des-ressources
+id: ADR-005
 title: "Regroupement fonctionnel des ressources en six familles"
 version: 0.1.0
 status: draft
@@ -9,10 +9,10 @@ date: 2026-08-10
 decideurs: ["human:jvtrudel (décideur)", "claude-opus-5 (rédaction)"]
 sources:
   - "workspace/session.md, tâche 8 du 2026-08-09"
-  - ADR-adoption-de-la-notion-de-ressource
-  - NON-cout-du-modele
+  - ADR-001
+  - NON-002
   - ANL-001-observation-corpus-repos-et-pratiques
-definition-associee: RES-ressource
+definition-associee: RES-001
 skill-associe: skl-001-ressource
 ---
 

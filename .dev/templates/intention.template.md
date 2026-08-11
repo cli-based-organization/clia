@@ -1,6 +1,6 @@
 ---
 type: intention
-id: INT-{{slug}}
+id: INT-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

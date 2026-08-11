@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-harnais-constitutionnel
+id: RES-016
 title: "Harnais constitutionnel"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, decision, objection]
 sections: [Principe, Règles impératives, Classification des documents, Arbitrage]
 skill: skl-005-ressource-de-controle
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: non-installe
 ---
 

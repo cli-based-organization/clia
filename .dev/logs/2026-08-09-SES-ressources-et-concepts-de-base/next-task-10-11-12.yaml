@@ -1,0 +1,68 @@
+# Suggestions de prochaines étapes après les tâches 10, 11 et 12.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-018 Q2 : le format est-il de la spécification ?"
+    detail: >-
+      ADR-006 D2 interdit de nommer une technologie dans la spécification.
+      ADR-001 D2 nomme le markdown et le YAML. L'un des deux doit céder, et la
+      règle d'agnosticisme est inapplicable tant que la question reste ouverte.
+    effet: bloquant
+
+  - titre: "Trancher NON-018 Q1 : quelles spécifications écrire, dans quel ordre"
+    detail: >-
+      Trois candidates : la grammaire du CLI, qui n'existe que dans le code ;
+      le modèle de ressources, dispersé dans trente définitions ; la
+      validation, dont le cahier des charges est un skill.
+
+  - titre: "Trancher NON-018 Q6 : la garde contre le travers inverse"
+    detail: >-
+      comm-cli est mort d'avoir spécifié sans implémenter. Valoriser la
+      spécification sans garde-fou reproduirait cet échec.
+
+le_plus_rentable_maintenant:
+  - titre: "Écrire la spécification de la grammaire du CLI"
+    detail: >-
+      C'est le point exact où le test de ADR-006 D4 échoue. La grammaire est
+      stable depuis la tâche 6, éprouvée par 91 tests, et documentée par neuf
+      aides depuis la tâche 12. L'écrire coûte peu et fait passer le test.
+    prealable: "réponse à NON-018 Q2 sur le statut du format"
+
+  - titre: "Éprouver MET-001 sur une fondation réelle"
+    detail: >-
+      La méthodologie est dérivée d'un échec et n'a jamais été employée. Sa
+      validité reste à établir, et ses seuils sont à confronter au coût réel :
+      dix sources par question sur huit questions font quatre-vingts sources.
+
+dette_nommee:
+  - titre: "Trois règles écrites et non tenues, ajoutées aujourd'hui"
+    detail: >-
+      Le test de ADR-006 D4 échoue. L'agnosticisme de ADR-006 D2 est violé par
+      ADR-001 D2. Le contrôle manuel des harnais de PDC-001 échoue sur
+      CLAUDE.md. Les trois échecs sont déclarés là où ils se produisent, ce qui
+      est préférable à des règles calibrées pour réussir, et cela alourdit ce
+      que NON-005 conteste.
+
+  - titre: "Quatre manifestations de la même confusion dans le code"
+    detail: >-
+      Affichage contre identité : l'adresse prise pour l'identité à la tâche 6,
+      le type dérivé du titre et la résolution sensible aux accents à la tâche
+      8, le décompte comparant des titres à la tâche 12. Le motif est stable et
+      mérite peut-être un concept, au sens de RES-007.
+
+  - titre: "Les artefacts dérivés sont au mauvais endroit"
+    detail: >-
+      Quatre-vingt-neuf fichiers d'implémentation vivent dans .dev/ avec la
+      spécification. Régénérables, donc peu coûteux à déplacer. ADR-006 D6 le
+      déclare et D7 le reporte.
+
+  - titre: "CLAUDE.md documente deux commandes qui n'existent pas"
+    detail: >-
+      clia setup et clia ses. PDC-001 en fait un défaut, son contrôle des
+      harnais le détecte, et le chantier A de PLN-001 reste suspendu à trois
+      réponses.
+
+  - titre: "MET-001 fixe des seuils dont le coût n'est pas estimé"
+    detail: >-
+      Dix sources par question et deux à quatre pages par question. Sur huit
+      questions, cela fait quatre-vingts sources et vingt-quatre pages. Aucune
+      estimation de temps n'accompagne ces seuils.

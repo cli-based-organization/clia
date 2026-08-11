@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-ontologie
+id: RES-006
 title: "Ontologie"
 version: 0.1.0
 status: draft

@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-harnais-operatoire
+id: RES-014
 title: "Harnais opératoire"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, decision, intention]
 sections: [Prise en charge de la demande, Méthodologie, Directives]
 skill: skl-005-ressource-de-controle
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

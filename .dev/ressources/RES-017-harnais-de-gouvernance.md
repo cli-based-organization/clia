@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-harnais-de-gouvernance
+id: RES-017
 title: "Harnais de gouvernance"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, version, title, status]
 relations-admissibles: [harnais, ressource, objection, decision]
 sections: [Cycle de décision, Objection, Arbitrage, Rôles]
 skill: skl-005-ressource-de-controle
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: non-installe
 ---
 

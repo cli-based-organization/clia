@@ -1,6 +1,6 @@
 ---
 type: plan
-id: PLN-{{slug}}
+id: PLN-{{discriminant}}
 title: "{{titre}}"
 status: draft
 statut-plan: {{statut_plan}}

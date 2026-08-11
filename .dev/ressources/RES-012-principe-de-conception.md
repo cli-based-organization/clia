@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-principe-de-conception
+id: RES-012
 title: "Principe de conception"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, portee]
 relations-admissibles: [principe, ressource, adr, concept, objection]
 sections: [Objet, Le principe, Ce qu'il exclut, Comment le vérifier, Conséquence d'une violation, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

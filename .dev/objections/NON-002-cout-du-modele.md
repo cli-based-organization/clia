@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-cout-du-modele
+id: NON-002
 title: "Coût du modèle et prolifération des types"
 status: draft
 initiateur: agent
 effet: bloquant
 etat: ouverte
-porte-sur: [RES-ressource, RES-concept, RES-index]
+porte-sur: [RES-001, RES-007, RES-000]
 ---
 
 # NON-002 - Coût du modèle et prolifération des types

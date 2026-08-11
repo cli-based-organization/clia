@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-article
+id: RES-028
 title: "Article"
 version: 0.1.0
 status: draft
 prefixe: ART
-emplacement: "publications/ART-<DATE>-<SLUG>.md"
+emplacement: "publications/ART-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: ia
 famille: implementation
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, publication]
 relations-admissibles: [article, rapport, fondation, concept, publication]
 sections: [Objet, Corps, Références, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 
@@ -43,7 +43,7 @@ Obligatoire. Il porte le lieu de publication et, une fois publié, le lien. Un a
 
 ## Cycle de vie et édition
 
-`point-fixe`, nommage daté. La forme est contrainte par le lieu de publication, ce qui peut imposer un format non markdown : `ADR-004` D1 le rend possible.
+`point-fixe`, nommage séquencé comme tous les types. La forme est contrainte par le lieu de publication, ce qui peut imposer un format non markdown : `ADR-004` D1 le rend possible.
 
 ## Relations
 

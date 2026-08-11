@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-{{slug}}
+id: RES-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

@@ -1,6 +1,6 @@
 ---
 type: methodologie
-id: MET-{{slug}}
+id: MET-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

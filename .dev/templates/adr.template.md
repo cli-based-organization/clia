@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-{{slug}}
+id: ADR-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

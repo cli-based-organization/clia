@@ -1,6 +1,6 @@
 ---
 type: analyse
-id: ANL-systeme-d-identifiants-de-clia
+id: ANL-003
 title: "Système d'identifiants des ressources clia : analyse et suggestions"
 status: draft
 date: 2026-08-10

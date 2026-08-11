@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-fondamentale
+id: skl-002
 name: skl-002-ressource-fondamentale
 version: 0.1.0
 status: draft

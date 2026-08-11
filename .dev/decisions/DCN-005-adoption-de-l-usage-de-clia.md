@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-adoption-de-l-usage-de-clia
+id: DCN-005
 title: "Adoption de l'usage d'un CLI extensible"
 version: 0.1.0
 status: draft

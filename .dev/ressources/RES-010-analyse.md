@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-analyse
+id: RES-010
 title: "Analyse"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, sujet]
 relations-admissibles: [analyse, fondation, fait, contexte, objection, ressource]
 sections: [Objet, Méthode, Constats, Réponse à la question posée, Limites, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 
@@ -45,7 +45,7 @@ Une analyse sans question posée est une description, et elle ne sert à rien.
 
 ## Cycle de vie
 
-`point-fixe`, nommage daté selon `RES-001`. Le nommage effectif de ce dépôt est séquencé, non-conformité portée par `NON-011` Q2, et le cas de `ANL-001` montre par ailleurs qu'une analyse est révisée après production, ce qui contredit l'immuabilité.
+`point-fixe`, nommage séquencé comme tous les types selon `RES-001`. Le nommage effectif de ce dépôt est séquencé, non-conformité portée par `NON-011` Q2, et le cas de `ANL-001` montre par ailleurs qu'une analyse est révisée après production, ce qui contredit l'immuabilité.
 
 ## Régime d'édition
 

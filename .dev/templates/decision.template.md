@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-{{slug}}
+id: DCN-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

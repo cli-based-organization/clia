@@ -26,7 +26,71 @@ Origines possibles, de la plus forte a la plus faible :
   environment   variable exportee dans le shell
   file          fichier de configuration
   default       valeur par defaut de clia
+
+Aide detaillee d'un verbe :
+  clia config ls --help
+  clia config set --help
+  clia config edit --help
+  clia config path --help
 EOF
+}
+
+clia_config_usage_verb() {
+  case "$1" in
+    ls) cat <<'EOF'
+Usage : clia configuration ls
+
+Affiche les variables reconnues, leur valeur effective et leur origine.
+
+Origines, de la plus forte a la plus faible :
+  environment   variable exportee dans le shell courant
+  file          fichier de configuration de l'utilisateur
+  default       valeur par defaut de clia
+
+Les variables presentes dans le fichier mais inconnues de clia sont
+affichees avec la mention "file (inconnue)", afin qu'une faute de frappe ne
+reste pas invisible.
+
+Alias : list
+EOF
+;;
+    set) cat <<'EOF'
+Usage : clia configuration set CLE VALEUR
+
+Assigne une variable dans le fichier de configuration de l'utilisateur.
+
+La cle s'ecrit avec ou sans le prefixe CLIA_, indifferemment :
+  clia config set EDITOR nvim
+  clia config set CLIA_EDITOR nvim
+
+Variables reconnues :
+  CLIA_EDITOR              editeur employe par res edit et config edit
+  CLIA_DEV_DIR_NAME        nom du repertoire de developpement, defaut .dev
+  CLIA_RESOURCES_DIR_NAME  nom du repertoire des definitions
+  CLIA_EXCLUDE_DIRS        repertoires exclus des parcours, defaut archives
+  CLIA_REPO_ROOT           force le depot de travail
+
+Une cle inconnue est enregistree et signalee : aucune commande ne la lira.
+Pour vider une variable : clia config set CLE ''
+
+Le fichier est reecrit de maniere atomique, et jamais execute.
+EOF
+;;
+    edit) cat <<'EOF'
+Usage : clia configuration edit
+
+Ouvre le fichier de configuration avec l'editeur declare par CLIA_EDITOR.
+Le fichier est cree s'il n'existe pas.
+EOF
+;;
+    path) cat <<'EOF'
+Usage : clia configuration path
+
+Affiche le chemin du fichier de configuration, selon la convention XDG :
+  $XDG_CONFIG_HOME/clia/config, a defaut ~/.config/clia/config
+EOF
+;;
+  esac
 }
 
 clia_config_normalize_key() {
@@ -38,6 +102,7 @@ clia_config_normalize_key() {
 }
 
 clia_config_ls() {
+  if clia_is_help "${1:-}"; then clia_config_usage_verb ls; return 0; fi
   local file
   file=$(clia_config_file)
 
@@ -69,6 +134,7 @@ clia_config_ls() {
 }
 
 clia_config_set() {
+  if clia_is_help "${1:-}"; then clia_config_usage_verb set; return 0; fi
   local raw_key="${1:-}" value="${2:-}"
   [[ -n "$raw_key" ]] || { clia_config_usage >&2; return 2; }
   if [[ $# -lt 2 ]]; then
@@ -127,6 +193,7 @@ clia_config_set() {
 }
 
 clia_config_edit() {
+  if clia_is_help "${1:-}"; then clia_config_usage_verb edit; return 0; fi
   local file dir editor
   file=$(clia_config_file)
   dir=$(dirname "$file")
@@ -142,10 +209,11 @@ clia_config_main() {
   local verb="${1:-}"
   [[ $# -gt 0 ]] && shift
   case "$verb" in
-    ls|list)  clia_config_ls ;;
+    ls|list)  clia_config_ls "$@" ;;
     set)      clia_config_set "$@" ;;
-    edit)     clia_config_edit ;;
-    path)     clia_config_file ;;
+    edit)     clia_config_edit "$@" ;;
+    path)     if clia_is_help "${1:-}"; then clia_config_usage_verb path
+              else clia_config_file; fi ;;
     ''|-h|--help|help) clia_config_usage ;;
     *)
       clia_warn "verbe inconnu : $verb"

@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-de-preparation
+id: skl-006
 name: skl-006-ressource-de-preparation
 version: 0.1.0
 status: draft

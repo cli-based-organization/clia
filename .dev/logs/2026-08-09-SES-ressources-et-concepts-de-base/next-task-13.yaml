@@ -1,0 +1,68 @@
+# Suggestions de prochaines étapes après la tâche 13.
+
+a_faire_par_l_humain:
+  - titre: "Trancher NON-019 Q1 : le champ id doit-il subsister ?"
+    detail: >-
+      Il vaut PREFIX-SEQ, entièrement déductible du nom de fichier. Un champ
+      obligatoire sans information propre dérivera, comme completed et complet
+      dans le corpus. Trois positions : le conserver pour l'autonomie du
+      frontmatter, le supprimer, ou le rendre facultatif et déductible.
+
+  - titre: "Trancher NON-019 Q2 : comment vérifier l'interdiction de renuméroter"
+    detail: >-
+      C'est cette interdiction qui fait du numéro une identité, et rien ne la
+      vérifie. Un contrôle comparant l'id au numéro du nom de fichier ne
+      détecte que la moitié des cas : un renommage cohérent des deux passerait.
+
+  - titre: "Trancher NON-019 Q3 : la forme des atomes de composite"
+    detail: >-
+      ANL-001 porte huit atomes en PREFIX-SEQ-NN. La demande disait toutes les
+      ressources en PREFIX-SEQ. Soit la seconde forme est admise, soit les
+      atomes reçoivent un numéro de plein droit, soit un atome n'est pas
+      référençable indépendamment de son composite, ce qui contredirait
+      ADR-004 D3.
+
+le_plus_rentable_maintenant:
+  - titre: "Implémenter clia validate"
+    detail: >-
+      Inchangé depuis trois jours, et la tâche 13 en renforce l'urgence. La
+      chaîne de validation fonctionne à la main et a trouvé dix-sept
+      non-conformités le 2026-08-10, puis trois bogues du générateur
+      aujourd'hui. Elle inclurait le contrôle de NON-019 Q2.
+
+  - titre: "Écrire un concept sur la confusion entre affichage et identité"
+    detail: >-
+      Cinq manifestations en trois jours : l'adresse prise pour l'identité, le
+      type dérivé du titre, la résolution sensible aux accents, le décompte
+      comparant des titres, le générateur dépendant de l'id. RES-007 exige
+      qu'un concept soit employé dans au moins deux ressources ; celui-ci l'est
+      dans cinq logs et trois objections.
+
+dette_nommee:
+  - titre: "Quatre règles écrites et non tenues, ajoutées en deux jours"
+    detail: >-
+      Le test de ADR-006 D4 échoue. L'agnosticisme de ADR-006 D2 est violé par
+      ADR-001 D2. Le contrôle manuel des harnais de PDC-001 échoue sur
+      CLAUDE.md. Et l'interdiction de renuméroter de ADR-007 D2 n'est vérifiée
+      par rien. NON-005 conteste cette accumulation depuis le 2026-08-09.
+
+  - titre: "Le champ id est redondant depuis aujourd'hui"
+    detail: "Porté par NON-019 Q1."
+
+  - titre: "L'ambiguïté de clia res show 002 demeure"
+    detail: >-
+      Déclarée acceptable par ADR-007, non réfutée. C'était l'argument
+      principal de l'agent contre l'identité par séquence.
+
+  - titre: "CLAUDE.md n'a toujours pas été touché"
+    detail: >-
+      Sa table des types annonce vingt-sept types là où trente sont définis, sa
+      désignation par triplet de numéros est désormais la bonne forme depuis
+      ADR-007, et il documente deux commandes qui n'existent pas. Le chantier A
+      de PLN-001 reste suspendu à trois réponses, dont l'une, NON-001 Q1, vient
+      d'être tranchée.
+
+  - titre: "Deux fichiers de l'humain restent non conformes"
+    detail: >-
+      FRG-001 et NON-013, avec des champs À RENSEIGNER. L'agent ne les complète
+      pas : ces champs appartiennent à leur initiateur.

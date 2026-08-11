@@ -1,6 +1,6 @@
 ---
 type: fondation
-id: FND-{{slug}}
+id: FND-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

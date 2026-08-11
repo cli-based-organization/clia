@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-frontiere-savoir
+id: NON-004
 title: "Frontière entre Ontologie, Concept, Fondation et Analyse"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-ontologie, RES-concept]
+porte-sur: [RES-006, RES-007]
 ---
 
 # NON-004 - Frontière entre Ontologie, Concept, Fondation et Analyse

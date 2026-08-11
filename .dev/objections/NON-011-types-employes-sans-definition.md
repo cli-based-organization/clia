@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-types-employes-sans-definition
+id: NON-011
 title: "Types employés sans définition, et nommage non conforme"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-ressource, ADR-adoption-de-la-notion-de-ressource, ADR-adoption-de-l-usage-de-clia]
+porte-sur: [RES-001, ADR-001, ADR-003]
 ---
 
 # NON-011 - Types employés sans définition, et nommage non conforme
@@ -68,6 +68,10 @@ Trois positions. Les définir à neuf, sept définitions de plus, ce que `NON-00
 **Réponse.**
 
 ### Q2 - Les analyses et les fondations sont-elles nommées par date ou par séquence ?
+
+**Réponse, du 2026-08-10, par l'humain.** Par séquence, et pour tous les types sans exception. `ADR-007` D4 abolit le nommage daté et retire au cycle de vie le pouvoir de commander le nommage : il ne commande plus que le versionnage.
+
+La troisième position que cette question envisageait, reconnaître que ces types ne sont pas des points fixes, n'est pas retenue : ils le restent quant au versionnage.
 
 `RES-001` dit par date, l'usage de ce dépôt dit par séquence, avec trois instances. Il faut soit corriger `RES-001`, soit renommer les trois fichiers, soit reconnaître que le cycle de vie de ces types n'est pas `point-fixe`.
 

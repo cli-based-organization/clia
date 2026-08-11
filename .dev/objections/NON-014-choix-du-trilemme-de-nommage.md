@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-choix-du-trilemme-de-nommage
+id: NON-014
 title: "Le choix du trilemme de nommage : quelle propriété clia abandonne"
 status: draft
 initiateur: agent
 effet: bloquant
 etat: ouverte
-porte-sur: [RES-ressource, ADR-adoption-de-la-notion-de-ressource, INT-intention-ultime]
+porte-sur: [RES-001, ADR-001, INT-intention-ultime]
 ---
 
 # NON-014 - Le choix du trilemme de nommage : quelle propriété clia abandonne
@@ -21,7 +21,7 @@ porte-sur: [RES-ressource, ADR-adoption-de-la-notion-de-ressource, INT-intention
 
 Le trilemme de Zooko énonce trois propriétés désirables d'un identifiant dans un protocole en réseau : être porteur de sens et mémorisable pour les utilisateurs, limiter le dommage qu'une entité malveillante peut causer, et se résoudre correctement sans autorité centrale. La conjecture est qu'aucun type de nom n'atteint plus de deux de ces propriétés ([Wikipédia](https://en.wikipedia.org/wiki/Zooko%27s_triangle)).
 
-Appliqué à `clia`, le constat est net. L'identité `<PREFIXE>-<SLUG>` est **lisible** et s'attribue **sans autorité**. La troisième propriété est donc abandonnée : rien ne garantit qu'un `RES-ressource` d'un dépôt ne désigne pas autre chose qu'un `RES-ressource` d'un autre.
+Appliqué à `clia`, le constat est net. L'identité `<PREFIXE>-<SLUG>` est **lisible** et s'attribue **sans autorité**. La troisième propriété est donc abandonnée : rien ne garantit qu'un `RES-001` d'un dépôt ne désigne pas autre chose qu'un `RES-001` d'un autre.
 
 Ce que cette objection contredit n'est pas ce choix, qui est probablement le bon. C'est le fait qu'il n'ait jamais été fait, ni écrit, ni assumé.
 

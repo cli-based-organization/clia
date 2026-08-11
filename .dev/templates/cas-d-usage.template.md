@@ -1,6 +1,6 @@
 ---
 type: cas-d-usage
-id: USE-{{slug}}
+id: USE-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

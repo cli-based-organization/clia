@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-presentation
+id: RES-029
 title: "Présentation"
 version: 0.1.0
 status: draft
 prefixe: PRS
-emplacement: "publications/PRS-<DATE>-<SLUG>/index.md"
+emplacement: "publications/PRS-<SEQ>-<SLUG>/index.md"
 cycle-de-vie: point-fixe
 edition: ia
 famille: implementation
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, evenement]
 relations-admissibles: [presentation, article, concept, fondation, publication]
 sections: [Objet, Message principal, Déroulé, Sources, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 
@@ -43,7 +43,7 @@ Ce jet propose une position : la source et la recette sont des atomes de la pré
 
 ## Cycle de vie et édition
 
-`point-fixe`, nommage daté. Une présentation est donnée à une date, devant un auditoire.
+`point-fixe`, nommage séquencé comme tous les types. Une présentation est donnée à une date, devant un auditoire.
 
 ## Relations
 

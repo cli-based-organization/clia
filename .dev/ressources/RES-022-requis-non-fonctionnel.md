@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-requis-non-fonctionnel
+id: RES-022
 title: "Requis non fonctionnel"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, qualite, specification-p
 relations-admissibles: [requis, specification, principe, code]
 sections: [Objet, Le requis, Qualité visée, Comment le mesurer, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

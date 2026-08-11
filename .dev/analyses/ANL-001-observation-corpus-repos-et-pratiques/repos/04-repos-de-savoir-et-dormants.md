@@ -1,6 +1,6 @@
 ---
 type: analyse
-id: ANL-04-repos-de-savoir-et-dormants
+id: ANL-001-07
 title: "Les dépôts de savoir, d'apprentissage et les dormants"
 version: 0.1.0
 status: draft

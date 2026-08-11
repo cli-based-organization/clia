@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-portee-du-systeme
+id: NON-006
 title: "Portée du système et travail multi-dépôts"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-ressource, RES-contexte, RES-intention, RES-ontologie, RES-concept]
+porte-sur: [RES-001, RES-002, RES-003, RES-006, RES-007]
 ---
 
 # NON-006 - Portée du système et travail multi-dépôts

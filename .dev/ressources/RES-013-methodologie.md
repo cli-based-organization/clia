@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-methodologie
+id: RES-013
 title: "Méthodologie"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, domaine]
 relations-admissibles: [methodologie, skill, concept, fondation, ressource]
 sections: [Objet, Quand l'employer, Le procédé, Ce qui peut échouer, Éprouvé sur, Relations]
 skill: skl-003-ressource-de-conception
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

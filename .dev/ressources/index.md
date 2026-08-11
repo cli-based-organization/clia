@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-index
+id: RES-000
 title: "Couche type du dépôt"
 version: 0.1.0
 status: draft
@@ -35,67 +35,67 @@ Cette progression type par type est elle-même une décision, actée par `ADR-00
 
 ## Les types de ressources
 
-Trente types, regroupés en six familles par `ADR-005`. La famille porte le processus de production, le type porte ses spécificités, `skl-001-ressource` porte les règles communes.
+Trente types, regroupés en six familles par `ADR-005`. L'identité d'un type est son `id`, de la forme `<PREFIX>-<SEQ>` depuis `ADR-007` ; le slug de son nom de fichier porte le **nom canonique** que le champ `type` de ses instances doit prendre.
 
 ### Famille fondamentale
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-001](RES-001-ressource.md) | Ressource | `RES` | vivant | co-edition | `skl-001-ressource` | actif |
-| [RES-002](RES-002-contexte.md) | Contexte | `CTX` | vivant | hybride | `skl-002-ressource-fondamentale` | actif |
-| [RES-003](RES-003-intention.md) | Intention | `INT` | vivant | humain | `skl-002-ressource-fondamentale` | actif |
-| [RES-004](RES-004-objection.md) | Objection | `NON` | travail | hybride | `skl-002-ressource-fondamentale` | actif |
-| [RES-005](RES-005-fait.md) | Faits | `FCT` | point-fixe | hybride | `skl-002-ressource-fondamentale` | actif |
-| [RES-006](RES-006-ontologie.md) | Ontologie | `ONT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
-| [RES-007](RES-007-concept.md) | Concept | `CPT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-001` | [RES-001-res](RES-001-ressource.md) | Ressource | `ressource` | `RES` | vivant | co-edition | `skl-001-ressource` | actif |
+| `RES-002` | [RES-002-con](RES-002-contexte.md) | Contexte | `contexte` | `CTX` | vivant | hybride | `skl-002-ressource-fondamentale` | actif |
+| `RES-003` | [RES-003-int](RES-003-intention.md) | Intention | `intention` | `INT` | vivant | humain | `skl-002-ressource-fondamentale` | actif |
+| `RES-004` | [RES-004-obj](RES-004-objection.md) | Objection | `objection` | `NON` | travail | hybride | `skl-002-ressource-fondamentale` | actif |
+| `RES-005` | [RES-005-fai](RES-005-fait.md) | Faits | `fait` | `FCT` | point-fixe | hybride | `skl-002-ressource-fondamentale` | actif |
+| `RES-006` | [RES-006-ont](RES-006-ontologie.md) | Ontologie | `ontologie` | `ONT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
+| `RES-007` | [RES-007-con](RES-007-concept.md) | Concept | `concept` | `CPT` | vivant | co-edition | `skl-002-ressource-fondamentale` | actif |
 
 ### Famille conception
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-010](RES-010-analyse.md) | Analyse | `ANL` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
-| [RES-011](RES-011-fondation.md) | Recherche de fondation | `FND` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
-| [RES-012](RES-012-principe-de-conception.md) | Principe de conception | `PDC` | vivant | co-edition | `skl-003-ressource-de-conception` | actif |
-| [RES-013](RES-013-methodologie.md) | Méthodologie | `MET` | vivant | ia | `skl-003-ressource-de-conception` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-010` | [RES-010-ana](RES-010-analyse.md) | Analyse | `analyse` | `ANL` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
+| `RES-011` | [RES-011-fon](RES-011-fondation.md) | Recherche de fondation | `fondation` | `FND` | point-fixe | ia | `skl-003-ressource-de-conception` | actif |
+| `RES-012` | [RES-012-pri](RES-012-principe-de-conception.md) | Principe de conception | `principe-de-conception` | `PDC` | vivant | co-edition | `skl-003-ressource-de-conception` | actif |
+| `RES-013` | [RES-013-met](RES-013-methodologie.md) | Méthodologie | `methodologie` | `MET` | vivant | ia | `skl-003-ressource-de-conception` | actif |
 
 ### Famille controle
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-014](RES-014-harnais-operatoire.md) | Harnais opératoire | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
-| [RES-015](RES-015-harnais-d-architecture.md) | Harnais d'architecture | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
-| [RES-016](RES-016-harnais-constitutionnel.md) | Harnais constitutionnel | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
-| [RES-017](RES-017-harnais-de-gouvernance.md) | Harnais de gouvernance | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
-| [RES-018](RES-018-skill.md) | Skill | `skl` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-014` | [RES-014-har](RES-014-harnais-operatoire.md) | Harnais opératoire | `harnais-operatoire` | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+| `RES-015` | [RES-015-har](RES-015-harnais-d-architecture.md) | Harnais d'architecture | `harnais-d-architecture` | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
+| `RES-016` | [RES-016-har](RES-016-harnais-constitutionnel.md) | Harnais constitutionnel | `harnais-constitutionnel` | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
+| `RES-017` | [RES-017-har](RES-017-harnais-de-gouvernance.md) | Harnais de gouvernance | `harnais-de-gouvernance` | `aucun` | vivant | co-edition | `skl-005-ressource-de-controle` | non-installe |
+| `RES-018` | [RES-018-ski](RES-018-skill.md) | Skill | `skill` | `skl` | vivant | co-edition | `skl-005-ressource-de-controle` | actif |
 
 ### Famille contenu
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-008](RES-008-fragment.md) | Fragment | `FRG` | point-fixe | hybride | `skl-004-ressource-de-contenu` | actif |
-| [RES-009](RES-009-decision.md) | Décision | `DCN` | vivant | hybride | `skl-004-ressource-de-contenu` | actif |
-| [RES-030](RES-030-entrevue.md) | Entrevue | `ENT` | travail | hybride | `skl-004-ressource-de-contenu` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-008` | [RES-008-fra](RES-008-fragment.md) | Fragment | `fragment` | `FRG` | point-fixe | hybride | `skl-004-ressource-de-contenu` | actif |
+| `RES-009` | [RES-009-dec](RES-009-decision.md) | Décision | `decision` | `DCN` | vivant | hybride | `skl-004-ressource-de-contenu` | actif |
+| `RES-030` | [RES-030-ent](RES-030-entrevue.md) | Entrevue | `entrevue` | `ENT` | travail | hybride | `skl-004-ressource-de-contenu` | actif |
 
 ### Famille preparation
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-019](RES-019-adr.md) | Décision d'architecture | `ADR` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-020](RES-020-specification.md) | Spécification | `SPC` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-021](RES-021-requis-fonctionnel.md) | Requis fonctionnel | `RQF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-022](RES-022-requis-non-fonctionnel.md) | Requis non fonctionnel | `RQNF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-023](RES-023-cas-d-usage.md) | Cas d'usage | `USE` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-024](RES-024-comportement-attendu.md) | Comportement attendu | `CMP` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
-| [RES-025](RES-025-plan.md) | Plan de travail | `PLN` | travail | ia | `skl-006-ressource-de-preparation` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-019` | [RES-019-adr](RES-019-adr.md) | Décision d'architecture | `adr` | `ADR` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-020` | [RES-020-spe](RES-020-specification.md) | Spécification | `specification` | `SPC` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-021` | [RES-021-req](RES-021-requis-fonctionnel.md) | Requis fonctionnel | `requis-fonctionnel` | `RQF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-022` | [RES-022-req](RES-022-requis-non-fonctionnel.md) | Requis non fonctionnel | `requis-non-fonctionnel` | `RQNF` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-023` | [RES-023-cas](RES-023-cas-d-usage.md) | Cas d'usage | `cas-d-usage` | `USE` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-024` | [RES-024-com](RES-024-comportement-attendu.md) | Comportement attendu | `comportement-attendu` | `CMP` | vivant | co-edition | `skl-006-ressource-de-preparation` | actif |
+| `RES-025` | [RES-025-pla](RES-025-plan.md) | Plan de travail | `plan` | `PLN` | travail | ia | `skl-006-ressource-de-preparation` | actif |
 
 ### Famille implementation
 
-| Définition | Type | Préfixe | Cycle | Édition | Skill | Statut |
-|---|---|---|---|---|---|---|
-| [RES-026](RES-026-code.md) | Code | `CDE` | vivant | ia | `skl-007-ressource-d-implementation` | actif |
-| [RES-027](RES-027-rapport-de-recherche.md) | Rapport de recherche | `RPT` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
-| [RES-028](RES-028-article.md) | Article | `ART` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
-| [RES-029](RES-029-presentation.md) | Présentation | `PRS` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+| Id | Définition | Type | Nom canonique | Préfixe | Cycle | Édition | Skill | Statut |
+|---|---|---|---|---|---|---|---|---|
+| `RES-026` | [RES-026-cod](RES-026-code.md) | Code | `code` | `CDE` | vivant | ia | `skl-007-ressource-d-implementation` | actif |
+| `RES-027` | [RES-027-rap](RES-027-rapport-de-recherche.md) | Rapport de recherche | `rapport-de-recherche` | `RPT` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+| `RES-028` | [RES-028-art](RES-028-article.md) | Article | `article` | `ART` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
+| `RES-029` | [RES-029-pre](RES-029-presentation.md) | Présentation | `presentation` | `PRS` | point-fixe | ia | `skl-007-ressource-d-implementation` | actif |
 
 Trente types, trente préfixes distincts, six familles.
 
@@ -152,6 +152,11 @@ Les huit premières ont été ouvertes par la tâche 2 sur les définitions elle
 | [NON-012](../objections/NON-012-granularite-de-la-ressource.md) | Granularité de la ressource et décompte des instances |
 | [NON-013](../objections/NON-013-ce-qu-est-une-ressource.md) | Ce qu'est une ressource. Ouverte par l'humain, à rédiger |
 | [NON-014](../objections/NON-014-choix-du-trilemme-de-nommage.md) | Le choix du trilemme de nommage : quelle propriété clia abandonne |
+| [NON-015](../objections/NON-015-mecanismes-d-entree.md) | Mécanismes d'entrée de l'humain dans le système |
+| [NON-016](../objections/NON-016-composition-et-atomicite.md) | Composition, atomicité et propriété holographique |
+| [NON-017](../objections/NON-017-familles-et-processus.md) | Familles fonctionnelles, attribution et processus par famille |
+| [NON-018](../objections/NON-018-specification-et-implementation.md) | Frontière entre spécification et implémentation |
+| [NON-019](../objections/NON-019-identifiant-par-sequence.md) | Conséquences de l'identifiant par séquence |
 
 ## Relations
 

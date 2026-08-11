@@ -1,8 +1,8 @@
 ---
 type: ressource
-id: RES-ressource
+id: RES-001
 title: "Ressource"
-version: 0.3.0
+version: 1.0.0
 status: draft
 prefixe: RES
 emplacement: ".dev/ressources/RES-<SEQ>-<SLUG>.md"
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, prefixe, emplacement, cy
 relations-admissibles: [ressource, adr, decision]
 sections: [Objet, Ce qu'est une ressource, Identité, Cycle de vie et versionnage, Régimes d'édition, Frontmatter, Relations, Points ouverts]
 skill: skl-001-ressource
-adr: ADR-adoption-de-la-notion-de-ressource
+adr: ADR-001
 statut: actif
 ---
 
@@ -69,7 +69,7 @@ Une ressource a un **coût**. Elle se produit, se relit, se maintient, se renum�
 
 | Invariant | Retenu | Comment, ou pourquoi pas |
 |---|---|---|
-| I1 Identité stable | **Oui**, par le champ `id` | Point d'écart avec `micrologic-clients`, qui l'écarte. Voir la section « Identité » |
+| I1 Identité stable | **Oui**, par le champ `id` de forme `<PREFIX>-<SEQ>` | Le numéro est attribué à la création et jamais modifié : c'est lui qui persiste. Voir la section « Identité » |
 | I2 Type comme contrat | **Oui**, partiellement | Le type est déclaré et ses champs obligatoires sont écrits en un seul endroit. La vérification reste humaine, faute d'outil. Voir `NON-005` |
 | I3 Représentation distincte | **Oui**, partiellement | Une ressource peut être publiée sous une autre forme. La relation entre les deux se déclare, elle n'est pas outillée |
 | I4 Désiré et constaté | **Non**, transposé | Pas de dualité déclarative. Les sections « Points ouverts » et les objections en tiennent lieu |
@@ -85,17 +85,20 @@ C'est le point où ce jet s'écarte de l'état de l'art, et l'écart est fondé 
 
 Ce calcul ne tient pas pour `clia`, dont l'objet est d'équiper plusieurs dépôts. `ANL-001` le mesure : dans le corpus, douze numéros de skill sur vingt portent plusieurs noms distincts selon le dépôt, `skl-004` en portant cinq et `skl-006` quatre. Un dépôt porte sept ADR dont trois paires de doublons de titre. Le numéro de séquence n'est donc pas un identifiant, c'est un ordre d'apparition local.
 
-**Décision de ce jet.** L'identité d'une ressource est le champ `id`, de la forme `<PREFIXE>-<SLUG>`, où le slug est celui du nom de fichier. Exemples : `RES-ressource`, `NON-identite-et-nommage`, `CTX-etat-du-systeme`.
+**Décision en vigueur, depuis `DCN-007` et `ADR-007` du 2026-08-10.** L'identité d'une ressource est le champ `id`, de la forme `<PREFIX>-<SEQ>`. Exemples : `RES-001`, `NON-014`, `ADR-006`.
+
+Cette décision **renverse** la position antérieure, qui faisait de l'identité le couple préfixe et slug. Son motif est écrit dans `ADR-007` : le numéro est attribué à la création et ne change jamais, alors qu'un slug suit un titre révisable. Ce qui persiste est donc le numéro.
 
 | Propriété | Porteur | Rôle |
 |---|---|---|
-| Identité | Champ `id` du frontmatter | Cible de tout renvoi entre ressources. Stable |
-| Ordre de lecture | Numéro `<SEQ>` du nom de fichier | Ordre d'apparition. Renumérotable sans casse |
-| Localisation | Chemin | Déductible du type et du nom. Modifiable |
+| Identité | Champ `id`, `<PREFIX>-<SEQ>` | Cible de tout renvoi. Attribué à la création, jamais modifié |
+| Libellé | Slug du nom de fichier | Lisible, révisable sans effet sur l'identité |
+| Nom canonique du type | Slug du nom de fichier d'une définition | Ce que porte le champ `type` des instances |
+| Localisation | Chemin | Déductible du type et du nom |
 
-Trois propriétés en découlent. Renuméroter ne casse aucun renvoi. Déplacer un fichier ne casse aucun renvoi. Renommer le slug reste un changement d'identité, et doit être traité comme tel : la ressource ancienne est marquée `est-remplacee-par` et la nouvelle `remplace`.
+Trois propriétés en découlent. Corriger un slug ne casse aucun renvoi. Déplacer un fichier ne casse aucun renvoi. **Renuméroter est interdit** : le numéro est l'identité, et une renumérotation est un changement d'identité, traité par `remplace` et `est-remplacee-par`.
 
-Le coût de cette décision est d'un champ de frontmatter par ressource, et de la discipline de renvoyer par `id` plutôt que par numéro. La forme exacte du slug et le traitement des collisions entre dépôts restent à arbitrer : voir `NON-001`.
+L'identifiant est **relatif au dépôt**. `RES-001` ne désigne la même chose que dans un dépôt donné. La portée inter-dépôts reste ouverte : voir `NON-001` Q2 et Q10.
 
 ## Cycle de vie et versionnage
 
@@ -104,7 +107,7 @@ Trois classes. Le cycle de vie commande le nommage et le versionnage.
 | Classe | Nommage | Versionnage | Types concernés |
 |---|---|---|---|
 | **Vivant** | Séquencé, `<PREFIXE>-<SEQ>-<SLUG>` | Semver dans le frontmatter | Ressource, Contexte, Intention, Ontologie, Concept |
-| **Point fixe** | Daté, `<PREFIXE>-<DATE>-<SLUG>` | Aucun. Une modification produit une nouvelle instance datée | Faits, analyses, fondations, logs, publications |
+| **Point fixe** | Daté, `<PREFIXE>-<SEQ>-<SLUG>` | Aucun. Une modification produit une nouvelle instance datée | Faits, analyses, fondations, logs, publications |
 | **Travail** | Séquencé | Aucun. Un journal en tête du document suffit | Objection, plans |
 
 Règles de semver pour les ressources vivantes. Majeur : changement incompatible du sens ou du contrat. Mineur : ajout rétrocompatible. Correctif : clarification sans effet sémantique.

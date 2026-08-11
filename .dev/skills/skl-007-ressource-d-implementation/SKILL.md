@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-d-implementation
+id: skl-007
 name: skl-007-ressource-d-implementation
 version: 0.1.0
 status: draft

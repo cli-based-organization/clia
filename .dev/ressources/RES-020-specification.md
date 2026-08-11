@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-specification
+id: RES-020
 title: "Spécification"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status]
 relations-admissibles: [specification, requis, usage, comportement, adr]
 sections: [Objet, Comportement observable, Interfaces, Ce qui est hors périmètre, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

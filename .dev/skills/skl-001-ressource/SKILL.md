@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource
+id: skl-001
 name: skl-001-ressource
 version: 0.1.0
 status: draft
@@ -9,8 +9,8 @@ description: >-
   quel que soit son type, auxquelles les autres skills renvoient. Partie B : produire une
   définition de type (`.dev/ressources/RES-<SEQ>-<SLUG>.md`). À utiliser avant de produire ou de
   modifier une ressource, et avant de la déposer.
-definition-associee: RES-ressource
-adr-associe: ADR-adoption-de-la-notion-de-ressource
+definition-associee: RES-001
+adr-associe: ADR-001
 ---
 
 # Skill - Écriture et validation d'une ressource
@@ -50,19 +50,21 @@ Les champs propres au type s'ajoutent, et la définition du type les énumère d
 
 ### A2 - Identité et nommage
 
-L'identité est le champ `id`, jamais le numéro de séquence ni le chemin (`ADR-001` D3).
+L'identité est le champ `id`, de la forme `<PREFIX>-<SEQ>` (`ADR-007`). Elle est attribuée à la création et **jamais modifiée** : renuméroter est un changement d'identité.
 
-Le nom de fichier suit le cycle de vie déclaré par le type.
+Le nom de fichier est le même pour tous les types, quel que soit leur cycle de vie.
 
-| Cycle de vie | Nom de fichier | Exemple |
-|---|---|---|
-| `vivant` | `<PREFIXE>-<SEQ>-<SLUG>.md`, séquence à trois chiffres | `RES-002-contexte.md` |
-| `travail` | `<PREFIXE>-<SEQ>-<SLUG>.md` | `NON-001-identite-et-nommage.md` |
-| `point-fixe` | `<PREFIXE>-<DATE>-<SLUG>.md`, date ISO | `FCT-2026-08-09-corpus-des-depots.md` |
+```
+<PREFIX>-<SEQ>-<SLUG>.md
+```
 
-Le slug est en minuscules, sans accent, mots séparés par des traits d'union. Il doit rester lisible dans un renvoi : le slug est la moitié de l'identité.
+Exemples : `RES-002-contexte.md`, `NON-001-identite-et-nommage.md`, `FCT-001-corpus-des-depots.md`.
 
-Un renvoi vers une autre ressource cite son `id` dans le texte et son chemin dans le lien markdown. Ne jamais renvoyer par le seul numéro : `ANL-001` établit que douze numéros de skill sur vingt portent plusieurs noms selon le dépôt.
+Le slug est en minuscules, sans accent, mots séparés par des traits d'union. Il porte le **libellé**, non l'identité : le corriger ne casse aucun renvoi. Pour une définition de type, le slug porte en outre le **nom canonique du type**, c'est-à-dire la valeur que le champ `type` de ses instances doit prendre.
+
+Un renvoi vers une autre ressource cite son `id` dans le texte et son chemin dans le lien markdown.
+
+**Ce qui a changé le 2026-08-10.** L'identité était `<PREFIX>-<SLUG>` jusqu'à `ADR-007`, qui l'a renversé. Le motif est que le numéro, attribué une fois, persiste, alors qu'un slug suit un titre révisable.
 
 ### A3 - Écriture
 

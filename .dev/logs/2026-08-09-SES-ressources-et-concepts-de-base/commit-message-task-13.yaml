@@ -1,0 +1,53 @@
+type: fix
+scope: identifiants
+sujet: "l'identité d'une ressource est PREFIX-SEQ, relative au dépôt"
+corps: |
+  Exécute la tâche 13 de la session du 2026-08-09, classée bogue. C'est la
+  réponse de l'humain à la question Q1 de NON-001, bloquante depuis le
+  2026-08-09, et elle va contre la proposition de l'agent.
+
+  Le fragment FRG-001, capté par l'humain, contient la prémisse qui manquait :
+  ce qui persiste par-delà les modifications est l'identité. Le numéro est
+  attribué à la création et persiste ; le slug dérive d'un titre révisable. La
+  prémisse de l'agent, selon laquelle le numéro se renumérote, n'était pas un
+  fait mais une permission tacite, et ADR-007 D2 la retire.
+
+  DCN-007 enregistre la décision, ADR-007 l'instruit en cinq décisions et
+  abroge explicitement ADR-001 D3. L'identité est PREFIX-SEQ, relative au
+  dépôt, attribuée à la création et jamais modifiée. Renuméroter est interdit.
+  Le slug porte le libellé et, pour une définition, le nom canonique du type.
+  Le nommage daté est aboli : le cycle de vie ne commande plus que le
+  versionnage.
+
+  Migration : quatre-vingt-trois identifiants convertis dans autant de
+  fichiers, un fichier renommé, aucune prescription de nommage daté ne
+  subsiste, aucun identifiant à slug ne subsiste. Quatre-vingt-cinq ressources
+  sur quatre-vingt-sept valident leur schéma ; les deux échecs sont des
+  fichiers de l'humain portant des champs À RENSEIGNER, laissés intacts.
+
+  Trois bogues du générateur trouvés pendant la migration, tous dus à la même
+  cause : il dépendait de l'id, dont la forme changeait. Le nom des définitions
+  CUE, la valeur du champ type et l'énumération du champ effet sont désormais
+  dérivés du slug du nom de fichier. Quatre régénérations complètes, sans
+  édition manuelle.
+
+  Deux objections reçoivent une réponse. NON-001 Q1 : l'identité est la
+  séquence, l'état passe à partiellement-repondue, quatre questions restant
+  ouvertes. NON-011 Q2 : nommage séquencé pour tous les types, la
+  non-conformité disparaissant par alignement de la règle sur la pratique.
+
+  NON-019 est ouverte, effet conditionnel, sept questions sur les conséquences
+  que la décision laisse indéterminées : la redondance du champ id,
+  l'absence de vérification de l'interdiction de renuméroter, la forme des
+  atomes de composite, et l'ambiguïté du numéro seul, déclarée acceptable et
+  non réfutée.
+
+  91 tests verts.
+note_pour_l_humain: >-
+  Votre fragment a changé l'interprétation de la tâche : sans lui j'aurais
+  appliqué la demande en la trouvant discutable, avec lui l'ADR peut expliquer
+  pourquoi mon raisonnement antérieur était faux. Un ajout est signalé comme
+  mien : l'interdiction de renuméroter, que la demande ne dit pas et sans
+  laquelle la décision perd son fondement. Elle n'est vérifiée par rien, ce qui
+  porte à quatre les règles écrites et non tenues ajoutées en deux jours. Le
+  versionnage reste la responsabilité de l'humain.

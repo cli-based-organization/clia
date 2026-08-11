@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-granularite-de-la-ressource
+id: NON-012
 title: "Granularité de la ressource et décompte des instances"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-ressource, ADR-adoption-de-la-notion-de-ressource, ADR-adoption-de-l-usage-de-clia]
+porte-sur: [RES-001, ADR-001, ADR-003]
 ---
 
 # NON-012 - Granularité de la ressource et décompte des instances

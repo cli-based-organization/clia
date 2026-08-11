@@ -1,6 +1,6 @@
 ---
 type: ontologie
-id: ONT-{{slug}}
+id: ONT-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

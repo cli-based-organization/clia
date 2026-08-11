@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-mecanismes-d-entree
+id: NON-015
 title: "Mécanismes d'entrée de l'humain dans le système"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-fragment, RES-decision, RES-entrevue, ADR-adoption-du-processus-de-travail]
+porte-sur: [RES-008, RES-009, RES-030, ADR-002]
 ---
 
 # NON-015 - Mécanismes d'entrée de l'humain dans le système

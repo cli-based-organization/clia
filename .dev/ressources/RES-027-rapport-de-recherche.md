@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-rapport-de-recherche
+id: RES-027
 title: "Rapport de recherche"
 version: 0.1.0
 status: draft
 prefixe: RPT
-emplacement: "publications/RPT-<DATE>-<SLUG>.md"
+emplacement: "publications/RPT-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: ia
 famille: implementation
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, date, auditoire, diffusion]
 relations-admissibles: [rapport, fondation, analyse, fait, publication]
 sections: [Objet, Résultats, Méthode, Discussion, Sources, Relations]
 skill: skl-007-ressource-d-implementation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 
@@ -45,7 +45,7 @@ Cette règle de composition est nouvelle et elle n'est pas outillée. `NON-007` 
 
 ## Cycle de vie et édition
 
-`point-fixe`, nommage daté. Un rapport diffusé ne se réécrit pas : une nouvelle version est un nouveau rapport, qui déclare `remplace`.
+`point-fixe`, nommage séquencé comme tous les types. Un rapport diffusé ne se réécrit pas : une nouvelle version est un nouveau rapport, qui déclare `remplace`.
 
 ## Relations
 

@@ -1,6 +1,6 @@
 ---
 type: concept
-id: CPT-{{slug}}
+id: CPT-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

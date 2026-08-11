@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-skill
+id: RES-018
 title: "Skill"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, name, version, status, description]
 relations-admissibles: [skill, ressource, methodologie, principe]
 sections: [Quand invoquer, Procédure, Gabarit, Validation, Erreurs fréquentes, Relations]
 skill: skl-005-ressource-de-controle
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

@@ -1,6 +1,6 @@
 ---
 type: fondation
-id: FND-identifiants-dans-les-systemes-decentralises
+id: FND-002
 title: "Identifiants dans les systèmes décentralisés : revue de la littérature"
 status: draft
 date: 2026-08-10

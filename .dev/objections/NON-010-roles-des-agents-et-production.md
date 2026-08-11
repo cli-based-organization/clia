@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-roles-des-agents-et-production
+id: NON-010
 title: "Rôles des trois agents et conditions de production"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [ADR-adoption-du-processus-de-travail]
+porte-sur: [ADR-002]
 ---
 
 # NON-010 - Rôles des trois agents et conditions de production

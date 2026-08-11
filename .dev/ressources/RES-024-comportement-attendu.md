@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-comportement-attendu
+id: RES-024
 title: "Comportement attendu"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, verifie]
 relations-admissibles: [comportement, requis, specification, usage, code, bug]
 sections: [Objet, Situation, Comportement attendu, Comment le vérifier, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

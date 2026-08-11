@@ -1,6 +1,6 @@
 ---
 type: presentation
-id: PRS-{{slug}}
+id: PRS-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-plan
+id: RES-025
 title: "Plan de travail"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, statut-plan, date, initiateur]
 relations-admissibles: [plan, ressource, objection, adr, intention]
 sections: [Statut, Intention, Chantiers, Livrables attendus, Objections de l'agent, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

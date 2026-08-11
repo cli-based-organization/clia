@@ -1,6 +1,6 @@
 ---
 type: fragment
-id: FRG-{{slug}}
+id: FRG-{{discriminant}}
 title: "{{titre}}"
 status: draft
 origine: {{origine}}

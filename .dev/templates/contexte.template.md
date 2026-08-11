@@ -1,6 +1,6 @@
 ---
 type: contexte
-id: CTX-{{slug}}
+id: CTX-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

@@ -1,6 +1,6 @@
 ---
 type: comportement-attendu
-id: CMP-{{slug}}
+id: CMP-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

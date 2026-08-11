@@ -1,6 +1,6 @@
 ---
 type: requis-non-fonctionnel
-id: RQNF-{{slug}}
+id: RQNF-{{discriminant}}
 title: "{{titre}}"
 version: 0.1.0
 status: draft

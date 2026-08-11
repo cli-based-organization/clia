@@ -1,0 +1,65 @@
+type: feat
+scope: clia
+sujet: "auto-découvrabilité, séparation spécification-implémentation, méthodologie de recherche"
+corps: |
+  Exécute les tâches 10, 11 et 12 de la session du 2026-08-09. La tâche 12 a
+  été traitée en premier : elle est vérifiable immédiatement et son principe
+  est invocable par les deux autres.
+
+  Tâche 12. Le bogue signalé, clia res new -h répondant "description
+  manquante", atteignait six verbes sur sept, tous par la même cause : la
+  validation des arguments précédait la reconnaissance de l'aide. Correction
+  générique par une fonction clia_is_help appelée en première ligne de chaque
+  verbe, et neuf aides propres décrivant ce que chaque verbe fait et ce qu'il
+  refuse. Vingt-quatre assertions de non-régression, quatre-vingt-onze au
+  total.
+
+  PDC-001 est le premier principe de conception du dépôt : toute fonction du
+  système doit être découvrable depuis le système, par trois gestes seulement.
+  Quatre interdits énoncés de manière reconnaissable, dont celui qui a été
+  violé : un message d'erreur qui constate sans orienter. Deux des trois
+  contrôles sont automatisés.
+
+  Deux bogues supplémentaires trouvés en chemin. clia res ls comparait le
+  titre lisible de la définition au champ type des instances, faisant
+  apparaître deux lignes pour un seul type : quatrième manifestation de la
+  confusion entre l'affichage et l'identité dans cette session. Et les
+  gabarits étaient comptés comme instances alors que RES-001 les place hors du
+  modèle, ce qui répond à NON-012 Q6. Après ces corrections, plus aucun type
+  employé n'est sans définition.
+
+  Tâche 10. DCN-006 et ADR-006 actent la séparation stricte de la
+  spécification et de l'implémentation. Le critère de départage tient en une
+  question : cet artefact reste-t-il vrai si l'on change de langage. La
+  spécification ne nomme aucune technologie, l'implémentation déclare ce
+  qu'elle implémente, et la spécification doit survivre à la suppression de
+  l'implémentation.
+
+  Le test de D4 échoue aujourd'hui, et c'est le résultat : la grammaire du CLI
+  n'existe que dans le code. La dette devient chiffrée : 1 600 lignes de bash
+  et 91 tests face à zéro spécification, cinq types de préparation définis
+  sans aucune instance. Le fait qui fonde la décision est mesuré par ANL-001 :
+  onze CLI réinventés en vingt-et-un mois, aucun ne laissant de spécification.
+
+  Une contradiction interne est ouverte et non tranchée : ADR-006 D2 interdit
+  de nommer une technologie dans la spécification, ADR-001 D2 nomme le
+  markdown et le YAML. NON-018 Q2 la porte.
+
+  Tâche 11. MET-001 reprend la critique de FND-002 avec des mesures : trente
+  lignes par question de recherche, quatre sources par question, zéro
+  référence complète. Les sept étapes de la tâche 7 sont conservées, trois
+  ajoutées qui portent sur la rigueur : vérifier les références, mesurer la
+  densité, dire ce qui manque. Un format de citation par nature de source, un
+  tableau comparant le seuil attendu à ce que FND-002 a atteint, et six modes
+  d'échec dont quatre observés dans ce dépôt. La méthodologie déclare qu'elle
+  est dérivée d'un échec et n'a jamais été éprouvée telle quelle.
+
+  NON-018 est ouverte, effet bloquant, sept questions. Le dépôt porte dix-huit
+  objections et cent vingt-neuf questions.
+note_pour_l_humain: >-
+  Votre critique de FND-002 est reprise chiffrée dans MET-001, avec un tableau
+  qui compare seuil et résultat sur dix critères : le document échoue sur deux,
+  la densité et le format de citation, et satisfait les huit autres. Le bogue
+  que vous signaliez atteignait six verbes sur sept. Et le test que ADR-006
+  définit échoue aujourd'hui, ce qui rend enfin mesurable la dette de
+  spécification du CLI. Le versionnage reste la responsabilité de l'humain.

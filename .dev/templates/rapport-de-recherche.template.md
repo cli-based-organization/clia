@@ -1,6 +1,6 @@
 ---
 type: rapport-de-recherche
-id: RPT-{{slug}}
+id: RPT-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

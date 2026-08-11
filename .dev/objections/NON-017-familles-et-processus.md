@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-familles-et-processus
+id: NON-017
 title: "Familles fonctionnelles, attribution et processus par famille"
 status: draft
 initiateur: agent
 effet: bloquant
 etat: ouverte
-porte-sur: [RES-ressource, ADR-regroupement-fonctionnel-des-ressources]
+porte-sur: [RES-001, ADR-005]
 ---
 
 # NON-017 - Familles fonctionnelles, attribution et processus par famille

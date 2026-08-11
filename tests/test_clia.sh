@@ -318,6 +318,41 @@ else
 fi
 
 # --------------------------------------------------------------------------
+printf '\nauto-decouvrabilite\n'
+# --------------------------------------------------------------------------
+#
+# PDC-001 : toute fonction du systeme est decouvrable depuis le systeme.
+# Regression du bogue signale le 2026-08-10 : six verbes sur sept repondaient
+# a -h par une erreur d'argument manquant.
+
+for verbe in ls new show edit; do
+  for drapeau in -h --help; do
+    out=$(run res "$verbe" "$drapeau")
+    assert_contains "res $verbe $drapeau affiche son usage" 'Usage : clia resource' "$out"
+    run res "$verbe" "$drapeau" >/dev/null 2>&1
+    assert_rc "res $verbe $drapeau retourne 0" 0 "$?"
+  done
+done
+
+for verbe in ls set edit path; do
+  out=$(run config "$verbe" -h)
+  assert_contains "config $verbe -h affiche son usage" 'Usage : clia configuration' "$out"
+done
+
+# L'aide d'un verbe est propre a ce verbe, non l'aide generale.
+out=$(run res new --help)
+assert_contains "l aide de new decrit new" 'new TYPE DESCRIPTION' "$out"
+assert_not_contains "l aide de new ne liste pas les autres verbes" 'edit ID                  ouvre' "$out"
+
+# L'aide est reconnue avant toute validation d'argument.
+out=$(run res new -h)
+assert_not_contains "l aide passe avant la validation des arguments" 'description manquante' "$out"
+
+# L aide generale renvoie vers l aide detaillee.
+out=$(run res --help)
+assert_contains "l usage general renvoie vers l aide par verbe" 'clia res new --help' "$out"
+
+# --------------------------------------------------------------------------
 printf '\nconfiguration\n'
 # --------------------------------------------------------------------------
 

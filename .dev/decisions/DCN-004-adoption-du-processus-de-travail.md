@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-adoption-du-processus-de-travail
+id: DCN-004
 title: "Adoption du processus de travail collaboratif"
 version: 0.1.0
 status: draft

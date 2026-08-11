@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-adr
+id: RES-019
 title: "Décision d'architecture"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, statut-decision, date, d
 relations-admissibles: [adr, decision, ressource, objection, analyse, fondation]
 sections: [Statut, Contexte, Décision en une phrase, Décisions détaillées, Conséquences, Objections ouvertes, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

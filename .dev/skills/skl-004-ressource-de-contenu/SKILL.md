@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-de-contenu
+id: skl-004
 name: skl-004-ressource-de-contenu
 version: 0.1.0
 status: draft

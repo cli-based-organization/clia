@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-fait
+id: RES-005
 title: "Faits"
 version: 0.1.0
 status: draft
 prefixe: FCT
-emplacement: ".dev/faits/FCT-<DATE>-<SLUG>.md"
+emplacement: ".dev/faits/FCT-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: hybride
 famille: fondamentale
@@ -60,11 +60,11 @@ Un fichier par fait serait ingérable, et c'est probablement ce qui a empêché 
 
 Ce jet propose donc que l'unité de fichier soit le **recueil**, et l'unité de sens le **fait**.
 
-Une ressource `FCT` porte un sujet, déclaré par son champ `sujet`, et contient les faits établis sur ce sujet. Chaque fait y est numéroté `F<NN>`, ce qui donne à chacun une adresse citable de la forme `FCT-<DATE>-<SLUG>#F03`.
+Une ressource `FCT` porte un sujet, déclaré par son champ `sujet`, et contient les faits établis sur ce sujet. Chaque fait y est numéroté `F<NN>`, ce qui donne à chacun une adresse citable de la forme `FCT-001#F03`.
 
 | Niveau | Unité | Identifiant |
 |---|---|---|
-| Fichier | Le recueil, un sujet | `FCT-<DATE>-<SLUG>` |
+| Fichier | Le recueil, un sujet | `FCT-<SEQ>` |
 | Entrée | Le fait, atomique | `F<NN>` dans le recueil |
 
 Un recueil est `point-fixe` : il est arrêté à sa date. Constater de nouveaux faits sur le même sujet produit un nouveau recueil, qui déclare `derive-de` vers le précédent. C'est ce qui permet de voir évoluer un sujet sans réécrire l'histoire.
@@ -125,7 +125,7 @@ La force persuasive relève du livrable qui emploie le fait, et de la méthodolo
 ## Structure attendue d'une instance
 
 ```
-# FCT-<DATE> - <Sujet>
+# FCT-<SEQ> - <Sujet>
 
 > Ce sur quoi porte ce recueil, et l'état auquel il est arrêté.
 

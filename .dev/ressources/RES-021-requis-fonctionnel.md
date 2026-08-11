@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-requis-fonctionnel
+id: RES-021
 title: "Requis fonctionnel"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, specification-parente]
 relations-admissibles: [requis, specification, usage, comportement, code]
 sections: [Objet, Le requis, Spécification parente, Critère de satisfaction, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

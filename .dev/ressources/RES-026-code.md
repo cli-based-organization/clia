@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-code
+id: RES-026
 title: "Code"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: ["aucun, le code ne porte pas de frontmatter"]
 relations-admissibles: [code, specification, requis, comportement, bug]
 sections: ["aucune, la structure du code suit son langage"]
 skill: skl-007-ressource-d-implementation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

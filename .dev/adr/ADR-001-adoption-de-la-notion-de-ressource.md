@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-adoption-de-la-notion-de-ressource
+id: ADR-001
 title: "Adoption de la notion de ressource"
 version: 0.1.0
 status: draft
@@ -12,7 +12,7 @@ sources:
   - RES-001-ressource
   - "ADR-008-ressource-de-type-ressource du dépôt noumanity-consultation/micrologic-clients"
   - "resource-types.yaml, archivé dans .dev/archives/"
-definition-associee: RES-ressource
+definition-associee: RES-001
 skill-associe: skl-001-ressource
 ---
 

@@ -31,6 +31,25 @@ clia_hint() {
 }
 
 # --------------------------------------------------------------------------
+# Aide
+# --------------------------------------------------------------------------
+#
+# Une demande d'aide doit etre reconnue AVANT toute validation d'arguments.
+# Sans cela, `clia res new -h` repond "description manquante", ce qui rend la
+# commande indecouvrable : bogue signale le 2026-08-10, present sur six des
+# sept verbes.
+#
+# Voir PDC-001 : l'auto-decouvrabilite est un principe de conception, et sa
+# violation est un defaut.
+
+clia_is_help() {
+  case "${1:-}" in
+    -h|--help|help|'-?') return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# --------------------------------------------------------------------------
 # Contexte-repertoire
 # --------------------------------------------------------------------------
 #
@@ -105,7 +124,7 @@ clia_config_default() {
     CLIA_EDITOR)              printf '%s\n' "${VISUAL:-${EDITOR:-vi}}" ;;
     CLIA_DEV_DIR_NAME)        printf '.dev\n' ;;
     CLIA_RESOURCES_DIR_NAME)  printf 'ressources\n' ;;
-    CLIA_EXCLUDE_DIRS)        printf 'archives\n' ;;
+    CLIA_EXCLUDE_DIRS)        printf 'archives,templates\n' ;;
     CLIA_REPO_ROOT)           printf '\n' ;;
     *)                        printf '\n' ;;
   esac
@@ -243,9 +262,9 @@ clia_slug() {
 # Sortie, un type par ligne, champs separes par une tabulation :
 #   type  prefixe  emplacement  cycle-de-vie  edition  definition  statut  canonique
 #
-# La huitieme colonne est le slug de l'id de la definition, c'est-a-dire le nom
-# canonique du type, sans accent. C'est la valeur que porte le champ type des
-# instances, et celle qu'un humain tape au clavier. Sans elle, "decision" ne
+# La huitieme colonne est le slug du nom de fichier de la definition, c'est-a-dire
+# le nom canonique du type, sans accent. C'est la valeur que porte le champ type
+# des instances, et celle qu'un humain tape au clavier. Sans elle, "decision" ne
 # resolvait pas le type intitule "Décision" : bogue constate le 2026-08-10.
 
 clia_types_defined() {
@@ -265,19 +284,28 @@ clia_types_defined() {
     edition=$(clia_frontmatter_field "$file" edition)
     statut=$(clia_frontmatter_field "$file" statut)
     [[ -n "$prefixe" ]] || continue
-    local ident canonique
-    ident=$(clia_frontmatter_field "$file" id)
-    canonique="${ident#*-}"
+    # Le nom canonique du type vient du SLUG DU NOM DE FICHIER, non de l'id.
+    # Depuis ADR-007, l'id est <PREFIX>-<SEQ> et ne porte plus de slug : le
+    # deriver de l'id donnerait un numero. Le nom de fichier, lui, porte
+    # <PREFIX>-<SEQ>-<SLUG>, et le slug est le nom canonique du type.
+    local canonique
+    canonique=$(printf '%s' "${base%.md}" | sed -E 's/^[A-Za-z]{2,4}-[0-9]{3}-//')
     printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
       "${title:-?}" "$prefixe" "${emplacement:-?}" "${cycle:-?}" \
       "${edition:-?}" "${base%.md}" "${statut:-?}" "${canonique:-?}"
   done < <(find "$dir" -maxdepth 1 -type f -name 'RES-*.md' | sort)
 }
 
-# Repertoires du depot de developpement exclus des parcours. Les archives
-# portent l'etat revolu du depot : les compter comme instances actives fausse
-# tout denombrement. Bogue constate au premier essai, ou 14 ADR archives
-# etaient comptes parmi les 3 ADR actifs.
+# Repertoires du depot de developpement exclus des parcours.
+#
+# archives  : l'etat revolu du depot. Les compter comme instances actives
+#             fausse tout denombrement. Bogue constate le 2026-08-09, ou 14 ADR
+#             archives etaient comptes parmi les 3 ADR actifs.
+# templates : des squelettes destines a etre copies, que RES-001 place
+#             explicitement hors du modele de ressources. Un gabarit porte le
+#             champ type de son type et serait compte comme une instance.
+#             Bogue constate le 2026-08-10. C'est la reponse d'implementation a
+#             la question Q6 de NON-012.
 clia_excluded_dirs() {
   printf '%s\n' "${CLIA_EXCLUDE_DIRS:-archives}" | tr ',' '\n' | sed '/^$/d'
 }

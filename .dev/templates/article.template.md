@@ -1,6 +1,6 @@
 ---
 type: article
-id: ART-{{slug}}
+id: ART-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

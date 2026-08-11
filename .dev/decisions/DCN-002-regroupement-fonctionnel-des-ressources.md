@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-regroupement-fonctionnel-des-ressources
+id: DCN-002
 title: "Les ressources sont regroupées selon leur fonction"
 version: 0.1.0
 status: draft

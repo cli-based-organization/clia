@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-validation-et-regles-non-tenues
+id: NON-005
 title: "Validation mécanique et règles écrites non tenues"
 status: draft
 initiateur: agent
 effet: bloquant
 etat: ouverte
-porte-sur: [RES-ressource, RES-intention, RES-fait, RES-ontologie]
+porte-sur: [RES-001, RES-003, RES-005, RES-006]
 ---
 
 # NON-005 - Validation mécanique et règles écrites non tenues

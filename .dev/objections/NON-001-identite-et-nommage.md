@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-identite-et-nommage
+id: NON-001
 title: "Identité, nommage et préfixes des ressources"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
-porte-sur: [RES-ressource, RES-objection, ADR-adoption-de-la-notion-de-ressource]
+etat: partiellement-repondue
+porte-sur: [RES-001, RES-004, ADR-001]
 ---
 
 # NON-001 - Identité, nommage et préfixes des ressources
@@ -19,6 +19,7 @@ porte-sur: [RES-ressource, RES-objection, ADR-adoption-de-la-notion-de-ressource
 - 2026-08-09 : preuve empirique ajoutée par l'implémentation de `clia`. La question Q1 n'est plus théorique, voir la section « Preuve produite par l'implémentation ».
 - 2026-08-10 : cinq questions ajoutées, Q8 à Q12, à partir de `FND-002` et `ANL-003`. Le champ `porte-sur` est étendu.
 - 2026-08-10 : deuxième preuve empirique. La collision de numéros annoncée par Q7 s'est produite en situation réelle, moins de vingt-quatre heures après avoir été posée. Voir la section « Deuxième preuve : la collision annoncée ».
+- 2026-08-10 : **Q1 répondue par l'humain**, tâche 13, actée par `DCN-007` et `ADR-007`. L'identité est `<PREFIX>-<SEQ>`, ni le slug ni le chemin. Q7 est répondue de fait : c'est `clia` qui attribue le numéro. L'état passe à `partiellement-repondue` : Q2, Q4, Q6 et Q10 restent ouvertes.
 
 ## Ce qui est contesté
 
@@ -79,7 +80,14 @@ Ce que cela ajoute à l'objection : la question Q7 n'est plus prospective. Et el
 
 `RES-001` propose le champ `id`. La position concurrente, celle de `micrologic-clients`, est que l'identité est le chemin, ce qui ne coûte rien mais rend tout reclassement destructeur.
 
-**Réponse.**
+**Réponse, du 2026-08-10, par l'humain.** Ni l'un ni l'autre : l'identité est le champ `id` de forme `<PREFIX>-<SEQ>`.
+
+La prémisse de l'agent était fausse sur un point de fait. Il supposait la renumérotation possible, donc le numéro instable. Elle ne l'est pas si l'on décide qu'elle ne l'est pas, et `ADR-007` D2 l'interdit. Le fragment `FRG-001` fournit le critère : ce qui persiste par-delà les modifications est l'identité. Le numéro est attribué à la création et persiste ; le slug suit un titre révisable.
+
+Cette réponse est actée par `DCN-007` et instruite par `ADR-007`. Les conséquences qu'elle laisse ouvertes sont portées par `NON-019`.
+
+non. voir FRG-001.
+
 
 ### Q2 - Si l'identité est `<PREFIXE>-<SLUG>`, que se passe-t-il quand deux dépôts emploient le même `id` pour des choses différentes ?
 

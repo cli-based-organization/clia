@@ -1,6 +1,6 @@
 ---
 type: skill
-id: skl-ressource-de-controle
+id: skl-005
 name: skl-005-ressource-de-controle
 version: 0.1.0
 status: draft

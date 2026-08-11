@@ -1,11 +1,11 @@
 ---
 type: ressource
-id: RES-fragment
+id: RES-008
 title: "Fragment"
 version: 0.1.0
 status: draft
 prefixe: FRG
-emplacement: ".dev/fragments/FRG-<DATE>-<SLUG>.md"
+emplacement: ".dev/fragments/FRG-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
 edition: hybride
 famille: contenu
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, status, origine, date-de-captation, explo
 relations-admissibles: [fragment, decision, fait, concept, analyse, fondation, intention]
 sections: [Objet, Le fragment, Origine, Ce qui en a été tiré, Ce qui reste à en tirer, Relations]
 skill: skl-004-ressource-de-contenu
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 
@@ -79,7 +79,7 @@ Le champ `exploitation` est l'apport du type. Il rend visible ce qui dort. La va
 
 ## Cycle de vie
 
-`point-fixe`, nommage daté. Un fragment ne se révise pas : sa valeur tient à sa forme captée. Une reformulation produit une autre ressource, qui déclare `derive-de` vers le fragment.
+`point-fixe`, nommage séquencé comme tous les types. Un fragment ne se révise pas : sa valeur tient à sa forme captée. Une reformulation produit une autre ressource, qui déclare `derive-de` vers le fragment.
 
 Ce qui évolue est le champ `exploitation` et la liste de ce qui en a été tiré. C'est le même écart que celui déjà relevé pour les autres types point fixe, et il est porté par `NON-011` Q2 et `NON-012` Q5.
 
@@ -99,7 +99,7 @@ Ce qui évolue est le champ `exploitation` et la liste de ce qui en a été tir�
 ## Structure attendue d'une instance
 
 ```
-# FRG-<DATE> - <Titre>
+# FRG-<SEQ> - <Titre>
 
 > Ce que le fragment porte, en une phrase.
 

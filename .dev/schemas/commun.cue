@@ -13,8 +13,10 @@ package clia
 #Date:       =~"^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
 #Semver:     =~"^[0-9]+[.][0-9]+[.][0-9]+$"
 
-// ADR-001 D3 : l'identite est le champ id, jamais le numero de sequence.
-#Id: =~"^[A-Za-z]{2,4}-[a-z0-9]+(-[a-z0-9]+)*$"
+// ADR-007 : l'identite est le champ id, de la forme <PREFIX>-<SEQ>. Elle est
+// relative au depot et attribuee a la creation. La seconde forme designe un
+// atome de composite : <PREFIX>-<SEQ>-<NN>.
+#Id: =~"^[A-Za-z]{2,4}-[0-9]{3}(-[0-9]{2})?$"
 
 // Le frontmatter minimal de toute ressource textuelle.
 #Frontmatter: {

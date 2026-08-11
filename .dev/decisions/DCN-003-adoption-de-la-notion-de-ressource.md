@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-adoption-de-la-notion-de-ressource
+id: DCN-003
 title: "Adoption de la notion de ressource"
 version: 0.1.0
 status: draft

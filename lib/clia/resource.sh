@@ -27,7 +27,92 @@ TYPE se designe par son nom ou par son prefixe, sans distinction de casse :
 ID se designe par son numero de sequence ou par son identifiant stable :
   clia res show RES-001
   clia res show RES-ressource
+
+Aide detaillee d'un verbe :
+  clia res ls --help
+  clia res new --help
+  clia res show --help
+  clia res edit --help
 EOF
+}
+
+# Aide propre a chaque verbe. Un verbe sans aide est un verbe indecouvrable.
+clia_resource_usage_verb() {
+  case "$1" in
+    ls) cat <<'EOF'
+Usage : clia resource ls [TYPE]
+
+Sans argument, liste les types de ressources connus du depot, avec leur
+prefixe, leur cycle de vie, leur regime d'edition, leur definition et leur
+nombre d'instances. Les types employes sans definition apparaissent avec la
+mention "aucune".
+
+Avec un TYPE, liste ses instances : identifiant, description, statut.
+
+TYPE se designe par son nom, son nom canonique ou son prefixe, sans
+distinction de casse, au singulier ou au pluriel :
+  clia res ls objection
+  clia res ls NON
+  clia res ls decision
+
+Alias : list
+EOF
+;;
+    new) cat <<'EOF'
+Usage : clia resource new TYPE DESCRIPTION
+
+Cree une ressource du type donne. Le slug est derive de la description :
+minuscules, accents translitteres, separateurs reduits a un trait d'union.
+
+  clia res new objection "Portee du systeme"
+  -> .dev/objections/NON-006-portee-du-systeme.md
+
+Ce que la commande fait :
+  - attribue le discriminant selon le cycle de vie declare par le type,
+    une sequence a trois chiffres ou une date ISO ;
+  - pose les champs que la definition declare obligatoires, en marquant
+    "À RENSEIGNER" ceux dont la valeur depend du contenu ;
+  - ecrit les sections que la definition annonce.
+
+Ce que la commande ne fait pas : rediger le contenu. Voir ADR-003 D5.
+
+Elle refuse si le type n'a pas de definition, si le slug est deja employe,
+ou si le type porte un statut deprecie ou non-installe.
+
+Alias : create
+EOF
+;;
+    show) cat <<'EOF'
+Usage : clia resource show ID
+
+Affiche une ressource sur la sortie standard.
+
+ID accepte trois formes, essayees dans cet ordre :
+  RES-001           prefixe et discriminant, l'adresse du fichier
+  RES-ressource     identifiant stable du frontmatter
+  001               numero seul, si un seul type le porte
+
+En cas d'ambiguite, la commande refuse et nomme les candidats. Le numero de
+sequence n'est pas un identifiant : voir NON-001.
+
+Les ressources archivees ne sont pas trouvees. Voir CLIA_EXCLUDE_DIRS.
+
+Alias : cat
+EOF
+;;
+    edit) cat <<'EOF'
+Usage : clia resource edit ID
+
+Ouvre une ressource avec l'editeur declare par CLIA_EDITOR, a defaut VISUAL,
+a defaut EDITOR, a defaut vi.
+
+ID accepte les memes trois formes que show.
+
+  clia config set EDITOR nvim
+  clia res edit RES-001
+EOF
+;;
+  esac
 }
 
 # --------------------------------------------------------------------------
@@ -51,12 +136,19 @@ clia_resource_ls_types() {
     printf 'TYPE\tPREFIXE\tCYCLE\tEDITION\tDEFINITION\tINSTANCES\n'
 
     # Types definis, avec leur nombre d'instances constate.
-    while IFS=$'\t' read -r title prefixe _empl cycle edition definition _statut; do
+    #
+    # Le decompte compare le nom CANONIQUE de la definition au champ type des
+    # instances, jamais le titre. Le titre est un libelle lisible ("Principe de
+    # conception"), le nom canonique est ce que le frontmatter porte
+    # ("principe-de-conception"). Comparer les titres faisait apparaitre deux
+    # lignes pour un seul type, l'une definie a zero instance et l'autre non
+    # definie : bogue constate le 2026-08-10, quatrieme manifestation de la
+    # confusion entre l'affichage et l'identite.
+    while IFS=$'\t' read -r title prefixe _empl cycle edition definition _statut canonique; do
       [[ -n "$title" ]] || continue
-      local key n
-      key=$(printf '%s' "$title" | tr '[:upper:]' '[:lower:]')
-      n=$(printf '%s\n' "$used" | awk -F'\t' -v k="$key" \
-            'tolower($1) == k { print $2; found = 1 } END { if (!found) print 0 }')
+      local n
+      n=$(printf '%s\n' "$used" | awk -F'\t' -v k="$canonique" \
+            'tolower($1) == tolower(k) { print $2; found = 1 } END { if (!found) print 0 }')
       printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
         "$title" "$prefixe" "$cycle" "$edition" "$definition" "$n"
     done <<< "$defined"
@@ -66,7 +158,7 @@ clia_resource_ls_types() {
     while IFS=$'\t' read -r t n; do
       [[ -n "$t" ]] || continue
       if ! printf '%s\n' "$defined" | awk -F'\t' -v k="$t" \
-             'tolower($1) == tolower(k) { found = 1 } END { exit !found }'; then
+             'tolower($8) == tolower(k) { found = 1 } END { exit !found }'; then
         printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$t" '?' '?' '?' 'aucune' "$n"
       fi
     done <<< "$used"
@@ -92,6 +184,7 @@ clia_resource_dir_of() {
 }
 
 clia_resource_ls_instances() {
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb ls; return 0; fi
   clia_require_repo
   local wanted="$1" line
   if ! line=$(clia_type_resolve "$wanted"); then
@@ -145,6 +238,7 @@ clia_resource_next_seq() {
 }
 
 clia_resource_new() {
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb new; return 0; fi
   clia_require_repo
   local wanted="$1"; shift
   local description="$*"
@@ -311,6 +405,7 @@ clia_resource_find() {
 }
 
 clia_resource_show() {
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb show; return 0; fi
   clia_require_repo
   local wanted="${1:-}"
   [[ -n "$wanted" ]] || { clia_resource_usage >&2; return 2; }
@@ -323,6 +418,7 @@ clia_resource_show() {
 }
 
 clia_resource_edit() {
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb edit; return 0; fi
   clia_require_repo
   local wanted="${1:-}"
   [[ -n "$wanted" ]] || { clia_resource_usage >&2; return 2; }
@@ -346,7 +442,8 @@ clia_resource_main() {
   [[ $# -gt 0 ]] && shift
   case "$verb" in
     ls|list)
-      if [[ $# -eq 0 ]]; then clia_resource_ls_types
+      if clia_is_help "${1:-}"; then clia_resource_usage_verb ls
+      elif [[ $# -eq 0 ]]; then clia_resource_ls_types
       else clia_resource_ls_instances "$1"; fi ;;
     new|create)   clia_resource_new "$@" ;;
     show|cat)     clia_resource_show "$@" ;;

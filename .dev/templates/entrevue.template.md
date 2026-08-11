@@ -1,6 +1,6 @@
 ---
 type: entrevue
-id: ENT-{{slug}}
+id: ENT-{{discriminant}}
 title: "{{titre}}"
 status: draft
 date: {{date}}

@@ -1,6 +1,6 @@
 ---
 type: decision
-id: DCN-nature-composable-de-la-ressource
+id: DCN-001
 title: "La ressource est un ensemble composable et atomique d'informations"
 version: 0.1.0
 status: draft

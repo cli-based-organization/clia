@@ -1,6 +1,6 @@
 ---
 type: adr
-id: ADR-adoption-du-processus-de-travail
+id: ADR-002
 title: "Adoption du processus de travail collaboratif humain, agent IA et cli"
 version: 0.1.0
 status: draft
@@ -9,8 +9,8 @@ date: 2026-08-09
 decideurs: ["human:jvtrudel (à statuer)", "claude-opus-5 (rédaction)"]
 sources:
   - ANL-001-observation-corpus-repos-et-pratiques
-  - ADR-adoption-de-la-notion-de-ressource
-  - RES-objection
+  - ADR-001
+  - RES-004
   - "CONSTITUTION.md, archivé dans .dev/archives/"
   - "workspace/session.md, tâche 4 du 2026-08-09"
 definition-associee: aucune

@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-decision
+id: RES-009
 title: "Décision"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, instance, date-de-decisi
 relations-admissibles: [decision, ressource, adr, intention, objection, fragment]
 sections: [Objet, La décision, Qui a décidé, Portée, Conséquences, Ce que la décision ne dit pas, Relations]
 skill: skl-004-ressource-de-contenu
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

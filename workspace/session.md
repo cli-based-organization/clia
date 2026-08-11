@@ -253,6 +253,23 @@ corriger ce bug.
 
 Et mettre dans les principes fondamentaux l' "auto-découvrabilité" du système.
 
+## 13. [bogue] identifiants relatif des ressources
+
+À l'interne d'un repo clia, toutes les ressources doivent être référençables (alias) par: <PREFIX>-<SEQ>.
+
+Pour les ressources RES, éliminer toute référence à <PREFIX>-<DATE> et <PREFIX>-<SLUG>
+
+Corriger les noms de fichier et les références.
+
+
+## 14. [recherche de fondation] Décisions institutionelles traçables
+
+Faire une recherche de fondation (en utilisant MET-001) portant sur la documentation des décisions.
+
+L'objectif de cette rechserche est de mieux comprendre les pratiques de documentation des décisions et de suivi des changements décision dans différents dommaines et différents contextes.
+
+Afin d'enrichir la ressource DCN introduit à la tâche 8 et, surtout, nos méthodologies de travail avec cette ressource.
+
 
 ## x. [conception] Amélioration de la notion de ressource
 

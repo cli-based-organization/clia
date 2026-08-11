@@ -1,12 +1,12 @@
 ---
 type: objection
-id: NON-composition-et-atomicite
+id: NON-016
 title: "Composition, atomicité et propriété holographique"
 status: draft
 initiateur: agent
 effet: conditionnel
 etat: ouverte
-porte-sur: [RES-ressource, ADR-nature-composable-de-la-ressource]
+porte-sur: [RES-001, ADR-004]
 ---
 
 # NON-016 - Composition, atomicité et propriété holographique

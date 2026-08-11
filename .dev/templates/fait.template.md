@@ -1,6 +1,6 @@
 ---
 type: fait
-id: FCT-{{slug}}
+id: FCT-{{discriminant}}
 title: "{{titre}}"
 status: draft
 sujet: {{sujet}}

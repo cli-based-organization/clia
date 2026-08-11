@@ -1,6 +1,6 @@
 ---
 type: ressource
-id: RES-cas-d-usage
+id: RES-023
 title: "Cas d'usage"
 version: 0.1.0
 status: draft
@@ -13,7 +13,7 @@ champs-obligatoires: [type, id, title, version, status, acteur-principal, niveau
 relations-admissibles: [usage, acteur, requis, specification, comportement]
 sections: [Objet, Acteur et but, Déroulement nominal, Variantes et échecs, Relations]
 skill: skl-006-ressource-de-preparation
-adr: ADR-regroupement-fonctionnel-des-ressources
+adr: ADR-005
 statut: actif
 ---
 

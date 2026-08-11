@@ -1,6 +1,6 @@
 ---
 type: plan
-id: PLN-point-d-entree-et-analyse-de-la-demande
+id: PLN-001
 title: "Réécriture du point d'entrée et écriture du skill d'analyse de la demande"
 status: draft
 statut-plan: propose
