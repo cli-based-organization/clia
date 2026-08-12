@@ -59,6 +59,17 @@ assert_rc() {
   fi
 }
 
+# assert_champ DESCRIPTION CLE VALEUR SORTIE
+# Verifie une ligne "CLE   VALEUR" d une sortie alignee par column -t, sans
+# dependre du nombre d espaces, qui varie avec la largeur des valeurs.
+assert_champ() {
+  if printf '%s' "$4" | grep -qE "^$2[[:space:]]+$3([[:space:]]|$)"; then
+    ok "$1"
+  else
+    ko "$1" "champ absent : $2 = $3"
+  fi
+}
+
 assert_file() {
   if [[ -f "$2" ]]; then ok "$1"; else ko "$1" "fichier absent : $2"; fi
 }
@@ -635,6 +646,152 @@ assert_contains 'reg ls --help explique le mode de tenue' 'derive au premier oub
 out=$(run_out reg show --help)
 assert_contains 'reg show --help dit que l item est un renvoi' 'renvoi' "$out"
 
+
+# --------------------------------------------------------------------------
+# clia session
+# --------------------------------------------------------------------------
+#
+# Un depot dedie : la session ecrit dans .dev/logs/ et lit workspace/session.md.
+
+SDEPOT="$TMP/sdepot"
+mkdir -p "$SDEPOT/.dev/logs" "$SDEPOT/workspace"
+( cd "$SDEPOT" && git init -q . \
+  && git config user.email t@t && git config user.name t ) >/dev/null 2>&1
+
+runses() { ( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
+             "$CLIA_BIN" ses "$@" ) 2>&1; }
+runses_out() { ( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
+                 "$CLIA_BIN" ses "$@" ) 2>/dev/null; }
+
+# L aide est atteignable, y compris sur un verbe qui exige un argument :
+# c est le defaut PDC-001 corrige le 2026-08-10, a ne pas reintroduire.
+out=$(runses --help)
+assert_contains 'ses --help liste les verbes' 'new DESCRIPTION' "$out"
+assert_contains 'ses --help donne le cycle de vie' 'todo -> open -> closed' "$out"
+out=$(runses new --help)
+assert_contains 'ses new --help sans argument affiche l aide' 'Reserve a l'"'"'humain' "$out"
+assert_not_contains 'ses new --help ne reclame pas de description' 'description manquante' "$out"
+out=$(runses todo --help)
+assert_contains 'ses todo --help affiche l aide' 'planification' "$out"
+out=$(runses status --help)
+assert_contains 'ses status --help explique le critere' 'MET-003' "$out"
+out=$(runses close --help)
+assert_contains 'ses close --help affiche l aide' 'closed' "$out"
+out=$(runses ls --help)
+assert_contains 'ses ls --help affiche l aide' 'planification' "$out"
+
+runses inconnu >/dev/null 2>&1
+assert_rc 'un verbe de session inconnu echoue en 2' 2 "$?"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human "$CLIA_BIN" ses new ) \
+  >/dev/null 2>&1
+assert_rc 'ses new sans description echoue en 2' 2 "$?"
+
+# Sans aucune session ni fichier vivant, status echoue proprement.
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human "$CLIA_BIN" ses status ) \
+  >/dev/null 2>&1
+assert_rc 'ses status sans session echoue en 1' 1 "$?"
+
+# La garde : ouvrir et fermer sont des actes de l humain.
+for verbe in new todo; do
+  ( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=agent \
+    "$CLIA_BIN" ses "$verbe" "essai interdit" ) >/dev/null 2>&1
+  assert_rc "ses $verbe refuse CLIA_ACTOR=agent" 3 "$?"
+done
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=agent \
+  "$CLIA_BIN" ses close ) >/dev/null 2>&1
+assert_rc 'ses close refuse CLIA_ACTOR=agent' 3 "$?"
+out=$( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=agent \
+       "$CLIA_BIN" ses new "essai interdit" 2>&1 )
+assert_contains 'le refus nomme la regle' 'CONSTITUTION.md C3' "$out"
+assert_contains 'le refus dit qui peut agir' 'reserve a l'"'"'humain' "$out"
+[[ -d "$SDEPOT/.dev/logs/SES-001-essai-interdit" ]] \
+  && ko 'le refus ne cree rien' 'repertoire cree malgre le refus' \
+  || ok 'le refus ne cree rien'
+
+# Ouverture.
+out=$(runses new "premiere session de travail")
+assert_contains 'ses new annonce l etat' 'etat open' "$out"
+assert_file 'ses new cree l enonce' "$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/SES-001.md"
+enonce="$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/SES-001.md"
+assert_contains 'l enonce porte les quatre rubriques, intention d abord' \
+  '# 1. INTENTION' "$(cat "$enonce")"
+assert_contains 'l enonce porte LIVRABLES' '# 3. LIVRABLES' "$(cat "$enonce")"
+assert_contains 'l enonce porte etat open' 'etat: open' "$(cat "$enonce")"
+
+# Une session neuve ne declare aucune tache : le gabarit ne doit pas en
+# introduire une, sinon le compteur ment des la creation.
+out=$(runses_out status)
+assert_contains 'status affiche l identifiant' 'SES-001' "$out"
+assert_champ 'status compte zero tache sur une session neuve' 'taches' 0 "$out"
+
+# Une tache declaree, sans journal, n est pas faite.
+printf '\n## 1. [conception] Une tache\n' >> "$enonce"
+out=$(runses_out status)
+assert_champ 'status compte la tache declaree' 'taches' 1 "$out"
+assert_champ 'une tache sans journal n est pas faite' 'taches faites' 0 "$out"
+
+# Une rubrique de niveau un numerotee n est pas une tache.
+out=$(runses_out status)
+assert_champ 'les rubriques ne sont pas comptees comme taches' 'taches' 1 "$out"
+
+# Le journal seul ne suffit pas : MET-003 exige le message de commit.
+mkdir -p "$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/TSK-001-une-tache"
+out=$(runses_out status)
+assert_champ 'un journal sans message de commit ne compte pas' 'taches faites' 0 "$out"
+touch "$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/TSK-001-une-tache/TSK-07-commit-message_x.yaml"
+out=$(runses_out status)
+assert_champ 'le message de commit fait la tache' 'taches faites' 1 "$out"
+assert_champ 'status compte les restantes' 'taches restantes' 0 "$out"
+
+# Le point apres le numero est facultatif : l humain ecrit les deux.
+printf '\n## 2 [bogue] Une tache sans point\n' >> "$enonce"
+out=$(runses_out status)
+assert_champ 'une tache sans point apres le numero est comptee' 'taches' 2 "$out"
+
+# Planification : todo n ouvre rien et ne ferme rien.
+runses todo "session planifiee" >/dev/null 2>&1
+out=$(runses_out ls)
+assert_contains 'ls affiche la session planifiee' 'todo' "$out"
+assert_contains 'ls affiche la session ouverte' 'open' "$out"
+assert_contains 'todo n a pas de date d ouverture' 'SES-002  todo' "$out"
+out=$(runses_out status)
+assert_contains 'todo ne change pas la session en cours' 'SES-001' "$out"
+
+# new ferme la session ouverte.
+runses new "deuxieme session" >/dev/null 2>&1
+assert_contains 'new ferme la session precedente' 'etat: closed' "$(cat "$enonce")"
+assert_contains 'la fermeture est datee' 'fermeture:' "$(cat "$enonce")"
+out=$(runses_out status)
+assert_contains 'la session en cours est la nouvelle' 'SES-003' "$out"
+
+# close.
+runses close >/dev/null 2>&1
+out=$(runses ls)
+assert_not_contains 'plus aucune session ouverte' ' open ' "$out"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human "$CLIA_BIN" ses close ) \
+  >/dev/null 2>&1
+assert_rc 'close sans session ouverte echoue en 1' 1 "$?"
+
+# Le fichier vivant tient lieu de session en cours quand aucun enonce n est
+# ouvert. C est l etat du depot clia lui-meme.
+cat > "$SDEPOT/workspace/session.md" <<'FIN'
+# CONTEXTE
+
+Un contexte.
+
+# Tâches
+
+## 1. [analyse] Une tache du fichier vivant
+
+## 2. [conception] Une autre
+FIN
+out=$(runses_out status)
+assert_contains 'le fichier vivant tient lieu de session' '(vivant)' "$out"
+assert_champ 'les taches du fichier vivant sont comptees' 'taches' 2 "$out"
+out=$(runses close)
+assert_contains 'le fichier vivant ne peut pas etre ferme' 'ne peut pas etre ferme' "$out"
+
+# --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"
 # --------------------------------------------------------------------------

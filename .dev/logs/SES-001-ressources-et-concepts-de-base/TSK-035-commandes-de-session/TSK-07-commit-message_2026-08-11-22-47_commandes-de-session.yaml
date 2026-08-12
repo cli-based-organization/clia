@@ -1,0 +1,47 @@
+type: feat
+portee: cli
+sujet: "instrumenter la session : status, ls, new, close, todo"
+corps: |
+  Six formes, celles que l'humain a nommées, et aucune de plus. status et ls
+  lisent et sont libres ; new, close et todo écrivent l'état d'un document de
+  régime humain et refusent de s'exécuter pour un agent, code 3. La garde est
+  celle de clia git save, déplacée de git.sh vers core.sh : une garde dupliquée
+  est une garde qui divergera.
+
+  Une tâche est comptée faite quand son journal porte le message de commit,
+  septième et dernière étape de MET-003. Le critère ne dit pas qu'une tâche est
+  bien faite : il dit qu'elle est journalisée jusqu'au bout, ce qui est
+  vérifiable.
+
+  La commande donne la première mesure de l'avancement de cette session :
+  35 tâches, 32 faites, ouverte depuis deux jours. Y arriver a demandé trois
+  corrections, toutes trouvées en confrontant le chiffre au fichier plutôt que
+  par un test. Le dépôt porte deux répertoires de journal pour une seule
+  session, séquelle d'un renommage, et les tâches 1 à 24 sont sous un format
+  plat antérieur à MET-003 : ne lire que le journal récent affichait huit
+  tâches faites au lieu de vingt-cinq. Et le fichier vivant écrit certaines
+  tâches sans point après le numéro : une lecture stricte en ratait deux.
+
+  RES-034 est révisée sur les trois points où elle contredisait la demande :
+  états todo, open, closed ; quatre rubriques INTENTION, CONTEXTE, LIVRABLES,
+  TÂCHES ; intention avant contexte. Cet ordre est celui des quatre sessions
+  archivées du dépôt : la définition avait dévié, la demande la ramène.
+
+  NON-037 porte ce que la révision fait disparaître sans que la demande le
+  dise : le critère de convergence, que ADR-002 nomme, et l'état abandonnee,
+  qui distinguait une session laissée d'une session aboutie.
+
+  L'énoncé de la session en cours n'est pas créé : ouvrir une session est un
+  acte de l'humain, par la garde même que cette tâche pose.
+fichiers:
+  - lib/clia/session.sh
+  - lib/clia/core.sh
+  - lib/clia/git.sh
+  - bin/clia
+  - .dev/ressources/RES-034-session.md
+  - .dev/schemas/session.cue
+  - .dev/schemas/session.input.cue
+  - .dev/templates/session.template.md
+  - tests/test_clia.sh
+  - .dev/objections/NON-037-frontiere-et-forme-de-la-session.md
+  - .dev/logs/SES-001-ressources-et-concepts-de-base/TSK-035-commandes-de-session/

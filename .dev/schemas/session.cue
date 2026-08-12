@@ -10,6 +10,10 @@ package clia
 	id: #Id
 	title: string & !=""
 	status: #Status
-	ouverture: #Date
-	etat: "ouverte" | "close" | "abandonnee"
+	// Une session en planification n'a pas de date d'ouverture.
+	ouverture: #Date | "À RENSEIGNER"
+	// Cycle de vie : todo -> open -> closed.
+	etat: "todo" | "open" | "closed"
+	// Inscrite par clia ses close.
+	fermeture?: #Date
 }

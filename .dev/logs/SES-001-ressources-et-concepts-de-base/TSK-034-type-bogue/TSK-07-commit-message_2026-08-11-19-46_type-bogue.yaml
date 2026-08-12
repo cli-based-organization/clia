@@ -1,0 +1,32 @@
+type: feat
+portee: ressources
+sujet: "introduire le type bogue (BUG)"
+corps: |
+  Le type est tiré de sept écarts constatés dans le dépôt en trois jours,
+  non d'une idée. Ils partagent un trait sans exception : un écart entre
+  un comportement attendu et un comportement constaté, où l'attendu vient
+  d'une règle écrite. Sans règle de référence, il n'y a pas de bogue.
+
+  Trois frontières écrites : l'issue n'a aucune règle de référence, le
+  comportement attendu dit ce qui doit être, l'objection conteste une
+  règle là où le bogue constate qu'elle n'est pas tenue.
+
+  Deux rubriques obligatoires et leur motif mesuré : « La cause », parce
+  que sur les sept cas elle diffère du symptôme dans cinq ; « La
+  correction », parce qu'un des sept était protégé par un test qui
+  codifiait l'ancien comportement et passait au vert depuis deux jours.
+
+  Le champ etat porte accepte, qui n'est pas corrige : un écart assumé
+  reste un écart, et le déclarer évite qu'il soit redécouvert. Poser
+  accepte est une décision, réservée à l'humain par C1.
+
+  Le type suit le modèle de frontmatter en vigueur, non celui de DCN-016
+  qui porte effet: suspendue. Créer un type sous un modèle non approuvé
+  forcerait la main sur cette décision.
+fichiers:
+  - .dev/ressources/RES-036-bogue.md
+  - .dev/schemas/bogue.cue
+  - .dev/schemas/bogue.input.cue
+  - .dev/templates/bogue.template.md
+  - .dev/objections/NON-036-frontiere-du-bogue.md
+  - .dev/logs/SES-001-ressources-et-concepts-de-base/TSK-034-type-bogue/

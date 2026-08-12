@@ -11,7 +11,7 @@ edition: hybride
 famille: preparation
 champs-obligatoires: [type, id, title, status, ouverture, etat]
 relations-admissibles: [session, tache, ressource, intention, objection]
-sections: [Contexte, Intention, Critère de convergence, Tâches, Relations]
+sections: [INTENTION, CONTEXTE, LIVRABLES, TÂCHES]
 skill: skl-006-ressource-de-preparation
 adr: ADR-013
 statut: actif
@@ -19,7 +19,7 @@ statut: actif
 
 # RES-034 - Session
 
-> Une session est un segment de travail borné par une intention et un critère de convergence. Elle est un **répertoire** contenant les tâches qui la composent.
+> Une session est un segment de travail borné par une intention. Elle est un **répertoire** : son énoncé, et le journal des tâches qui la composent.
 
 ## Objet
 
@@ -29,12 +29,18 @@ Ce document définit le type `session`. Sa fonction est de donner au travail une
 
 Une ressource composite. Son répertoire contient un répertoire par tâche.
 
-| Elle porte | Rôle |
+Quatre rubriques, dans cet ordre.
+
+| Rubrique | Rôle |
 |---|---|
-| **Le contexte** | La situation dans laquelle le travail s'ouvre |
-| **L'intention** | Ce que la session vise |
-| **Le critère de convergence** | Ce qui permet de la clore. Il n'a pas à être défini à l'ouverture |
-| **Les tâches** | Ce qui est demandé, dans l'ordre où l'humain l'écrit |
+| **1. INTENTION** | Ce que la session vise |
+| **2. CONTEXTE** | La situation dans laquelle le travail s'ouvre |
+| **3. LIVRABLES** | Ce que la session produit |
+| **4. TÂCHES** | Ce qui est demandé, dans l'ordre où l'humain l'écrit |
+
+L'ordre n'est pas indifférent : l'intention vient avant le contexte, comme dans les quatre sessions archivées du dépôt. Une tâche est une rubrique de **niveau deux**, ouverte par son numéro : `## 12. [bogue] ...`. Le niveau suffit à la distinguer d'une rubrique de session.
+
+**`LIVRABLES` est ce que la définition n'avait pas.** La session déclare ce qu'elle produit, ce que `PDC-003` V-S1 exige d'un plan.
 
 ## Ce qu'une session n'est pas
 
@@ -49,9 +55,15 @@ Une ressource composite. Son répertoire contient un répertoire par tâche.
 | Champ | Valeurs | Rôle |
 |---|---|---|
 | `ouverture` | Date ISO | Quand la session a été ouverte |
-| `etat` | `ouverte`, `close`, `abandonnee` | Où en est la session |
+| `etat` | `todo`, `open`, `closed` | Où en est la session |
 
-Le critère de convergence n'est pas un champ obligatoire : `ADR-002` pose qu'il n'a pas à être défini au démarrage.
+Le cycle est `todo => open => closed`. Une session `todo` est planifiée et n'a pas de date d'ouverture.
+
+**Deux choses ont disparu de la version précédente de cette définition**, et ce n'est pas anodin.
+
+Le **critère de convergence** n'est plus une rubrique. `ADR-002` le nomme et `workspace/session.md` en porte un. `NON-037` Q1 pose la question.
+
+L'état `abandonnee` n'existe plus : une session abandonnée est `closed`, indistinguable d'une session aboutie. `NON-037` Q2.
 
 ## Test d'admission
 
@@ -67,10 +79,14 @@ Une session existe dès que l'humain écrit dans `workspace/session.md`.
 
 | Bloc | Propriétaire |
 |---|---|
-| Le contexte, l'intention, le critère de convergence, les tâches | L'humain seul |
-| L'état | Les deux |
+| Les quatre rubriques | L'humain seul |
+| L'état | L'humain, ou le cli agissant pour lui |
 
 L'agent ne réécrit jamais l'énoncé d'une tâche ni l'intention d'une session.
+
+**Ouvrir et fermer sont des actes de l'humain.** `clia ses new`, `clia ses close` et `clia ses todo` refusent de s'exécuter pour un agent, code de retour 3. Ils décident de ce sur quoi le dépôt travaille : `ADR-002` en fait un acte de l'humain, et `CONSTITUTION.md` C3 place l'énoncé en régime d'édition humaine.
+
+`clia ses status` et `clia ses ls` lisent : ils sont libres.
 
 ## Frontière avec les types voisins
 
@@ -85,11 +101,24 @@ L'agent ne réécrit jamais l'énoncé d'une tâche ni l'intention d'une session
 Un répertoire.
 
 ```
-SES-<SEQ>-<SLUG>/
-    TSK-001-<slug>/
+.dev/logs/SES-<SEQ>-<SLUG>/
+    SES-<SEQ>.md          l'énoncé
+    TSK-001-<slug>/       le journal d'une tâche
     TSK-002-<slug>/
     ...
 ```
+
+## Ce qui compte une tâche faite
+
+Une tâche est **faite quand son journal porte le message de commit**, septième et dernière étape de `MET-003`. Sa présence atteste que les six autres ont été écrites.
+
+**Le critère ne dit pas qu'une tâche est bien faite.** Il dit qu'elle est journalisée jusqu'au bout, ce qui est vérifiable, là où « bien faite » ne l'est pas.
+
+## Le fichier de session vivant
+
+`workspace/session.md` est le point d'entrée déclaré par `CLAUDE.md`. Tant qu'aucun énoncé ne porte `etat: open`, **c'est lui la session en cours**, et les commandes de lecture le traitent comme tel.
+
+Il ne peut pas être fermé : il ne porte pas de frontmatter. L'enregistrer comme énoncé est un geste de l'humain.
 
 ## Relations
 
@@ -103,3 +132,6 @@ SES-<SEQ>-<SLUG>/
 |---|---|
 | Le fichier de session vivant devient-il une `SES` à sa clôture, et par quel geste | `NON-028` |
 | Le répertoire de session actuel porte une date, la nouvelle forme un numéro | `NON-028` |
+| Le critère de convergence n'a plus de rubrique | `NON-037` |
+| Une session abandonnée est indistinguable d'une session aboutie | `NON-037` |
+| `todo`, `open` et `closed` sont anglais dans un frontmatter français | `NON-037` |

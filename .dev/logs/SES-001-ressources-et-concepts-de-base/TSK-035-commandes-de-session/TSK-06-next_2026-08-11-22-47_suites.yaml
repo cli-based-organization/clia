@@ -1,0 +1,25 @@
+suites:
+  - id: N1
+    quoi: "Répondre aux cinq questions de NON-037"
+    pourquoi: "Q1 décide si le critère de convergence subsiste ; ADR-002 le suppose"
+    qui: humain
+  - id: N2
+    quoi: "Ouvrir l'énoncé SES-001 de la session en cours"
+    pourquoi: "35 tâches et deux jours sans énoncé ; status déduit ce qui devrait être déclaré"
+    qui: humain
+    commande: "clia ses new"
+    depend-de: [N1]
+  - id: N3
+    quoi: "Faire de workspace/session.md un lien vers l'énoncé ouvert"
+    pourquoi: "Supprime tout repli ; ADR-017 D3 emploie déjà ce mécanisme pour INTENTION.md"
+    qui: humain
+    depend-de: [N2]
+  - id: N4
+    quoi: "Retirer la tolérance au format de journal plat"
+    pourquoi: "126 fichiers d'un seul dépôt ; NON-028 Q1 porte la migration"
+    depend-de: [NON-028-Q1]
+  - id: N5
+    quoi: "Un seul répertoire de journal par session"
+    pourquoi: "Le dépôt en porte deux pour une session, séquelle du renommage du 2026-08-11"
+bloque:
+  - "Le critère de convergence n'a plus de rubrique : clia ses close ferme sans critère"

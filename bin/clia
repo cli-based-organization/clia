@@ -62,6 +62,7 @@ Usage : clia [option] <ressource> <verbe> [arguments]
 
 Ressources :
   resource, res, r        gerer les ressources du depot
+  session, ses, s         ouvrir, suivre et fermer les sessions de travail
   registre, reg           consulter les registres
   git, g                  suivre l'historique des ressources
   configuration, config, c  gerer la configuration de l'utilisateur
@@ -74,6 +75,7 @@ Options :
 
 Aide d'une ressource :
   clia resource --help
+  clia session --help
   clia registre --help
   clia git --help
   clia config --help
@@ -139,6 +141,9 @@ main() {
     resource|res|r)
       . "$CLIA_LIB_DIR/resource.sh"
       clia_resource_main "$@" ;;
+    session|ses|s)
+      . "$CLIA_LIB_DIR/session.sh"
+      clia_session_main "$@" ;;
     git|g)
       . "$CLIA_LIB_DIR/resource.sh"
       . "$CLIA_LIB_DIR/git.sh"

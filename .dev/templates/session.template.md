@@ -11,20 +11,19 @@ etat: {{etat}}
 
 > {{resume}}
 
-## Contexte
+# 1. INTENTION
 
 À rédiger.
 
-## Intention
+# 2. CONTEXTE
 
 À rédiger.
 
-## Critère de convergence
-
-À rédiger. Il n'a pas à être défini à l'ouverture.
-
-## Tâches
+# 3. LIVRABLES
 
 À rédiger.
 
-## Relations
+# 4. TÂCHES
+
+À rédiger. Une rubrique de niveau deux par tâche, numérotée :
+`## <n>. [type] Titre de la tâche`

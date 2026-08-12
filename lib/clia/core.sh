@@ -50,6 +50,32 @@ clia_is_help() {
 }
 
 # --------------------------------------------------------------------------
+# Qui agit
+# --------------------------------------------------------------------------
+#
+# Certaines commandes sont reservees a l'humain par CONSTITUTION.md :
+#   C2  clia git save
+#   C3  ce qui ecrit l'etat d'un document en regime d'edition humaine, dont
+#       l'ouverture et la cloture d'une session
+#
+# La detection repose sur les marqueurs que les environnements d'agent posent
+# eux-memes. Elle n'est pas infranchissable : un agent qui dispose d'un shell
+# appelle git directement. Elle rend la transgression explicite, ce qui est sa
+# portee reelle et ce que la constitution declare.
+#
+# CLIA_ACTOR=human leve la garde. Le poser depuis un agent est une violation
+# de la constitution, non un contournement prevu.
+
+clia_acteur_est_agent() {
+  [[ "${CLIA_ACTOR:-}" == "human" ]] && return 1
+  [[ "${CLIA_ACTOR:-}" == "agent" ]] && return 0
+  [[ -n "${CLAUDECODE:-}" ]] && return 0
+  [[ -n "${CLAUDE_CODE_ENTRYPOINT:-}" ]] && return 0
+  [[ -n "${AIDER_MODEL:-}" ]] && return 0
+  return 1
+}
+
+# --------------------------------------------------------------------------
 # Contexte-repertoire
 # --------------------------------------------------------------------------
 #

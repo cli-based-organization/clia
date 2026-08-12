@@ -46,14 +46,9 @@ clia_git() { git -C "$CLIA_REPO_ROOT_RESOLVED" "$@"; }
 # CLIA_ACTOR=human leve la garde. Le poser depuis un agent est une violation
 # de C2, non un contournement prevu.
 
-clia_git_acteur_est_agent() {
-  [[ "${CLIA_ACTOR:-}" == "human" ]] && return 1
-  [[ "${CLIA_ACTOR:-}" == "agent" ]] && return 0
-  [[ -n "${CLAUDECODE:-}" ]] && return 0
-  [[ -n "${CLAUDE_CODE_ENTRYPOINT:-}" ]] && return 0
-  [[ -n "${AIDER_MODEL:-}" ]] && return 0
-  return 1
-}
+# La garde vit desormais dans core.sh : la commande session en a besoin aussi,
+# et une garde dupliquee est une garde qui divergera. Ce nom reste valide.
+clia_git_acteur_est_agent() { clia_acteur_est_agent; }
 
 # --------------------------------------------------------------------------
 # T1 : un commit ne renomme pas et ne reecrit pas la meme ressource

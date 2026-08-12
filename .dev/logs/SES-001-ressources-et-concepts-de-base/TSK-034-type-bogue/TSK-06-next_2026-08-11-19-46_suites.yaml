@@ -1,0 +1,18 @@
+suites:
+  - id: N1
+    quoi: "Répondre aux quatre questions de NON-036"
+    pourquoi: "Q1 et Q4 conditionnent la frontière et le modèle du type"
+    qui: humain
+  - id: N2
+    quoi: "Consigner en BUG les écarts encore ouverts"
+    pourquoi: "Sept écarts constatés, six corrigés ; le type n'a aucune instance"
+    depend-de: [N1]
+  - id: N3
+    quoi: "Registre des bogues"
+    pourquoi: "PLN-005 chantier D ; NON-029 Q1 laisse ouverte la question du type unique"
+  - id: N4
+    quoi: "Migrer BUG sous le modèle des quatre champs"
+    pourquoi: "PLN-007 chantier D, quand DCN-016 sera approuvée"
+    depend-de: [approbation-DCN-016]
+bloque:
+  - "DCN-016 porte effet: suspendue ; le type suit le modèle en vigueur en attendant"
