@@ -1,0 +1,103 @@
+{
+  "$comment": [
+    "Politique de permissions du depot clia, versionnee.",
+    "",
+    "defaultMode reste 'default' : en session interactive, ce qui n'est pas",
+    "dans allow est demande a l'humain. Poser 'dontAsk' ici ferait echouer",
+    "silencieusement toute commande non listee, y compris en interactif.",
+    "Pour l'execution autonome, passer --permission-mode dontAsk a l'appel :",
+    "le mode appartient a l'invocation, la politique appartient au depot.",
+    "",
+    "L'interdit de CONSTITUTION.md C2 n'est pas porte par 'deny' mais par le",
+    "hook PreToolUse. Motif : une regle deny ne compare que le debut de la",
+    "ligne, et 'git -C . commit' passe a travers. Mesure le 2026-08-12.",
+    "Voir .claude/hooks/refuser-git-en-ecriture.py, et son banc de 42 cas.",
+    "",
+    "Les regles 'ask' sur les fichiers s'ecrivent Edit(chemin) et non",
+    "Write(chemin) : Claude Code signale que Write(chemin) n'est jamais",
+    "evalue, et qu'Edit couvre tous les outils d'ecriture. C3 protege ces",
+    "documents en regime d'edition humaine, l'agent doit demander avant."
+  ],
+
+  "permissions": {
+    "defaultMode": "default",
+
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git blame:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git check-ignore:*)",
+
+      "Bash(clia:*)",
+      "Bash(bash tests/test_clia.sh)",
+      "Bash(bash .claude/hooks/test_refuser-git-en-ecriture.sh)",
+      "Bash(cue vet:*)",
+      "Bash(cue version:*)",
+
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(diff:*)",
+      "Bash(basename:*)",
+      "Bash(dirname:*)",
+      "Bash(readlink:*)",
+      "Bash(command -v:*)",
+      "Bash(bash -n:*)",
+      "Bash(chmod +x:*)",
+      "Bash(mkdir -p:*)"
+    ],
+
+    "ask": [
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(sed -i:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "WebFetch",
+
+      "Edit(CLAUDE.md)",
+      "Edit(INTENTION.md)",
+      "Edit(CONSTITUTION.md)",
+      "Edit(ARCHITECTURE.md)",
+      "Edit(workspace/session.md)",
+      "Edit(.dev/logs/*/session.md)",
+      "Edit(.dev/decisions/**)",
+      "Edit(.dev/principes/**)"
+    ],
+
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(git config --global:*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/*credentials*)",
+      "Read(**/id_rsa*)",
+      "Read(~/.ssh/**)"
+    ]
+  },
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/refuser-git-en-ecriture.py"
+          }
+        ]
+      }
+    ]
+  }
+}

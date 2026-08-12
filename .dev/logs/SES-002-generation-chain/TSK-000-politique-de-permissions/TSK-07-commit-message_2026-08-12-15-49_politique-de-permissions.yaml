@@ -1,0 +1,37 @@
+type: feat
+portee: harnais
+sujet: "rendre CONSTITUTION.md C2 mécaniquement tenue"
+corps: |
+  C2 interdit à un agent les six verbes git qui écrivent. La règle vivait
+  dans un document que l'agent lit, et rien ne l'empêchait d'appeler l'outil
+  directement : le 2026-08-10, un commit non voulu a été créé sur ce dépôt,
+  moins d'une heure après l'écriture de la garde du verbe clia, qui ne
+  couvrait que ce verbe.
+
+  Une règle deny ne suffit pas : elle ne compare que le début de la ligne, et
+  la forme avec option de répertoire passe à travers, mesuré en dépôt
+  jetable. La seule règle deny qui tienne interdit aussi la lecture, et deny
+  l'emporte sur allow : la lecture ne peut pas être rouverte ensuite.
+
+  La garde est donc un hook PreToolUse, qui lit la ligne entière et refuse
+  les six verbes sous toutes leurs formes. Un parseur, pas une expression
+  régulière : la sous-commande n'est pas le deuxième mot de la ligne, c'est
+  le premier mot qui n'est ni une option globale ni la valeur d'une option
+  globale.
+
+  Éprouvé de bout en bout : sous le mode qui contourne toutes les
+  vérifications de permission, la tentative est refusée et aucun commit n'est
+  créé.
+
+  Trois défauts trouvés en éprouvant, dont un en conditions réelles : la
+  garde a bloqué l'écriture de son propre journal, parce qu'un tableau de
+  documentation citait les verbes interdits. Le corps d'un document en place
+  est du texte, pas une commande.
+
+  Un banc de 51 cas accompagne la garde. Une garde sans test est une garde
+  dont on ignore la portée.
+fichiers:
+  - .claude/settings.json
+  - .claude/hooks/refuser-git-en-ecriture.py
+  - .claude/hooks/test_refuser-git-en-ecriture.sh
+  - .dev/logs/SES-002-generation-chain/TSK-000-politique-de-permissions/

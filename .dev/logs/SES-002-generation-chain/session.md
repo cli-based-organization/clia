@@ -55,6 +55,27 @@ Faire un plan SMART. Tout ce qui n'est pas smart doit faire l'objet d'un seul NO
 
 ## 3. [implémentation] Exécuter les plans PLN-008
 
+## 4. [planification] Préparer l'implémentation des commandes d'installation et de mise à jour
+
+Consulter ce qui a été fait dans les expérimentations précédentes => ANL-001 et $HOME/git
 
 
-## x. [planification]
+Préparer un plan d'implémentation SMART pour les commandes suivantes:
+
+```sh
+. setup.sh install --dev # Installation en mode dev
+
+clia setup init [...] # même interface cli que la commande git cli. instrumente un repo git avec système clia. ET crée un repo git si le repo n'existe pas.
+clia setup check [PATH] # vérifie si le repo PATH ou $PWD (défaut) est compatible avec clia. Répond à la questoin peut-on instrumenter ce repo avec clia sans impacter le repo existant?
+clia setup check [PATH] # vérifie si le repo PATH ou $PWD (défaut) est instrumenté avec clia et est conforme à la version déclarée
+
+clia setup upgrade [VERSION] # met à jour ce repo en compatibilité avec la version latest ou VERSION
+```
+
+Installation en mode dev => 1. seulement accessible par l'utilisateur. 2. une fois installé, clia est utilisable sur n'importe quel repo git, 3. remote == repo git local dans un répertoire au choix accessible par l'utilisateur, 4. le code utiliser est le repo de dev (remote), 5. aucune modification du remote n'est nécessaire.
+
+Créer un ISU + NON pour tout ce qui n'est pas SMART
+
+## 5. [implémentation] exécuter le plan créé à la tâche précédente
+
+

@@ -1,0 +1,13 @@
+type: chore
+portee: plans
+sujet: "clore PLN-008 : statut-plan reflète l'exécution"
+corps: |
+  PLN-008 a été exécuté pendant la tâche 1, avant que cette tâche 3 le
+  demande séparément. Les six critères de réussite sont reconfirmés à
+  froid, après les changements produits par les réponses à NON-037.
+
+  statut-plan valait propose alors que le corps du plan affirme
+  l'exécution : corrigé à execute.
+fichiers:
+  - .dev/plans/PLN-008-chaine-de-session-par-lien-symbolique.md
+  - .dev/logs/SES-002-generation-chain/TSK-003-executer-pln-008/

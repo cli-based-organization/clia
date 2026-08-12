@@ -3,7 +3,7 @@ type: plan
 id: PLN-008
 title: "Chaîne de session par lien symbolique"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-12
 initiateur: agent
 porte-sur: [RES-032, RES-034, lib/clia/session.sh]
@@ -156,7 +156,7 @@ B ──> C ──> D
 
 **Les six durées sont des estimations.** Le dépôt n'a mesuré la durée d'aucun chantier. C'est le même défaut que `PLN-007`, et il n'est pas corrigé.
 
-**Quatre plans attendent depuis leur rédaction.** `PLN-001`, `PLN-003`, `PLN-005` et `PLN-007` portent `statut-plan: propose` sans être engagés ; `PLN-004` est abandonné. Deux seulement ont été exécutés sur huit. Celui-ci l'est dans la foulée parce que la tâche est déclarée `[implémentation]`.
+**Quatre plans attendent depuis leur rédaction.** `PLN-001`, `PLN-003`, `PLN-005` et `PLN-007` portent `statut-plan: propose` sans être engagés ; `PLN-004` est abandonné. Deux seulement ont été exécutés sur huit avant celui-ci. Celui-ci l'est dans la foulée parce que la tâche est déclarée `[implémentation]`.
 
 ## Relations
 

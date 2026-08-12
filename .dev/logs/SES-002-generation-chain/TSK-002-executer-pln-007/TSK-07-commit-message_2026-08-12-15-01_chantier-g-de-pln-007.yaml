@@ -1,0 +1,26 @@
+type: feat
+portee: cli
+sujet: "clia resource check : signaler un champ obligatoire constant"
+corps: |
+  PLN-007 chantier G, exécuté seul. Les six autres chantiers du plan
+  appliquent DCN-016, décision suspendue depuis sa création le 2026-08-11,
+  et le plan porte lui-même l'objection de ne pas l'exécuter avant
+  approbation. Ce chantier n'en dépend pas : c'est une règle générale sur
+  n'importe quel champ obligatoire, pas les quatre champs que la décision
+  déclare.
+
+  Pour chaque type défini, pour chaque champ obligatoire, sur ses instances à
+  deux ou plus : si toutes portent la même valeur, la commande le signale.
+  Elle retrouve le défaut que NON-035 avait mesuré à la main sur status, 157
+  instances et une seule valeur pendant trois jours, et six autres du même
+  ordre restés invisibles jusqu'ici : initiateur toujours agent sur les
+  plans, etat toujours ouverte sur les issues, statut-decision toujours
+  propose sur les ADR.
+
+  Ce n'est pas clia validate, que ISU-007 réclame séparément : un seul
+  contrôle, placé comme verbe de la commande resource existante plutôt que
+  comme un nouvel outil.
+fichiers:
+  - lib/clia/resource.sh
+  - tests/test_clia.sh
+  - .dev/logs/SES-002-generation-chain/TSK-002-executer-pln-007/

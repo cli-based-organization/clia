@@ -874,6 +874,35 @@ out=$(runses switch --help)
 assert_contains 'ses switch --help dit ce qu il ne fait pas' 'ne fait QUE' "$out"
 
 # --------------------------------------------------------------------------
+# clia resource check
+# --------------------------------------------------------------------------
+#
+# Plusieurs instances de CHO existent deja dans DEPOT, toutes creees par
+# res new, qui pose toujours status: draft et version: 0.1.0 : elles font un
+# cas reel de champ constant, sans qu'il faille en fabriquer un a la main.
+
+out=$(run_out res check chose); rc=$?
+assert_contains 'check signale status constant' 'status' "$out"
+assert_contains 'check signale version constante' 'version' "$out"
+assert_rc 'check retourne 1 quand un champ constant est trouve' 1 "$rc"
+
+# Une instance dont le status varie fait sortir le champ du rapport.
+sed -i.bak 's/^status: draft$/status: en-cours/' \
+  "$DEPOT/.dev/choses/CHO-003-troisieme-chose.md"
+rm -f "$DEPOT/.dev/choses/CHO-003-troisieme-chose.md.bak"
+
+out=$(run_out res check chose)
+assert_not_contains 'un champ qui varie desormais n est plus signale' \
+  $'chose\tstatus' "$out"
+assert_contains 'un champ encore constant reste signale' 'version' "$out"
+
+out=$(run_out res check --help)
+assert_contains 'res check --help explique le code de retour' 'Code de retour' "$out"
+
+run res check TYPE_INCONNU_XYZ >/dev/null 2>&1
+assert_rc 'check sur un type inconnu ne trouve rien, code 0' 0 "$?"
+
+# --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"
 # --------------------------------------------------------------------------

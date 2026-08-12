@@ -19,6 +19,7 @@ Verbes :
   new TYPE DESCRIPTION     cree une ressource, slug derive de la description
   show ID                  affiche une ressource
   edit ID                  ouvre une ressource avec CLIA_EDITOR
+  check [TYPE]             signale un champ obligatoire constant sur toutes les instances
 
 TYPE se designe par son nom ou par son prefixe, sans distinction de casse :
   clia res ls objection
@@ -33,6 +34,7 @@ Aide detaillee d'un verbe :
   clia res new --help
   clia res show --help
   clia res edit --help
+  clia res check --help
 EOF
 }
 
@@ -110,6 +112,26 @@ ID accepte les memes trois formes que show.
 
   clia config set EDITOR nvim
   clia res edit RES-001
+EOF
+;;
+    check) cat <<'EOF'
+Usage : clia resource check [TYPE]
+
+Signale un champ obligatoire dont toutes les instances d'un type portent la
+meme valeur. Un tel champ n'apprend rien : c'est le defaut que NON-035 a
+mesure sur le champ status, valant draft dans les cent cinquante-sept
+instances du depot pendant trois jours, sans que rien ne le signale.
+
+Sans TYPE, tous les types definis a deux instances ou plus sont examines.
+Avec TYPE, seul celui-la.
+
+Le champ type n'est jamais signale : il est constant par construction.
+
+Sortie vide si rien n'est constant. Code de retour 1 si un champ constant est
+trouve, 0 sinon : la commande peut servir de garde dans un script.
+
+Ce n'est pas clia validate. Un seul controle, pas les dix que ISU-007
+reclame.
 EOF
 ;;
   esac
@@ -440,6 +462,88 @@ clia_resource_edit() {
 }
 
 # --------------------------------------------------------------------------
+# check : un champ obligatoire dont toutes les instances portent la meme
+# valeur
+# --------------------------------------------------------------------------
+#
+# PLN-007 chantier G. Motif : status a valu draft dans les cent cinquante-
+# sept instances du depot pendant trois jours, et rien ne le signalait.
+# NON-035 l'a mesure a la main ; ce controle le mesure a chaque appel.
+#
+# Independant de DCN-016 : il ne pose ni ne suppose les quatre champs
+# qu'elle declare, seulement une regle generale sur n'importe quel champ
+# obligatoire d'un type deja defini.
+#
+# Ce n'est pas clia validate, que ISU-007 reclame : un seul controle, pas les
+# dix V1 a V10 ni la validation de schema. Un premier pas, pas l'outil entier.
+
+clia_resource_check() {
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb check; return 0; fi
+  clia_require_repo
+
+  local defined
+  defined=$(clia_types_defined)
+
+  local rapport=''
+  local title prefixe emplacement cycle edition definition statut canonique
+  while IFS=$'\t' read -r title prefixe emplacement cycle edition definition statut canonique; do
+    [[ -n "$title" ]] || continue
+    if [[ -n "${1:-}" ]]; then
+      local voulu
+      voulu=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
+      [[ "$(printf '%s' "$canonique" | tr '[:upper:]' '[:lower:]')" == "$voulu" \
+         || "$(printf '%s' "$prefixe" | tr '[:upper:]' '[:lower:]')" == "$voulu" ]] || continue
+    fi
+
+    local dir
+    dir=$(clia_resource_dir_of "$emplacement")
+    [[ -d "$dir" ]] || continue
+
+    local -a fichiers=()
+    while IFS= read -r f; do fichiers+=("$f"); done \
+      < <(find "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" | sort)
+    local n=${#fichiers[@]}
+    (( n >= 2 )) || continue
+
+    local champs
+    champs=$(clia_frontmatter_field "$(clia_resources_dir)/${definition}.md" champs-obligatoires 2>/dev/null)
+    champs=$(printf '%s' "$champs" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+
+    local champ
+    while IFS= read -r champ; do
+      [[ -n "$champ" ]] || continue
+      # type est constant par construction : c'est ce qui definit le type,
+      # pas un defaut a signaler.
+      [[ "$champ" == "type" ]] && continue
+
+      local -a valeurs=()
+      local f v
+      for f in "${fichiers[@]}"; do
+        v=$(clia_frontmatter_field "$f" "$champ" 2>/dev/null) || v=''
+        valeurs+=("$v")
+      done
+
+      local unique
+      unique=$(printf '%s\n' "${valeurs[@]}" | sort -u | grep -c '')
+      if (( unique == 1 )); then
+        rapport+="${canonique}	${champ}	${valeurs[0]:-(vide)}	${n}
+"
+      fi
+    done <<< "$champs"
+  done <<< "$defined"
+
+  if [[ -z "$rapport" ]]; then
+    clia_warn "aucun champ obligatoire constant trouve"
+    return 0
+  fi
+
+  { printf 'TYPE\tCHAMP\tVALEUR\tINSTANCES\n'; printf '%s' "$rapport"; } \
+    | column -t -s $'\t'
+  clia_warn "un champ constant sur toutes les instances n'apprend rien : voir ISU-008"
+  return 1
+}
+
+# --------------------------------------------------------------------------
 # Dispatch
 # --------------------------------------------------------------------------
 
@@ -454,6 +558,7 @@ clia_resource_main() {
     new|create)   clia_resource_new "$@" ;;
     show|cat)     clia_resource_show "$@" ;;
     edit)         clia_resource_edit "$@" ;;
+    check)        clia_resource_check "$@" ;;
     ''|-h|--help|help) clia_resource_usage ;;
     *)
       clia_warn "verbe inconnu : $verb"

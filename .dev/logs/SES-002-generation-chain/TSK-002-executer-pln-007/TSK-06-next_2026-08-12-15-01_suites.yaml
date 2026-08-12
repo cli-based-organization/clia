@@ -1,0 +1,14 @@
+suites:
+  - id: N1
+    quoi: "Approuver, refuser ou réviser DCN-016"
+    pourquoi: "PLN-007 chantiers A à F en dépendent entièrement ; c'est le seul geste qui les débloque"
+    qui: humain
+  - id: N2
+    quoi: "Examiner les six champs constants découverts par clia res check, hors status"
+    pourquoi: "initiateur, etat, statut-decision, version : peut-être normal, peut-être un défaut"
+    qui: humain
+  - id: N3
+    quoi: "Envisager clia validate comme initiative propre"
+    pourquoi: "check est un premier fondement, pas l'outil que ISU-007 réclame"
+bloque:
+  - "PLN-007 chantiers A à F : DCN-016 suspendue, aucune approbation reçue"

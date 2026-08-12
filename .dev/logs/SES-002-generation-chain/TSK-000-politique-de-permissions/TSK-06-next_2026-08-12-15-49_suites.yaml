@@ -1,0 +1,23 @@
+suites:
+  - id: N1
+    quoi: "Inscrire dans CONSTITUTION.md que C2 est désormais outillée"
+    pourquoi: "La règle est tenue par un mécanisme ; le document qui l'énonce l'ignore"
+    qui: humain
+    note: "CONSTITUTION.md est en régime d'édition humaine, et désormais en ask"
+  - id: N2
+    quoi: "Réduire settings.local.json à ce qui sert encore"
+    pourquoi: "160 règles accumulées, dont beaucoup désignent des chemins disparus"
+    qui: humain
+  - id: N3
+    quoi: "Éprouver la politique dans un dépôt tiers"
+    pourquoi: "L'intention de SES-002 est l'usage dans n'importe quel dépôt"
+  - id: N4
+    quoi: "Décider si un agent non interactif est un acteur distinct"
+    pourquoi: "Un pipeline autonome qui va jusqu'au commit suppose de lever C2 ; c'est une décision, pas un réglage"
+    qui: humain
+    note: "Mériterait une DCN plutôt qu'un contournement par CLIA_ACTOR"
+  - id: N5
+    quoi: "Étendre le banc aux formes non couvertes"
+    pourquoi: "Trois défauts sur quatre ont été trouvés en éprouvant, un seul en usage réel"
+ouvert:
+  - "La garde ne couvre pas un appel indirect depuis un script ou un interpréteur"
