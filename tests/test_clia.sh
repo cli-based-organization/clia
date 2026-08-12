@@ -667,7 +667,8 @@ runses_out() { ( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
 # c est le defaut PDC-001 corrige le 2026-08-10, a ne pas reintroduire.
 out=$(runses --help)
 assert_contains 'ses --help liste les verbes' 'new DESCRIPTION' "$out"
-assert_contains 'ses --help donne le cycle de vie' 'todo -> open -> closed' "$out"
+assert_contains 'ses --help liste switch' 'switch SESSION' "$out"
+assert_contains 'ses --help donne le cycle de vie' 'todo -> opened -> closed' "$out"
 out=$(runses new --help)
 assert_contains 'ses new --help sans argument affiche l aide' 'Reserve a l'"'"'humain' "$out"
 assert_not_contains 'ses new --help ne reclame pas de description' 'description manquante' "$out"
@@ -710,13 +711,27 @@ assert_contains 'le refus dit qui peut agir' 'reserve a l'"'"'humain' "$out"
 
 # Ouverture.
 out=$(runses new "premiere session de travail")
-assert_contains 'ses new annonce l etat' 'etat open' "$out"
-assert_file 'ses new cree l enonce' "$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/SES-001.md"
-enonce="$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/SES-001.md"
+assert_contains 'ses new annonce l etat' 'etat opened' "$out"
+assert_file 'ses new cree l enonce' "$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/session.md"
+enonce="$SDEPOT/.dev/logs/SES-001-premiere-session-de-travail/session.md"
 assert_contains 'l enonce porte les quatre rubriques, intention d abord' \
   '# 1. INTENTION' "$(cat "$enonce")"
 assert_contains 'l enonce porte LIVRABLES' '# 3. LIVRABLES' "$(cat "$enonce")"
-assert_contains 'l enonce porte etat open' 'etat: open' "$(cat "$enonce")"
+assert_contains 'l enonce porte le critere de convergence' \
+  '# 4. CRITÈRES DE CONVERGENCE' "$(cat "$enonce")"
+assert_contains 'l enonce porte TACHES en cinquieme' '# 5. TÂCHES' "$(cat "$enonce")"
+
+# La chaine : new pose le lien, et il est relatif.
+lien="$SDEPOT/workspace/session.md"
+if [[ -L "$lien" ]]; then ok 'ses new pose un lien symbolique'
+else ko 'ses new pose un lien symbolique' 'ce n est pas un lien'; fi
+cible=$(readlink "$lien")
+assert_contains 'le lien designe l enonce neuf' 'SES-001-premiere-session-de-travail/session.md' "$cible"
+case "$cible" in
+  /*) ko 'le lien est relatif' "lien absolu : $cible" ;;
+  *)  ok 'le lien est relatif' ;;
+esac
+assert_contains 'l enonce porte etat opened' 'etat: opened' "$(cat "$enonce")"
 
 # Une session neuve ne declare aucune tache : le gabarit ne doit pas en
 # introduire une, sinon le compteur ment des la creation.
@@ -752,7 +767,7 @@ assert_champ 'une tache sans point apres le numero est comptee' 'taches' 2 "$out
 runses todo "session planifiee" >/dev/null 2>&1
 out=$(runses_out ls)
 assert_contains 'ls affiche la session planifiee' 'todo' "$out"
-assert_contains 'ls affiche la session ouverte' 'open' "$out"
+assert_contains 'ls affiche la session ouverte' 'opened' "$out"
 assert_contains 'todo n a pas de date d ouverture' 'SES-002  todo' "$out"
 out=$(runses_out status)
 assert_contains 'todo ne change pas la session en cours' 'SES-001' "$out"
@@ -764,16 +779,61 @@ assert_contains 'la fermeture est datee' 'fermeture:' "$(cat "$enonce")"
 out=$(runses_out status)
 assert_contains 'la session en cours est la nouvelle' 'SES-003' "$out"
 
-# close.
-runses close >/dev/null 2>&1
-out=$(runses ls)
-assert_not_contains 'plus aucune session ouverte' ' open ' "$out"
-( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human "$CLIA_BIN" ses close ) \
-  >/dev/null 2>&1
-assert_rc 'close sans session ouverte echoue en 1' 1 "$?"
+# switch ne fait QUE deplacer le lien : aucun etat ne change.
+avant=$(grep -h '^etat:' "$SDEPOT"/.dev/logs/SES-*/session.md | tr '\n' ' ')
+runses switch 1 >/dev/null 2>&1
+apres=$(grep -h '^etat:' "$SDEPOT"/.dev/logs/SES-*/session.md | tr '\n' ' ')
+if [[ "$avant" == "$apres" ]]; then ok 'switch ne touche aucun etat'
+else ko 'switch ne touche aucun etat' "avant [$avant] apres [$apres]"; fi
+assert_contains 'switch deplace le lien' 'SES-001-premiere-session-de-travail' \
+  "$(readlink "$SDEPOT/workspace/session.md")"
 
-# Le fichier vivant tient lieu de session en cours quand aucun enonce n est
-# ouvert. C est l etat du depot clia lui-meme.
+# Le lien fait autorite : status suit le lien, meme vers une session close.
+out=$(runses_out status)
+assert_contains 'status suit le lien' 'SES-001' "$out"
+assert_champ 'le lien peut designer une session close' 'etat' 'closed' "$out"
+
+# switch accepte le slug et le numero seul.
+runses switch premiere-session-de-travail >/dev/null 2>&1
+assert_contains 'switch accepte le slug' 'SES-001-premiere-session-de-travail' \
+  "$(readlink "$SDEPOT/workspace/session.md")"
+runses switch SES-003 >/dev/null 2>&1
+assert_contains 'switch accepte l alias complet' 'SES-003' \
+  "$(readlink "$SDEPOT/workspace/session.md")"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
+  "$CLIA_BIN" ses switch SES-999 ) >/dev/null 2>&1
+assert_rc 'switch sur une session inconnue echoue en 1' 1 "$?"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
+  "$CLIA_BIN" ses switch ) >/dev/null 2>&1
+assert_rc 'switch sans alias echoue en 2' 2 "$?"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=agent \
+  "$CLIA_BIN" ses switch 1 ) >/dev/null 2>&1
+assert_rc 'switch refuse CLIA_ACTOR=agent' 3 "$?"
+
+# ls voit toutes les sessions, pas seulement celle que le lien designe.
+out=$(runses_out ls)
+assert_contains 'ls voit la premiere session' 'SES-001' "$out"
+assert_contains 'ls voit la session planifiee' 'SES-002' "$out"
+assert_contains 'ls voit la troisieme' 'SES-003' "$out"
+
+# close ferme la session que le lien designe.
+runses switch SES-003 >/dev/null 2>&1
+runses close >/dev/null 2>&1
+out=$(runses_out ls)
+assert_not_contains 'plus aucune session ouverte' ' opened ' "$out"
+
+# Le point d entree ne s ecrase pas : un fichier ordinaire non vide est
+# preserve, parce qu il porte peut-etre le seul exemplaire de son contenu.
+rm -f "$SDEPOT/workspace/session.md"
+printf 'contenu precieux\n' > "$SDEPOT/workspace/session.md"
+( cd "$SDEPOT" && CLIA_REPO_ROOT="$SDEPOT" CLIA_ACTOR=human \
+  "$CLIA_BIN" ses switch 1 ) >/dev/null 2>&1
+assert_rc 'switch refuse d ecraser un fichier ordinaire' 1 "$?"
+assert_contains 'le fichier ordinaire est preserve' 'contenu precieux' \
+  "$(cat "$SDEPOT/workspace/session.md")"
+
+# Sans lien, le fichier vivant tient lieu de session en cours. C est le repli
+# d un depot neuf ou non migre.
 cat > "$SDEPOT/workspace/session.md" <<'FIN'
 # CONTEXTE
 
@@ -790,6 +850,28 @@ assert_contains 'le fichier vivant tient lieu de session' '(vivant)' "$out"
 assert_champ 'les taches du fichier vivant sont comptees' 'taches' 2 "$out"
 out=$(runses close)
 assert_contains 'le fichier vivant ne peut pas etre ferme' 'ne peut pas etre ferme' "$out"
+out=$(runses status)
+assert_contains 'l avertissement de repli ne sort que la' 'session non enregistree' "$out"
+
+# Un lien casse est signale, non silencieux.
+rm -f "$SDEPOT/workspace/session.md"
+ln -s "$SDEPOT/.dev/logs/SES-404-absente/session.md" "$SDEPOT/workspace/session.md"
+out=$(runses status)
+assert_contains 'un lien casse est signale' 'ne pointe sur rien' "$out"
+rm -f "$SDEPOT/workspace/session.md"
+
+# Un enonce depose a la main n a pas forcement de frontmatter : l afficher
+# comme le fichier vivant serait faux.
+mkdir -p "$SDEPOT/.dev/logs/SES-009-deposee-a-la-main"
+printf '# Une session sans frontmatter\n\n## 1. [analyse] Une tache\n' \
+  > "$SDEPOT/.dev/logs/SES-009-deposee-a-la-main/session.md"
+out=$(runses_out ls)
+assert_contains 'un enonce sans frontmatter garde son numero' 'SES-009' "$out"
+assert_not_contains 'il n est pas pris pour le fichier vivant' '(vivant)' "$out"
+assert_contains 'son etat est declare inconnu' '(non declare)' "$out"
+
+out=$(runses switch --help)
+assert_contains 'ses switch --help dit ce qu il ne fait pas' 'ne fait QUE' "$out"
 
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------

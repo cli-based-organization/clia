@@ -12,8 +12,8 @@ package clia
 	status: #Status
 	// Une session en planification n'a pas de date d'ouverture.
 	ouverture: #Date | "À RENSEIGNER"
-	// Cycle de vie : todo -> open -> closed.
-	etat: "todo" | "open" | "closed"
+	// Cycle de vie : todo -> opened -> closed.
+	etat: "todo" | "opened" | "closed"
 	// Inscrite par clia ses close.
 	fermeture?: #Date
 }

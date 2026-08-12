@@ -11,7 +11,7 @@ edition: hybride
 famille: preparation
 champs-obligatoires: [type, id, title, status, ouverture, etat]
 relations-admissibles: [session, tache, ressource, intention, objection]
-sections: [INTENTION, CONTEXTE, LIVRABLES, TÂCHES]
+sections: [INTENTION, CONTEXTE, LIVRABLES, CRITÈRES DE CONVERGENCE, TÂCHES]
 skill: skl-006-ressource-de-preparation
 adr: ADR-013
 statut: actif
@@ -29,14 +29,15 @@ Ce document définit le type `session`. Sa fonction est de donner au travail une
 
 Une ressource composite. Son répertoire contient un répertoire par tâche.
 
-Quatre rubriques, dans cet ordre.
+Cinq rubriques, dans cet ordre.
 
 | Rubrique | Rôle |
 |---|---|
 | **1. INTENTION** | Ce que la session vise |
 | **2. CONTEXTE** | La situation dans laquelle le travail s'ouvre |
 | **3. LIVRABLES** | Ce que la session produit |
-| **4. TÂCHES** | Ce qui est demandé, dans l'ordre où l'humain l'écrit |
+| **4. CRITÈRES DE CONVERGENCE** | Ce qui permet de clore la session |
+| **5. TÂCHES** | Ce qui est demandé, dans l'ordre où l'humain l'écrit |
 
 L'ordre n'est pas indifférent : l'intention vient avant le contexte, comme dans les quatre sessions archivées du dépôt. Une tâche est une rubrique de **niveau deux**, ouverte par son numéro : `## 12. [bogue] ...`. Le niveau suffit à la distinguer d'une rubrique de session.
 
@@ -55,15 +56,15 @@ L'ordre n'est pas indifférent : l'intention vient avant le contexte, comme dans
 | Champ | Valeurs | Rôle |
 |---|---|---|
 | `ouverture` | Date ISO | Quand la session a été ouverte |
-| `etat` | `todo`, `open`, `closed` | Où en est la session |
+| `etat` | `todo`, `opened`, `closed` | Où en est la session |
 
-Le cycle est `todo => open => closed`. Une session `todo` est planifiée et n'a pas de date d'ouverture.
+Le cycle est `todo => opened => closed`. Une session `todo` est planifiée et n'a pas de date d'ouverture.
 
-**Deux choses ont disparu de la version précédente de cette définition**, et ce n'est pas anodin.
+**Le critère de convergence est une rubrique obligatoire.** Il l'avait perdue le 2026-08-11, et l'humain l'a rétabli le lendemain : `ADR-002` fonde la segmentation du travail sur l'intention, le livrable et le critère de convergence, et les trois ont désormais leur rubrique.
 
-Le **critère de convergence** n'est plus une rubrique. `ADR-002` le nomme et `workspace/session.md` en porte un. `NON-037` Q1 pose la question.
+Il n'a pas à être défini à l'ouverture. `ADR-002` le pose, et la rubrique peut rester `À rédiger`.
 
-L'état `abandonnee` n'existe plus : une session abandonnée est `closed`, indistinguable d'une session aboutie. `NON-037` Q2.
+L'état `abandonnee` n'existe plus : une session abandonnée est `closed`, indistinguable d'une session aboutie. `ISU-011` porte l'écart, à la demande de l'humain.
 
 ## Test d'admission
 
@@ -132,6 +133,6 @@ Il ne peut pas être fermé : il ne porte pas de frontmatter. L'enregistrer comm
 |---|---|
 | Le fichier de session vivant devient-il une `SES` à sa clôture, et par quel geste | `NON-028` |
 | Le répertoire de session actuel porte une date, la nouvelle forme un numéro | `NON-028` |
-| Le critère de convergence n'a plus de rubrique | `NON-037` |
-| Une session abandonnée est indistinguable d'une session aboutie | `NON-037` |
-| `todo`, `open` et `closed` sont anglais dans un frontmatter français | `NON-037` |
+| Aucun geste ne consulte le critère de convergence | `ISU-010` |
+| Une session abandonnée est indistinguable d'une session aboutie | `ISU-011` |
+| Un lien pointant une session non ouverte s'affiche comme session en cours | `NON-038` |

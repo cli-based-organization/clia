@@ -1,0 +1,59 @@
+type: feat
+portee: cli
+sujet: "chaîne de session par lien symbolique, et verbe switch"
+corps: |
+  workspace/session.md devient un lien vers l'énoncé de la session en cours :
+  le point d'entrée déclaré par CLAUDE.md ne bouge plus quand la session
+  change. L'humain avait posé ce lien à la main ; le système l'inscrit.
+
+  ses new pose le lien sur l'énoncé neuf. ses switch ne fait que le déplacer :
+  il n'ouvre pas la session pointée, ne ferme pas l'ancienne, et ne touche
+  aucun état. Le lien peut donc désigner une session close, et status
+  l'affiche telle quelle. C'est ce que « ne fait que » veut dire.
+
+  Le lien posé est relatif, alors que celui posé à la main est absolu : un
+  lien absolu casse au clone et au déplacement, et l'intention de SES-002 est
+  de rendre le système utilisable dans n'importe quel dépôt. La commande
+  refuse d'écraser un workspace/session.md qui serait un fichier ordinaire non
+  vide.
+
+  L'énoncé se nomme session.md, non SES-<SEQ>.md : le répertoire porte déjà le
+  numéro, et c'est la forme que l'humain a adoptée.
+
+  Le critère de convergence redevient une rubrique obligatoire. ADR-002 fonde
+  la segmentation du travail sur l'intention, le livrable et le critère : les
+  trois ont de nouveau leur rubrique.
+
+  Un défaut trouvé en validant : un énoncé déposé à la main sans frontmatter
+  s'affichait comme le fichier vivant. L'identifiant vient désormais du nom du
+  répertoire à défaut du frontmatter, et un état absent se déclare non déclaré
+  plutôt que supposé ouvert.
+
+  PLN-008 ordonne le travail en six chantiers, chacun à livrable unique,
+  critère exécutable et limite déclarée. Cinq points n'ont pas pu en devenir
+  un et tiennent dans un seul NON, comme la tâche le demande : NON-038.
+
+  Les réponses à NON-037 sont arrivées pendant l'implémentation. Trois des
+  cinq points de NON-038 en sortent : l'état abandonnee et le critère de
+  convergence deviennent ISU-011 et ISU-010 à la demande de l'humain, et la
+  valeur open devient opened, celle que j'avais posée seul la veille étant
+  fausse. Deux réponses disent ne pas comprendre l'objection : NON-037 reçoit
+  une rubrique de précision, sans que les blocs de réponse soient touchés. La
+  plus importante lève un malentendu : le lien symbolique est ce qui rend
+  CLAUDE.md stable, il n'impose pas de le modifier, et CLAUDE.md n'est pas
+  touché.
+fichiers:
+  - lib/clia/session.sh
+  - .dev/schemas/session.cue
+  - .dev/schemas/session.input.cue
+  - .dev/objections/NON-037-frontiere-et-forme-de-la-session.md
+  - .dev/issues/ISU-010-le-critere-de-convergence-n-est-verifie-par-rien.md
+  - .dev/issues/ISU-011-une-session-abandonnee-ne-se-distingue-pas-d-une-session-aboutie.md
+  - .dev/logs/SES-002-generation-chain/session.md
+  - .dev/ressources/RES-032-log.md
+  - .dev/ressources/RES-034-session.md
+  - .dev/templates/session.template.md
+  - tests/test_clia.sh
+  - .dev/plans/PLN-008-chaine-de-session-par-lien-symbolique.md
+  - .dev/objections/NON-038-ce-que-la-chaine-de-session-laisse-ouvert.md
+  - .dev/logs/SES-002-generation-chain/TSK-001-ajuster-clia-ses/

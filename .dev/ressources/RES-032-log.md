@@ -104,6 +104,45 @@ TSK-<SEQ_TYPE>-<TYPE_LOG>_<YYYY-MM-DD-HH-MM>_<SLUG>.md
 
 Exemple : `TSK-01-demande_2026-08-11-09-06_systeme-de-journalisation.md`
 
+## Le répertoire de journal, et la chaîne de session
+
+Le répertoire de journal d'une session contient **l'énoncé de cette session** en plus des répertoires de tâches.
+
+```
+.dev/logs/SES-<SEQ>-<SLUG>/
+    session.md              l'énoncé de la session
+    TSK-001-<slug>/         le journal d'une tâche
+    TSK-002-<slug>/
+```
+
+**L'énoncé se nomme `session.md`, non `SES-<SEQ>.md`.** Le répertoire porte déjà le numéro ; le répéter dans le nom du fichier n'ajoute rien.
+
+### Le point d'entrée est un lien
+
+`workspace/session.md` n'est pas un fichier : c'est un **lien symbolique** vers l'énoncé de la session en cours.
+
+| Ce que le lien permet | Pourquoi cela compte |
+|---|---|
+| Le point d'entrée ne bouge pas | `CLAUDE.md` en fait le seul point d'entrée des demandes |
+| La session change sans que rien d'autre change | Aucun document de harnais n'est à réécrire |
+| Les sessions antérieures restent lisibles | Elles ne sont ni déplacées ni archivées |
+
+**Le lien est relatif.** Un lien absolu casse au clone du dépôt, à son déplacement, et dans tout dépôt dont le chemin diffère.
+
+**Le lien fait autorité.** Ce qu'il désigne est la session en cours, même si l'énoncé pointé porte un état autre qu'`open` : `clia ses switch` déplace le lien sans toucher aucun état.
+
+`ADR-017` D3 emploie déjà ce mécanisme pour `INTENTION.md`.
+
+### Ce que les commandes en font
+
+| Commande | Effet sur le lien |
+|---|---|
+| `clia ses new DESCRIPTION` | Le fait pointer sur l'énoncé neuf |
+| `clia ses switch SESSION` | Le fait pointer ailleurs, **et rien d'autre** |
+| `clia ses close`, `status`, `ls`, `todo` | Aucun |
+
+La commande refuse d'écraser un `workspace/session.md` qui serait un fichier ordinaire non vide : il porte peut-être le seul exemplaire de son contenu.
+
 ## Ressources sources et méthode de génération
 
 | Élément | Valeur |

@@ -1,0 +1,28 @@
+suites:
+  - id: N1
+    quoi: "Répondre aux deux questions restantes de NON-038"
+    pourquoi: "Trois des cinq points ont été tranchés pendant la tâche ; deux subsistent"
+    qui: humain
+  - id: N2
+    quoi: "Réunir les deux répertoires de journal de SES-001"
+    pourquoi: "L'avancement affiché est 10 sur 35 au lieu de 32"
+    depend-de: [NON-028-Q1]
+  - id: N3
+    quoi: "Donner un frontmatter à l'énoncé de SES-001"
+    pourquoi: "Il ne déclare ni état, ni ouverture, ni identifiant"
+    qui: humain
+  - id: N4
+    quoi: "Rendre le lien réel relatif"
+    pourquoi: "Il est absolu et casserait au clone ; l'intention de SES-002 est l'usage dans n'importe quel dépôt"
+    qui: humain
+    commande: "clia ses switch SES-002"
+  - id: N5
+    quoi: "Éprouver clia dans un dépôt tiers"
+    pourquoi: "L'intention de SES-002 n'est vérifiée par aucun usage réel hors de ce dépôt"
+  - id: N6
+    quoi: "Relire les objections concernées avant de clore une tâche, pas seulement avant de commencer"
+    pourquoi: "Les cinq réponses à NON-037 sont arrivées pendant l'implémentation et n'ont été vues qu'à la clôture"
+    porte-sur: MET-003
+ouvert:
+  - "ISU-010 : aucun geste ne consulte le critère de convergence"
+  - "ISU-011 : une session abandonnée ne se distingue pas d'une session aboutie"

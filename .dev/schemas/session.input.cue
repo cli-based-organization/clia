@@ -10,5 +10,5 @@ package clia
 	resume:       string & !=""
 	discriminant: =~"^[0-9]{3}$"
 	ouverture:    =~"^[0-9]{4}-[0-9]{2}-[0-9]{2}$" | "À RENSEIGNER"
-	etat:         "todo" | "open" | "closed"
+	etat:         "todo" | "opened" | "closed"
 }

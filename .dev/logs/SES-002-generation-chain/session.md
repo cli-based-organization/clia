@@ -4,7 +4,7 @@ id: SES-002
 title: "generation chain"
 status: draft
 ouverture: 2026-08-11
-etat: open
+etat: opened
 ---
 
 # SES-002 - generation chain
@@ -50,3 +50,11 @@ Aussi, `clia ses switch SESSION_ALIAS` ne fait que modifier le lien symbolique
 TODO: 
 
 Faire un plan SMART. Tout ce qui n'est pas smart doit faire l'objet d'un seul NON.
+
+## 2. [implémentation] Exécuter les plans PLN-007
+
+## 3. [implémentation] Exécuter les plans PLN-008
+
+
+
+## x. [planification]

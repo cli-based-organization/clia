@@ -23,7 +23,11 @@ etat: {{etat}}
 
 À rédiger.
 
-# 4. TÂCHES
+# 4. CRITÈRES DE CONVERGENCE
+
+À rédiger. Ce qui permet de clore la session.
+
+# 5. TÂCHES
 
 À rédiger. Une rubrique de niveau deux par tâche, numérotée :
 `## <n>. [type] Titre de la tâche`

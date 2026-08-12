@@ -5,8 +5,14 @@
 # repertoire : son enonce, et le journal des taches qui la composent.
 #
 #   .dev/logs/SES-<SEQ>-<SLUG>/
-#       SES-<SEQ>.md          l'enonce
+#       session.md            l'enonce
 #       TSK-<SEQ>-<slug>/     le journal d'une tache
+#
+#   workspace/session.md -> lien symbolique vers l'enonce de la session en cours
+#
+# Le lien est la chaine de session : CLAUDE.md declare workspace/session.md
+# comme seul point d'entree des demandes, et le lien le fait pointer sur la
+# session courante sans que le point d'entree bouge.
 #
 # Decisions appliquees :
 #   RES-034     definition du type session
@@ -17,7 +23,7 @@
 #   MET-003     la tache est journalisee en sept etapes, la septieme etant le
 #               message de commit
 #
-# Cycle de vie : todo -> open -> closed.
+# Cycle de vie : todo -> opened -> closed.
 
 # --------------------------------------------------------------------------
 # Localisation
@@ -33,36 +39,95 @@ clia_session_vivant() {
 }
 
 # Les enonces de session, un chemin par ligne, dans l'ordre des numeros.
+#
+# L'enonce se nomme session.md, et non SES-<SEQ>.md : c'est la forme que
+# l'humain a adoptee le 2026-08-12, et le repertoire porte deja le numero.
 clia_session_files() {
   local dir
   dir=$(clia_session_dir)
   [[ -d "$dir" ]] || return 0
-  find "$dir" -mindepth 2 -maxdepth 2 -type f -name 'SES-*.md' 2>/dev/null | sort
+  find "$dir" -mindepth 2 -maxdepth 2 -type f -name 'session.md' 2>/dev/null | sort
 }
 
-# La session ouverte.
+# Resout un alias de session vers son enonce. Accepte SES-002, 002, 2 et le
+# slug du repertoire, sans distinction de casse. C'est le mecanisme de
+# clia_registre_find, repris plutot que reinvente.
+clia_session_find() {
+  local wanted="$1" dir matches seq
+  dir=$(clia_session_dir)
+  [[ -d "$dir" ]] || return 1
+
+  if [[ "$wanted" =~ ^[0-9]{1,3}$ ]]; then
+    seq=$(printf '%03d' "$((10#$wanted))")
+    wanted="SES-${seq}"
+  fi
+  wanted=$(printf '%s' "$wanted" | tr '[:upper:]' '[:lower:]')
+
+  matches=$(clia_session_files | while IFS= read -r f; do
+    local base
+    base=$(basename "$(dirname "$f")" | tr '[:upper:]' '[:lower:]')
+    if [[ "$base" == "$wanted" || "$base" == "$wanted"-* \
+          || "$base" == *-"$wanted" || "${base#ses-[0-9][0-9][0-9]-}" == "$wanted" ]]; then
+      printf '%s\n' "$f"
+    fi
+  done)
+  [[ -n "$matches" ]] || return 1
+
+  local count
+  count=$(printf '%s\n' "$matches" | grep -c '')
+  if (( count > 1 )); then
+    clia_warn "alias de session ambigu : $1"
+    printf '%s\n' "$matches" | sed "s#^$CLIA_REPO_ROOT_RESOLVED/#      #" >&2
+    return 1
+  fi
+  printf '%s\n' "$matches"
+}
+
+# La session en cours, par ordre d'autorite decroissant.
 #
-# Deux etats du depot sont admis, et le second est celui d'aujourd'hui :
-#   - un enonce porte etat: open. C'est lui.
-#   - aucun enonce n'existe. C'est alors le fichier vivant, que RES-034 nomme
-#     deja le point d'entree vivant de la session en cours.
-#
-# Sans ce repli, la commande n'aurait rien a dire d'un depot qui travaille,
-# et serait livree inutilisable.
+#   1. La cible du lien workspace/session.md. C'est la chaine de session, et
+#      elle fait autorite : le lien EST ce que le depot designe comme session
+#      courante. Il peut donc pointer sur une session close, si switch l'a
+#      voulu.
+#   2. A defaut de lien, l'enonce qui porte etat: opened.
+#   3. A defaut d'enonce, le fichier vivant lui-meme. Repli pour un depot neuf
+#      ou non migre : sans lui, la commande n'aurait rien a dire d'un depot qui
+#      travaille.
 clia_session_ouverte() {
+  local vivant cible
+  vivant=$(clia_session_vivant)
+
+  if [[ -L "$vivant" ]]; then
+    cible=$(readlink -f "$vivant" 2>/dev/null) || cible=''
+    if [[ -n "$cible" && -f "$cible" ]]; then
+      printf '%s\n' "$cible"
+      return 0
+    fi
+    clia_warn "le lien workspace/session.md ne pointe sur rien"
+    clia_hint "clia ses switch SESSION le repointe"
+    return 1
+  fi
+
   local f
   while IFS= read -r f; do
     [[ -n "$f" ]] || continue
-    if [[ "$(clia_frontmatter_field "$f" etat 2>/dev/null)" == "open" ]]; then
+    if [[ "$(clia_frontmatter_field "$f" etat 2>/dev/null)" == "opened" ]]; then
       printf '%s\n' "$f"
       return 0
     fi
   done < <(clia_session_files)
 
-  local vivant
-  vivant=$(clia_session_vivant)
   [[ -f "$vivant" ]] || return 1
   printf '%s\n' "$vivant"
+}
+
+# Vrai quand la session en cours n'est qu'un fichier vivant sans enonce, cas
+# de repli. Sert a n'avertir que dans ce cas : l'avertissement s'affichait
+# encore alors que la session etait enregistree et que le lien pointait
+# dessus. Corrige le 2026-08-12.
+clia_session_est_repli() {
+  local file="$1"
+  [[ "$file" == "$(clia_session_vivant)" ]] && ! [[ -L "$file" ]]
 }
 
 # Les repertoires de journal d'une session, un par ligne, le plus recent
@@ -225,18 +290,38 @@ clia_session_titre() {
   printf '(sans titre)\n'
 }
 
+# L'identifiant d'une session.
+#
+# Le frontmatter d'abord. A defaut, le numero que porte le nom du repertoire :
+# un enonce depose a la main peut n'avoir pas encore de frontmatter, et
+# l'afficher comme le fichier vivant serait faux. Constate le 2026-08-12 sur
+# SES-001, dont l'enonce existait sans frontmatter.
 clia_session_id() {
-  local file="$1" id
+  local file="$1" id parent
   id=$(clia_frontmatter_field "$file" id 2>/dev/null) || id=''
   [[ -n "$id" ]] && { printf '%s\n' "$id"; return 0; }
+
+  if [[ "$file" != "$(clia_session_vivant)" ]]; then
+    parent=$(basename "$(dirname "$file")")
+    if [[ "$parent" =~ ^SES-[0-9]{3} ]]; then
+      printf '%s\n' "${parent:0:7}"
+      return 0
+    fi
+  fi
   printf '(vivant)\n'
 }
 
+# L'etat d'une session.
+#
+# Le fichier vivant sans frontmatter est la session en cours par definition :
+# son etat vaut opened. Un enonce sans frontmatter ne declare rien, et le dire
+# vaut mieux que de supposer qu'il est ouvert.
 clia_session_etat() {
   local file="$1" etat
   etat=$(clia_frontmatter_field "$file" etat 2>/dev/null) || etat=''
   [[ -n "$etat" ]] && { printf '%s\n' "$etat"; return 0; }
-  printf 'open\n'
+  [[ "$file" == "$(clia_session_vivant)" ]] && { printf 'opened\n'; return 0; }
+  printf '(non declare)\n'
 }
 
 # --------------------------------------------------------------------------
@@ -253,15 +338,19 @@ Verbes :
   new DESCRIPTION     ouvre une session. Ferme celle qui est ouverte
   close               ferme la session ouverte
   todo DESCRIPTION    cree une session en planification
+  switch SESSION      fait pointer le lien sur une autre session
 
 Cycle de vie :
-  todo -> open -> closed
+  todo -> opened -> closed
 
-Une session est un repertoire de .dev/logs/ : son enonce SES-<SEQ>.md, et le
-journal des taches qui la composent.
+Une session est un repertoire de .dev/logs/ : son enonce session.md, et le
+journal des taches qui la composent. workspace/session.md est un lien
+symbolique vers l'enonce de la session en cours : le point d'entree declare
+par CLAUDE.md ne bouge pas quand la session change.
 
-new, close et todo sont reserves a l'humain : ils decident de ce sur quoi le
-depot travaille, et ecrivent l'etat d'un document en regime d'edition humaine.
+new, close, todo et switch sont reserves a l'humain : ils decident de ce sur
+quoi le depot travaille, et ecrivent l'etat d'un document en regime d'edition
+humaine.
 
 Aide detaillee d'un verbe :
   clia ses status --help
@@ -269,6 +358,7 @@ Aide detaillee d'un verbe :
   clia ses new --help
   clia ses close --help
   clia ses todo --help
+  clia ses switch --help
 EOF
 }
 
@@ -286,7 +376,7 @@ Une tache est comptee faite quand son journal porte le message de commit,
 septieme et derniere etape de MET-003. Le critere ne dit pas qu'une tache
 est bien faite : il dit qu'elle est journalisee jusqu'au bout.
 
-La session en cours est l'enonce qui porte etat: open. A defaut, c'est le
+La session en cours est l'enonce qui porte etat: opened. A defaut, c'est le
 fichier de session vivant, workspace/session.md.
 EOF
 ;;
@@ -307,9 +397,11 @@ Usage : clia session new DESCRIPTION
 
 Ouvre une session. La session ouverte, s'il y en a une, est fermee d'abord.
 
-Cree le repertoire .dev/logs/SES-<SEQ>-<SLUG>/ et son enonce SES-<SEQ>.md,
-dont les quatre rubriques sont a rediger : INTENTION, CONTEXTE, LIVRABLES,
-TACHES.
+Cree le repertoire .dev/logs/SES-<SEQ>-<SLUG>/ et son enonce session.md, dont
+les cinq rubriques sont a rediger : INTENTION, CONTEXTE, LIVRABLES, CRITERES
+DE CONVERGENCE, TACHES.
+
+Fait ensuite pointer workspace/session.md sur le nouvel enonce.
 
 Reserve a l'humain. Ouvrir une session decide de ce sur quoi le depot
 travaille : ADR-002 en fait un acte de l'humain, et CONSTITUTION.md C3
@@ -326,6 +418,27 @@ Reserve a l'humain.
 
 Le fichier de session vivant ne peut pas etre ferme : il ne porte pas de
 frontmatter. Enregistrez-le d'abord comme enonce.
+EOF
+;;
+    switch) cat <<'EOF'
+Usage : clia session switch SESSION
+
+Fait pointer workspace/session.md sur l'enonce d'une autre session.
+
+Il ne fait QUE cela : il n'ouvre pas la session pointee, ne ferme pas
+l'ancienne, et ne touche aucun etat. Le lien peut donc designer une session
+close ou en planification, et clia ses status l'affichera telle quelle.
+
+La session se designe par son alias, son numero seul ou son slug :
+  clia ses switch SES-001
+  clia ses switch 1
+  clia ses switch generation-chain
+
+Le lien pose est relatif : il survit au clone et au deplacement du depot.
+
+Reserve a l'humain.
+
+Alias : sw
 EOF
 ;;
     todo) cat <<'EOF'
@@ -383,7 +496,7 @@ clia_session_status() {
     printf 'depuis\t%s\n' "$(clia_session_duree "$ouverture")"
   } | column -t -s $'\t'
 
-  if [[ "$file" == "$(clia_session_vivant)" ]]; then
+  if clia_session_est_repli "$file"; then
     clia_warn "session non enregistree : le fichier vivant tient lieu d'enonce"
     clia_hint "clia ses new l'enregistrerait sous .dev/logs/SES-<SEQ>-<SLUG>/"
   fi
@@ -408,7 +521,7 @@ clia_session_ls() {
     local vivant ouverte
     vivant=$(clia_session_vivant)
     ouverte=$(clia_session_ouverte 2>/dev/null) || ouverte=''
-    if [[ -f "$vivant" && "$ouverte" == "$vivant" ]]; then
+    if [[ -f "$vivant" ]] && clia_session_est_repli "$ouverte"; then
       clia_session_ls_ligne "$vivant"
     fi
   } | column -t -s $'\t'
@@ -451,6 +564,37 @@ clia_session_refuser_agent() {
   return 3
 }
 
+# Pose workspace/session.md en lien vers un enonce.
+#
+# Le lien est RELATIF. Celui pose a la main le 2026-08-12 etait absolu : un
+# lien absolu casse au clone, au deplacement, et dans tout depot dont le
+# chemin differe. L'intention de SES-002 est de rendre le systeme utilisable
+# dans n'importe quel depot, et le lien relatif traverse ces trois cas.
+#
+# Le fichier remplace est le point d'entree declare par CLAUDE.md : la
+# commande refuse d'ecraser un fichier ordinaire non vide, qu'elle
+# detruirait.
+clia_session_poser_lien() {
+  local cible="$1" vivant dir rel
+  vivant=$(clia_session_vivant)
+  dir=$(dirname "$vivant")
+
+  if [[ -e "$vivant" && ! -L "$vivant" ]]; then
+    if [[ -s "$vivant" ]]; then
+      clia_warn "workspace/session.md est un fichier, non un lien"
+      clia_hint "clia refuse de l'ecraser : il porte peut-etre le seul exemplaire"
+      clia_hint "deplacez-le sous .dev/logs/SES-<SEQ>-<SLUG>/session.md, puis reessayez"
+      return 1
+    fi
+    rm -f "$vivant"
+  fi
+
+  mkdir -p "$dir"
+  rel=$(realpath --relative-to="$dir" "$cible" 2>/dev/null) || rel="$cible"
+  ln -sfn "$rel" "$vivant"
+  clia_warn "workspace/session.md -> $rel"
+}
+
 clia_session_next_seq() {
   local dir max
   dir=$(clia_session_dir)
@@ -480,7 +624,12 @@ clia_session_ecrire_enonce() {
     printf '# 1. INTENTION\n\nÀ rédiger.\n\n'
     printf '# 2. CONTEXTE\n\nÀ rédiger.\n\n'
     printf '# 3. LIVRABLES\n\nÀ rédiger.\n\n'
-    printf '# 4. TÂCHES\n\n'
+    # ADR-002 fonde la segmentation du travail sur l'intention, le livrable et
+    # le critere de convergence. Ce dernier avait perdu sa rubrique le
+    # 2026-08-11 ; l'humain l'a retabli le lendemain. Il n'a pas a etre defini
+    # a l'ouverture.
+    printf '# 4. CRITÈRES DE CONVERGENCE\n\nÀ rédiger. Ce qui permet de clore la session.\n\n'
+    printf '# 5. TÂCHES\n\n'
     # Aucune tache d'exemple : elle serait comptee, et une session neuve
     # afficherait une tache alors qu'elle n'en porte aucune.
     printf 'À rédiger. Une rubrique de niveau deux par tâche, numérotée :\n'
@@ -499,7 +648,7 @@ clia_session_creer() {
   [[ -n "$slug" ]] || { clia_warn "la description ne produit aucun slug"; return 2; }
   seq=$(clia_session_next_seq)
   dir="$(clia_session_dir)/SES-${seq}-${slug}"
-  file="$dir/SES-${seq}.md"
+  file="$dir/session.md"
 
   if [[ -e "$dir" ]]; then
     clia_warn "existe deja : ${dir#$CLIA_REPO_ROOT_RESOLVED/}"
@@ -517,7 +666,7 @@ clia_session_creer() {
 
   printf '%s\n' "$file"
   clia_warn "cree : ${file#$CLIA_REPO_ROOT_RESOLVED/} (etat $etat)"
-  clia_hint "clia ne redige pas le contenu : les quatre rubriques sont a remplir"
+  clia_hint "clia ne redige pas le contenu : les cinq rubriques sont a remplir"
 }
 
 clia_session_new() {
@@ -530,20 +679,48 @@ clia_session_new() {
   # deux sessions ouvertes rendraient status ambigu.
   local ouverte
   ouverte=$(clia_session_ouverte 2>/dev/null) || ouverte=''
-  if [[ -n "$ouverte" && "$ouverte" != "$(clia_session_vivant)" ]]; then
+  if [[ -n "$ouverte" ]] && ! clia_session_est_repli "$ouverte"; then
     clia_session_fermer_fichier "$ouverte" || return 1
   elif [[ -n "$ouverte" ]]; then
     clia_warn "le fichier de session vivant reste en place, il n'est pas ferme"
     clia_hint "${ouverte#$CLIA_REPO_ROOT_RESOLVED/} ne porte pas de frontmatter"
   fi
 
-  clia_session_creer open "$@"
+  local enonce
+  enonce=$(clia_session_creer opened "$@") || return 1
+  clia_session_poser_lien "$enonce"
 }
 
 clia_session_todo() {
   if clia_is_help "${1:-}"; then clia_session_usage_verb todo; return 0; fi
   clia_session_refuser_agent todo || return 3
   clia_session_creer todo "$@"
+}
+
+# switch : ne fait QUE deplacer le lien.
+#
+# Il n'ouvre pas la session pointee, ne ferme pas l'ancienne, et ne touche
+# aucun champ etat. C'est ce que la demande dit, et la consequence est que le
+# lien peut designer une session close ou en planification : clia ses status
+# l'affichera telle quelle. NON-038 Q1 porte la question.
+clia_session_switch() {
+  if clia_is_help "${1:-}"; then clia_session_usage_verb switch; return 0; fi
+  clia_session_refuser_agent switch || return 3
+  clia_require_repo
+
+  local wanted="${1:-}"
+  [[ -n "$wanted" ]] || { clia_warn "alias de session manquant"; \
+                          clia_hint "clia ses ls affiche les sessions"; return 2; }
+
+  local enonce
+  if ! enonce=$(clia_session_find "$wanted"); then
+    clia_warn "session introuvable : $wanted"
+    clia_hint "clia ses ls affiche les sessions du depot"
+    return 1
+  fi
+
+  clia_session_poser_lien "$enonce" || return 1
+  printf '%s\n' "$enonce"
 }
 
 # Passe un enonce a l'etat closed et inscrit sa date de fermeture.
@@ -582,7 +759,7 @@ clia_session_close() {
     clia_warn "aucune session ouverte"
     return 1
   fi
-  if [[ "$ouverte" == "$(clia_session_vivant)" ]]; then
+  if clia_session_est_repli "$ouverte"; then
     clia_warn "le fichier de session vivant ne peut pas etre ferme"
     clia_hint "il ne porte pas de frontmatter et tient lieu d'enonce par defaut"
     clia_hint "clia ses new l'enregistrerait sous .dev/logs/SES-<SEQ>-<SLUG>/"
@@ -603,6 +780,7 @@ clia_session_main() {
     ls|list)            clia_session_ls "$@" ;;
     new)                clia_session_new "$@" ;;
     close)              clia_session_close "$@" ;;
+    switch|sw)          clia_session_switch "$@" ;;
     todo)               clia_session_todo "$@" ;;
     ''|-h|--help|help)  clia_session_usage ;;
     *)
