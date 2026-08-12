@@ -55,6 +55,9 @@ Migrer la structure sans les horodatages : un répertoire par tâche, noms conse
 
 **Réponse.**
 
+
+Oui. Migrer au "best effort" ce qui peut l'être
+
 ### Q2 - Comment vérifier qu'un log a été écrit au moment qu'il déclare ?
 
 L'horodatage est déclaratif. Trois pistes.
@@ -69,6 +72,9 @@ La troisième est la position actuelle, et elle est celle que `NON-005` conteste
 
 **Réponse.**
 
+ouvrir un ISU à ce sujet
+
+
 ### Q3 - Le préfixe `TSK` du nom de log doit-il changer ?
 
 `TSK-01-demande` désigne un type de log, non une tâche. Le répertoire lève l'ambiguïté, le nom seul non.
@@ -76,6 +82,10 @@ La troisième est la position actuelle, et elle est celle que `NON-005` conteste
 Candidats : conserver `TSK`, ce que le correctif C4 prescrit littéralement ; employer `LOG-01-demande`, cohérent avec le préfixe du type ; ou n'employer que le numéro, `01-demande`.
 
 **Réponse.**
+
+Utiliser TSK pour le moment
+
+ouvrir un ISU à ce sujet
 
 ### Q4 - Une tâche a-t-elle un fichier d'énoncé distinct ?
 
@@ -85,6 +95,15 @@ Un fichier d'énoncé distinct rendrait la tâche lisible sans ouvrir un log, et
 
 **Réponse.**
 
+Ue ressource est polymorphe et composable.
+
+Les tâches dans les sessions sont un cas de ressource déclarée dans une autre ressource.
+
+La mécanique de ce cas d'usage n'est pas bien établie. Et, surtout,  elle n'est pas instrumentable sous cette forme.
+
+On ne traitera pas imédiatement la question.
+Ouvrir une ISU à ce sujet
+
 ### Q5 - Quand le fichier de session vivant devient-il une `SES` ?
 
 `RES-034` distingue `workspace/session.md`, point d'entrée vivant en édition humaine, de la ressource `SES` qui l'enregistre.
@@ -92,6 +111,10 @@ Un fichier d'énoncé distinct rendrait la tâche lisible sans ouvrir un log, et
 Aucun geste ne fait passer de l'un à l'autre. À la clôture d'une session, qui produit la `SES`, et avec quel contenu ?
 
 **Réponse.**
+
+Bon point.
+
+faire de session.md, la session active, un lien symbolique d'une instance de ressource SES
 
 ## Ce qui lèverait cette objection
 
