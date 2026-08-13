@@ -3,9 +3,9 @@ type: bogue
 id: BUG-001
 title: "exécution de claude cli sans interruption"
 status: draft
-regle: À RENSEIGNER
-constate-le: À RENSEIGNER
-etat: À RENSEIGNER
+regle: DCN-017
+constate-le: 2026-08-12
+etat: ouvert
 ---
 
 # BUG-001 - exécution de claude cli sans interruption

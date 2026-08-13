@@ -1,0 +1,27 @@
+suites:
+  - id: N1
+    quoi: "Repondre a NON-040 Q1 et Q3"
+    pourquoi: "Ce sont les deux qui decident du contenu de la politique. Sans elles, le hook qui autorise et clia config ia policy apply restent hors de tout plan"
+    qui: humain
+  - id: N2
+    quoi: "Executer PLN-015, chantier A d'abord"
+    pourquoi: "Une heure decide du sort des deux autres : si un hook ne peut pas autoriser, la piste B redevient la seule"
+  - id: N3
+    quoi: "Rediger DCN-017"
+    pourquoi: "BUG-001 declare enfreindre une regle qui n'existe pas. CONSTITUTION.md C1 reserve la redaction des decisions a l'humain"
+    qui: humain
+  - id: N4
+    quoi: "Reduire settings.local.json aux regles de ce depot"
+    pourquoi: "12 936 octets contre 3 602 pour la politique versionnee, avec des chemins d'autres depots. Ce n'est pas une cause d'interruption, c'est un obstacle au diagnostic"
+    qui: humain
+  - id: N5
+    quoi: "Renseigner BUG-003, et PDC-006 et PDC-007"
+    pourquoi: "Trois squelettes de plus, dont deux crees pendant cette tache. Le compteur monte quand un document est ouvert et non rempli"
+    qui: humain
+fait-en-cours-de-tache:
+  - "ANL-012 : 14 interruptions sur 15 ne viennent d'aucune regle du depot"
+  - "La conduite reglerait 6 cas sur 15 : la conclusion de la tache 000 etait partielle"
+  - "Cause racine : le hook du depot sait refuser, pas autoriser"
+  - "PLN-015 : trois chantiers SMART, deux points sortis avec leur motif"
+  - "NON-040 : une seule objection pour toute la tache"
+  - "BUG-001 conforme a son schema : trois champs transcrits depuis son corps"

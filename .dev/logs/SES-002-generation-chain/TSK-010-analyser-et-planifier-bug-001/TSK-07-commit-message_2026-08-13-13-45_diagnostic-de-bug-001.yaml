@@ -1,0 +1,43 @@
+type: docs
+portee: dev
+sujet: "diagnostic de BUG-001 : le dépôt sait refuser, pas autoriser"
+corps: |
+  ANL-012 classe les quinze interruptions consignées dans BUG-001. Quatorze
+  ne viennent d'aucune règle du dépôt : une ligne contenant une variable, une
+  substitution ou un document en place ne peut être comparée à aucune règle,
+  donc elle est demandée. La quinzième venait d'une règle ask, retirée le
+  2026-08-12.
+
+  L'analyse corrige la conclusion inscrite dans settings.json à la tâche 000.
+  Écrire les fichiers avec l'outil d'écriture plutôt qu'avec un document en
+  place règle six cas sur quinze. Les huit autres sont des scripts d'épreuve,
+  qui ont besoin de variables pour être reproductibles : aucune discipline ne
+  les rendra analysables statiquement.
+
+  La cause racine est ailleurs. Le hook PreToolUse du dépôt sort en 0 ou en 2,
+  et le code 0 signifie « je ne m'oppose pas », pas « j'autorise » : la
+  demande a lieu ensuite. Le dépôt a écrit ses interdits et jamais ses
+  permissions, et le seul point du système où une commande non analysable
+  peut être jugée sur son contenu est inoccupé.
+
+  PLN-015 porte trois chantiers exécutables sans attendre : mesurer qu'un
+  hook peut autoriser, écrire la règle de conduite dans le harnais, livrer
+  clia config ia policy check. Deux points en sont sortis — le hook qui
+  autorise et policy apply — faute de critère exécutable tant que
+  « légitime » n'est pas défini.
+
+  NON-040 est la seule objection de la tâche : jusqu'où la politique
+  autorise, si l'écriture hors du dépôt reste demandée, et le fait que
+  DCN-017, la règle que BUG-001 déclare enfreinte, est un squelette vide.
+
+  BUG-001 devient conforme à son schéma : ses trois champs À RENSEIGNER sont
+  transcrits depuis son propre corps.
+note_pour_l_humain: |
+  Le plan traite la moitié du bogue et le déclare. L'autre moitié attend deux
+  réponses, NON-040 Q1 et Q3.
+fichiers:
+  - .dev/analyses/ANL-012-interruptions-de-l-execution-autonome.md
+  - .dev/plans/PLN-015-politique-d-autorisation-du-depot.md
+  - .dev/objections/NON-040-portee-de-la-politique-d-autorisation.md
+  - .dev/bogues/BUG-001-execution-de-claude-cli-sans-interruption.md
+  - .dev/logs/SES-002-generation-chain/TSK-010-analyser-et-planifier-bug-001/
