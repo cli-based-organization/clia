@@ -3,6 +3,10 @@ type: ressource
 id: RES-036
 title: "Bogue"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: BUG
 emplacement: ".dev/bogues/BUG-<SEQ>-<SLUG>.md"
@@ -120,6 +124,20 @@ L'agent peut ouvrir un bogue et le corriger. Il ne peut pas passer un bogue à `
 ## Comment le reproduire
 ## La cause
 ## La correction
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `ouvert` | `etat` |
+| `corrige` | `etat` |
+| `non-reproduit` | `etat` |
+| `accepte` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

@@ -3,6 +3,10 @@ type: objection
 id: NON-011
 title: "Types employés sans définition, et nommage non conforme"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

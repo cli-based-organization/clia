@@ -4,6 +4,9 @@ id: DCN-018
 title: "chaine d'abstraction: conceptuel, abstraite, spécifique"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 instance: À RENSEIGNER
 date-de-decision: 2026-08-13
 portee: À RENSEIGNER

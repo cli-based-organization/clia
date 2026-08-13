@@ -3,6 +3,10 @@ type: objection
 id: NON-034
 title: "Le nettoyage des formulations normatives n'est pas mesurable par recherche"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

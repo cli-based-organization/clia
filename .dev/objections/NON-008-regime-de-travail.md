@@ -3,6 +3,10 @@ type: objection
 id: NON-008
 title: "Régime de travail, échelles et arbitrage"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

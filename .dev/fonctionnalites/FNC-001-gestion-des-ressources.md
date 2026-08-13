@@ -4,6 +4,10 @@ id: FNC-001
 title: "Gestion des ressources"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia res ls|new|show|edit|check
 ---

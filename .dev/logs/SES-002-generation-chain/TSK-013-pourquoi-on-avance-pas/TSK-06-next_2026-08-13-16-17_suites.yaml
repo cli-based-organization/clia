@@ -1,0 +1,26 @@
+# MET-005 etape 6 : une directive, une seule. Elle est en tete, et c'est N1.
+# Les autres sont de la dette nommee, non des propositions concurrentes.
+suites:
+  - id: N1
+    quoi: "clia res edit DCN-016 : poser effet: en-vigueur, ou reviser"
+    pourquoi: "C'est ce que clia focus designe. Debloque cinq chantiers de PLN-007, immobilises depuis le 2026-08-11"
+    qui: humain
+dette-nommee:
+  - id: D1
+    quoi: "Compter les chantiers bloques, non les plans"
+    pourquoi: "DCN-016 bloque cinq chantiers dans un seul plan ; la commande affiche « bloque 1 plan(s) »"
+  - id: D2
+    quoi: "Reprendre les plans existants qui declarent un blocage en prose"
+    pourquoi: "skl-006 l'interdit desormais pour les plans neufs. Les anciens ne sont pas repris"
+  - id: D3
+    quoi: "Mesurer si BUG-005 est corrige"
+    pourquoi: "La mesure est unique : la prochaine tache se termine-t-elle sur un geste execute sans demander de precision ? Elle appartient a l'humain qui la vit"
+    qui: humain
+fait-en-cours-de-tache:
+  - "clia focus ne lisait pas les decisions : DCN-016 n'etait un item pour personne depuis le 2026-08-11"
+  - "Nouvelle categorie A APPROUVER, destinataire humain, en tete de priorite"
+  - "clia focus --humain et --agent : 22 items pour l'humain contre 63 au total"
+  - "MET-005 etape 6 : le format de la directive, et la regle de coherence avec clia focus"
+  - "skl-006 : un blocage se declare avec le geste qui le leve, et son controle est executable"
+  - "279 -> 289 assertions"
+  - "Le compteur monte de deux : rendre visible fait monter le nombre, pour la troisieme fois en cinq taches"

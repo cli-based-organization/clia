@@ -3,6 +3,10 @@ type: objection
 id: NON-018
 title: "Frontière entre spécification et implémentation"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

@@ -1,0 +1,49 @@
+type: fix
+portee: cli
+sujet: "clia focus désigne le geste de l'humain"
+corps: |
+  Rapport de bogue de l'humain : deux plans exécutés, deux échecs déclarés,
+  et aucune directive pour débloquer la situation. Le grief est fondé.
+
+  BUG-005 et ANL-013. clia focus ne lisait pas les décisions. DCN-016, qui
+  débloque cinq chantiers de PLN-007, n'était un item pour personne depuis le
+  2026-08-11 : la commande ne la mentionnait que comme motif d'un plan rangé à
+  défricher. Sur 61 items en attente, 3 seulement étaient destinés à l'humain,
+  et la commande désignait un travail d'agent.
+
+  Trois corrections dans le code. Une décision suspendue devient un item,
+  catégorie A APPROUVER — DCN-013 pose qu'un premier jet d'agent reste
+  suspendu jusqu'à approbation manuelle, c'est donc une attente adressée à
+  l'humain. Elle passe devant tout : c'est la seule catégorie où l'humain est
+  le seul à pouvoir agir, CONSTITUTION.md C1. Et clia focus --humain
+  et --agent filtrent sur le destinataire : 22 items pour l'humain contre 63
+  au total, le défrichage restant dans les deux filtres.
+
+  Deux corrections dans la méthode. MET-005 reçoit une étape 6 : une tâche se
+  termine sur un geste, pas sur un rapport. Quatre éléments obligatoires — le
+  geste à l'impératif, la commande copiable telle quelle, ce qu'elle débloque,
+  et qui — et une règle de cohérence : la directive rendue est celle que clia
+  focus désigne, et si les deux divergent, la commande a raison. Aux tâches 11
+  et 12, l'agent écrivait « statuer sur DCN-016 » pendant que la commande
+  disait « corriger BUG-001 ».
+
+  skl-006 impose qu'un plan qui déclare un blocage déclare le geste qui le
+  lève, qui peut le faire, et ce qu'il débloque. Son contrôle est exécutable :
+  le geste doit apparaître dans clia focus --humain, sinon c'est un bogue.
+
+  Le compteur monte de deux, pour la troisième fois en cinq tâches. Rendre
+  visible ce qui était caché fait monter le nombre ; ce qui s'améliore est la
+  capacité à choisir.
+
+  279 à 289 assertions.
+note_pour_l_humain: |
+  clia focus dit maintenant : approuver DCN-016. C'est le geste qui débloque
+  les cinq chantiers de PLN-007.
+fichiers:
+  - .dev/bogues/BUG-005-aucune-directive-actionnable-a-la-fin-d-une-execution.md
+  - .dev/analyses/ANL-013-pourquoi-l-humain-ne-peut-pas-agir.md
+  - lib/clia/focus.sh
+  - tests/test_clia.sh
+  - .dev/methodologies/MET-005-execution-d-un-plan.md
+  - .dev/skills/skl-006-ressource-de-preparation/SKILL.md
+  - .dev/logs/SES-002-generation-chain/TSK-013-pourquoi-on-avance-pas/

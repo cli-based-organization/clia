@@ -3,6 +3,10 @@ type: objection
 id: NON-039
 title: "Ce que les commandes d'installation laissent ouvert"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 effet: conditionnel
 etat: ouverte

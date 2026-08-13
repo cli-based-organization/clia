@@ -3,6 +3,10 @@ type: plan
 id: PLN-008
 title: "Chaîne de session par lien symbolique"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-12
 initiateur: agent

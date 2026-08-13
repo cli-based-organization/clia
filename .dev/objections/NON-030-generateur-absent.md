@@ -3,6 +3,10 @@ type: objection
 id: NON-030
 title: "Trois familles dérivées, aucun générateur"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

@@ -3,6 +3,10 @@ type: plan
 id: PLN-002
 title: "Remédiation de la verbosité justificative des définitions de type"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-10
 initiateur: agent

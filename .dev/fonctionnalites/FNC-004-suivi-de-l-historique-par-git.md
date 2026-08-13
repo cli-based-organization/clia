@@ -4,6 +4,10 @@ id: FNC-004
 title: "Suivi de l'historique par git"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia git check|save|log|diff
 ---

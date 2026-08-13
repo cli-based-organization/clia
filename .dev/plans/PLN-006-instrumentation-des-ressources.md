@@ -3,6 +3,10 @@ type: plan
 id: PLN-006
 title: "Instrumentation des ressources : ce qui est implémentable"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-11
 initiateur: agent

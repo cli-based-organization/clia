@@ -3,6 +3,10 @@ type: objection
 id: NON-002
 title: "Coût du modèle et prolifération des types"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

@@ -4,6 +4,10 @@ id: ADR-007
 title: "L'identifiant d'une ressource est relatif au dépôt et porté par sa séquence"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-decision: propose
 date: 2026-08-10
 decideurs: ["human:jvtrudel (décideur)", "claude-opus-5 (rédaction)"]

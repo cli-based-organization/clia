@@ -4,6 +4,10 @@ id: RES-003
 title: "Intention"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: INT
 emplacement: ".dev/intentions/INT-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
@@ -116,6 +120,13 @@ La troisième forme mérite attention. Elle répond directement au besoin que `C
 ## Critère de satisfaction
 ## Critère de trahison
 ## Ce que cette intention exclut
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
+
 ## Relations
 ```
 

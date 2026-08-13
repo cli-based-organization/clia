@@ -3,6 +3,9 @@ type: analyse
 id: ANL-002
 title: "Localisation du CLI clia : dépôt unique ou dépôt indépendant"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-09
 sujet: "Où développer clia, au regard des faits du corpus et des propriétés des CLI orientés ressources"
 generated:

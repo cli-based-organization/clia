@@ -3,6 +3,9 @@ type: fondation
 id: FND-002
 title: "Identifiants dans les systèmes décentralisés : revue de la littérature"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-10
 sujet: "Conception d'un système d'identifiants pour ressources partageables et réutilisables en contexte décentralisé"
 methodologie: "revue de la littérature, sept étapes, chaque affirmation référencée"

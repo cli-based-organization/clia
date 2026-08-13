@@ -4,6 +4,10 @@ id: RES-009
 title: "Décision"
 version: 0.3.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: DCN
 emplacement: ".dev/decisions/DCN-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
@@ -162,6 +166,21 @@ Un agent qui constate une conséquence la porte dans une objection ou dans le jo
 ## Portée
 ## Conséquences
 ## Ce que la décision ne dit pas
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `proposee` | `effet` |
+| `en-vigueur` | `effet` |
+| `suspendue` | `effet` |
+| `abrogee` | `effet` |
+| `remplacee` | `effet` |
+
+Ces valeurs sont **reprises du champ `effet`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

@@ -3,6 +3,10 @@ type: objection
 id: NON-006
 title: "Portée du système et travail multi-dépôts"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

@@ -4,6 +4,10 @@ id: RES-012
 title: "Principe de conception"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: PDC
 emplacement: ".dev/principes/PDC-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
@@ -72,6 +76,13 @@ Un principe engage les deux parties : l'humain l'invoque pour refuser, l'agent l
 ## Ce qu'il exclut
 ## Comment le vérifier
 ## Conséquence d'une violation
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
+
 ## Relations
 ```
 

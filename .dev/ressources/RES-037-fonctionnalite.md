@@ -3,6 +3,10 @@ type: ressource
 id: RES-037
 title: "Fonctionnalité"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: FNC
 emplacement: ".dev/fonctionnalites/FNC-<SEQ>-<SLUG>.md"
@@ -110,6 +114,20 @@ Cinq rubriques.
 |---|---|
 | Un type de plus dans un dépôt qui en compte trente-sept | `NON-002` |
 | Le rattachement des plans existants est-il rétroactif | `PLN-014` chantier B |
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `pressentie` | `etat` |
+| `en-cours` | `etat` |
+| `livree` | `etat` |
+| `retiree` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

@@ -4,6 +4,9 @@ id: DCN-017
 title: "Le système clia doit être utilisable sans intervention humaine autre que le lancement d'une commande/tâche"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 instance: À RENSEIGNER
 date-de-decision: 2026-08-12
 portee: À RENSEIGNER

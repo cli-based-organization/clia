@@ -3,6 +3,10 @@ type: issue
 id: ISU-001
 title: "Définir une ressource dans un document ressource"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: humain
 etat: ouverte
 ouverture: 2026-08-11

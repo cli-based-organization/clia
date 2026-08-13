@@ -3,6 +3,10 @@ type: issue
 id: ISU-007
 title: "Validation et portée des ressources"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

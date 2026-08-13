@@ -3,6 +3,9 @@ type: analyse
 id: ANL-005
 title: "Traçabilité de l'historique des ressources : ce que git fournit, à quelles conditions"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-10
 sujet: "Historique individuel d'un fichier et d'un répertoire à partir de git, contraintes, et options d'ancrage"
 generated:

@@ -3,6 +3,10 @@ type: objection
 id: NON-029
 title: "Les registres, leur catégorie et leur tenue"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

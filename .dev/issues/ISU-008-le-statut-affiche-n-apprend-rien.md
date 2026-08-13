@@ -3,6 +3,10 @@ type: issue
 id: ISU-008
 title: "Le statut affiché par clia res ls n'apprend rien"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: humain
 etat: ouverte
 ouverture: 2026-08-11

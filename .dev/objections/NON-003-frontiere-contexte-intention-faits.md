@@ -3,6 +3,10 @@ type: objection
 id: NON-003
 title: "Frontière entre Contexte, Intention et Faits"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

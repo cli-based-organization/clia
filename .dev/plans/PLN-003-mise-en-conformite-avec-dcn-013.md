@@ -3,6 +3,10 @@ type: plan
 id: PLN-003
 title: "Mise en conformité avec DCN-013"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent

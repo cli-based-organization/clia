@@ -3,6 +3,10 @@ type: objection
 id: NON-040
 title: "Portée de la politique d'autorisation"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 effet: bloquant
 etat: ouverte

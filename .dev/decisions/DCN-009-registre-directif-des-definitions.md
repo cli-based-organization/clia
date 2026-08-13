@@ -4,6 +4,10 @@ id: DCN-009
 title: "Les ressources sont redigees dans un registre directif et factuel"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: adopte
+activated: true
+domain-status: "en-vigueur"
 instance: "human:jvtrudel"
 date-de-decision: 2026-08-10
 portee: systeme

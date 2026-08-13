@@ -4,6 +4,10 @@ id: RES-031
 title: "Issue"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: ISU
 emplacement: ".dev/issues/ISU-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
@@ -119,6 +123,20 @@ L'agent ne reformule jamais l'énoncé de la problématique posé par l'humain.
 ## Ce qui a été tenté
 ## Pistes
 ## Ce qui la clôturerait
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `ouverte` | `etat` |
+| `en-cours` | `etat` |
+| `close` | `etat` |
+| `abandonnee` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

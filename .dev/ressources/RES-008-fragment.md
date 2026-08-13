@@ -4,6 +4,10 @@ id: RES-008
 title: "Fragment"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: FRG
 emplacement: ".dev/fragments/FRG-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
@@ -98,6 +102,20 @@ Ce qui évolue est le champ `exploitation` et la liste de ce qui en a été tir�
 ## Origine
 ## Ce qui en a été tiré
 ## Ce qui reste à en tirer
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `non-exploite` | `exploitation` |
+| `partiellement-exploite` | `exploitation` |
+| `exploite` | `exploitation` |
+| `sterile` | `exploitation` |
+
+Ces valeurs sont **reprises du champ `exploitation`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

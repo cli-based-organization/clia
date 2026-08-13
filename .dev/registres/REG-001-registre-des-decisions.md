@@ -3,6 +3,10 @@ type: registre
 id: REG-001
 title: "Registre des décisions"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "saisie"
 registre-de: décisions
 tenue: saisie
 ---

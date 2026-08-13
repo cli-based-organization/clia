@@ -4,6 +4,10 @@ id: DCN-010
 title: "clia opere le suivi de l historique des ressources"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: adopte
+activated: true
+domain-status: "en-vigueur"
 instance: "human:jvtrudel"
 date-de-decision: 2026-08-10
 portee: systeme

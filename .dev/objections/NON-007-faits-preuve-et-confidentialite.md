@@ -3,6 +3,10 @@ type: objection
 id: NON-007
 title: "Faits, preuve et confidentialité"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

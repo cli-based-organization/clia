@@ -3,6 +3,10 @@ type: bogue
 id: BUG-004
 title: "Un plan SMART n'est pas exécutable, et rien ne le signale"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouvert"
 regle: "Un plan SMART, exécuté, produit les livrables qu'il planifie"
 constate-le: 2026-08-13
 etat: ouvert

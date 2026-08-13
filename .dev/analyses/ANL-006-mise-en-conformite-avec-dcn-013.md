@@ -3,6 +3,9 @@ type: analyse
 id: ANL-006
 title: "Mise en conformité avec DCN-013 : interprétation et implications"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Ce que DCN-013 et les réponses à NON-026 changent pour clia, du point de vue de l'agent"
 generated:

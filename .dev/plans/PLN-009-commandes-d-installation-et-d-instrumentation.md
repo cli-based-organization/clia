@@ -3,6 +3,10 @@ type: plan
 id: PLN-009
 title: "Commandes d'installation et d'instrumentation"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-12
 initiateur: humain

@@ -3,6 +3,10 @@ type: objection
 id: NON-026
 title: "Conséquences de l'ADR dérivé et du lien symbolique d'intention"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

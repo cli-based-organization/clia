@@ -3,6 +3,9 @@ type: analyse
 id: ANL-008
 title: "Le savoir est une relation entre un acteur et une information"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Interprétation des sept réponses à NON-004, et des trois reproches de méthode qu'elles portent"
 generated:

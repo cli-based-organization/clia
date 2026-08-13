@@ -3,6 +3,10 @@ type: objection
 id: NON-023
 title: "Conséquences du régime d'identification à deux niveaux"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

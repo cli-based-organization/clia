@@ -3,6 +3,10 @@ type: issue
 id: ISU-006
 title: "Le volume du nettoyage des formulations normatives est inconnu"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

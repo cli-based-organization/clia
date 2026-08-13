@@ -3,6 +3,10 @@ type: plan
 id: PLN-001
 title: "Réécriture du point d'entrée et écriture du skill d'analyse de la demande"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-plan: propose
 date: 2026-08-09
 initiateur: agent

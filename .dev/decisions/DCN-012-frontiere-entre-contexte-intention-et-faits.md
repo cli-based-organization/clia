@@ -4,6 +4,9 @@ id: DCN-012
 title: "Frontiere entre contexte intention et faits"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 instance: À RENSEIGNER
 date-de-decision: 2026-08-11
 portee: À RENSEIGNER

@@ -3,6 +3,10 @@ type: objection
 id: NON-027
 title: "Régime SMART, type Issue, et un PDC produit par l'agent"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

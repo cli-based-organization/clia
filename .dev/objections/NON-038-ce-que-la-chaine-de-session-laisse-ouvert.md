@@ -3,6 +3,10 @@ type: objection
 id: NON-038
 title: "Ce que la chaîne de session laisse ouvert"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 effet: conditionnel
 etat: ouverte

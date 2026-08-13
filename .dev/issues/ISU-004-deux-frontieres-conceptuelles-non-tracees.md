@@ -3,6 +3,10 @@ type: issue
 id: ISU-004
 title: "Deux frontières conceptuelles ne sont pas tracées"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

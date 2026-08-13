@@ -3,6 +3,10 @@ type: plan
 id: PLN-010
 title: "Clore ce qui est répondu"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-13
 initiateur: agent

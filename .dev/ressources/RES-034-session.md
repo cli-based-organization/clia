@@ -3,6 +3,10 @@ type: ressource
 id: RES-034
 title: "Session"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: SES
 emplacement: ".dev/logs/SES-<SEQ>-<SLUG>/"
@@ -120,6 +124,19 @@ Une tâche est **faite quand son journal porte le message de commit**, septième
 `workspace/session.md` est le point d'entrée déclaré par `CLAUDE.md`. Tant qu'aucun énoncé ne porte `etat: open`, **c'est lui la session en cours**, et les commandes de lecture le traitent comme tel.
 
 Il ne peut pas être fermé : il ne porte pas de frontmatter. L'enregistrer comme énoncé est un geste de l'humain.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `todo` | `etat` |
+| `opened` | `etat` |
+| `closed` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

@@ -4,6 +4,9 @@ id: DCN-014
 title: "cycle de vie des ressources"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 instance: À RENSEIGNER
 date-de-decision: 2026-08-11
 portee: À RENSEIGNER

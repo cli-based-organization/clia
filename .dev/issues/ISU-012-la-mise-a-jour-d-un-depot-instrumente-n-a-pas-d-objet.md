@@ -3,6 +3,10 @@ type: issue
 id: ISU-012
 title: "La mise à jour d'un dépôt instrumenté n'a pas d'objet"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-12

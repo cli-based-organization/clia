@@ -3,6 +3,10 @@ type: objection
 id: NON-017
 title: "Familles fonctionnelles, attribution et processus par famille"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

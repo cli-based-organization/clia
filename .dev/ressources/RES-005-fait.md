@@ -4,6 +4,10 @@ id: RES-005
 title: "Faits"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: FCT
 emplacement: ".dev/faits/FCT-<SEQ>-<SLUG>.md"
 cycle-de-vie: point-fixe
@@ -136,6 +140,13 @@ La force persuasive relève du livrable qui emploie le fait, et de la méthodolo
 ### F02 - ...
 ## Faits contestés
 ## Ce qui n'a pas pu être établi
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
+
 ## Relations
 ```
 

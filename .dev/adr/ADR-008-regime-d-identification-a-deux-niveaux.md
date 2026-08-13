@@ -4,6 +4,10 @@ id: ADR-008
 title: "Régime d'identification à deux niveaux : alias interne et identifiant externe"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-decision: propose
 date: 2026-08-10
 decideurs: ["human:jvtrudel (décideur)", "claude-opus-5 (rédaction)"]

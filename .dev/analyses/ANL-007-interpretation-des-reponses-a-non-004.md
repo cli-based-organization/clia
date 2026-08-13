@@ -3,6 +3,9 @@ type: analyse
 id: ANL-007
 title: "Interprétation des réponses à NON-004 : le savoir et ses frontières"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Ce que la réponse Q1 de NON-004 change, et ce que six questions sans réponse laissent en suspens"
 generated:

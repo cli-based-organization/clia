@@ -3,6 +3,9 @@ type: analyse
 id: ANL-010
 title: "Source de vérité de l'implémentation : requis, spécifications et code dans clia"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Où placer la source de vérité des contraintes et choix techniques, quand le code est une ressource générée"
 generated:

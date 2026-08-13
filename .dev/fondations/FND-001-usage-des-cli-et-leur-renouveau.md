@@ -3,6 +3,9 @@ type: fondation
 id: FND-001
 title: "Usage des CLI et leur renouveau à l'ère du cloud et de la manipulation de ressources"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-09
 sujet: "Interfaces en ligne de commande : propriétés, histoire, causes du renouveau, modèle orienté ressources"
 methodologie: "revue documentaire sur sources publiques, faits datés vérifiés à la source"

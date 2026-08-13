@@ -3,6 +3,9 @@ type: analyse
 id: ANL-012
 title: "Interruptions de l'exécution autonome"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-13
 sujet: "diagnostic de BUG-001 : pourquoi l'agent est interrompu, et ce qui peut y mettre fin"
 ---

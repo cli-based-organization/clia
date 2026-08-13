@@ -4,6 +4,10 @@ id: FNC-005
 title: "Consultation des registres"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia reg ls|show
 ---

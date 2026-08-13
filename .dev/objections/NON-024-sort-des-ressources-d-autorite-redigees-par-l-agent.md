@@ -3,6 +3,10 @@ type: objection
 id: NON-024
 title: "Sort des douze ressources d'autorité rédigées par l'agent"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

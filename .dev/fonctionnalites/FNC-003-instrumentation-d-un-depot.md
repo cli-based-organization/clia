@@ -4,6 +4,10 @@ id: FNC-003
 title: "Instrumentation d'un dépôt"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia setup check|init [PATH] [--dev]
 ---

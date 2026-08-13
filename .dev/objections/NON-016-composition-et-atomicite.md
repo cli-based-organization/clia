@@ -3,6 +3,10 @@ type: objection
 id: NON-016
 title: "Composition, atomicité et propriété holographique"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

@@ -3,6 +3,10 @@ type: plan
 id: PLN-007
 title: "Mise en oeuvre des quatre champs d'état"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent
@@ -16,7 +20,32 @@ porte-sur: [RES-001, DCN-016, lib/clia/resource.sh]
 
 ## Statut
 
-`propose`. **Deux chantiers sur sept sont satisfaits, cinq sont bloqués.** Le plan ne passe pas à `execute` : `MET-005` étape 5.
+`propose`. **Six chantiers sur sept sont satisfaits.** Le plan ne passe pas à `execute` tant que le septième ne l'est pas : `MET-005` étape 5.
+
+### Réexécution du 2026-08-13, tâche 11, après approbation de `DCN-016`
+
+| Chantier | État |
+|---|---|
+| A. `RES-001` déclare les quatre champs | **Exécuté** |
+| B. `commun.cue` les porte | **Exécuté**, `domain-status` optionnel — 25 types sur 37 n'ont aucun cycle de vie métier propre |
+| C. Les définitions déclarent leur `domain-status` | **Exécuté**, 37 sur 37 : 12 énumérations reportées, 25 « aucune » |
+| D. Les instances portent les quatre champs | **Exécuté**, 183 instances, 152 avec `domain-status` |
+| E. Supprimer les champs anciens | **Bloqué** — voir ci-dessous |
+| F, G | Satisfaits antérieurement |
+
+**Le chantier E est bloqué par trois motifs mesurés**, dont deux que ce plan ne pouvait pas connaître le 2026-08-11 :
+
+| Motif | Mesure |
+|---|---|
+| Il est irréversible | 191 champs supprimés dans les instances |
+| **Il casserait le CLI** | `clia focus` et `clia res ls` lisent `etat`, `effet` et `statut-plan` : **10 lectures dans `lib/`** |
+| Son critère dépend d'`ISU-009` | Le critère porte sur `statut:`, et le sort de `status` reste ouvert |
+
+**Le geste qui le débloque** : réécrire les 10 lectures du CLI pour qu'elles lisent `domain-status`, puis trancher `ISU-009`. Qui : l'agent pour le premier, l'humain pour le second.
+
+### Premier passage, 2026-08-13 13:53
+
+Zéro chantier sur sept. `DCN-016` portait alors `effet: suspendue`, et cinq chantiers l'appliquaient. `BUG-004` est né de ce passage : ce plan a été proposé à l'exécution pendant quatre tâches sans être exécutable.
 
 | Chantier | État au 2026-08-13 |
 |---|---|

@@ -4,6 +4,10 @@ id: RES-026
 title: "Code"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: CDE
 emplacement: "lib/, bin/, tests/"
 cycle-de-vie: vivant
@@ -57,6 +61,13 @@ C'est la seule famille où la validation ne dépend pas d'un contrôle textuel. 
 ## Cycle de vie et édition
 
 `vivant`, versionné par le versionnage de l'outil et non par un semver de frontmatter. `ia`.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
 
 ## Relations
 

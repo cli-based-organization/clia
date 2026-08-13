@@ -17,6 +17,7 @@ Verbes :
   set CLE VALEUR    assigne une variable dans le fichier de configuration
   edit              ouvre le fichier de configuration avec CLIA_EDITOR
   path              affiche le chemin du fichier de configuration
+  ia policy check   diagnostique la politique de permissions du depot
 
 La cle s'ecrit avec ou sans le prefixe CLIA_, indifferemment :
   clia config set EDITOR nvim
@@ -205,6 +206,120 @@ clia_config_edit() {
   "$editor" "$file"
 }
 
+# --------------------------------------------------------------------------
+# clia config ia policy check
+# --------------------------------------------------------------------------
+#
+# PLN-015 chantier C. Repond a « ce depot peut-il executer une tache sans
+# interruption, et sinon qu'est-ce qui manque ? ».
+#
+# Elle ne modifie rien : diagnostiquer et corriger sont deux verbes, comme
+# clia setup check et init.
+#
+# Ce que la mesure du chantier A a etabli, et que ce diagnostic rapporte : un
+# hook decide dans le sens du refus, jamais dans celui de l'autorisation. Une
+# ligne de commande contenant une variable, une substitution ou un document en
+# place n'est comparee a aucune regle — c'est BUG-001, quatorze interruptions
+# sur quinze.
+
+clia_config_ia_ligne() {
+  printf '%s\t%s\t%s\n' "$1" "$2" "$3"
+}
+
+clia_config_ia_policy_check() {
+  if clia_is_help "${1:-}"; then
+    cat <<'EOF'
+Usage : clia config ia policy check
+
+Diagnostique la politique de permissions du depot : ce qui est en place, et
+ce qui manque pour qu'une tache s'execute sans interrompre l'humain.
+
+Sortie 0 si la politique est complete, 1 sinon. La commande ne modifie rien.
+EOF
+    return 0
+  fi
+
+  clia_require_repo
+  local racine reglages manques=0 lignes=''
+  racine="$CLIA_REPO_ROOT_RESOLVED"
+  reglages="$racine/.claude/settings.json"
+
+  # Le decompte se fait AVANT l'affichage, jamais dedans : un bloc pipe vers
+  # column s'execute dans un sous-shell, et la variable y est perdue. Le
+  # premier jet affichait « politique complete » avec cinq manques.
+  if [[ -f "$reglages" ]]; then
+    local n_allow n_deny n_ask n_hooks
+    n_allow=$(grep -c '"Bash(\|"Read"\|"Grep"\|"Glob"' "$reglages" 2>/dev/null) || n_allow=0
+    n_deny=$(sed -n '/"deny"/,/\]/p' "$reglages" 2>/dev/null | grep -c '"') || n_deny=0
+    n_ask=$(sed -n '/"ask"/,/\]/p' "$reglages" 2>/dev/null | grep -c '"') || n_ask=0
+    n_hooks=$(grep -c 'PreToolUse\|PostToolUse' "$reglages" 2>/dev/null) || n_hooks=0
+
+    lignes+=$(clia_config_ia_ligne allow "ok" "$n_allow regle(s) : ce qui est courant et sur")$'\n'
+    if (( n_deny > 1 )); then
+      lignes+=$(clia_config_ia_ligne deny "ok" "$((n_deny - 1)) regle(s) : ce qui reste interdit")$'\n'
+    else
+      lignes+=$(clia_config_ia_ligne deny "absent" "rien n'est interdit explicitement")$'\n'
+      manques=$((manques + 1))
+    fi
+    if (( n_ask > 1 )); then
+      lignes+=$(clia_config_ia_ligne ask "ok" "$((n_ask - 1)) regle(s) : ce qui demande l'humain")$'\n'
+    else
+      lignes+=$(clia_config_ia_ligne ask "absent" "rien ne demande l'humain explicitement")$'\n'
+      manques=$((manques + 1))
+    fi
+    if (( n_hooks > 0 )); then
+      lignes+=$(clia_config_ia_ligne hooks "ok" "$n_hooks evenement(s) outille(s)")$'\n'
+    else
+      lignes+=$(clia_config_ia_ligne hooks "absent" "aucun hook : rien ne juge une ligne non analysable")$'\n'
+      manques=$((manques + 1))
+    fi
+  else
+    lignes+=$(clia_config_ia_ligne allow "absent" "aucun .claude/settings.json")$'\n'
+    lignes+=$(clia_config_ia_ligne deny "absent" "aucun .claude/settings.json")$'\n'
+    lignes+=$(clia_config_ia_ligne ask "absent" "aucun .claude/settings.json")$'\n'
+    lignes+=$(clia_config_ia_ligne hooks "absent" "aucun .claude/settings.json")$'\n'
+    manques=4
+  fi
+
+  # Le manque que la mesure du chantier A de PLN-015 a etabli, et qu'aucune
+  # configuration ne comble aujourd'hui.
+  lignes+=$(clia_config_ia_ligne "autorisation" "impossible" \
+    "un hook refuse, il n'autorise pas : mesure du 2026-08-13")$'\n'
+  manques=$((manques + 1))
+
+  {
+    printf 'MECANISME\tETAT\tCE QU IL PORTE\n'
+    printf '%s' "$lignes"
+  } | column -t -s $'\t'
+
+  printf '\n'
+  if (( manques > 0 )); then
+    clia_warn "$manques point(s) manquant(s)"
+    clia_hint "les commandes non analysables statiquement interrompent l'humain : BUG-001"
+    clia_hint "ce qui les evite est ecrit dans MET-005 etape 3"
+    return 1
+  fi
+  printf 'politique complete\n'
+  return 0
+}
+
+clia_config_ia() {
+  local sujet="${1:-}" verbe="${2:-}"
+  case "$sujet" in
+    policy)
+      [[ $# -gt 0 ]] && shift
+      case "${1:-}" in
+        check) shift; clia_config_ia_policy_check "$@" ;;
+        ''|-h|--help) clia_config_ia_policy_check --help ;;
+        *) clia_warn "verbe inconnu : $1"
+           clia_hint "seul « check » existe ; « apply » attend NON-040"
+           return 2 ;;
+      esac ;;
+    ''|-h|--help) printf 'Usage : clia config ia policy check\n' ;;
+    *) clia_warn "sujet inconnu : $sujet"; return 2 ;;
+  esac
+}
+
 clia_config_main() {
   local verb="${1:-}"
   [[ $# -gt 0 ]] && shift
@@ -212,6 +327,7 @@ clia_config_main() {
     ls|list)  clia_config_ls "$@" ;;
     set)      clia_config_set "$@" ;;
     edit)     clia_config_edit "$@" ;;
+    ia)       clia_config_ia "$@" ;;
     path)     if clia_is_help "${1:-}"; then clia_config_usage_verb path
               else clia_config_file; fi ;;
     ''|-h|--help|help) clia_config_usage ;;

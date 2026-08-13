@@ -3,6 +3,10 @@ type: objection
 id: NON-009
 title: "Statut de la session et critère de convergence"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

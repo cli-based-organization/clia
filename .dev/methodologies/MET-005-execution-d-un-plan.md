@@ -4,6 +4,9 @@ id: MET-005
 title: "Exécution d'un plan"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 domaine: "conduite de l'exécution d'un plan, de son autorisation à sa clôture"
 ---
 
@@ -107,13 +110,46 @@ Les six cas, et la forme qui n'aurait rien déclenché :
 
 **Un plan partiellement exécuté ne passe pas à `execute`.** Il reste `propose`, et le journal dit quels chantiers ont été faits et lesquels ne l'ont pas été.
 
+## Étape 6 - Rendre la directive
+
+**Une tâche se termine sur un geste, pas sur un rapport.**
+
+`BUG-005` : deux plans exécutés, deux échecs déclarés, treize journaux produits — et l'humain sans rien à faire. La prescription antérieure disait « propose l'action utile » sans dire où, sous quelle forme, ni combien. Une règle sans format ne tient pas.
+
+### La forme
+
+**Une directive, une seule, en tête de ce qui est rendu à l'humain.** Quatre éléments :
+
+| Élément | Ce qu'il porte |
+|---|---|
+| **Le geste** | Une phrase à l'impératif |
+| **La commande** | Ce qu'on tape, exactement, copiable telle quelle |
+| **Ce qu'il débloque** | Combien de chantiers, quels plans |
+| **Qui** | L'humain ou l'agent |
+
+**Le reste du rapport vient après.** Un humain qui doit lire quarante lignes pour trouver quoi faire ne le trouve pas.
+
+### La règle de cohérence
+
+**La directive rendue est celle que `clia focus` désigne.**
+
+Si les deux divergent, **la commande a raison**, et l'agent corrige la commande — non son message. Une divergence signale que le dépôt ne sait pas voir ce que l'agent a compris : c'est un défaut du système, pas une nuance à expliquer en prose.
+
+C'est ce qui empêche le défaut de revenir. Aux tâches 11 et 12, l'agent écrivait « statuer sur `DCN-016` » pendant que `clia focus` disait « corriger `BUG-001` ». **Deux réponses à la même question, et un humain qui n'en exécute aucune.**
+
+### Ce qui vaut aussi quand tout s'est bien passé
+
+Une exécution réussie se termine également sur une directive. Le geste est alors « commiter », ou l'exécution du plan suivant — mais il est nommé, et il est unique.
+
 ## Ce qui n'est pas fait, et comment le dire
 
 **Une exécution qui ne produit aucun livrable est un échec, et se déclare comme tel.**
 
-L'agent ne clôt pas la tâche en la déclarant réussie : il nomme l'anomalie, en cherche la cause, et propose l'action utile. `clia focus` la désigne.
+L'agent ne clôt pas la tâche en la déclarant réussie : il nomme l'anomalie, en cherche la cause, et **rend la directive de l'étape 6**.
 
 C'est le second défaut relevé par `BUG-002`, et le plus grave des deux : présenter une tâche vide comme un succès empêche l'humain de voir qu'il y a un problème.
+
+**Un échec ne dispense pas de la directive — il la rend plus nécessaire.** C'est le cas où l'humain a le moins de moyens de deviner quoi faire.
 
 ## Éprouvé sur
 
@@ -135,6 +171,9 @@ C'est le second défaut relevé par `BUG-002`, et le plus grave des deux : prés
 | Chaque critère de réussite a-t-il été exécuté | Le log de résultat de validation |
 | Les fonctionnalités livrées sont-elles décrites avec leur usage | Le log de fait |
 | Le plan déclare-t-il la tâche qui l'a exécuté | La section « Statut » du plan |
+| **Une directive unique est-elle rendue, en tête** | Ce qui est rendu à l'humain |
+| **Porte-t-elle une commande copiable telle quelle** | La même |
+| **Désigne-t-elle le même geste que `clia focus`** | La sortie de la commande |
 
 ## Relations
 

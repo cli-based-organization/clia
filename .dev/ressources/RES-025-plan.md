@@ -4,6 +4,10 @@ id: RES-025
 title: "Plan de travail"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: PLN
 emplacement: ".dev/plans/PLN-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
@@ -44,6 +48,20 @@ Le mécanisme est hérité du `CONSTITUTION.md` archivé, où il s'appelait brea
 ## Cycle de vie et édition
 
 `travail`, journalisé en tête plutôt que versionné. `ia` : le plan est produit par l'agent, l'humain y répond par objection ou par autorisation.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `propose` | `statut-plan` |
+| `approuve` | `statut-plan` |
+| `execute` | `statut-plan` |
+| `abandonne` | `statut-plan` |
+
+Ces valeurs sont **reprises du champ `statut-plan`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

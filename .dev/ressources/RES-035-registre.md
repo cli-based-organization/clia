@@ -3,6 +3,10 @@ type: ressource
 id: RES-035
 title: "Registre"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: REG
 emplacement: ".dev/registres/REG-<SEQ>-<SLUG>.md"
@@ -117,6 +121,18 @@ Un item retiré n'est pas supprimé : son statut passe à `retire`, et son numé
 | 001 | DCN-001 | ... | en-vigueur |
 
 ## Ce que le registre ne contient pas
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `saisie` | `tenue` |
+| `derivee` | `tenue` |
+
+Ces valeurs sont **reprises du champ `tenue`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

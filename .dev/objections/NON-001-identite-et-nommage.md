@@ -3,6 +3,10 @@ type: objection
 id: NON-001
 title: "Identité, nommage et préfixes des ressources"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

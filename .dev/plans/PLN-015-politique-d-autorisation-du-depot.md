@@ -3,6 +3,10 @@ type: plan
 id: PLN-015
 title: "Politique d'autorisation du dépôt"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-plan: propose
 date: 2026-08-13
 initiateur: agent
@@ -22,7 +26,11 @@ porte-sur: [BUG-001, .claude/settings.json, .claude/hooks]
 |---|---|
 | A | **Exécuté, critère non satisfait.** Un hook décide dans le sens du refus, pas dans celui de l'autorisation |
 | B | **Exécuté.** `MET-005` étape 3 porte les deux règles et les six cas |
-| C | **Hors d'atteinte**, il dépendait de A |
+| C | **Exécuté à la réexécution du 2026-08-13 16:30.** `clia config ia policy check` |
+
+**Le chantier C avait été déclaré hors d'atteinte, et c'était une erreur.** Le premier passage a conclu qu'« une commande qui diagnostique une politique dont on ne sait pas si elle peut agir n'a pas d'objet ». **On le sait désormais** : le chantier A a établi qu'un hook refuse et n'autorise pas. Le diagnostic a donc un objet précis — dire ce que le dépôt peut et ce qu'il ne peut pas, cette impossibilité comprise.
+
+**Une connaissance négative reste une connaissance.** C'est ce que le premier passage n'a pas vu.
 
 **Ce que la mesure du chantier A a établi.** Le hook est appelé et sa décision `deny` est appliquée ; sa décision `allow` ne lève pas une règle `ask` du projet. Et le mode non interactif ne produit jamais la demande de confirmation que `BUG-001` constate : la piste D est **indémontrable par script**, non réfutée.
 

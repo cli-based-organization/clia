@@ -3,6 +3,9 @@ type: analyse
 id: ANL-003
 title: "Système d'identifiants des ressources clia : analyse et suggestions"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-10
 sujet: "Position de clia sur les axes de conception d'identifiants, et suggestions fondées"
 generated:

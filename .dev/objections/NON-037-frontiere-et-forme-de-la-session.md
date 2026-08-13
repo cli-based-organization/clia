@@ -3,6 +3,10 @@ type: objection
 id: NON-037
 title: "Forme de la session, et ce que sa révision fait disparaître"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

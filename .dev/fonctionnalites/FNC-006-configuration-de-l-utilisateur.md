@@ -4,6 +4,10 @@ id: FNC-006
 title: "Configuration de l'utilisateur"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia config ls|set|edit|path
 ---

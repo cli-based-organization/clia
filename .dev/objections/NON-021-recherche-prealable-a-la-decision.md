@@ -3,6 +3,10 @@ type: objection
 id: NON-021
 title: "Le processus de travail ne prévoit aucune recherche préalable à une décision"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

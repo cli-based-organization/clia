@@ -3,6 +3,10 @@ type: plan
 id: PLN-004
 title: "Ajustement de clia aux réponses de NON-004"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "abandonne"
 statut-plan: abandonne
 date: 2026-08-11
 initiateur: agent

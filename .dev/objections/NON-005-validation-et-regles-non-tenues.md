@@ -3,6 +3,10 @@ type: objection
 id: NON-005
 title: "Validation mécanique et règles écrites non tenues"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

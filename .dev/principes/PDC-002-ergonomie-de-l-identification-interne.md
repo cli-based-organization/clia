@@ -4,6 +4,9 @@ id: PDC-002
 title: "Ergonomie de l'identification interne"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 portee: systeme
 ---
 

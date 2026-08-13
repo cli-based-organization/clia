@@ -29,6 +29,7 @@
 
 clia_focus_categorie_libelle() {
   case "$1" in
+    approuver) printf 'A APPROUVER\thumain\n' ;;
     decider)   printf 'A DECIDER\thumain\n' ;;
     clore)     printf 'A CLORE\tagent\n' ;;
     executer)  printf 'A EXECUTER\tagent\n' ;;
@@ -184,7 +185,47 @@ clia_focus_bogues() {
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'BUG-*.md' 2>/dev/null | sort)
 }
 
+# Les decisions suspendues attendent l'humain, et personne d'autre.
+#
+# BUG-005 : DCN-013 pose qu'un premier jet d'agent reste suspendu jusqu'a
+# approbation manuelle. C'est donc une attente adressee a l'humain — et le
+# systeme ne la comptait pas. DCN-016 bloquait cinq chantiers de PLN-007
+# depuis le 2026-08-11 sans etre un item pour personne : la commande ne la
+# nommait que comme motif d'un plan range a defricher.
+clia_focus_decisions() {
+  local dir f alias titre effet n
+  dir="$(clia_dev_dir)/decisions"
+  [[ -d "$dir" ]] || return 0
+  while IFS= read -r f; do
+    [[ -n "$f" ]] || continue
+    effet=$(clia_frontmatter_field "$f" effet 2>/dev/null)
+    [[ "$effet" == "suspendue" ]] || continue
+    alias=$(basename "$f" .md | grep -oE '^DCN-[0-9]{3}')
+    titre=$(clia_frontmatter_field "$f" title 2>/dev/null)
+    n=$(clia_focus_plans_bloques "$alias")
+    if (( n > 0 )); then
+      printf 'approuver\t%s\t%s (bloque %s plan(s))\n' "$alias" "$titre" "$n"
+    else
+      printf 'approuver\t%s\t%s\n' "$alias" "$titre"
+    fi
+  done < <(find -L "$dir" -maxdepth 1 -type f -name 'DCN-*.md' 2>/dev/null | sort)
+}
+
+# Combien de plans proposes citent cet alias de decision.
+clia_focus_plans_bloques() {
+  local alias="$1" dir f n=0
+  dir="$(clia_dev_dir)/plans"
+  [[ -d "$dir" ]] || { printf '0\n'; return 0; }
+  while IFS= read -r f; do
+    [[ -n "$f" ]] || continue
+    [[ "$(clia_frontmatter_field "$f" statut-plan 2>/dev/null)" == "propose" ]] || continue
+    grep -q -- "$alias" "$f" 2>/dev/null && n=$((n + 1))
+  done < <(find -L "$dir" -maxdepth 1 -type f -name 'PLN-*.md' 2>/dev/null)
+  printf '%s\n' "$n"
+}
+
 clia_focus_items() {
+  clia_focus_decisions
   clia_focus_objections
   clia_focus_plans
   clia_focus_issues
@@ -195,23 +236,40 @@ clia_focus_items() {
 # L'ordre de priorite
 # --------------------------------------------------------------------------
 #
-# Un bogue ouvert passe avant tout : c'est un ecart constate a une regle
-# ecrite, et le laisser ouvert fait diverger le systeme de ce qu'il declare.
+# Une decision suspendue passe avant tout : elle attend l'humain, et lui seul
+# peut la lever. Ensuite un bogue ouvert, ecart constate a une regle ecrite.
 #
-# Ensuite ce qui est pret a etre fait par l'agent, puis ce qui attend
-# l'humain, puis ce qui demande un defrichage.
+# Puis ce qui est pret a etre fait par l'agent, puis ce qui attend une reponse
+# de l'humain, puis ce qui demande un defrichage.
 #
 # A l'interieur d'une categorie, le poids departage : ce qui est le plus cite
 # ailleurs debloque le plus.
 
+# Une decision suspendue passe devant tout.
+#
+# BUG-005, correction S2. Elle bloque par construction tout ce qui en derive,
+# et c'est la seule categorie ou l'humain est le seul a pouvoir agir :
+# CONSTITUTION.md C1. La laisser derriere un bogue que personne n'attend est
+# ce qui a immobilise PLN-007 pendant deux jours.
 clia_focus_rang() {
   case "$1" in
-    corriger)  printf '1\n' ;;
-    executer)  printf '2\n' ;;
-    decider)   printf '3\n' ;;
-    clore)     printf '4\n' ;;
-    defricher) printf '5\n' ;;
+    approuver) printf '1\n' ;;
+    corriger)  printf '2\n' ;;
+    executer)  printf '3\n' ;;
+    decider)   printf '4\n' ;;
+    clore)     printf '5\n' ;;
+    defricher) printf '6\n' ;;
     *)         printf '9\n' ;;
+  esac
+}
+
+# Le destinataire d'une categorie, pour le filtre de clia focus --humain.
+clia_focus_destinataire() {
+  case "$1" in
+    approuver|decider) printf 'humain\n' ;;
+    clore|executer|corriger) printf 'agent\n' ;;
+    defricher) printf 'les deux\n' ;;
+    *) printf '?\n' ;;
   esac
 }
 
@@ -221,15 +279,19 @@ clia_focus_rang() {
 
 clia_focus_usage() {
   cat <<'EOF'
-Usage : clia focus [--tout]
+Usage : clia focus [--tout] [--humain | --agent]
 
 Repond a « que dois-je faire maintenant ? ».
 
 Sans argument, la commande nomme UNE action et la commande qui l'executerait.
-Avec --tout, elle affiche le decompte par categorie et les items de chacune.
 
-Les cinq categories, dans l'ordre de priorite :
+  --tout      le decompte par categorie, et les items de chacune
+  --humain    seulement ce que l'humain peut faire, et lui seul
+  --agent     seulement ce que l'agent peut faire
 
+Les six categories, dans l'ordre de priorite :
+
+  A APPROUVER   une decision suspendue : elle attend l'humain, et lui seul
   A CORRIGER    un bogue ouvert : le systeme diverge de ce qu'il declare
   A EXECUTER    un plan propose, avec livrable et critere declares
   A DECIDER     une objection sans reponse : elle attend l'humain
@@ -250,6 +312,7 @@ EOF
 clia_focus_action_pour() {
   local cat="$1" alias="$2"
   case "$cat" in
+    approuver) printf 'clia res edit %s   # poser effet: en-vigueur, ou reviser\n' "$alias" ;;
     corriger)  printf 'clia res show %s   # lire, puis corriger la cause\n' "$alias" ;;
     executer)  printf 'clia res show %s   # lire, puis executer ses chantiers\n' "$alias" ;;
     decider)   printf 'clia res edit %s   # repondre aux questions\n' "$alias" ;;
@@ -262,19 +325,45 @@ clia_focus_main() {
   if clia_is_help "${1:-}"; then clia_focus_usage; return 0; fi
   clia_require_repo
 
-  local tout=0
-  case "${1:-}" in
-    --tout|-a) tout=1 ;;
-    '')        ;;
-    *)         clia_warn "option inconnue : $1"
-               clia_focus_usage >&2
-               return 2 ;;
-  esac
+  # BUG-005 S3 : l'humain qui lance la commande veut SON geste, non la
+  # priorite du depot. Sur 61 items le 2026-08-13, 57 etaient du travail
+  # d'agent, et la commande designait l'un d'eux.
+  local tout=0 qui=''
+  while (( $# > 0 )); do
+    case "$1" in
+      --tout|-a) tout=1 ;;
+      --humain)  qui='humain' ;;
+      --agent)   qui='agent' ;;
+      '')        ;;
+      *)         clia_warn "option inconnue : $1"
+                 clia_focus_usage >&2
+                 return 2 ;;
+    esac
+    shift
+  done
 
   local items
   items=$(clia_focus_items)
+
+  # Le defrichage s'adresse aux deux : il reste dans les deux filtres.
+  if [[ -n "$qui" ]]; then
+    local gardes='' cat_ligne dest
+    while IFS= read -r cat_ligne; do
+      [[ -n "$cat_ligne" ]] || continue
+      dest=$(clia_focus_destinataire "${cat_ligne%%$'\t'*}")
+      if [[ "$dest" == "$qui" || "$dest" == "les deux" ]]; then
+        gardes+="$cat_ligne"$'\n'
+      fi
+    done <<< "$items"
+    items="${gardes%$'\n'}"
+  fi
+
   if [[ -z "$items" ]]; then
-    printf 'rien en attente\n'
+    if [[ -n "$qui" ]]; then
+      printf 'rien en attente pour %s\n' "$qui"
+    else
+      printf 'rien en attente\n'
+    fi
     return 0
   fi
 
@@ -317,7 +406,7 @@ clia_focus_main() {
   {
     printf 'CATEGORIE\tQUI\tNOMBRE\n'
     local c n
-    for c in corriger executer decider clore defricher; do
+    for c in approuver corriger executer decider clore defricher; do
       n=$(printf '%s\n' "$items" | awk -F'\t' -v k="$c" '$1 == k' | grep -c '') || n=0
       (( n > 0 )) || continue
       IFS=$'\t' read -r libelle destinataire < <(clia_focus_categorie_libelle "$c")
@@ -327,7 +416,7 @@ clia_focus_main() {
 
   printf '\n'
   local c
-  for c in corriger executer decider clore defricher; do
+  for c in approuver corriger executer decider clore defricher; do
     local lignes
     lignes=$(printf '%s\n' "$items" | awk -F'\t' -v k="$c" '$1 == k')
     [[ -n "$lignes" ]] || continue

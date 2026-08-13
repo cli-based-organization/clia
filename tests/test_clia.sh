@@ -1281,6 +1281,58 @@ if printf '%s' "$out" | awk '/^A EXECUTER/,/^$/' | grep -q 'PLN-002'; then
   ok 'une decision en vigueur ne bloque pas le plan'
 else ko 'une decision en vigueur ne bloque pas le plan' 'PLN-002 absent de A EXECUTER'; fi
 
+# Une decision suspendue est un item, et elle attend l humain.
+#
+# BUG-005 : DCN-013 pose qu un premier jet d agent reste suspendu jusqu a
+# approbation manuelle. DCN-016 bloquait cinq chantiers de PLN-007 sans etre
+# un item pour personne : focus ne lisait pas les decisions.
+
+cat > "$FDEPOT/.dev/decisions/DCN-002-a-approuver.md" <<'EOF'
+---
+type: decision
+id: DCN-002
+title: "Une decision qui attend l humain"
+status: draft
+effet: suspendue
+---
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'une decision suspendue est un item' 'A APPROUVER' "$out"
+assert_contains 'et elle est nommee' 'DCN-002' "$out"
+
+# Elle passe devant le bogue ouvert : elle attend l humain, et lui seul.
+out=$(runfocus_out)
+assert_contains 'a approuver passe devant a corriger' 'A APPROUVER' "$out"
+assert_contains 'et son destinataire est l humain' 'humain' "$out"
+assert_contains 'la commande a taper est donnee' 'clia res edit DCN-002' "$out"
+
+# Le filtre par destinataire.
+out=$(runfocus_out --tout --agent)
+if printf '%s' "$out" | grep -q 'A APPROUVER'; then
+  ko '--agent masque ce qui attend l humain' 'A APPROUVER encore la'
+else ok '--agent masque ce qui attend l humain'; fi
+assert_contains '--agent garde le travail d agent' 'A CORRIGER' "$out"
+
+# clia config ia policy check : PLN-015 chantier C.
+out=$( ( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" config ia policy check ) 2>&1 )
+rc=$?
+for m in allow deny ask hooks; do
+  assert_contains "policy check affiche le mecanisme $m" "$m" "$out"
+done
+assert_contains 'policy check nomme le manque etabli par la mesure' 'autorisation' "$out"
+assert_rc 'policy check sort en 1 quand il manque un point' 1 "$rc"
+out=$( ( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" config ia policy check --help ) 2>&1 )
+assert_contains 'policy check dit qu il ne modifie rien' 'ne modifie rien' "$out"
+( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" config ia policy apply ) >/dev/null 2>&1
+assert_rc 'policy apply n existe pas encore et le dit' 2 "$?"
+
+out=$(runfocus_out --tout --humain)
+assert_contains '--humain garde ce qui attend l humain' 'A APPROUVER' "$out"
+if printf '%s' "$out" | grep -q 'A CORRIGER'; then
+  ko '--humain masque le travail d agent' 'A CORRIGER encore la'
+else ok '--humain masque le travail d agent'; fi
+assert_contains '--humain garde le defrichage, qui vise les deux' 'A DEFRICHER' "$out"
+
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

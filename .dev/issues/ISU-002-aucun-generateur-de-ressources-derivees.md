@@ -3,6 +3,10 @@ type: issue
 id: ISU-002
 title: "Aucun générateur de ressources dérivées n'existe"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

@@ -3,6 +3,10 @@ type: plan
 id: PLN-005
 title: "Ajustement de clia aux réponses de NON-004"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent

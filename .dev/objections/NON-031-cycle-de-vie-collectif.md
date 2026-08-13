@@ -3,6 +3,10 @@ type: objection
 id: NON-031
 title: "Le cycle de vie collectif contredit RES-001 sans le remplacer"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

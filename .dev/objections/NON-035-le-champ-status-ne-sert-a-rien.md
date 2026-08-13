@@ -3,6 +3,10 @@ type: objection
 id: NON-035
 title: "Un champ obligatoire universel qui n'a jamais changé de valeur"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

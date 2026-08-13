@@ -4,6 +4,9 @@ id: MET-003
 title: "Journalisation du travail"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 domaine: "traçabilité du travail de l'agent, au fil de son exécution"
 ---
 

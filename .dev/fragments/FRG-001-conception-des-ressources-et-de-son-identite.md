@@ -3,6 +3,9 @@ type: fragment
 id: FRG-001
 title: "Conception des ressources et de son identité"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 origine: Jérémy Viau-Trudel
 date-de-captation: 2026-08-10
 exploitation: À RENSEIGNER

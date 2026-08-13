@@ -3,6 +3,10 @@ type: ressource
 id: RES-032
 title: "Log"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: LOG
 emplacement: ".dev/logs/SES-<SEQ>-<SLUG>/TSK-<SEQ>-<SLUG>/TSK-<SEQ_TYPE>-<TYPE_LOG>_<YYYY-MM-DD-HH-MM>_<SLUG>.md"
@@ -151,6 +155,13 @@ La commande refuse d'écraser un `workspace/session.md` qui serait un fichier or
 | Ressources sources | La tâche `TSK`, et le travail effectivement produit |
 
 Conformément à `NON-026` Q5, une ressource générée déclare ses sources et sa méthode.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
 
 ## Relations
 

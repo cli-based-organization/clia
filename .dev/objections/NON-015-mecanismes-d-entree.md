@@ -3,6 +3,10 @@ type: objection
 id: NON-015
 title: "Mécanismes d'entrée de l'humain dans le système"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

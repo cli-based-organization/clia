@@ -4,6 +4,9 @@ id: NON-013
 title: "ce qu'est une ressource"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-09
 ---
 

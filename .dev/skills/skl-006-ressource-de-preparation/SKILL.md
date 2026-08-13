@@ -69,6 +69,23 @@ Un échec signale un champ absent, mal orthographié, ou dont la valeur sort de 
 
 Pour un ADR, vérifier en outre que chaque décision porte son alternative écartée et, quand elle est révisable, sa porte de sortie.
 
+## Écrire un plan : ce qui bloque se déclare avec ce qui le lève
+
+**Un plan qui déclare un blocage déclare par quel geste il se lève.** Sans quoi le blocage est une constatation, et personne ne sait quoi en faire.
+
+| Ce qui ne suffit pas | Ce qu'il faut écrire |
+|---|---|
+| « Ce chantier attend `DCN-016` » | « Ce chantier attend que `DCN-016` passe de `suspendue` à `en-vigueur`. Geste : `clia res edit DCN-016`. Qui : l'humain. Débloque : 5 chantiers » |
+| « Un préalable est ouvert » | Lequel, quel geste le lève, qui peut le faire |
+
+**Trois éléments, à chaque blocage déclaré** : le geste, qui peut le faire, ce qu'il débloque.
+
+**Le motif est mesuré.** `BUG-005` : `PLN-007` déclarait son blocage en prose depuis le 2026-08-11, dans ses objections et sa section « Statut ». Le geste qui le levait n'apparaissait dans aucune commande, et l'humain est resté deux jours sans savoir quoi faire.
+
+**Ce que la règle rend possible.** `clia focus` lit les décisions suspendues et les range en `A APPROUVER`. Un blocage écrit selon cette règle devient une ligne de la file de l'humain ; un blocage écrit en prose reste invisible.
+
+**Le contrôle.** Après avoir écrit un plan qui déclare un blocage, lancer `clia focus --humain` : le geste doit y apparaître. S'il n'y est pas, c'est le plan qui est mal écrit, ou le dépôt qui ne sait pas encore voir ce type de blocage — et alors c'est un bogue, non une prose à étoffer.
+
 ## Le piège de cette famille
 
 Décider sans dire ce qui ferait changer d'avis. `ANL-001` mesure au défaut D3 que le corpus compte quatre-vingt-neuf ADR et aucun sur ses quatre ruptures de cap réelles : les décisions y sont abandonnées en silence plutôt que révisées, faute de porte de sortie écrite.

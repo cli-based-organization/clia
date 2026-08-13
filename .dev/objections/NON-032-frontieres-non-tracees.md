@@ -3,6 +3,10 @@ type: objection
 id: NON-032
 title: "Deux frontières demandées et non traçables sans ontologie"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

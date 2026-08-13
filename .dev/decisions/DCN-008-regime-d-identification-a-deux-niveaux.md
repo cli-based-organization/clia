@@ -4,6 +4,10 @@ id: DCN-008
 title: "L identifiant interne est un alias, l identite est celle de l oeuvre"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: adopte
+activated: true
+domain-status: "en-vigueur"
 instance: "human:jvtrudel"
 date-de-decision: 2026-08-10
 portee: systeme

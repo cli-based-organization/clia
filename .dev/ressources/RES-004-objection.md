@@ -4,6 +4,10 @@ id: RES-004
 title: "Objection"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: NON
 emplacement: ".dev/objections/NON-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
@@ -128,6 +132,23 @@ Le mécanisme d'identité proposé par `RES-001`, où l'identité est le couple 
 ### Q2 - <question>
 **Réponse.**
 ## Ce qui lèverait cette objection
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `ouverte` | `etat` |
+| `partiellement-repondue` | `etat` |
+| `repondue` | `etat` |
+| `resolue` | `etat` |
+| `levee-par-decision` | `etat` |
+| `differee` | `etat` |
+| `caduque` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
+
 ## Relations
 ```
 

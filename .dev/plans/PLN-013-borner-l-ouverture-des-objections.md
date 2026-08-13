@@ -3,6 +3,10 @@ type: plan
 id: PLN-013
 title: "Borner l'ouverture des objections"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "execute"
 statut-plan: execute
 date: 2026-08-13
 initiateur: agent

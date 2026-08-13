@@ -3,6 +3,10 @@ type: objection
 id: NON-028
 title: "Conséquences du système de journalisation"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

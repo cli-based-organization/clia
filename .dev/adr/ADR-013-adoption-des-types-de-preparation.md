@@ -4,6 +4,10 @@ id: ADR-013
 title: "Adoption des sept types de la famille préparation"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-decision: propose
 date: 2026-08-10
 decideurs: ["claude-opus-5 (rédaction)", "human:jvtrudel (à approuver)"]

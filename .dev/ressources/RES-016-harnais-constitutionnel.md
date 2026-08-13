@@ -4,6 +4,10 @@ id: RES-016
 title: "Harnais constitutionnel"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: aucun
 emplacement: "CONSTITUTION.md"
 cycle-de-vie: vivant
@@ -42,6 +46,13 @@ Une règle qui peut être levée par une instruction ordinaire n'est pas constit
 ## Cycle de vie et édition
 
 `vivant`, nom fixe à la racine, `co-edition`.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
 
 ## Relations
 

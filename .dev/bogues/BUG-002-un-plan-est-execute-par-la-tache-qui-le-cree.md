@@ -3,6 +3,10 @@ type: bogue
 id: BUG-002
 title: "Un plan est exécuté par la tâche qui le crée"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouvert"
 regle: "Un plan SMART, exécuté, produit les livrables qu'il planifie"
 constate-le: 2026-08-13
 etat: ouvert

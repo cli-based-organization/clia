@@ -3,6 +3,10 @@ type: objection
 id: NON-014
 title: "Le choix du trilemme de nommage : quelle propriété clia abandonne"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

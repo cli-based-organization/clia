@@ -3,6 +3,9 @@ type: analyse
 id: ANL-011
 title: "Focus et accumulation des items ouverts"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-13
 sujet: "Pourquoi le nombre de choses à faire augmente à mesure qu'on travaille, et ce qui le ferait diminuer"
 generated:

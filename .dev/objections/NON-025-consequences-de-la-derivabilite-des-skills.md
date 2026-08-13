@@ -3,6 +3,10 @@ type: objection
 id: NON-025
 title: "Conséquences de la dérivabilité des skills"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

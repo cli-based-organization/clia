@@ -4,6 +4,9 @@ id: PDC-003
 title: "SMART et extrême SMART"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 portee: systeme
 ---
 

@@ -3,6 +3,10 @@ type: issue
 id: ISU-011
 title: "Une session abandonnée ne se distingue pas d'une session aboutie"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: humain
 etat: ouverte
 ouverture: 2026-08-12

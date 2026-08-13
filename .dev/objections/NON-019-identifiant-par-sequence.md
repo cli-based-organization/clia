@@ -3,6 +3,10 @@ type: objection
 id: NON-019
 title: "Conséquences de l'identifiant par séquence"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

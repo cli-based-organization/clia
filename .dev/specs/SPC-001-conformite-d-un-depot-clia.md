@@ -4,6 +4,9 @@ id: SPC-001
 title: "Conformité d'un dépôt clia"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 ---
 
 # SPC-001 - Conformité d'un dépôt clia

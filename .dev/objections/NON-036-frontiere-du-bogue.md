@@ -3,6 +3,10 @@ type: objection
 id: NON-036
 title: "Frontière du bogue et sort des sept écarts constatés"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

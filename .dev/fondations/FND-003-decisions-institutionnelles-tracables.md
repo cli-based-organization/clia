@@ -3,6 +3,9 @@ type: fondation
 id: FND-003
 title: "Décisions institutionnelles traçables : documentation et suivi des changements"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-10
 sujet: "Pratiques de documentation des décisions et de suivi de leurs changements, dans plusieurs domaines"
 methodologie: "MET-001, dix étapes, revue de littérature"

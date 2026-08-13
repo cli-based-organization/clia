@@ -1,0 +1,44 @@
+# derive-de : TSK-07-commit-message_2026-08-13-14-01_plan-smart-non-executable.yaml
+# Le premier message rapportait un echec d'execution. DCN-016 a ete approuvee
+# depuis, et quatre chantiers ont pu etre executes.
+type: feat
+portee: modele
+sujet: "quatre champs d'état pour toute ressource"
+corps: |
+  DCN-016 est passée en vigueur, et PLN-007 a pu avancer de quatre chantiers.
+  Six sur sept sont désormais satisfaits.
+
+  RES-001 déclare les quatre champs : maturity, adoption, activated, et
+  domain-status dont les valeurs sont propres au type. commun.cue les porte,
+  les trois premiers obligatoires et domain-status optionnel — vingt-cinq des
+  trente-sept types déclarent n'avoir aucun cycle de vie métier propre, et le
+  contraindre à l'échelle commune exigerait une valeur de types qui n'en ont
+  pas.
+
+  Les 37 définitions déclarent leur domain-status : 12 reportent l'énumération
+  d'un champ existant, 25 déclarent n'en avoir aucune. Les valeurs sont
+  reprises, jamais inventées, et chacune dit de quel champ elle vient.
+
+  183 instances portent les quatre champs, dont 152 avec domain-status repris
+  de leur champ propre. Le dépôt ne régresse pas : 166 conformes.
+
+  366 valeurs ont été posées sans jugement par instance. maturity vaut
+  conception partout, comme status valait draft partout : c'est le défaut que
+  DCN-016 corrigeait, reproduit sur un champ neuf. La différence est que le
+  champ peut varier. domain-status y échappe : 12 énumérations distinctes.
+
+  Le chantier E — supprimer les 154 champs anciens — n'est pas exécuté, pour
+  trois motifs mesurés. Il est irréversible : 191 champs. Il casserait le CLI :
+  clia focus et clia res ls font 10 lectures de etat, effet et statut-plan.
+  Et son critère dépend d'ISU-009, toujours ouverte. Le deuxième motif
+  n'existait pas quand le plan a été écrit, le 2026-08-11.
+
+  289 à 297 assertions.
+note_pour_l_humain: |
+  Le geste qui débloque le dernier chantier : réécrire les dix lectures du CLI
+  pour qu'elles lisent domain-status. C'est du travail d'agent.
+fichiers:
+  - .dev/ressources/
+  - .dev/schemas/commun.cue
+  - .dev/plans/PLN-007-quatre-champs-d-etat.md
+  - .dev/logs/SES-002-generation-chain/TSK-011-executer-pln-007/

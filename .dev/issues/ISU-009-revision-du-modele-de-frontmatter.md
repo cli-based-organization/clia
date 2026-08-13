@@ -3,6 +3,10 @@ type: issue
 id: ISU-009
 title: "Révision du modèle de frontmatter"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: humain
 etat: ouverte
 ouverture: 2026-08-11

@@ -4,10 +4,14 @@ id: DCN-016
 title: "Quatre champs d etat pour toute ressource"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: adopte
+activated: true
+domain-status: "en-vigueur"
 instance: "human:jvtrudel"
 date-de-decision: 2026-08-11
 portee: systeme
-effet: suspendue
+effet: en-vigueur
 attestation: interne
 diffusion: public
 ---

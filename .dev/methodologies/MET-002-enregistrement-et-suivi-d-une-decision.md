@@ -4,6 +4,9 @@ id: MET-002
 title: "Enregistrement et suivi d'une décision"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 domaine: "traçabilité des décisions qui contraignent le travail"
 ---
 

@@ -3,6 +3,10 @@ type: objection
 id: NON-033
 title: "L'autorité de création des principes bloque un chantier"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: bloquant
 etat: repondue

@@ -4,6 +4,10 @@ id: DCN-007
 title: "L identifiant interne d une ressource est PREFIX-SEQ"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: adopte
+activated: true
+domain-status: "en-vigueur"
 instance: "human:jvtrudel"
 date-de-decision: 2026-08-09
 portee: systeme

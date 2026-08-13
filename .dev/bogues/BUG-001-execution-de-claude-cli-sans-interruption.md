@@ -3,6 +3,10 @@ type: bogue
 id: BUG-001
 title: "exécution de claude cli sans interruption"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouvert"
 regle: DCN-017
 constate-le: 2026-08-12
 etat: ouvert

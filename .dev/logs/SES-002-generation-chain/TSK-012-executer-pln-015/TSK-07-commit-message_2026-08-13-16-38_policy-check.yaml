@@ -1,0 +1,34 @@
+# derive-de : TSK-07-commit-message_2026-08-13-15-37_un-hook-refuse-il-n-autorise-pas.yaml
+type: feat
+portee: cli
+sujet: "clia config ia policy check"
+corps: |
+  Le chantier C de PLN-015 avait été déclaré hors d'atteinte au premier
+  passage, parce qu'il dépendait d'un chantier A dont le critère n'était pas
+  satisfait. Le raisonnement était faux : A n'a pas échoué à produire une
+  connaissance, il a établi qu'un hook refuse et n'autorise pas. Une
+  connaissance négative reste une connaissance.
+
+  clia config ia policy check répond donc à « puis-je exécuter une tâche sans
+  interrompre l'humain, et sinon qu'est-ce qui manque ? ». Elle affiche l'état
+  des quatre mécanismes — allow, deny, ask, hooks — et nomme en cinquième
+  ligne ce qu'aucune configuration ne comble : l'autorisation est impossible,
+  mesure du 2026-08-13. Sortie 0 si la politique est complète, 1 sinon. Elle
+  ne modifie rien.
+
+  clia config ia policy apply n'existe pas et sort en 2 en le disant : il
+  attend NON-040 et un mécanisme d'autorisation qui n'est pas démontré.
+
+  Un défaut trouvé en éprouvant : le premier jet affichait « politique
+  complète » avec cinq manques. Le décompte se faisait dans un bloc redirigé
+  vers column, donc dans un sous-shell, et la variable y était perdue. Même
+  piège que le grep -c de la tâche 9 : une sortie qui a l'air juste et un code
+  de retour qui ment.
+
+  PLN-015 garde ses trois chantiers exécutés et reste propose : deux points
+  demeurent hors du plan.
+fichiers:
+  - lib/clia/config.sh
+  - tests/test_clia.sh
+  - .dev/plans/PLN-015-politique-d-autorisation-du-depot.md
+  - .dev/logs/SES-002-generation-chain/TSK-012-executer-pln-015/

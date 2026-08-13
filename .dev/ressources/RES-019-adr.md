@@ -4,6 +4,10 @@ id: RES-019
 title: "Décision d'architecture"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: ADR
 emplacement: ".dev/adr/ADR-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
@@ -66,6 +70,20 @@ Les cinq ADR de ce dépôt sont tous au statut `propose`. Un ADR qui se déclare
 `vivant`, `ia`. Un ADR est généré à partir de ses sources ; il se régénère quand elles changent.
 
 L'humain lit, commente et objecte. Il ne co-édite pas un document dérivé : il corrige la source.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `propose` | `statut-decision` |
+| `accepte` | `statut-decision` |
+| `remplacee` | `statut-decision` |
+| `abandonnee` | `statut-decision` |
+
+Ces valeurs sont **reprises du champ `statut-decision`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

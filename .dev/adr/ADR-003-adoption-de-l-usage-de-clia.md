@@ -4,6 +4,10 @@ id: ADR-003
 title: "Adoption de l'usage d'un CLI extensible, clia"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-decision: propose
 date: 2026-08-09
 decideurs: ["human:jvtrudel (à statuer)", "claude-opus-5 (rédaction)"]

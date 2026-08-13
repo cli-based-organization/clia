@@ -3,6 +3,9 @@ type: fondation
 id: FND-004
 title: "Publication des spécifications : RFC, normalisation, standardisation"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Les mécanismes de publication des spécifications techniques, leur histoire et leurs régimes d'autorité"
 methodologie: "MET-001, complétant FND-015 archivée"

@@ -171,3 +171,16 @@ Choisir l'option de rémédiation la plus prometteuse et proruire un plan SMART.
 ## 11. [implémentation] exécute le PLN-007
 
 ## 12. [implémentation] exécute le PLN-015
+
+## 13. [rapport de bogue] Pourquoi on avance pas
+
+Les plans PLN-015 et PLN-017 ont été exécutés pendant 8 minutes mais ils ont échoué ou n'ont rien produit ou n'ont pas bien rapporter le problème.
+
+Aucune directive claire et compréhensible pour l'humain n'a été fournit pour avancer et débloquer la situation.
+
+Ce n'est pas un comportement acceptable. Consigner cet incident dans un rapport BUG.
+
+Dire pourquoi dans une analyse ANL. Proposer une solution.
+
+Réécrire les skills et les méthodes d'exécution et d'écriture de plans pour que cette situation ne se produise pas.
+

@@ -4,6 +4,10 @@ id: FNC-002
 title: "Gestion des sessions"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "livree"
 etat: livree
 usage: clia ses status|ls|new|close|todo|switch
 ---

@@ -3,6 +3,9 @@ type: analyse
 id: ANL-004
 title: "Verbosité justificative des définitions de type : diagnostic, cause, correctif"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-10
 sujet: "Pourquoi les trente définitions RES justifient au lieu de prescrire, et ce qui le corrige"
 generated:

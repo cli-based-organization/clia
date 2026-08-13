@@ -3,6 +3,10 @@ type: issue
 id: ISU-005
 title: "L'agent ne peut pas créer un principe de conception"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

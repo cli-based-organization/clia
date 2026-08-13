@@ -3,6 +3,9 @@ type: bogue
 id: BUG-003
 title: "compréhensibilité des logs par plan"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 regle: À RENSEIGNER
 constate-le: À RENSEIGNER
 etat: À RENSEIGNER

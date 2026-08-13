@@ -3,6 +3,10 @@ type: objection
 id: NON-004
 title: "Frontière entre Ontologie, Concept, Fondation et Analyse"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: informatif
 etat: repondue

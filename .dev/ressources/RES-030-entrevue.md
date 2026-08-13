@@ -4,6 +4,10 @@ id: RES-030
 title: "Entrevue"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: ENT
 emplacement: ".dev/entrevues/ENT-<SEQ>-<SLUG>.md"
 cycle-de-vie: travail
@@ -54,6 +58,13 @@ C'est le type où la propriété par bloc est la plus nette.
 ## Cycle de vie et édition
 
 `travail`, journalisée en tête. Une entrevue peut se poursuivre en plusieurs temps.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+**Aucune.** Ce type n'a pas de cycle de vie métier propre : son état est entièrement décrit par les trois champs universels `maturity`, `adoption` et `activated`.
 
 ## Relations
 

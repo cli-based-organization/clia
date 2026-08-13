@@ -3,6 +3,10 @@ type: issue
 id: ISU-010
 title: "Le critère de convergence n'est vérifié par rien"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: humain
 etat: ouverte
 ouverture: 2026-08-12

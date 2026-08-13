@@ -4,6 +4,9 @@ id: DCN-011
 title: "Structure du systeme autour de la ressource"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 instance: À RENSEIGNER
 date-de-decision: 2026-08-11
 portee: À RENSEIGNER

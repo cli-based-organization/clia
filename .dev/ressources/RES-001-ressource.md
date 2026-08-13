@@ -4,6 +4,10 @@ id: RES-001
 title: "Ressource"
 version: 2.0.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 prefixe: RES
 emplacement: ".dev/ressources/RES-<SEQ>-<SLUG>.md"
 cycle-de-vie: vivant
@@ -184,6 +188,40 @@ Toute définition de type porte les quatorze champs suivants. Les cinq premiers 
 | `statut` | Le type défini | `actif`, `deprecie` ou `non-installe` |
 
 La cohabitation, dans un même frontmatter, des métadonnées de la définition et des propriétés du type défini est un compromis assumé : elle évite un second fichier par type. Elle demande en retour de savoir lire la colonne « Portée » du tableau ci-dessus.
+
+## Les quatre champs d'état de toute ressource
+
+`DCN-016`, en vigueur depuis le 2026-08-13. Elle corrige un défaut mesuré par `NON-035` : `status` valait `draft` dans les cent cinquante-sept instances du dépôt, et il était le seul état affiché par le CLI.
+
+**Trois natures d'état étaient confondues sous un seul champ**, et une quatrième — le cycle de vie métier — était portée par huit champs différents selon le type.
+
+| Champ | Valeurs | Ce qu'il dit | Propre au type ? |
+|---|---|---|---|
+| `maturity` | `conception`, `mature`, `fin-de-vie`, `obsolete` | Où en est le document | Non, universel |
+| `adoption` | `propose`, `adopte`, `conteste`, `obsolete` | Ce que le système en fait | Non, universel |
+| `activated` | `true`, `false` | S'il faut le considérer | Non, universel |
+| `domain-status` | **Déclarées par le `RES` du type** | Le cycle de vie métier | **Oui** |
+
+**`domain-status` est le seul des quatre dont les valeurs varient d'un type à l'autre.** Chaque définition déclare son énumération, ou déclare n'en avoir aucune. C'est lui qui reprend les valeurs des huit champs que `DCN-016` supprime : `effet` pour la décision, `etat` pour l'objection et l'issue, `statut-plan` pour le plan.
+
+### Ce qui reste ouvert
+
+**Le sort de `status`.** `DCN-016` posait la condition « si OKF en a besoin, préserver ; sinon supprimer », et la condition n'a pas pu être vérifiée : deux sources du corpus se contredisent et la spécification OKF n'était pas consultable. `ISU-009` le porte.
+
+**Ces quatre champs ne sont pas encore obligatoires.** Les déclarer ici les définit ; les rendre obligatoires dans `commun.cue` avant de les poser sur les instances rendrait le dépôt entier non conforme. `PLN-007` en fait deux chantiers distincts, dans cet ordre.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `actif` | `statut` |
+| `deprecie` | `statut` |
+| `non-installe` | `statut` |
+
+Ces valeurs sont **reprises du champ `statut`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

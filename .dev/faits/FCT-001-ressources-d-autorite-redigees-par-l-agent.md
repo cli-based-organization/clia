@@ -3,6 +3,9 @@ type: fait
 id: FCT-001
 title: "Ressources d'autorité rédigées par l'agent avant CONSTITUTION.md C1"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 sujet: "Les DCN et PDC du dépôt, leur rédacteur et leur état d'approbation au 2026-08-10"
 date-de-constat: 2026-08-10
 diffusion: public

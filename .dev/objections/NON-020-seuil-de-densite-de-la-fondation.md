@@ -3,6 +3,10 @@ type: objection
 id: NON-020
 title: "Le seuil de densité de MET-001 n'est pas atteignable"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "repondue"
 initiateur: agent
 effet: conditionnel
 etat: repondue

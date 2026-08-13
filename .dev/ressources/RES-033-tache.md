@@ -3,6 +3,10 @@ type: ressource
 id: RES-033
 title: "Tâche"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "actif"
 version: 0.1.0
 prefixe: TSK
 emplacement: ".dev/logs/SES-<SEQ>-<SLUG>/TSK-<SEQ>-<SLUG>/"
@@ -95,6 +99,20 @@ TSK-<SEQ>-<SLUG>/
 ```
 
 L'énoncé peut vivre dans le log de type `demande`, qui le reprend et l'interprète. Un fichier d'énoncé distinct n'est pas exigé.
+
+
+## Cycle de vie métier : `domain-status`
+
+`DCN-016` pose que `domain-status` porte le cycle de vie métier du type, et que chaque définition en déclare l'énumération.
+
+| Valeur | Reprise de |
+|---|---|
+| `demandee` | `etat` |
+| `en-cours` | `etat` |
+| `faite` | `etat` |
+| `abandonnee` | `etat` |
+
+Ces valeurs sont **reprises du champ `etat`**, que `DCN-016` supprime. Elles ne sont pas nouvelles : le type les portait déjà.
 
 ## Relations
 

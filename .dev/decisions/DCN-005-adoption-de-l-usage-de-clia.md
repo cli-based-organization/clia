@@ -4,6 +4,10 @@ id: DCN-005
 title: "Adoption de l'usage d'un CLI extensible"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "proposee"
 instance: "aucune : décision non actée"
 date-de-decision: 2026-08-09
 portee: systeme

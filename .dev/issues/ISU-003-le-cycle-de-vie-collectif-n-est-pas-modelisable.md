@@ -3,6 +3,10 @@ type: issue
 id: ISU-003
 title: "Le cycle de vie collectif des ressources n'est pas modélisable"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "ouverte"
 initiateur: agent
 etat: ouverte
 ouverture: 2026-08-11

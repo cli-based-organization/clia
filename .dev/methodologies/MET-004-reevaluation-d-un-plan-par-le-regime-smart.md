@@ -4,6 +4,9 @@ id: MET-004
 title: "Réévaluation d'un plan par le régime SMART"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 domaine: "séparation de ce qui est planifiable de ce qui ne l'est pas encore"
 ---
 

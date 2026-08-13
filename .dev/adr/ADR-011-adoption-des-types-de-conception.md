@@ -4,6 +4,10 @@ id: ADR-011
 title: "Adoption des quatre types de la famille conception"
 version: 0.1.0
 status: draft
+maturity: conception
+adoption: propose
+activated: true
+domain-status: "propose"
 statut-decision: propose
 date: 2026-08-10
 decideurs: ["claude-opus-5 (rédaction)", "human:jvtrudel (à approuver)"]

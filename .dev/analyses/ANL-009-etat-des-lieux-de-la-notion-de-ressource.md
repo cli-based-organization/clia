@@ -3,6 +3,9 @@ type: analyse
 id: ANL-009
 title: "État des lieux de la définition et de l'instrumentation des ressources"
 status: draft
+maturity: conception
+adoption: propose
+activated: true
 date: 2026-08-11
 sujet: "Ce que le dépôt dit de la ressource, sur neuf axes, et ce qui reste à trancher"
 generated:
