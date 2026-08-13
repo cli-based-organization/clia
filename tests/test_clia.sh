@@ -1014,6 +1014,149 @@ assert_rc 'init refuse le depot source comme cible' 1 "$?"
 ( cd "$USETUP" && "$CLIA_BIN" setup init "$USETUP/x" --inconnu ) >/dev/null 2>&1
 assert_rc 'une option inconnue de init echoue en 2' 2 "$?"
 
+
+# --------------------------------------------------------------------------
+# clia resource ls : le champ d'etat qui varie
+# --------------------------------------------------------------------------
+#
+# PLN-011. clia res ls affichait status, constant dans tout le depot. Il
+# affiche desormais le champ d'etat propre declare par la definition du type.
+
+# Le type Chose declare status comme seul champ d'etat : la colonne le reste.
+out=$(run_out res ls chose)
+assert_contains 'ls TYPE affiche une colonne d etat' 'STATUS' "$out"
+
+# Un type dont la definition declare un champ d'etat propre le fait afficher.
+cat > "$DEPOT/.dev/ressources/RES-003-machin.md" <<'EOF'
+---
+type: ressource
+id: RES-machin
+title: "Machin"
+version: 0.1.0
+status: draft
+prefixe: MCH
+emplacement: ".dev/machins/MCH-<SEQ>-<SLUG>.md"
+cycle-de-vie: travail
+edition: ia
+champs-obligatoires: [type, id, title, status, etat]
+relations-admissibles: [ressource]
+sections: [Objet, Relations]
+skill: aucun
+adr: aucun
+statut: actif
+---
+
+# RES-003 - Machin
+EOF
+mkdir -p "$DEPOT/.dev/machins"
+cat > "$DEPOT/.dev/machins/MCH-001-premier.md" <<'EOF'
+---
+type: machin
+id: MCH-001
+title: "Premier machin"
+status: draft
+etat: ouvert
+---
+EOF
+cat > "$DEPOT/.dev/machins/MCH-002-second.md" <<'EOF'
+---
+type: machin
+id: MCH-002
+title: "Second machin"
+status: draft
+etat: ferme
+---
+EOF
+
+out=$(run_out res ls machin)
+assert_contains 'ls TYPE affiche le champ d etat propre' 'ETAT' "$out"
+assert_not_contains 'ls TYPE n affiche plus status quand un etat propre existe' \
+  'STATUS' "$out"
+assert_contains 'ls TYPE montre la premiere valeur' 'ouvert' "$out"
+assert_contains 'ls TYPE montre la seconde, differente' 'ferme' "$out"
+
+# --------------------------------------------------------------------------
+# clia focus
+# --------------------------------------------------------------------------
+#
+# PLN-012. Un depot dedie : focus lit les objections, plans, issues et bogues.
+
+FDEPOT="$TMP/fdepot"
+mkdir -p "$FDEPOT/.dev/objections" "$FDEPOT/.dev/plans" \
+         "$FDEPOT/.dev/issues" "$FDEPOT/.dev/bogues" "$FDEPOT/.dev/ressources"
+
+runfocus() { ( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" focus "$@" ) 2>&1; }
+runfocus_out() { ( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" focus "$@" ) 2>/dev/null; }
+
+out=$(runfocus --help)
+assert_contains 'focus --help liste les categories' 'A CORRIGER' "$out"
+assert_contains 'focus --help dit qu il n execute rien' 'n'"'"'execute rien' "$out"
+( cd "$FDEPOT" && CLIA_REPO_ROOT="$FDEPOT" "$CLIA_BIN" focus --inconnu ) >/dev/null 2>&1
+assert_rc 'une option inconnue de focus echoue en 2' 2 "$?"
+
+out=$(runfocus_out)
+assert_contains 'sur un depot sans item, focus le dit' 'rien en attente' "$out"
+
+# Une objection repondue : categorie A CLORE, destinataire agent.
+cat > "$FDEPOT/.dev/objections/NON-001-essai.md" <<'EOF'
+---
+type: objection
+id: NON-001
+title: "Une objection repondue"
+status: draft
+initiateur: agent
+effet: informatif
+etat: repondue
+porte-sur: []
+---
+EOF
+out=$(runfocus_out)
+assert_contains 'une objection repondue est a clore' 'A CLORE' "$out"
+assert_contains 'focus nomme l item' 'NON-001' "$out"
+
+# Un bogue ouvert passe devant tout le reste.
+cat > "$FDEPOT/.dev/bogues/BUG-001-essai.md" <<'EOF'
+---
+type: bogue
+id: BUG-001
+title: "Un bogue ouvert"
+status: draft
+regle: "une regle"
+constate-le: 2026-08-13
+etat: ouvert
+---
+EOF
+out=$(runfocus_out)
+assert_contains 'un bogue ouvert passe en premier' 'A CORRIGER' "$out"
+assert_contains 'focus nomme le bogue' 'BUG-001' "$out"
+
+# La sortie par defaut tient en dix lignes : c est le critere du plan.
+n=$(runfocus_out | grep -c '')
+if (( n <= 10 )); then ok 'la sortie de focus tient en dix lignes'
+else ko 'la sortie de focus tient en dix lignes' "obtenu $n lignes"; fi
+
+# Un plan sans critere de reussite n est pas propose a l execution.
+cat > "$FDEPOT/.dev/plans/PLN-001-sans-critere.md" <<'EOF'
+---
+type: plan
+id: PLN-001
+title: "Un plan sans critere"
+status: draft
+statut-plan: propose
+sert: []
+porte-sur: []
+---
+
+# PLN-001 - Un plan sans critere
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'un plan sans critere est a defricher' 'A DEFRICHER' "$out"
+assert_contains 'et il est signale comme non SMART' 'non SMART' "$out"
+
+# --tout affiche toutes les categories presentes.
+assert_contains '--tout affiche le decompte' 'CATEGORIE' "$out"
+assert_contains '--tout garde la categorie prioritaire' 'A CORRIGER' "$out"
+
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

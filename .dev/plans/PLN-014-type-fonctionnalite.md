@@ -3,9 +3,10 @@ type: plan
 id: PLN-014
 title: "Type fonctionnalité"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-13
 initiateur: agent
+sert: []  # introduit un type de ressource : modèle, pas produit
 porte-sur: [RES-001, .dev/ressources]
 ---
 
@@ -15,7 +16,7 @@ porte-sur: [RES-001, .dev/ressources]
 
 ## Statut
 
-`propose`.
+`execute`. Les deux chantiers ont été exécutés par la tâche 9 de `SES-002`, le 2026-08-13.
 
 ## Intention
 

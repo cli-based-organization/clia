@@ -1,0 +1,10 @@
+type: chore
+portee: plans
+sujet: "reconfirmer PLN-010, déjà exécuté"
+corps: |
+  PLN-010 avait été exécuté à la tâche 6, dans la même séance que ANL-011.
+  Cette tâche 7 en redemandait l'exécution : les deux critères de réussite
+  sont reconfirmés à froid plutôt que de faire confiance au contrôle
+  d'hier. Les deux tiennent, aucun écart trouvé, rien de neuf à produire.
+fichiers:
+  - .dev/logs/SES-002-generation-chain/TSK-007-executer-pln-010/

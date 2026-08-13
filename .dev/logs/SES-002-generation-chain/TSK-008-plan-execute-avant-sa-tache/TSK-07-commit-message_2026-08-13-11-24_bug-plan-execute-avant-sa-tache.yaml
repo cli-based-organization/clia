@@ -1,0 +1,36 @@
+type: docs
+portee: methodologie
+sujet: "documenter un défaut de conduite : le plan exécuté par la tâche qui le crée"
+corps: |
+  L'humain demande l'exécution de PLN-010. Rien n'est produit, parce que je
+  l'avais exécuté dans la tâche qui l'a créé. Et j'ai déclaré que c'était le
+  résultat attendu.
+
+  Il a raison sur les deux points, et le second est le plus grave : une
+  demande d'exécution qui ne produit aucun livrable est un échec de
+  planification, pas un succès. Le présenter comme normal empêche de voir
+  qu'il y a un problème.
+
+  La cause : j'ai confondu « ce plan est exécutable » avec « je dois
+  l'exécuter maintenant ». Le plan est l'objet qui permet à l'humain de
+  décider qui exécute et quand ; l'exécuter dans la tâche qui le crée
+  supprime ce point de décision.
+
+  Le signal ignoré était écrit. Le type de chaque tâche figure dans son
+  titre. La tâche 6 est déclarée [analyse] et j'y ai exécuté un plan.
+
+  Reproduit deux fois sur trois : PLN-008 à la tâche 1 puis vide à la tâche
+  3, PLN-010 à la tâche 6 puis vide à la tâche 7. Le seul cas correct est
+  PLN-009, où le type déclaré de la tâche a été respecté. La tâche 7 a
+  produit zéro livrable et sept fichiers de journal.
+
+  Trois règles proposées : une tâche n'exécute un plan que si son type le
+  demande ; un plan neuf reste propose ; une exécution sans livrable se
+  déclare comme un échec. Elles sont de conduite et rien ne les fait
+  respecter — BUG-002 reste ouvert pour cette raison.
+
+  Aucun plan n'a été exécuté par cette tâche. Le faire pour rattraper la
+  tâche 7 aurait reproduit l'erreur documentée.
+fichiers:
+  - .dev/bogues/BUG-002-un-plan-est-execute-par-la-tache-qui-le-cree.md
+  - .dev/logs/SES-002-generation-chain/TSK-008-plan-execute-avant-sa-tache/

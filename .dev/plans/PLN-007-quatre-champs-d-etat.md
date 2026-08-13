@@ -6,6 +6,7 @@ status: draft
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent
+sert: [FNC-001]  # changerait ce que clia res ls affiche
 porte-sur: [RES-001, DCN-016, lib/clia/resource.sh]
 ---
 

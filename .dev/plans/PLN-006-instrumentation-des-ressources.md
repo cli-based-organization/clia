@@ -6,6 +6,7 @@ status: draft
 statut-plan: execute
 date: 2026-08-11
 initiateur: agent
+sert: [FNC-001]  # a livré clia res
 porte-sur: [NON-026, NON-025, NON-030, NON-027, NON-033, NON-014, NON-011]
 ---
 

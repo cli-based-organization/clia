@@ -3,9 +3,10 @@ type: plan
 id: PLN-013
 title: "Borner l'ouverture des objections"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-13
 initiateur: agent
+sert: []  # règle de conduite de l'agent : méthode
 porte-sur: [MET-003, PDC-005, RES-004]
 ---
 
@@ -15,7 +16,9 @@ porte-sur: [MET-003, PDC-005, RES-004]
 
 ## Statut
 
-`propose`.
+`execute`. Les deux chantiers ont été exécutés par la tâche 9 de `SES-002`, le 2026-08-13.
+
+**Le critère a trouvé son lieu dans `MET-005`**, créée par la même tâche, plutôt que dans `MET-003` : aucune méthodologie ne guidait l'exécution d'un plan, et c'est là que le filtre s'applique. `MET-003` reçoit la rubrique du chantier B.
 
 ## Intention
 

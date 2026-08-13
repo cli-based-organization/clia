@@ -6,6 +6,7 @@ status: draft
 statut-plan: execute
 date: 2026-08-12
 initiateur: agent
+sert: [FNC-002]  # a livré la chaîne de session et clia ses switch
 porte-sur: [RES-032, RES-034, lib/clia/session.sh]
 ---
 

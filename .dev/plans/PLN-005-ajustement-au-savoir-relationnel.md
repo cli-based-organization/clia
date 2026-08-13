@@ -6,6 +6,7 @@ status: draft
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent
+sert: []  # ajustement du modèle de ressources : documentaire
 porte-sur: [RES-007, RES-010, skl-001, ONT-001]
 ---
 

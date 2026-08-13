@@ -64,6 +64,7 @@ Ressources :
   resource, res, r        gerer les ressources du depot
   session, ses, s         ouvrir, suivre et fermer les sessions de travail
   setup                   instrumenter un depot, diagnostiquer sa conformite
+  focus, f                que faire maintenant : une seule action a la fois
   registre, reg           consulter les registres
   git, g                  suivre l'historique des ressources
   configuration, config, c  gerer la configuration de l'utilisateur
@@ -78,6 +79,7 @@ Aide d'une ressource :
   clia resource --help
   clia session --help
   clia setup --help
+  clia focus --help
   clia registre --help
   clia git --help
   clia config --help
@@ -149,6 +151,9 @@ main() {
     setup)
       . "$CLIA_LIB_DIR/setup.sh"
       clia_setup_main "$@" ;;
+    focus|f)
+      . "$CLIA_LIB_DIR/focus.sh"
+      clia_focus_main "$@" ;;
     git|g)
       . "$CLIA_LIB_DIR/resource.sh"
       . "$CLIA_LIB_DIR/git.sh"

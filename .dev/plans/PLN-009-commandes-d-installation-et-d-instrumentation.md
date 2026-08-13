@@ -6,6 +6,7 @@ status: draft
 statut-plan: execute
 date: 2026-08-12
 initiateur: humain
+sert: [FNC-003]  # a livré clia setup check et init
 porte-sur: [setup.sh, bin/clia, RES-020]
 ---
 

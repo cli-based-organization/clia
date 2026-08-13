@@ -134,3 +134,24 @@ Les notes d'implémentation seront utiles pour produire les releases notes.
 Mais il semble y avoir un recoupement avec les commit-message. Or, le commit message devrait être plus succint et les détails devraient se trouver dans les notes implémentation.
 
 ## 7. [implémentation] Exécuter le plan PLN-010
+
+## 8. [bogue] Plan smart qui refusent d'exécuter la demande
+
+La tâche précédente demande l'exécution d'un plan sensé être smart...
+
+Or, rien n'est exécuté... pire l'agent IA considère que c'est normal.
+
+> Tâche 7 exécutée — sans rien produire de neuf, et c'est le résultat attendu.
+
+Voici ce à quoi on s'attend:
+
+- un plan SMART signifie qu'on peut exécuter le plan et qu'il produira les livrables planifiés
+- sinon, c'est une ERREUR et il faut ouvrir un BUG
+
+TODO => disagnostiquer. Ouvrir un BUG pour documenter cet incident. Proposer une solution.
+
+## 9. [implémentation] Exécuter les plans => PLN-011 PLN-012 PLN-013 PLN-014
+
+TODO => Après chaque exécuton de plan, dire les fonctionnalités qui ont été implémentés et comment l'utiliser
+
+Mettre cette directive dans la méthodologie qui guide l'exécution des plans

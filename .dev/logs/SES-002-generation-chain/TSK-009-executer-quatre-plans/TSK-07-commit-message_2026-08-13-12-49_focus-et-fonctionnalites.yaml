@@ -1,0 +1,52 @@
+type: feat
+portee: cli
+sujet: "clia focus, l'état qui varie, et le type Fonctionnalité"
+corps: |
+  Exécution des quatre plans issus de ANL-011, huit chantiers.
+
+  clia focus répond à « que dois-je faire maintenant ? » en nommant une
+  action et la commande qui l'exécuterait. Il agrège les 59 items ouverts du
+  dépôt en cinq catégories avec leur destinataire, et désigne le plus
+  prioritaire. La sortie tient en huit lignes.
+
+  clia res ls TYPE affiche enfin le champ d'état qui varie, déduit des champs
+  obligatoires que chaque définition déclare : etat pour l'objection,
+  statut-plan pour le plan, effet pour la décision. Onze types sur
+  trente-huit en ont un. C'est ISU-008, ouverte le 2026-08-11 à la demande de
+  l'humain et redemandée le 13.
+
+  Le type Fonctionnalité donne au dépôt sa première unité de produit : tout
+  le reste — plan, issue, objection, bogue — nomme un problème. Sept
+  instances décrivent ce que clia fait, chacune avec sa rubrique « Comment
+  s'en servir ». Les quatorze plans déclarent désormais la fonctionnalité
+  qu'ils servent.
+
+  MET-005 fixe la conduite de l'exécution d'un plan : aucune méthodologie ne
+  la couvrait. Son étape 1 porte la correction de BUG-002 — le type de la
+  tâche commande, un plan neuf reste propose. Son étape 2 porte le filtre de
+  PLN-013 entre ce qui se décide en avançant et ce qui doit s'arrêter. Son
+  étape 4 porte la directive de la tâche 9 : dire les fonctionnalités
+  livrées et comment s'en servir. Le journal de cette tâche l'applique à
+  lui-même.
+
+  Deux défauts trouvés en éprouvant. grep -c affiche 0 quand il ne trouve
+  rien et sort en 1 : mon repli ajoutait un second zéro et la comparaison
+  arithmétique plantait. Et le critère de PLN-013 n'a été éprouvé que par
+  recherche de mots, là où il demande un jugement : réussi à la lettre,
+  faiblement à l'esprit, et déclaré comme tel.
+
+  Le compteur passe de 59 à 55 items en attente.
+fichiers:
+  - lib/clia/focus.sh
+  - lib/clia/resource.sh
+  - bin/clia
+  - .dev/ressources/RES-037-fonctionnalite.md
+  - .dev/schemas/fonctionnalite.cue
+  - .dev/schemas/fonctionnalite.input.cue
+  - .dev/templates/fonctionnalite.template.md
+  - .dev/fonctionnalites/
+  - .dev/methodologies/MET-005-execution-d-un-plan.md
+  - .dev/methodologies/MET-003-journalisation-du-travail.md
+  - .dev/plans/
+  - tests/test_clia.sh
+  - .dev/logs/SES-002-generation-chain/TSK-009-executer-quatre-plans/

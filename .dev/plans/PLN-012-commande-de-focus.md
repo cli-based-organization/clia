@@ -3,9 +3,10 @@ type: plan
 id: PLN-012
 title: "Commande de focus"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-13
 initiateur: agent
+sert: [FNC-007]  # livre clia focus
 porte-sur: [lib/clia/focus.sh, bin/clia]
 ---
 
@@ -15,7 +16,9 @@ porte-sur: [lib/clia/focus.sh, bin/clia]
 
 ## Statut
 
-`propose`.
+`execute`. Les deux chantiers ont été exécutés par la tâche 9 de `SES-002`, le 2026-08-13.
+
+**Un écart déclaré** : le chantier A annonçait quatre catégories, l'implémentation en compte cinq. Les bogues ouverts sont des items ouverts, et le critère exigeait que chacun reçoive une catégorie.
 
 ## Intention
 

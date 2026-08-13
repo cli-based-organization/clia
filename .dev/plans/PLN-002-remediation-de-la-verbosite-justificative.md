@@ -6,6 +6,7 @@ status: draft
 statut-plan: execute
 date: 2026-08-10
 initiateur: agent
+sert: []  # nettoyage de la verbosité des définitions : documentaire
 porte-sur: [skl-001-ressource, RES-001, ressource.template.md]
 ---
 

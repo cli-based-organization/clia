@@ -6,6 +6,7 @@ status: draft
 statut-plan: execute
 date: 2026-08-13
 initiateur: agent
+sert: []  # clôture d'objections et contrainte de schéma : documentaire
 porte-sur: [RES-004, objection.cue, .dev/objections]
 ---
 

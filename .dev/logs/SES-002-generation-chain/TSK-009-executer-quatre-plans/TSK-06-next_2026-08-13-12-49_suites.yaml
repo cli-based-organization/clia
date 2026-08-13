@@ -1,0 +1,23 @@
+suites:
+  - id: N1
+    quoi: "Se servir de clia focus plusieurs jours"
+    pourquoi: "L'ordre de priorité est un jugement inscrit dans le code ; seul l'usage dira s'il est bon"
+    qui: humain
+  - id: N2
+    quoi: "Statuer sur les 36 objections repondue"
+    pourquoi: "C'est la plus grosse catégorie de clia focus --tout, et elle attend l'humain"
+    qui: humain
+  - id: N3
+    quoi: "Corriger BUG-002, que clia focus désigne comme l'action prioritaire"
+    pourquoi: "Les trois règles sont écrites dans MET-005 ; rien ne les rend mécaniques"
+  - id: N4
+    quoi: "Contraindre le champ sert par un schéma"
+    pourquoi: "Rien ne vérifie qu'une FNC déclarée par un plan existe"
+  - id: N5
+    quoi: "Remonter d'une fonctionnalité vers les plans qui l'ont livrée"
+    pourquoi: "Le champ sert va du plan vers la fonctionnalité ; l'inverse se cherche à la main"
+fait-en-cours-de-tache:
+  - "PLN-011, PLN-012, PLN-013, PLN-014 exécutés et clos : 8 chantiers"
+  - "MET-005 créée : aucune méthodologie ne guidait l'exécution d'un plan"
+  - "Le compteur passe de 59 à 55 items en attente"
+  - "Deux défauts trouvés en éprouvant : grep -c en échec affiche 0 et sort en 1 ; le critère de PLN-013 n'est éprouvé que par heuristique"

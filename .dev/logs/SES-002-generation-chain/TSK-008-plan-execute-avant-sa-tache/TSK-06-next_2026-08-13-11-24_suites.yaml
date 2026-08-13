@@ -1,0 +1,19 @@
+suites:
+  - id: N1
+    quoi: "Exécuter PLN-012, la commande de focus"
+    pourquoi: "Elle répondrait à R3 : nommer l'action utile plutôt que laisser l'agent conclure seul qu'il n'y a rien à faire"
+    note: "C'est aussi la recommandation la plus directement liée au besoin exprimé à la tâche 6"
+  - id: N2
+    quoi: "Décider si les trois règles de BUG-002 entrent dans un document d'autorité"
+    pourquoi: "Elles sont de conduite et rien ne les fait respecter ; PDC-003 serait le lieu naturel"
+    qui: humain
+    note: "CONSTITUTION.md C1 interdit à l'agent de modifier un PDC"
+  - id: N3
+    quoi: "Rendre R1 mécanique"
+    pourquoi: "Il faudrait qu'un plan déclare la tâche qui l'a exécuté, et qu'une tâche déclare ses livrables attendus"
+    note: "Deux champs qui n'existent pas ; à peser contre NON-002, qui conteste la charge du modèle"
+  - id: N4
+    quoi: "Renseigner BUG-001, resté avec ses rubriques vides"
+    pourquoi: "Première instance du type, ouverte par l'humain le 2026-08-12, jamais complétée"
+ouvert:
+  - "BUG-002 reste ouvert : la correction est écrite, rien ne la fait tenir"

@@ -6,6 +6,7 @@ status: draft
 statut-plan: propose
 date: 2026-08-11
 initiateur: agent
+sert: []  # mise en conformité du harnais avec une décision : gouvernance
 porte-sur: [CONSTITUTION.md, RES-009, RES-019, lib/clia/resource.sh]
 ---
 

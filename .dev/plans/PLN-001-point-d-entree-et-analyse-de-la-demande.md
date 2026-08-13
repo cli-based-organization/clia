@@ -6,6 +6,7 @@ status: draft
 statut-plan: propose
 date: 2026-08-09
 initiateur: agent
+sert: []  # réécriture du harnais et d'un skill : gouvernance, pas produit
 porte-sur: [CLAUDE.md, skl-analyse-de-la-demande]
 ---
 

@@ -3,9 +3,10 @@ type: plan
 id: PLN-011
 title: "Afficher l'état qui varie"
 status: draft
-statut-plan: propose
+statut-plan: execute
 date: 2026-08-13
 initiateur: agent
+sert: [FNC-001]  # a livré l'affichage de l'état dans clia res ls
 porte-sur: [lib/clia/resource.sh, ISU-008]
 ---
 
@@ -15,7 +16,7 @@ porte-sur: [lib/clia/resource.sh, ISU-008]
 
 ## Statut
 
-`propose`.
+`execute`. Le chantier A a été exécuté par la tâche 9 de `SES-002`, le 2026-08-13.
 
 ## Intention
 

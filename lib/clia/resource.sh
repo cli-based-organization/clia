@@ -205,6 +205,32 @@ clia_resource_dir_of() {
   fi
 }
 
+# Le champ d'etat PROPRE d'un type, deduit de ses champs obligatoires.
+#
+# PLN-011. Motif : clia res ls affichait status, qui vaut draft dans les 163
+# instances du depot, et jamais le champ qui varie. ISU-008, ouverte a la
+# demande de l'humain le 2026-08-11 et redemandee le 2026-08-13.
+#
+# Les sept noms cherches sont ceux que DCN-016 recense dans le depot. Le
+# premier trouve gagne : aucun type n'en porte deux. Onze types sur trente-
+# sept en ont un ; les autres retombent sur status.
+#
+# Cette fonction n'attend pas DCN-016 ni les quatre champs d'etat : elle lit
+# ce que chaque definition declare aujourd'hui.
+clia_resource_champ_etat() {
+  local definition="$1" champs c
+  champs=$(clia_frontmatter_field \
+             "$(clia_resources_dir)/${definition}.md" champs-obligatoires 2>/dev/null) || champs=''
+  champs=$(printf '%s' "$champs" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+  for c in etat effet statut-plan statut-decision statut exploitation tenue; do
+    if printf '%s\n' "$champs" | grep -qx "$c"; then
+      printf '%s\n' "$c"
+      return 0
+    fi
+  done
+  printf 'status\n'
+}
+
 clia_resource_ls_instances() {
   if clia_is_help "${1:-}"; then clia_resource_usage_verb ls; return 0; fi
   clia_require_repo
@@ -225,8 +251,12 @@ clia_resource_ls_instances() {
     return 0
   fi
 
+  local champ_etat entete
+  champ_etat=$(clia_resource_champ_etat "$definition")
+  entete=$(printf '%s' "$champ_etat" | tr '[:lower:]-' '[:upper:]_')
+
   {
-    printf 'ID\tDESCRIPTION\tSTATUS\n'
+    printf 'ID\tDESCRIPTION\t%s\n' "$entete"
     local file base id desc status
     while IFS= read -r file; do
       base=$(basename "$file" .md)
@@ -241,7 +271,7 @@ clia_resource_ls_instances() {
         | sed -E "s/^(${prefixe}-([0-9]{4}-[0-9]{2}-[0-9]{2}|[0-9]{3})).*/\1/")
       [[ -n "$id" ]] || id="$base"
       desc=$(clia_frontmatter_field "$file" title 2>/dev/null) || desc=''
-      status=$(clia_frontmatter_field "$file" status 2>/dev/null) || status=''
+      status=$(clia_frontmatter_field "$file" "$champ_etat" 2>/dev/null) || status=''
       printf '%s\t%s\t%s\n' "$id" "${desc:-?}" "${status:-?}"
     done < <(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null | sort)
   } | column -t -s $'\t'

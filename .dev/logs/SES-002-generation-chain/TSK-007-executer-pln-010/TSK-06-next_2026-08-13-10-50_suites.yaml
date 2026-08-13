@@ -1,0 +1,9 @@
+suites:
+  - id: N1
+    quoi: "Statuer sur les 36 objections répondue"
+    pourquoi: "repondue signifie que l'initiateur n'a pas encore statué ; c'est le geste qui ferait descendre le compteur à zéro"
+    qui: humain
+  - id: N2
+    quoi: "Exécuter PLN-011 (afficher l'état qui varie) ou PLN-012 (commande de focus)"
+    pourquoi: "Ce sont les recommandations non exécutées les plus directement utiles, identifiées à la tâche 6"
+note: "Rien de nouveau produit par cette tâche : PLN-010 était déjà exécuté et ses deux critères sont reconfirmés."

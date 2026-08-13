@@ -6,6 +6,7 @@ status: draft
 statut-plan: abandonne
 date: 2026-08-11
 initiateur: agent
+sert: []  # abandonné
 porte-sur: [RES-006, RES-007, ISU-001, NON-004]
 ---
 

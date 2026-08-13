@@ -43,6 +43,10 @@ Porte l'énoncé repris sans reformulation, l'interprétation, les livrables ide
 
 Porte ce que le contexte a établi, ce qui a été écarté et pourquoi, et les hypothèses qui se sont révélées fausses en chemin.
 
+**Il porte aussi ce qui a été décidé en avançant.** Une incertitude que le filtre de `MET-005` étape 2 range du côté « décider et avancer » ne devient pas une objection : elle est consignée ici, avec la décision prise et son motif.
+
+**C'est le lieu qui empêche « moins d'objections » de devenir « moins de traces ».** Une décision prise en avançant reste une décision documentée ; elle change de lieu, pas de statut. Sans cette rubrique, borner l'ouverture des objections reviendrait à effacer le raisonnement au lieu de le déplacer.
+
 *Contrôle :* son horodatage précède celui du premier livrable produit.
 
 ### 3. `fait`, pendant, à mesure
