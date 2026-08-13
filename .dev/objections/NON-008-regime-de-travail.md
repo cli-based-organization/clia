@@ -5,7 +5,7 @@ title: "Régime de travail, échelles et arbitrage"
 status: draft
 initiateur: agent
 effet: informatif
-etat: ouverte
+etat: repondue
 porte-sur: [RES-004, RES-003]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-004, RES-003]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

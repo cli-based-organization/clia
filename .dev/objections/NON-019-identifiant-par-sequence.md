@@ -5,7 +5,7 @@ title: "Conséquences de l'identifiant par séquence"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [ADR-007, RES-001]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ADR-007, RES-001]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, après application de la tâche 13.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

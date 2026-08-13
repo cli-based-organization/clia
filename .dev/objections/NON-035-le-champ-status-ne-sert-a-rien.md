@@ -5,7 +5,7 @@ title: "Un champ obligatoire universel qui n'a jamais changé de valeur"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, RES-026]
 ---
 
@@ -18,6 +18,7 @@ porte-sur: [RES-001, RES-026]
 - 2026-08-11 : ouverte par l'agent, tâche 32, avec `ISU-008` et `ISU-009`.
 - 2026-08-11 : **les quatre questions répondues par l'humain.** Traitement à la tâche 33 : `DCN-016` enregistre les quatre champs en premier jet suspendu, `PLN-007` ordonne la mise en oeuvre.
 - 2026-08-11 : l'effet passe de `bloquant` à `conditionnel`. **L'objection reste ouverte** : la réponse Q2 est conditionnelle et sa condition n'est pas vérifiée.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

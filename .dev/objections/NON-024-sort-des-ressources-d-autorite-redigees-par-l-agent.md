@@ -5,7 +5,7 @@ title: "Sort des douze ressources d'autorité rédigées par l'agent"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-009, RES-012, RES-019]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-009, RES-012, RES-019]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, à la tâche 20, avec `CONSTITUTION.md`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

@@ -26,7 +26,7 @@ clia_registre_files() {
   local dir
   dir=$(clia_registre_dir)
   [[ -d "$dir" ]] || return 0
-  find "$dir" -maxdepth 1 -type f -name 'REG-*.md' 2>/dev/null | sort
+  find -L "$dir" -maxdepth 1 -type f -name 'REG-*.md' 2>/dev/null | sort
 }
 
 # Resout un alias de registre vers son fichier. Accepte REG-001 et 001.

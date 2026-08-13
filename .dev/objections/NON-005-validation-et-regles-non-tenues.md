@@ -5,7 +5,7 @@ title: "Validation mécanique et règles écrites non tenues"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, RES-003, RES-005, RES-006]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-001, RES-003, RES-005, RES-006]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

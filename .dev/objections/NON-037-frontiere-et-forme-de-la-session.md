@@ -5,7 +5,7 @@ title: "Forme de la session, et ce que sa révision fait disparaître"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-034, ADR-002]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-034, ADR-002]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, tâche 35, avec la révision de `RES-034` et `lib/clia/session.sh`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

@@ -5,7 +5,7 @@ title: "Statut de la session et critère de convergence"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [ADR-002, ADR-001, RES-003]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ADR-002, ADR-001, RES-003]
 ## Journal
 
 - 2026-08-09 : ouverte par l'agent, à la production de `ADR-002`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

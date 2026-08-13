@@ -5,7 +5,7 @@ title: "Frontière entre spécification et implémentation"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [ADR-006, ADR-001, RES-018]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ADR-006, ADR-001, RES-018]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, à la production de `ADR-006`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

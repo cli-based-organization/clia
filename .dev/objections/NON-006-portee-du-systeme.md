@@ -5,7 +5,7 @@ title: "Portée du système et travail multi-dépôts"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, RES-002, RES-003, RES-006, RES-007]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-001, RES-002, RES-003, RES-006, RES-007]
 
 - 2026-08-09 : ouverte par l'agent, à la production du premier jet des ressources fondamentales.
 - 2026-08-10 : deux questions ajoutées, Q8 et Q9, à partir de `FND-002` et `ANL-003`, qui apportent des mécanismes attestés là où Q5 n'avait que le constat.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

@@ -1,0 +1,26 @@
+suites:
+  - id: N1
+    quoi: "Exécuter PLN-012, la commande de focus"
+    pourquoi: "C'est la recommandation qui répond le plus directement au besoin exprimé : une seule action claire à prendre"
+    note: "L'information existe déjà, dispersée dans 61 fichiers ; il ne manque que l'agrégation"
+  - id: N2
+    quoi: "Exécuter PLN-011, afficher l'état qui varie"
+    pourquoi: "ISU-008 ouverte le 2026-08-11 à la demande de l'humain, redemandée le 13, jamais corrigée"
+  - id: N3
+    quoi: "Statuer sur les 36 objections répondues"
+    pourquoi: "repondue signifie que l'initiateur n'a pas encore statué ; resolue, levee-par-decision et caduque n'ont jamais servi"
+    qui: humain
+    note: "C'est le geste qui ferait passer de 36 repondue à zéro"
+  - id: N4
+    quoi: "Reprendre les 12 objections répondues sans suite"
+    pourquoi: "Une réponse humaine sans suite est un travail perdu deux fois ; les fermer ne les exploite pas"
+  - id: N5
+    quoi: "Exécuter PLN-013 et PLN-014"
+    pourquoi: "Borner l'ouverture, et donner au dépôt son unité de produit"
+fait-en-cours-de-tache:
+  - "PLN-010 exécuté : 33 objections ouvertes -> 2. Bilan net de la tâche : -25 items"
+  - "objection.cue impose les sept états que RES-004 déclarait sans que rien ne les fasse respecter"
+  - "Correction d'une mesure fausse : RES-004 déclare bien sept états, ANL-011 C3 le porte"
+  - "Type Note d'implémentation écarté : son contenu est déjà dans les 44 journaux TSK-03-fait"
+ouvert:
+  - "NON-038 et NON-039 restent sans réponse : ce sont les deux seules objections ouvertes"

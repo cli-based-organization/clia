@@ -902,6 +902,118 @@ assert_contains 'res check --help explique le code de retour' 'Code de retour' "
 run res check TYPE_INCONNU_XYZ >/dev/null 2>&1
 assert_rc 'check sur un type inconnu ne trouve rien, code 0' 0 "$?"
 
+
+# --------------------------------------------------------------------------
+# clia setup
+# --------------------------------------------------------------------------
+#
+# Un depot dedie par cas : init ecrit, et les cas ne doivent pas se marcher
+# dessus. Les criteres verifies sont ceux de SPC-001.
+
+USETUP="$TMP/setup"
+mkdir -p "$USETUP"
+
+runsetup() { ( cd "$1" && CLIA_REPO_ROOT="$1" "$CLIA_BIN" setup "${@:2}" ) 2>&1; }
+runsetup_out() { ( cd "$1" && CLIA_REPO_ROOT="$1" "$CLIA_BIN" setup "${@:2}" ) 2>/dev/null; }
+
+out=$( "$CLIA_BIN" setup --help 2>&1 )
+assert_contains 'setup --help liste les verbes' 'check [PATH]' "$out"
+assert_contains 'setup --help distingue les deux niveaux' './setup.sh install' "$out"
+out=$( "$CLIA_BIN" setup check --help 2>&1 )
+assert_contains 'setup check --help nomme la specification' 'SPC-001' "$out"
+out=$( "$CLIA_BIN" setup init --help 2>&1 )
+assert_contains 'setup init --help decrit le regime lie' '--dev' "$out"
+assert_contains 'setup init --help enonce les garanties' 'ecrase' "$out"
+
+( "$CLIA_BIN" setup inconnu ) >/dev/null 2>&1
+assert_rc 'un verbe de setup inconnu echoue en 2' 2 "$?"
+
+# check sur un emplacement inexistant : I1 et I2 en echec.
+ABSENT="$USETUP/nexiste-pas"
+out=$( cd "$USETUP" && "$CLIA_BIN" setup check "$ABSENT" 2>/dev/null )
+assert_contains 'check sur un absent : verdict non instrumentable' 'non instrumentable' "$out"
+assert_contains 'check sur un absent : I1 en echec' 'I1' "$out"
+( cd "$USETUP" && "$CLIA_BIN" setup check "$ABSENT" ) >/dev/null 2>&1
+assert_rc 'check sur un absent echoue en 1' 1 "$?"
+
+# check sur un depot git vierge : instrumentable.
+VIERGE="$USETUP/vierge"
+mkdir -p "$VIERGE"
+( cd "$VIERGE" && git init -q . ) >/dev/null 2>&1
+out=$( cd "$VIERGE" && "$CLIA_BIN" setup check 2>/dev/null )
+assert_contains 'check sur un vierge : non instrumente' 'non instrumente' "$out"
+assert_contains 'check sur un vierge : instrumentable' 'instrumentable' "$out"
+( cd "$VIERGE" && "$CLIA_BIN" setup check ) >/dev/null 2>&1
+assert_rc 'check sur un vierge retourne 0' 0 "$?"
+
+# init : la chaine complete.
+CIBLE="$USETUP/cible"
+out=$( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$CIBLE" 2>&1 )
+assert_contains 'init cree l emplacement absent' 'cree' "$out"
+assert_contains 'init annonce le regime' 'regime copie' "$out"
+assert_file 'init pose le point d entree de harnais' "$CIBLE/CLAUDE.md"
+assert_file 'init pose l intention' "$CIBLE/INTENTION.md"
+assert_file 'init pose la version' "$CIBLE/.dev/version"
+if [[ -d "$CIBLE/.git" ]]; then ok 'init cree le depot de gestion de versions'
+else ko 'init cree le depot de gestion de versions' '.git absent'; fi
+
+out=$( cd "$CIBLE" && "$CLIA_BIN" setup check 2>/dev/null )
+assert_contains 'apres init : instrumente' 'instrumente' "$out"
+assert_contains 'apres init : conforme' 'conforme' "$out"
+( cd "$CIBLE" && "$CLIA_BIN" setup check ) >/dev/null 2>&1
+assert_rc 'apres init, check retourne 0' 0 "$?"
+
+# Les definitions sont utilisables : c est la cible mesurable du plan.
+out=$( cd "$CIBLE" && CLIA_REPO_ROOT="$CIBLE" "$CLIA_BIN" res ls 2>/dev/null )
+assert_contains 'apres init, res ls repond' 'PREFIXE' "$out"
+
+# SPC-001 P2 : un emplacement occupe est conserve, jamais ecrase.
+GARDE="$USETUP/garde"
+mkdir -p "$GARDE"
+printf 'MON PROPRE CONTENU\n' > "$GARDE/CLAUDE.md"
+out=$( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$GARDE" 2>&1 )
+assert_contains 'init annonce ce qu il conserve' 'conserve' "$out"
+assert_contains 'le contenu existant est intact' 'MON PROPRE CONTENU' "$(cat "$GARDE/CLAUDE.md")"
+
+# SPC-001 P5 : rejouable.
+out=$( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$CIBLE" 2>&1 )
+assert_contains 'init rejoue ne pose rien de neuf' 'poses : 0' "$out"
+( cd "$CIBLE" && "$CLIA_BIN" setup check ) >/dev/null 2>&1
+assert_rc 'apres un second init, le depot reste conforme' 0 "$?"
+
+# SPC-001 P3 : le depot source n est pas modifie.
+AVANT=$(find "$CLIA_TEST_ROOT" -path "$CLIA_TEST_ROOT/.git" -prune -o -type f -print 2>/dev/null | sort | md5sum)
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$USETUP/p3" ) >/dev/null 2>&1
+APRES=$(find "$CLIA_TEST_ROOT" -path "$CLIA_TEST_ROOT/.git" -prune -o -type f -print 2>/dev/null | sort | md5sum)
+if [[ "$AVANT" == "$APRES" ]]; then ok 'init ne modifie pas le depot source'
+else ko 'init ne modifie pas le depot source' 'le source a change'; fi
+
+# Le regime lie : des liens, relatifs, et utilisables.
+LIE="$USETUP/lie"
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$LIE" --dev ) >/dev/null 2>&1
+if [[ -L "$LIE/CLAUDE.md" ]]; then ok 'le regime lie pose un lien'
+else ko 'le regime lie pose un lien' 'ce n est pas un lien'; fi
+case "$(readlink "$LIE/CLAUDE.md")" in
+  /*) ko 'le lien du regime lie est relatif' 'lien absolu' ;;
+  *)  ok 'le lien du regime lie est relatif' ;;
+esac
+( cd "$LIE" && "$CLIA_BIN" setup check ) >/dev/null 2>&1
+assert_rc 'un depot en regime lie est conforme' 0 "$?"
+
+# Les definitions liees doivent etre lues : find -type f ne suit pas les
+# liens, et le depot etait declare conforme alors que res ls ne trouvait
+# rien. Constate le 2026-08-12.
+out=$( cd "$LIE" && CLIA_REPO_ROOT="$LIE" "$CLIA_BIN" res ls 2>/dev/null )
+assert_contains 'les definitions liees sont lues' 'PREFIXE' "$out"
+
+# init refuse d instrumenter le depot source lui-meme.
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$CLIA_TEST_ROOT" ) >/dev/null 2>&1
+assert_rc 'init refuse le depot source comme cible' 1 "$?"
+
+# Une option inconnue est refusee, non ignoree.
+( cd "$USETUP" && "$CLIA_BIN" setup init "$USETUP/x" --inconnu ) >/dev/null 2>&1
+assert_rc 'une option inconnue de init echoue en 2' 2 "$?"
+
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

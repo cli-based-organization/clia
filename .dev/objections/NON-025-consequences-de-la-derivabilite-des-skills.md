@@ -5,7 +5,7 @@ title: "Conséquences de la dérivabilité des skills"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-018, RES-001, ADR-016]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-018, RES-001, ADR-016]
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 21, avec `ADR-016`.
 - 2026-08-11 : **doublon signalé au ménage de la tâche 30.** `NON-030` pose la même question, élargie aux trois familles dérivées et non aux seuls skills. Les questions Q1 et Q2 de cette objection sont reprises par `NON-030` Q1 et Q2. Cette objection reste ouverte pour ses Q3 et Q4, propres aux skills.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

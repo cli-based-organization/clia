@@ -5,7 +5,7 @@ title: "Granularité de la ressource et décompte des instances"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, ADR-001, ADR-003]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-001, ADR-001, ADR-003]
 
 - 2026-08-09 : ouverte par l'agent, à l'implémentation de `clia res ls`, qui a rendu l'écart mesurable.
 - 2026-08-10 : trois questions ajoutées, Q8 à Q10, à partir de `FND-002`, qui fournit le cadre théorique manquant.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

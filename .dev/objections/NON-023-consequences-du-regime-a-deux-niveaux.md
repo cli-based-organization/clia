@@ -5,7 +5,7 @@ title: "Conséquences du régime d'identification à deux niveaux"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [ADR-008, RES-001, RES-009, MET-002]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ADR-008, RES-001, RES-009, MET-002]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, à la tâche 18, avec `DCN-008` et `ADR-008`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

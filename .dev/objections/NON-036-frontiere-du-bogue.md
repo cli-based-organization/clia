@@ -5,7 +5,7 @@ title: "Frontière du bogue et sort des sept écarts constatés"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-036, RES-031]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-036, RES-031]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, tâche 34, avec `RES-036`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

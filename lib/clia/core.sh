@@ -319,7 +319,7 @@ clia_types_defined() {
     printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
       "${title:-?}" "$prefixe" "${emplacement:-?}" "${cycle:-?}" \
       "${edition:-?}" "${base%.md}" "${statut:-?}" "${canonique:-?}"
-  done < <(find "$dir" -maxdepth 1 -type f -name 'RES-*.md' | sort)
+  done < <(find -L "$dir" -maxdepth 1 -type f -name 'RES-*.md' 2>/dev/null | sort)
 }
 
 # Repertoires du depot de developpement exclus des parcours.
@@ -346,7 +346,7 @@ clia_dev_files() {
   while read -r d; do
     prune+=( -path "$dev/$d" -prune -o )
   done < <(clia_excluded_dirs)
-  find "$dev" "${prune[@]}" -type f -name '*.md' -print 2>/dev/null | sort
+  find -L "$dev" "${prune[@]}" -type f -name '*.md' -print 2>/dev/null | sort
 }
 
 # Types effectivement employes dans le depot, deduits du champ type des

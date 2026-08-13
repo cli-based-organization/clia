@@ -10,8 +10,14 @@ package clia
 	id: #Id
 	title: string & !=""
 	status: #Status
-	initiateur: string & !=""
+	initiateur: "humain" | "agent"
 	effet: "bloquant" | "conditionnel" | "informatif"
-	etat: string & !=""
+	// Les sept etats declares par RES-004, rubrique « Etats ». Le schema
+	// acceptait auparavant n'importe quelle chaine : la definition etait
+	// ecrite et rien ne la faisait respecter. Cinq de ces valeurs n'avaient
+	// jamais servi le 2026-08-13, alors qu'elles decrivent des situations
+	// que le depot vit. Voir ANL-011 C3.
+	etat: "ouverte" | "partiellement-repondue" | "repondue" | "resolue" |
+	      "levee-par-decision" | "differee" | "caduque"
 	"porte-sur": [...string]
 }

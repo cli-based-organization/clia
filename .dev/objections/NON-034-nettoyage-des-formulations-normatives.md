@@ -5,7 +5,7 @@ title: "Le nettoyage des formulations normatives n'est pas mesurable par recherc
 status: draft
 initiateur: agent
 effet: informatif
-etat: ouverte
+etat: repondue
 porte-sur: [ANL-001]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ANL-001]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, tâche 29, avec `ISU-006`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

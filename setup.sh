@@ -158,17 +158,34 @@ _clia_deactivate() {
 _CLIA_MARK_BEGIN='# >>> clia >>>'
 _CLIA_MARK_END='# <<< clia <<<'
 
+# Le mode developpement, et ses cinq proprietes.
+#
+# Il n'a pas ete cree par le drapeau --dev : c'est ce que install fait depuis
+# toujours. Le drapeau nomme ce qui etait implicite, et rend les cinq
+# proprietes verifiables plutot que supposees. Voir PLN-009 chantier D.
+_clia_declarer_mode_dev() {
+  local root="$1"
+  _clia_hint "mode developpement, cinq proprietes :"
+  _clia_hint "  1. local      seul l'utilisateur courant est touche, pas de sudo"
+  _clia_hint "  2. universel  clia s'execute dans n'importe quel depot git"
+  _clia_hint "  3. source     le depot de reference est $root"
+  _clia_hint "  4. vivant     le code employe est celui de ce depot, non une copie"
+  _clia_hint "  5. non intrusif  aucune ecriture dans le depot source"
+}
+
 _clia_install() {
   local root="$1" rc="${HOME}/.bashrc"
 
   if grep -qF "$_CLIA_MARK_BEGIN" "$rc" 2>/dev/null; then
     _clia_msg "deja installe dans $rc"
     _clia_hint "pour changer de racine : ./setup.sh uninstall puis install"
+    _clia_declarer_mode_dev "$root"
     return 0
   fi
 
   _clia_msg "cette commande va ajouter 5 lignes a $rc"
   _clia_hint "activation de clia depuis $root"
+  _clia_declarer_mode_dev "$root"
   printf '       continuer ? [o/N] ' >&2
   local answer
   read -r answer
@@ -225,8 +242,12 @@ Commandes :
   . setup.sh deactivate    retire clia du shell courant
   ./setup.sh check         verifie les prerequis et l'etat
   ./setup.sh install       ajoute l'activation a ~/.bashrc, apres confirmation
+  ./setup.sh install --dev  idem : --dev nomme le mode, qui est le seul offert
   ./setup.sh uninstall     retire l'activation de ~/.bashrc
   ./setup.sh help          cette aide
+
+Ce setup.sh installe le CLI dans le shell. Pour instrumenter un depot avec
+le systeme clia, c'est une autre commande : clia setup init [PATH]
 
 activate et deactivate modifient le shell courant : ils doivent etre sources,
 d'ou le point qui precede. Les autres commandes s'executent normalement.
@@ -249,7 +270,18 @@ _clia_setup_main() {
     activate)    _clia_activate "$root" ;;
     deactivate)  _clia_deactivate "$root" ;;
     check)       _clia_check "$root" ;;
-    install)     _clia_install "$root" ;;
+    install)
+      shift || true
+      # --dev est le seul mode offert, et c'est deja celui qu'install
+      # applique. Le drapeau est accepte et declare ; tout autre mode est
+      # refuse plutot que silencieusement ignore.
+      case "${1:-}" in
+        ''|--dev) _clia_install "$root" ;;
+        *)
+          _clia_msg "mode inconnu : $1"
+          _clia_hint "seul --dev est offert, et c'est le mode par defaut"
+          return 2 ;;
+      esac ;;
     uninstall)   _clia_uninstall ;;
     version|--version|-v) printf 'setup.sh %s\n' "$CLIA_SETUP_VERSION" ;;
     help|--help|-h) _clia_help ;;

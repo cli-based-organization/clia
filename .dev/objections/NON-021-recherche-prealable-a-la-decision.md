@@ -5,7 +5,7 @@ title: "Le processus de travail ne prévoit aucune recherche préalable à une d
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [ADR-002, ADR-007, MET-001]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [ADR-002, ADR-007, MET-001]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, à la tâche 14, après lecture de la source primaire du champ des ADR.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est constaté
 

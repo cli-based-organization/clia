@@ -5,7 +5,7 @@ title: "Le seuil de densité de MET-001 n'est pas atteignable"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [MET-001, RES-011]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [MET-001, RES-011]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, à la tâche 14, après la mesure de l'étape 10 de `FND-003`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

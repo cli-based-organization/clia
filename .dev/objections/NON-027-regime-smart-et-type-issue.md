@@ -5,7 +5,7 @@ title: "Régime SMART, type Issue, et un PDC produit par l'agent"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [PDC-003, RES-031, RES-025]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [PDC-003, RES-031, RES-025]
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 23, avec `PDC-003` et `RES-031`.
 - 2026-08-11 : **doublon signalé au ménage de la tâche 30.** `NON-033` Q1 pose la même question, et elle bloque désormais un chantier de `PLN-005`. La réponse à l'une vaut pour l'autre.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

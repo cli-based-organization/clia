@@ -5,7 +5,7 @@ title: "Deux frontières demandées et non traçables sans ontologie"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-006, RES-007]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-006, RES-007]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, tâche 29, avec `ISU-004`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

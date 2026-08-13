@@ -1,0 +1,24 @@
+suites:
+  - id: N1
+    quoi: "Exécuter PLN-009"
+    pourquoi: "C'est la tâche 5 de SES-002, enchaînée immédiatement"
+  - id: N2
+    quoi: "Répondre aux trois questions de NON-039"
+    pourquoi: "Q3 change le chantier C : poser le fichier de version coûte cinq lignes maintenant, une migration plus tard"
+    qui: humain
+  - id: N3
+    quoi: "Rédiger DCN-017 et lui donner un effet"
+    pourquoi: "Son corps est à rédiger et son effet est À RENSEIGNER ; elle commande pourtant le mode d'exécution"
+    qui: humain
+  - id: N4
+    quoi: "Renseigner BUG-001 : règle enfreinte, état, cause, correction"
+    pourquoi: "Première instance du type bogue ; les rubriques de diagnostic sont vides"
+  - id: N5
+    quoi: "Traiter ISU-012, les quatre livrables de la mise à jour"
+    pourquoi: "Porte le second critère de convergence de SES-002, que PLN-009 n'atteint pas"
+fait-en-cours-de-tache:
+  - "Retiré Bash(sed -i:*) de ask : cette règle, posée le matin même, a causé l'interruption 6 de BUG-001"
+  - "Treize commandes courantes passées en allow"
+  - "Méthode changée : les documents s'écrivent avec l'outil d'écriture, non par document en place dans une commande shell"
+bloque:
+  - "PLN-009 ne couvre pas clia setup upgrade : ISU-012"

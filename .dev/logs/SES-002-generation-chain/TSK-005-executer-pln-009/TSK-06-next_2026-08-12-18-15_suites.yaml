@@ -1,0 +1,26 @@
+suites:
+  - id: N1
+    quoi: "Instrumenter un vrai dépôt de $HOME/git et y travailler"
+    pourquoi: "C'est le critère de convergence de SES-002 ; tout n'a été éprouvé qu'en dépôt jetable"
+    qui: humain
+    commande: "clia setup check PATH puis clia setup init PATH --dev"
+  - id: N2
+    quoi: "Traiter ISU-012 : les quatre livrables de la mise à jour"
+    pourquoi: "Porte le second critère de convergence de SES-002 ; PLN-009 ne l'atteint pas"
+  - id: N3
+    quoi: "Répondre aux questions de NON-039"
+    pourquoi: "Q1 décide si check est un verbe ou deux ; le choix est réversible tant qu'aucun dépôt tiers n'en dépend"
+    qui: humain
+  - id: N4
+    quoi: "Éprouver ce qui arrive quand le dépôt source se déplace"
+    pourquoi: "Un déplacement du source casserait tous les dépôts liés à la fois ; rien ne le vérifie"
+  - id: N5
+    quoi: "Rendre C6 et C7 bloquants"
+    pourquoi: "La version est posée et comparée sans conséquence tant que la mise à jour n'existe pas"
+    depend-de: [N2]
+fait-en-cours-de-tache:
+  - "Bogue préexistant corrigé : find -type f ne suit pas les liens, sept emplacements dans core.sh, resource.sh et registre.sh. Le régime lié était inutilisable"
+  - "Écart au plan déclaré : SPC-001 n'exprime pas ses critères en commandes shell, RES-020 l'interdit"
+  - "NON-039 Q3 appliquée sans attendre : le fichier de version est posé par init"
+bloque:
+  - "clia setup upgrade reste hors périmètre : ISU-012"

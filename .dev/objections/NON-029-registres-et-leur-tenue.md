@@ -5,7 +5,7 @@ title: "Les registres, leur catégorie et leur tenue"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-035, REG-001]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-035, REG-001]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 28, avec `RES-035` et `REG-001`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

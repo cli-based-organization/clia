@@ -5,7 +5,7 @@ title: "Familles fonctionnelles, attribution et processus par famille"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, ADR-005]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-001, ADR-005]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, aux tâches 8 et 9 de la session du 2026-08-09.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

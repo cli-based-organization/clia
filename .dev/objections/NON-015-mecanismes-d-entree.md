@@ -5,7 +5,7 @@ title: "Mécanismes d'entrée de l'humain dans le système"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-008, RES-009, RES-030, ADR-002]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-008, RES-009, RES-030, ADR-002]
 ## Journal
 
 - 2026-08-10 : ouverte par l'agent, aux tâches 8 et 9 de la session du 2026-08-09.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

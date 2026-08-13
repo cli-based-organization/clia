@@ -5,7 +5,7 @@ title: "Conséquences du système de journalisation"
 status: draft
 initiateur: agent
 effet: conditionnel
-etat: ouverte
+etat: repondue
 porte-sur: [RES-032, RES-033, RES-034, MET-003]
 ---
 
@@ -16,6 +16,7 @@ porte-sur: [RES-032, RES-033, RES-034, MET-003]
 ## Journal
 
 - 2026-08-11 : ouverte par l'agent, à la tâche 25, avec `RES-032`, `RES-033`, `RES-034` et `MET-003`.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

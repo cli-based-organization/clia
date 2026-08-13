@@ -5,7 +5,7 @@ title: "Trois familles dérivées, aucun générateur"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-018, RES-019, RES-010]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-018, RES-019, RES-010]
 
 - 2026-08-11 : ouverte par l'agent, tâche 29, avec `ISU-002`.
 - 2026-08-11 : **reprend `NON-025` Q1 et Q2**, signalé au ménage de la tâche 30. `NON-025` portait la question pour les seuls skills ; celle-ci l'élargit aux trois familles dérivées.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

@@ -1,0 +1,40 @@
+type: docs
+portee: plans
+sujet: "planifier les commandes d'installation et d'instrumentation"
+corps: |
+  Cinq commandes ont été demandées, quatre entrent dans PLN-009. Le premier
+  chantier est un préalable que PLN-003 réclame depuis le 2026-08-11 :
+  personne n'a écrit ce qu'est un dépôt clia conforme, et trois des cinq
+  commandes en dépendent. Il produit accessoirement la première instance du
+  type SPC, défini et sans instance.
+
+  Dix dépôts de $HOME/git portent un setup.sh, quatre ont été examinés.
+  ticket-driven-ai est le précédent direct et deux de ses choix sont repris :
+  installer le CLI n'est pas instrumenter un dépôt, et le mode développement
+  est un régime de liaison — liens symboliques vers la source, copies sinon.
+  C'est la réponse exacte aux exigences 4 et 5 de la demande.
+
+  Deux mesures ont surpris. Le mode développement existe déjà : setup.sh
+  install satisfait les cinq exigences énoncées, sans que le mot soit écrit
+  nulle part. Et clia fonctionne déjà sur un dépôt git vierge pour la
+  résolution du contexte : ce qui manque est le contenu, pas la capacité à
+  s'exécuter ailleurs.
+
+  Trois points sortent du plan et tiennent dans un ISU et un NON, comme la
+  tâche le prescrit : la mise à jour n'a ni version déclarée ni mécanisme de
+  migration ni inventaire des changements ; deux commandes portent le même
+  nom check ; et le mot remote désigne ce que CLIA_HOME désigne déjà.
+
+  Le premier est le plus lourd : il porte le second critère de convergence de
+  SES-002, et le plan ne l'atteint pas. Le dépôt a déjà migré trois fois à la
+  main, sans trace réutilisable.
+
+  Une correction de la politique de permissions au passage : la règle ask sur
+  sed -i, posée le matin même, a causé l'une des sept interruptions que
+  BUG-001 relève. Retirée.
+fichiers:
+  - .dev/plans/PLN-009-commandes-d-installation-et-d-instrumentation.md
+  - .dev/issues/ISU-012-la-mise-a-jour-d-un-depot-instrumente-n-a-pas-d-objet.md
+  - .dev/objections/NON-039-ce-que-les-commandes-d-installation-laissent-ouvert.md
+  - .claude/settings.json
+  - .dev/logs/SES-002-generation-chain/TSK-004-planifier-installation-et-mise-a-jour/

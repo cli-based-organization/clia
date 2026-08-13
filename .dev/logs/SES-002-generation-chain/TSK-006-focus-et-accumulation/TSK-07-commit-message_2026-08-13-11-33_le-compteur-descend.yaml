@@ -1,0 +1,48 @@
+type: docs
+portee: methodologie
+sujet: "analyser l'accumulation, et faire descendre le compteur pour la première fois"
+corps: |
+  L'humain ne s'y retrouve plus : les items s'accumulent, rien n'avance. La
+  mesure dit autre chose que ce que je supposais.
+
+  Il répond à 98 % des questions : 217 posées, 213 reçues, 36 objections sur
+  38 entièrement traitées. Trente et une étaient pourtant comptées ouvertes.
+  Le goulot n'était pas l'humain, c'était l'absence de tout geste de clôture.
+  Mes journaux répétaient « en attente d'une réponse » sur des documents
+  entièrement répondus.
+
+  RES-004 déclare sept états avec leur sens ; objection.cue acceptait
+  n'importe quelle chaîne ; cinq de ces sept n'avaient jamais servi. Ce n'est
+  pas une définition manquante, c'est une définition excellente que rien ne
+  faisait respecter — le sujet de NON-005, ouverte le 2026-08-09.
+
+  PLN-010 est exécuté dans la foulée : le schéma impose désormais les sept
+  états, et 31 objections passent à repondue, chacune avec sa ligne de
+  journal datée. Le critère est mécanique — autant de réponses que de
+  questions — et aucune réponse n'est interprétée.
+
+  Bilan de la tâche : six documents créés, trente et un fermés. Moins
+  vingt-cinq. La courbe était monotone croissante sur cinq jours : 12, 25,
+  53, 57, 61. C'est la première fois qu'elle s'inverse.
+
+  Une analyse sur l'accumulation qui produirait dix documents se réfuterait
+  elle-même : le nombre de livrables était un critère de réussite.
+
+  Aucune objection n'est ouverte par cette tâche. Le type Fonctionnalité est
+  retenu et porté par PLN-014 ; le type Note d'implémentation est écarté, son
+  contenu existant déjà dans les 44 journaux de fait.
+
+  Une mesure s'est révélée fausse en cours d'analyse et la correction est
+  conservée dans ANL-011 C3 : j'avais conclu que RES-004 ne déclarait aucun
+  état, en cherchant dans une rubrique qui n'existe pas. C'est la troisième
+  fois en cinq jours que je confonds ce que j'ai cherché avec ce qui existe.
+fichiers:
+  - .dev/analyses/ANL-011-focus-et-accumulation-des-items-ouverts.md
+  - .dev/plans/PLN-010-clore-ce-qui-est-repondu.md
+  - .dev/plans/PLN-011-afficher-l-etat-qui-varie.md
+  - .dev/plans/PLN-012-commande-de-focus.md
+  - .dev/plans/PLN-013-borner-l-ouverture-des-objections.md
+  - .dev/plans/PLN-014-type-fonctionnalite.md
+  - .dev/schemas/objection.cue
+  - .dev/objections/
+  - .dev/logs/SES-002-generation-chain/TSK-006-focus-et-accumulation/

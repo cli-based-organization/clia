@@ -1,0 +1,48 @@
+type: feat
+portee: cli
+sujet: "instrumenter un dépôt tiers : clia setup check et init"
+corps: |
+  Exécution des quatre chantiers de PLN-009. clia sort de son propre dépôt.
+
+  SPC-001 est la première instance du type SPC, défini et sans instance
+  jusqu'ici. PLN-003 chantier G1 la réclamait depuis le 2026-08-11 : sans
+  critères, init ne sait pas quoi produire et check ne sait quoi vérifier.
+  Onze critères, deux jeux — un dépôt peut être instrumentable sans être
+  instrumenté — et cinq exigences sur ce que l'instrumentation garantit.
+
+  Un écart au plan, déclaré : le chantier demandait des commandes shell dans
+  la spécification, RES-020 l'interdit. La spécification énonce l'état
+  observable, le code dit comment le constater, et vingt-trois renvois les
+  relient.
+
+  clia setup check diagnostique sans rien écrire, et rend trois verdicts
+  distincts selon l'état. clia setup init instrumente, crée le dépôt s'il
+  manque, et garantit cinq choses éprouvées une par une : tout critère
+  bloquant devient vrai, aucun emplacement occupé n'est écrasé, le dépôt
+  source n'est pas modifié, ce qui est conservé est annoncé, et relancer ne
+  dégrade rien.
+
+  Le fichier de version est posé sans attendre, sur la recommandation Q3 de
+  NON-039 : cinq lignes maintenant évitent de le rétro-ajouter à tout dépôt
+  instrumenté entre-temps.
+
+  Le mode développement n'a pas été créé par --dev : setup.sh install
+  satisfaisait déjà les cinq exigences énoncées, sans que le mot soit écrit
+  nulle part. Le drapeau les nomme et les rend vérifiables.
+
+  Un bogue préexistant a été trouvé en éprouvant le régime lié : find -type f
+  ne suit pas les liens symboliques, et check déclarait conforme un dépôt où
+  res ls ne trouvait rien. Le défaut dormait dans core.sh, resource.sh et
+  registre.sh depuis leur écriture, invisible tant qu'aucun dépôt ne portait
+  de ressources liées. Sept emplacements corrigés. C'est le contrôle d'usage
+  réel, non celui de conformité, qui l'a révélé.
+fichiers:
+  - .dev/specs/SPC-001-conformite-d-un-depot-clia.md
+  - lib/clia/setup.sh
+  - lib/clia/core.sh
+  - lib/clia/resource.sh
+  - lib/clia/registre.sh
+  - bin/clia
+  - setup.sh
+  - tests/test_clia.sh
+  - .dev/logs/SES-002-generation-chain/TSK-005-executer-pln-009/

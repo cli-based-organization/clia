@@ -16,7 +16,15 @@
     "Les regles 'ask' sur les fichiers s'ecrivent Edit(chemin) et non",
     "Write(chemin) : Claude Code signale que Write(chemin) n'est jamais",
     "evalue, et qu'Edit couvre tous les outils d'ecriture. C3 protege ces",
-    "documents en regime d'edition humaine, l'agent doit demander avant."
+    "documents en regime d'edition humaine, l'agent doit demander avant.",
+    "",
+    "Le 2026-08-12, BUG-001 a releve sept interruptions en une seule tache.",
+    "L'une venait d'une regle 'ask' posee ici le matin meme sur sed -i : elle",
+    "est retiree, et les commandes de lecture et d'ecriture de texte les plus",
+    "courantes sont passees en 'allow'. Les six autres viennent de l'analyse",
+    "statique du shell, qu'aucune regle ne peut satisfaire : la reponse est",
+    "d'ecrire les fichiers avec l'outil d'ecriture plutot qu'avec un document",
+    "en place dans une commande shell. Voir DCN-017."
   ],
 
   "permissions": {
@@ -55,13 +63,24 @@
       "Bash(command -v:*)",
       "Bash(bash -n:*)",
       "Bash(chmod +x:*)",
-      "Bash(mkdir -p:*)"
+      "Bash(mkdir -p:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(printf:*)",
+      "Bash(echo:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(mktemp:*)",
+      "Bash(python3:*)",
+      "Bash(jq:*)",
+      "Bash(date:*)",
+      "Bash(git init:*)"
     ],
 
     "ask": [
-      "Bash(rm:*)",
-      "Bash(mv:*)",
-      "Bash(sed -i:*)",
+      "Bash(rm -rf:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
       "WebFetch",

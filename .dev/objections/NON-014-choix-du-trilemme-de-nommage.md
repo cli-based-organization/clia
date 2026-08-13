@@ -5,7 +5,7 @@ title: "Le choix du trilemme de nommage : quelle propriété clia abandonne"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-001, ADR-001, INT-intention-ultime]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-001, ADR-001, INT-intention-ultime]
 
 - 2026-08-10 : ouverte par l'agent, à la production de `FND-002` et `ANL-003`.
 - 2026-08-11 : **objet partiellement dépassé**, noté au ménage de la tâche 30. `ADR-008` a tranché l'identité depuis : `<PREFIX>-<SEQ>` est un alias interne, non l'identité, et l'ergonomie est fixée comme exigence opposable par `PDC-002`. Le trilemme se pose désormais entre l'alias interne, l'identifiant externe non fixé, et l'identité de l'oeuvre sans porteur. L'objection n'est pas levée : sa question subsiste sous cette forme.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

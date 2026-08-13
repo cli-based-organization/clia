@@ -5,7 +5,7 @@ title: "L'autorité de création des principes bloque un chantier"
 status: draft
 initiateur: agent
 effet: bloquant
-etat: ouverte
+etat: repondue
 porte-sur: [RES-012, PDC-003]
 ---
 
@@ -17,6 +17,7 @@ porte-sur: [RES-012, PDC-003]
 
 - 2026-08-11 : ouverte par l'agent, tâche 29, avec `ISU-005`.
 - 2026-08-11 : **reprend `NON-027` Q1**, signalé au ménage de la tâche 30. La question est posée depuis la tâche 23 ; ce qui change est qu'elle bloque maintenant un chantier.
+- 2026-08-13 : passe a `repondue` par `PLN-010`, chantier B. Critere mecanique : chaque question porte une reponse. Aucune reponse n'a ete interpretee.
 
 ## Ce qui est contesté
 

@@ -243,7 +243,7 @@ clia_resource_ls_instances() {
       desc=$(clia_frontmatter_field "$file" title 2>/dev/null) || desc=''
       status=$(clia_frontmatter_field "$file" status 2>/dev/null) || status=''
       printf '%s\t%s\t%s\n' "$id" "${desc:-?}" "${status:-?}"
-    done < <(find "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" | sort)
+    done < <(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null | sort)
   } | column -t -s $'\t'
 }
 
@@ -253,7 +253,7 @@ clia_resource_ls_instances() {
 
 clia_resource_next_seq() {
   local dir="$1" prefixe="$2" max
-  max=$(find "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null \
+  max=$(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null \
         | sed -E "s#.*/${prefixe}-([0-9]{3}).*#\1#" \
         | grep -E '^[0-9]{3}$' | sort -n | tail -1)
   printf '%03d\n' $(( 10#${max:-0} + 1 ))
@@ -309,7 +309,7 @@ clia_resource_new() {
   fi
   # Un slug deja employe sous un autre numero est presque toujours un doublon.
   local jumeau
-  jumeau=$(find "$dir" -maxdepth 1 -type f -name "${prefixe}-*-${slug}.md" 2>/dev/null | head -1)
+  jumeau=$(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*-${slug}.md" 2>/dev/null | head -1)
   if [[ -n "$jumeau" ]]; then
     clia_warn "un slug identique existe : ${jumeau#$CLIA_REPO_ROOT_RESOLVED/}"
     clia_hint "changez la description, ou modifiez la ressource existante"
@@ -501,7 +501,7 @@ clia_resource_check() {
 
     local -a fichiers=()
     while IFS= read -r f; do fichiers+=("$f"); done \
-      < <(find "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" | sort)
+      < <(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null | sort)
     local n=${#fichiers[@]}
     (( n >= 2 )) || continue
 
