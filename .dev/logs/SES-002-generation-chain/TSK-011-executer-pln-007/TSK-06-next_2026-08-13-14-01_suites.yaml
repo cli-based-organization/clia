@@ -1,0 +1,21 @@
+suites:
+  - id: N1
+    quoi: "Statuer sur DCN-016 : approuver, ou reviser"
+    pourquoi: "Cinq chantiers de PLN-007 en dependent, et rien d'autre ne les debloque. DCN-013 pose l'approbation manuelle, CONSTITUTION.md C1 reserve les decisions"
+    qui: humain
+  - id: N2
+    quoi: "Trancher ISU-009 : le sort du champ status"
+    pourquoi: "C'est le point d'arret que PLN-007 declare avant son chantier B. Meme approuvee, DCN-016 laisse ce point ouvert"
+    qui: humain
+  - id: N3
+    quoi: "Porter l'executabilite dans le regime SMART lui-meme"
+    pourquoi: "PDC-003 mesure la forme d'un chantier, pas la disponibilite de ses prealables. La correction d'aujourd'hui vit dans clia focus, pas dans le principe. BUG-004 reste ouvert"
+  - id: N4
+    quoi: "Detecter aussi les prealables ouverts qui ne sont pas des decisions"
+    pourquoi: "Une issue ouverte, ou un point d'arret ecrit en prose, ne sont pas suivis. Le chantier B de PLN-007 en est un"
+fait-en-cours-de-tache:
+  - "Zero chantier de PLN-007 execute : declare comme un echec, pas comme un resultat"
+  - "Deux chantiers sur sept etaient deja satisfaits sans que le plan le dise"
+  - "BUG-004 ouvert : un plan SMART n'est pas executable, et rien ne le signalait"
+  - "clia focus corrige : A EXECUTER passe de 2 plans a 1"
+  - "275 -> 279 assertions"

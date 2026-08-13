@@ -1,0 +1,39 @@
+type: fix
+portee: cli
+sujet: "un plan bloqué n'est plus proposé à l'exécution"
+corps: |
+  L'exécution de PLN-007 a échoué : zéro chantier sur sept. Cinq appliquent
+  DCN-016, qui porte effet: suspendue depuis le 2026-08-11, et le plan le
+  déclare lui-même dans ses objections. Les deux autres étaient déjà
+  satisfaits — le contrôle de valeur unique par la tâche 2, l'affichage du
+  champ d'état par PLN-011 — sans que le plan le dise.
+
+  BUG-004 : un plan peut satisfaire PDC-003 et n'être pas exécutable. Les
+  trois contrôles du régime SMART mesurent la forme d'un chantier — livrable,
+  critère, limite — et jamais la disponibilité de ses préalables. clia focus
+  héritait de ce trou et rangeait PLN-007 en A EXECUTER, deuxième priorité du
+  dépôt, depuis quatre tâches.
+
+  C'est une cause distincte de BUG-002, qui portait sur un plan exécuté par la
+  tâche qui l'avait créé. Même symptôme, une demande d'exécution qui ne
+  produit rien.
+
+  clia focus suit désormais le lien : un plan qui cite une décision suspendue
+  est rangé à défricher, avec son préalable nommé. A EXECUTER passe de deux
+  plans à un seul. La détection est délibérément large — un faux positif se
+  voit, un faux négatif est ce que le bogue constate — et aucun ne se produit
+  sur les quatorze plans du dépôt.
+
+  Ce qui reste : un plan bloqué par une issue ouverte, ou par un point d'arrêt
+  écrit en prose, passe toujours pour prêt. BUG-004 reste ouvert.
+
+  275 à 279 assertions.
+note_pour_l_humain: |
+  PLN-007 n'a pas avancé d'un chantier et n'avancera pas : il attend que vous
+  statuiez sur DCN-016.
+fichiers:
+  - .dev/bogues/BUG-004-un-plan-smart-n-est-pas-executable-et-rien-ne-le-signale.md
+  - lib/clia/focus.sh
+  - tests/test_clia.sh
+  - .dev/plans/PLN-007-quatre-champs-d-etat.md
+  - .dev/logs/SES-002-generation-chain/TSK-011-executer-pln-007/

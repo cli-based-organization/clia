@@ -1221,6 +1221,66 @@ EOF
 out=$(runfocus_out --tout)
 assert_contains 'un bogue au gabarit non rempli reste visible' 'BUG-002' "$out"
 
+# Un plan SMART dont un prealable est suspendu n est pas propose a l execution.
+#
+# BUG-004 : PDC-003 mesure la forme d un chantier, pas la disponibilite de ses
+# prealables. PLN-007 satisfait les trois controles et a ete propose a
+# l execution pendant quatre taches, alors que DCN-016 est suspendue.
+
+mkdir -p "$FDEPOT/.dev/decisions"
+cat > "$FDEPOT/.dev/plans/PLN-002-prealable-suspendu.md" <<'EOF'
+---
+type: plan
+id: PLN-002
+title: "Un plan complet mais bloque"
+status: draft
+statut-plan: propose
+sert: []
+porte-sur: [DCN-001]
+---
+
+# PLN-002 - Un plan complet mais bloque
+
+### Chantier A
+
+| **Livrable** | un fichier |
+| **Critère de réussite** | il existe |
+
+## Relations
+
+- `derive-de` DCN-001
+EOF
+cat > "$FDEPOT/.dev/decisions/DCN-001-suspendue.md" <<'EOF'
+---
+type: decision
+id: DCN-001
+title: "Une decision suspendue"
+status: draft
+effet: suspendue
+---
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'un plan dont le prealable est suspendu va a defricher' 'prealable suspendu' "$out"
+assert_contains 'et le prealable est nomme' 'DCN-001' "$out"
+if printf '%s' "$out" | awk '/^A EXECUTER/,/^$/' | grep -q 'PLN-002'; then
+  ko 'un plan bloque n est pas propose a l execution' 'PLN-002 sous A EXECUTER'
+else ok 'un plan bloque n est pas propose a l execution'; fi
+
+# La meme decision en vigueur ne bloque rien.
+cat > "$FDEPOT/.dev/decisions/DCN-001-suspendue.md" <<'EOF'
+---
+type: decision
+id: DCN-001
+title: "Une decision en vigueur"
+status: draft
+effet: en-vigueur
+---
+EOF
+out=$(runfocus_out --tout)
+if printf '%s' "$out" | awk '/^A EXECUTER/,/^$/' | grep -q 'PLN-002'; then
+  ok 'une decision en vigueur ne bloque pas le plan'
+else ko 'une decision en vigueur ne bloque pas le plan' 'PLN-002 absent de A EXECUTER'; fi
+
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

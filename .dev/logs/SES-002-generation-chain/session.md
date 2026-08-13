@@ -168,4 +168,6 @@ Analysez-le. Inclure dans ANL produit le diagnostique et des pistes de correctif
 
 Choisir l'option de rémédiation la plus prometteuse et proruire un plan SMART.
 
-## 11. []
+## 11. [implémentation] exécute le PLN-007
+
+## 12. [implémentation] exécute le PLN-015

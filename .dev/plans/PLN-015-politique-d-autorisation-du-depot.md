@@ -16,7 +16,19 @@ porte-sur: [BUG-001, .claude/settings.json, .claude/hooks]
 
 ## Statut
 
-`propose`. Produit par la tâche 10 de `SES-002`, qui ne l'exécute pas — `MET-005` étape 1 : une tâche de planification produit un plan, elle ne l'exécute pas.
+`propose`. **Partiellement exécuté par la tâche 12 de `SES-002`, le 2026-08-13** — `MET-005` étape 5 : un plan partiellement exécuté ne passe pas à `execute`.
+
+| Chantier | Sort |
+|---|---|
+| A | **Exécuté, critère non satisfait.** Un hook décide dans le sens du refus, pas dans celui de l'autorisation |
+| B | **Exécuté.** `MET-005` étape 3 porte les deux règles et les six cas |
+| C | **Hors d'atteinte**, il dépendait de A |
+
+**Ce que la mesure du chantier A a établi.** Le hook est appelé et sa décision `deny` est appliquée ; sa décision `allow` ne lève pas une règle `ask` du projet. Et le mode non interactif ne produit jamais la demande de confirmation que `BUG-001` constate : la piste D est **indémontrable par script**, non réfutée.
+
+**Ce que le plan avait prévu** : « si la mesure échoue, tout le plan tombe ». La prévision était trop nette — le chantier B tient, et il est exécuté.
+
+Produit par la tâche 10, qui ne l'a pas exécuté : `MET-005` étape 1.
 
 ## Intention
 

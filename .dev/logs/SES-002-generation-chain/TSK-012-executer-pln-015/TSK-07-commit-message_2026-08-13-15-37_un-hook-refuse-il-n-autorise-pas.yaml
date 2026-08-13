@@ -1,0 +1,47 @@
+type: docs
+portee: dev
+sujet: "un hook refuse, il n'autorise pas"
+corps: |
+  Exécution partielle de PLN-015. Le chantier A a été exécuté et son critère
+  n'est pas satisfait ; le chantier B est fait ; le chantier C dépendait de A
+  et tombe avec lui. Le plan reste propose.
+
+  La mesure, en dépôt jetable, quatre passages. Avec une règle ask sur Bash et
+  sans hook, la commande est refusée ; avec un hook qui rend allow, elle reste
+  refusée, alors que la trace prouve que le hook a été appelé. Sans règle ask
+  et sans hook, elle s'exécute ; avec un hook qui rend deny, elle est bloquée
+  par le seul effet du hook.
+
+  Un hook décide donc dans le sens du refus, pas dans celui de l'autorisation.
+  Sa décision allow ne lève pas une règle ask du projet. C'est la propriété
+  sur laquelle ANL-012 avait fondé sa recommandation, et l'analyse déclarait
+  ne pas l'avoir vérifiée.
+
+  La piste n'est pas réfutée pour autant : elle est indémontrable par script.
+  Le mode non interactif ne produit jamais la demande de confirmation que
+  BUG-001 constate — sans règle ask, une commande contenant $(date) passe.
+  L'établir demande une session interactive et un humain qui regarde l'écran.
+
+  Le chantier B tient et il est exécuté. MET-005 étape 3 porte deux règles —
+  un fichier s'écrit avec l'outil d'écriture, un chemin qui ne sert qu'une
+  fois s'écrit en toutes lettres — et les six interruptions de BUG-001
+  qu'elles auraient évitées, chacune avec la forme fautive et la forme
+  correcte.
+
+  ANL-012 est corrigée sur deux points, tous deux signalés dans le document :
+  ce que la mesure établit, et la répartition des six cas évitables, 3 et 3
+  plutôt que 4 et 2. Le total ne change pas.
+
+  BUG-004 s'est manifesté sous une troisième forme en validant cette tâche :
+  PLN-015, partiellement exécuté et sans chantier atteignable, est toujours
+  proposé à l'exécution. Ce n'est pas un lien qui manque, c'est l'exécutabilité
+  qui n'est modélisée nulle part.
+note_pour_l_humain: |
+  Six interruptions sur quinze ont désormais un correctif applicable. Les huit
+  autres n'en ont aucun, hors le mode de permission à l'invocation.
+fichiers:
+  - .dev/methodologies/MET-005-execution-d-un-plan.md
+  - .dev/analyses/ANL-012-interruptions-de-l-execution-autonome.md
+  - .dev/plans/PLN-015-politique-d-autorisation-du-depot.md
+  - .dev/bogues/BUG-004-un-plan-smart-n-est-pas-executable-et-rien-ne-le-signale.md
+  - .dev/logs/SES-002-generation-chain/TSK-012-executer-pln-015/

@@ -1,0 +1,24 @@
+suites:
+  - id: N1
+    quoi: "Eprouver en session interactive qu'un hook supprime la demande de confirmation"
+    pourquoi: "C'est la seule chose que la tache 12 ne pouvait pas faire. Le mode non interactif ne produit jamais cette demande. Le sort de PLN-015 en depend"
+    qui: humain
+  - id: N2
+    quoi: "Decider ou vit l'executabilite d'un plan"
+    pourquoi: "BUG-004 s'est manifeste sous une troisieme forme une heure apres sa correction. Ce n'est pas un lien qui manque, c'est une propriete : ni PDC-003 ni le frontmatter du plan ne la portent"
+  - id: N3
+    quoi: "Mesurer les interruptions de la prochaine tache"
+    pourquoi: "Les deux regles de conduite de MET-005 etape 3 n'ont pas ete eprouvees a l'usage. Six sur quinze est une prevision, pas un resultat"
+    qui: humain
+  - id: N4
+    quoi: "Statuer sur NON-040"
+    pourquoi: "Elle reste ouverte et bloquante. Sa Q1 et sa Q3 ne conditionnent plus rien d'immediat : les chantiers qu'elles bloquaient dependaient d'un mecanisme qui ne fonctionne pas dans le sens espere"
+    qui: humain
+fait-en-cours-de-tache:
+  - "Chantier A execute, critere non satisfait : un hook decide dans le sens du refus, pas de l'autorisation"
+  - "La piste D de ANL-012 n'est pas refutee, elle est indemontrable par script"
+  - "Chantier B execute : MET-005 etape 3 porte deux regles et les six cas de BUG-001"
+  - "Chantier C hors d'atteinte, il dependait de A"
+  - "PLN-015 reste propose"
+  - "ANL-012 corrigee sur deux points, tous deux signales dans le document"
+  - "BUG-004 elargi : une troisieme forme constatee en validant"

@@ -42,10 +42,12 @@ La configuration du dépôt — `settings.json`, `settings.local.json`, le hook 
 
 | Ce qui aurait évité l'interruption | Nombre |
 |---|---|
-| Écrire le fichier avec l'outil d'écriture | 4 |
-| Écrire le chemin en toutes lettres au lieu d'une variable | 2 |
+| Écrire le fichier avec l'outil d'écriture | 3 |
+| Écrire le chemin en toutes lettres au lieu d'une variable | 3 |
 | Une règle du dépôt — déjà corrigée | 1 |
 | **Rien que l'agent puisse changer dans sa conduite** | **8** |
+
+**La répartition des six premières a été corrigée le 2026-08-13**, en reprenant les cas un par un pour le chantier B de `PLN-015` : 3 et 3, non 4 et 2. Le premier compte avait pris pour deux interruptions distinctes les deux documents en place d'un même appel. **Le total évitable reste six, et aucune conclusion ne change.**
 
 **Les huit irréductibles sont des scripts d'épreuve** : activer l'environnement, créer un dépôt jetable, y lancer `clia setup init`, comparer une empreinte avant et après. Ils ont besoin de variables et de substitution — c'est ce qui les rend reproductibles.
 
@@ -109,9 +111,28 @@ C'est aussi ce que `BUG-001` propose : `clia config ia policy check` pour diagno
 | Elle est éprouvée par un banc de cas | Le hook `C2` en a un de 42 cas ; c'est le précédent |
 | Elle nomme ce qu'elle n'autorise pas | Une politique qui autorise tout est `bypassPermissions` sous un autre nom |
 
+## Ce que la mesure a établi, et qui contredit la piste retenue
+
+**Ajouté le 2026-08-13, tâche 12, après l'exécution du chantier A de `PLN-015`.**
+
+La piste D reposait sur une propriété non vérifiée : qu'un hook puisse autoriser. Quatre passages en dépôt jetable donnent ceci.
+
+| Règle `ask` | Hook | Résultat |
+|---|---|---|
+| `["Bash"]` | aucun | Refusée |
+| `["Bash"]` | rend `allow` | **Refusée**, alors que le hook a bien été appelé |
+| `[]` | aucun | Exécutée |
+| `[]` | rend `deny` | **Refusée** par le seul effet du hook |
+
+**Un hook décide dans le sens du refus, pas dans celui de l'autorisation.** Sa décision `allow` ne lève pas une règle `ask` du projet.
+
+**La piste D n'est pas démontrée fausse : elle est indémontrable par script.** Le mode non interactif ne produit jamais la demande de confirmation qui fait l'objet de `BUG-001` — sans règle `ask`, la commande contenant `$(date)` s'exécute. Établir qu'un hook supprime cette demande exigerait une session interactive et un humain qui regarde l'écran.
+
+**Ce que la recommandation devient.** La piste A tient et a été exécutée : elle supprime six interruptions sur quinze. **Les huit autres n'ont, à ce jour, aucun correctif établi** hors de la piste B — le mode de permission à l'invocation, qui reste un outil et non un régime.
+
 ## Limites
 
-**Le mécanisme d'autorisation par hook n'a jamais servi dans ce dépôt.** Il est documenté, le hook existant n'en emploie que la moitié. Le vérifier est le premier chantier du plan, avec son critère de réussite — l'affirmer ici serait le supposer.
+**Le mécanisme d'autorisation par hook n'avait jamais servi dans ce dépôt** au moment de l'écriture. Il a été mesuré depuis, et la section ci-dessus le rapporte.
 
 **Les quinze interruptions viennent de deux tâches**, celles que l'humain a pris la peine de consigner. `BUG-001` dit qu'il y en a eu d'autres. La répartition par cause est donc établie sur un échantillon documenté, non sur la population.
 

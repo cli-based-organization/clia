@@ -60,6 +60,31 @@ Dans l'ordre que le plan déclare. Chaque chantier a un critère de réussite ex
 
 **Un écart au plan décidé en l'exécutant se déclare.** Le plan a été écrit avant de connaître le terrain ; le corriger est normal, le corriger en silence ne l'est pas.
 
+### Deux formes qui interrompent l'humain, et ce qui les remplace
+
+**Sa portée dépasse l'exécution d'un plan.** La règle vaut pour tout travail de l'agent ; elle vit ici parce que c'est le lieu où l'agent agit, et `PLN-015` chantier B laissait le choix du lieu.
+
+`BUG-001` a relevé quinze interruptions sur deux tâches. **Six venaient de la façon dont l'agent invoquait ses outils**, et six seulement : les autres sont hors de sa portée, `ANL-012` C2 le mesure.
+
+**R1. Un fichier s'écrit avec l'outil d'écriture, jamais par un document en place dans une commande shell.**
+
+**R2. Un chemin qui ne sert qu'une fois s'écrit en toutes lettres, jamais par une variable.**
+
+Les six cas, et la forme qui n'aurait rien déclenché :
+
+| Interruption | Ce qui a été fait | Ce qu'il fallait faire |
+|---|---|---|
+| 1 | `cat > "$D/TSK-01-demande_${TS}_....md" <<'FIN'` | L'outil d'écriture, chemin complet en clair |
+| 2 | `for f in .../setup.sh …; do … "$(wc -l < "$f")"; done` | Quatre commandes, quatre chemins littéraux |
+| 3 | `R=/home/…/bin/tda ; grep -n -A45 '…' "$R"` | `grep -n -A45 '…' /home/…/bin/tda` |
+| 5 | `H=.claude/hooks/… ; printf … \| python3 "$H"` | `printf … \| python3 .claude/hooks/…` |
+| 7 | Deux `cat > "$D/…" <<'FIN'` dans un seul appel | Deux appels à l'outil d'écriture |
+| 9 | `python3 - <<'PY'` remplaçant des chaînes dans deux fichiers | L'outil d'édition, un remplacement par appel |
+
+**Le motif.** Une ligne contenant une variable, une substitution ou un document en place ne peut être comparée à aucune règle de permission : l'outil ne sait pas ce qu'elle fera, donc il demande. Les deux règles ci-dessus retirent le motif de la demande au lieu d'essayer d'y répondre.
+
+**Ce que ces règles ne prétendent pas.** Elles suppriment six interruptions sur quinze. Les huit autres sont des scripts d'épreuve — créer un dépôt jetable, y lancer une commande, comparer une empreinte — qui ont besoin de variables pour être reproductibles. **Aucune discipline ne les rendra analysables statiquement**, et le chantier A de `PLN-015` a établi qu'un hook ne les autorise pas non plus.
+
 ## Étape 4 - Rendre les fonctionnalités livrées
 
 **C'est la directive de la tâche 9, et elle porte sur ce qui est rendu à l'humain, non sur ce qui est produit.**

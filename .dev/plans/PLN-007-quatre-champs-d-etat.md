@@ -16,7 +16,17 @@ porte-sur: [RES-001, DCN-016, lib/clia/resource.sh]
 
 ## Statut
 
-`propose`. Aucun chantier n'est engagé.
+`propose`. **Deux chantiers sur sept sont satisfaits, cinq sont bloqués.** Le plan ne passe pas à `execute` : `MET-005` étape 5.
+
+| Chantier | État au 2026-08-13 |
+|---|---|
+| G. Contrôle de valeur unique | **Fait**, tâche 2 de `SES-002`. `clia res check` signale cinq champs constants |
+| F. Afficher le bon champ dans le CLI | **Fait autrement**, par `PLN-011`, tâche 9. `clia res ls objection` affiche trois valeurs distinctes |
+| A à E | **Bloqués** : ils appliquent `DCN-016`, qui porte `effet: suspendue` |
+
+**La tâche 11 a tenté l'exécution et n'a rien pu produire.** Le chantier A est le seul à ne dépendre de rien, et l'exécuter seul ferait déclarer par `RES-001` quatre champs qu'aucun schéma ne porte et qu'aucune instance ne renseigne — le défaut que `NON-005` nomme.
+
+**Ce plan a été proposé à l'exécution par `clia focus` pendant quatre tâches**, parce que `PDC-003` mesure la forme des chantiers et non la disponibilité de leurs préalables. C'est `BUG-004`, ouvert et corrigé le même jour dans la commande.
 
 Les mesures sont dans `NON-035` et `DCN-016`.
 

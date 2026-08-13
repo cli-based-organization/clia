@@ -87,10 +87,36 @@ clia_focus_objections() {
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'NON-*.md' 2>/dev/null | sort)
 }
 
+# La premiere decision suspendue dont un plan derive, ou rien.
+#
+# BUG-004 : PDC-003 mesure la forme d'un chantier — livrable, critere, limite
+# — et jamais la disponibilite de ses prealables. PLN-007 satisfait les trois
+# controles et n'est pas executable : DCN-016, dont il derive, porte
+# effet: suspendue depuis le 2026-08-11. Il a ete propose a l'execution
+# pendant quatre taches.
+#
+# Le lien est ecrit en clair dans le plan ; personne ne le suivait.
+clia_focus_prealable_suspendu() {
+  local plan="$1" dev alias f effet
+  dev=$(clia_dev_dir)
+  while IFS= read -r alias; do
+    [[ -n "$alias" ]] || continue
+    f=$(find -L "$dev/decisions" -maxdepth 1 -type f \
+          -name "${alias}-*.md" 2>/dev/null | head -1)
+    [[ -n "$f" ]] || continue
+    effet=$(clia_frontmatter_field "$f" effet 2>/dev/null)
+    if [[ "$effet" == "suspendue" ]]; then
+      printf '%s\n' "$alias"
+      return 0
+    fi
+  done < <(grep -oE 'DCN-[0-9]{3}' "$plan" 2>/dev/null | sort -u)
+  return 1
+}
+
 # Les plans proposes attendent une execution. Un plan SMART declare un
 # livrable, un critere et une limite par chantier : PDC-003.
 clia_focus_plans() {
-  local dir f alias titre statut livrables criteres
+  local dir f alias titre statut livrables criteres suspendue
   dir="$(clia_dev_dir)/plans"
   [[ -d "$dir" ]] || return 0
   while IFS= read -r f; do
@@ -106,6 +132,9 @@ clia_focus_plans() {
     if (( criteres == 0 || livrables == 0 )); then
       printf 'defricher\t%s\t%s (non SMART : ni livrable ni critere declare)\n' \
         "$alias" "$titre"
+    elif suspendue=$(clia_focus_prealable_suspendu "$f"); then
+      printf 'defricher\t%s\t%s (prealable suspendu : %s)\n' \
+        "$alias" "$titre" "$suspendue"
     else
       printf 'executer\t%s\t%s\n' "$alias" "$titre"
     fi
