@@ -1157,6 +1157,70 @@ assert_contains 'et il est signale comme non SMART' 'non SMART' "$out"
 assert_contains '--tout affiche le decompte' 'CATEGORIE' "$out"
 assert_contains '--tout garde la categorie prioritaire' 'A CORRIGER' "$out"
 
+# Aucun item ouvert ne disparait, quel que soit son etat.
+#
+# PLN-012 chantier A : « chaque item ouvert recoit exactement une categorie ».
+# Le premier jet ne traitait que ouverte et repondue ; trois items du depot
+# reel etaient invisibles, dont BUG-001, rapporte par l'humain.
+
+cat > "$FDEPOT/.dev/objections/NON-002-sans-etat.md" <<'EOF'
+---
+type: objection
+id: NON-002
+title: "Une objection sans champ etat"
+status: draft
+---
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'une objection sans etat reste visible' 'NON-002' "$out"
+assert_contains 'et son etat manquant est nomme' 'etat absent' "$out"
+
+cat > "$FDEPOT/.dev/objections/NON-003-partielle.md" <<'EOF'
+---
+type: objection
+id: NON-003
+title: "Une objection partiellement repondue"
+status: draft
+initiateur: agent
+effet: informatif
+etat: partiellement-repondue
+porte-sur: []
+---
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'une objection partiellement repondue attend l humain' 'NON-003' "$out"
+
+cat > "$FDEPOT/.dev/objections/NON-004-caduque.md" <<'EOF'
+---
+type: objection
+id: NON-004
+title: "Une objection caduque"
+status: draft
+initiateur: agent
+effet: informatif
+etat: caduque
+porte-sur: []
+---
+EOF
+out=$(runfocus_out --tout)
+if printf '%s' "$out" | grep -q 'NON-004'; then
+  ko 'une objection caduque ne demande plus rien' 'NON-004 encore listee'
+else ok 'une objection caduque ne demande plus rien'; fi
+
+cat > "$FDEPOT/.dev/bogues/BUG-002-etat-du-gabarit.md" <<'EOF'
+---
+type: bogue
+id: BUG-002
+title: "Un bogue dont l etat n est pas renseigne"
+status: draft
+regle: "une regle"
+constate-le: 2026-08-13
+etat: À RENSEIGNER
+---
+EOF
+out=$(runfocus_out --tout)
+assert_contains 'un bogue au gabarit non rempli reste visible' 'BUG-002' "$out"
+
 # --------------------------------------------------------------------------
 # --------------------------------------------------------------------------
 printf '\nbilan : %d reussis, %d echoues\n' "$pass" "$fail"

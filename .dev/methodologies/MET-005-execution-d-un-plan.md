@@ -90,6 +90,18 @@ L'agent ne clôt pas la tâche en la déclarant réussie : il nomme l'anomalie, 
 
 C'est le second défaut relevé par `BUG-002`, et le plus grave des deux : présenter une tâche vide comme un succès empêche l'humain de voir qu'il y a un problème.
 
+## Éprouvé sur
+
+| Cas | Résultat |
+|---|---|
+| Les 39 objections du dépôt, rangées une à une par le filtre de l'étape 2 | **26 devaient s'arrêter, 12 pouvaient avancer, 1 n'est pas une objection.** Douze sur trente-neuf n'avaient pas lieu d'être ouvertes |
+| `NON-035` et `NON-036`, rangées du côté « avancer » | **Vérifié après coup** : traitées en avançant, `PLN-011` et le type `Bogue`, sans qu'aucune décision coûte de retour en arrière |
+| `NON-013` | **Le filtre ne le range pas**, et c'est juste : un brouillon vide ne porte aucune incertitude à trancher |
+
+**Ce que l'épreuve établit.** Le filtre départage, et il départage dans le sens qui réduit les objections : près d'un tiers des cas passés.
+
+**Ce qu'elle n'établit pas.** Sa tenue sur des cas neufs. Le rangement porte sur trente-neuf objections déjà écrites, par celui-là même qui les a ouvertes.
+
 ## Comment vérifier que la méthodologie est suivie
 
 | Contrôle | Ce qu'il regarde |

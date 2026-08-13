@@ -31,13 +31,21 @@ Exemple de sortie :
 a faire     A CORRIGER
 qui         agent
 quoi        BUG-002 - Un plan est exécuté par la tâche qui le crée
-cite par    0 document(s)
-en attente  59 item(s) au total
+cite par    2 document(s)
+en attente  58 item(s) au total
 
 clia res show BUG-002   # lire, puis corriger la cause
 ```
 
 Les cinq catégories, dans l'ordre de priorité : `A CORRIGER` un bogue ouvert, `A EXECUTER` un plan proposé et SMART, `A DECIDER` une objection sans réponse, `A CLORE` une objection répondue, `A DEFRICHER` une issue ou un plan sans critère.
+
+**Aucun item ouvert ne disparaît.** Seuls les états clos déclarés par le schéma retirent un item de la liste. Un item dont l'état est absent ou non renseigné est rangé à défricher, avec son défaut nommé :
+
+```
+A DEFRICHER
+  NON-013   ce qu'est une ressource (etat absent)
+  BUG-001   exécution de claude cli sans interruption (etat À RENSEIGNER)
+```
 
 ## Ce qu'elle ne fait pas
 

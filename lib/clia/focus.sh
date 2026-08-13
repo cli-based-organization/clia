@@ -55,8 +55,15 @@ clia_focus_poids() {
 
 # Les objections : sans reponse, elles attendent l'humain ; repondues, elles
 # attendent une cloture.
+#
+# Les sept etats du schema sont traites, et aucun autre cas ne disparait.
+# Un etat absent ou inconnu ne vaut pas un etat clos : l'item est range a
+# defricher plutot qu'omis. Sans cela le decompte ment, et le critere de
+# PLN-012 chantier A — chaque item ouvert recoit exactement une categorie —
+# tombe des qu'une instance est incomplete. C'etait le cas de NON-013, seule
+# objection sans champ etat, invisible du focus jusqu'ici.
 clia_focus_objections() {
-  local dir f alias titre etat q r
+  local dir f alias titre etat
   dir="$(clia_dev_dir)/objections"
   [[ -d "$dir" ]] || return 0
   while IFS= read -r f; do
@@ -65,10 +72,17 @@ clia_focus_objections() {
     titre=$(clia_frontmatter_field "$f" title 2>/dev/null)
     etat=$(clia_frontmatter_field "$f" etat 2>/dev/null)
     case "$etat" in
-      ouverte)
+      ouverte|partiellement-repondue)
         printf 'decider\t%s\t%s\n' "$alias" "$titre" ;;
       repondue)
         printf 'clore\t%s\t%s\n' "$alias" "$titre" ;;
+      differee)
+        printf 'defricher\t%s\t%s (differee : a reprendre)\n' "$alias" "$titre" ;;
+      resolue|levee-par-decision|caduque)
+        ;;  # etats clos : l'objection ne demande plus rien
+      *)
+        printf 'defricher\t%s\t%s (etat %s)\n' \
+          "$alias" "$titre" "${etat:-absent}" ;;
     esac
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'NON-*.md' 2>/dev/null | sort)
 }
@@ -98,6 +112,9 @@ clia_focus_plans() {
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'PLN-*.md' 2>/dev/null | sort)
 }
 
+# Meme regle que pour les objections : seuls les etats clos declares par le
+# schema font disparaitre un item. Un etat absent est un defaut de l'instance,
+# pas une raison de la taire.
 clia_focus_issues() {
   local dir f alias titre etat
   dir="$(clia_dev_dir)/issues"
@@ -105,10 +122,16 @@ clia_focus_issues() {
   while IFS= read -r f; do
     [[ -n "$f" ]] || continue
     etat=$(clia_frontmatter_field "$f" etat 2>/dev/null)
-    [[ "$etat" == "ouverte" || "$etat" == "en-cours" ]] || continue
+    case "$etat" in
+      close|abandonnee) continue ;;
+    esac
     alias=$(basename "$f" .md | grep -oE '^ISU-[0-9]{3}')
     titre=$(clia_frontmatter_field "$f" title 2>/dev/null)
-    printf 'defricher\t%s\t%s\n' "$alias" "$titre"
+    case "$etat" in
+      ouverte|en-cours) printf 'defricher\t%s\t%s\n' "$alias" "$titre" ;;
+      *)                printf 'defricher\t%s\t%s (etat %s)\n' \
+                          "$alias" "$titre" "${etat:-absent}" ;;
+    esac
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'ISU-*.md' 2>/dev/null | sort)
 }
 
@@ -119,10 +142,16 @@ clia_focus_bogues() {
   while IFS= read -r f; do
     [[ -n "$f" ]] || continue
     etat=$(clia_frontmatter_field "$f" etat 2>/dev/null)
-    [[ "$etat" == "ouvert" ]] || continue
+    case "$etat" in
+      corrige|non-reproduit|accepte) continue ;;
+    esac
     alias=$(basename "$f" .md | grep -oE '^BUG-[0-9]{3}')
     titre=$(clia_frontmatter_field "$f" title 2>/dev/null)
-    printf 'corriger\t%s\t%s\n' "$alias" "$titre"
+    case "$etat" in
+      ouvert) printf 'corriger\t%s\t%s\n' "$alias" "$titre" ;;
+      *)      printf 'defricher\t%s\t%s (etat %s)\n' \
+                "$alias" "$titre" "${etat:-absent}" ;;
+    esac
   done < <(find -L "$dir" -maxdepth 1 -type f -name 'BUG-*.md' 2>/dev/null | sort)
 }
 

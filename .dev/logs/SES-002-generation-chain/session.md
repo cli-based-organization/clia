@@ -13,7 +13,9 @@ etat: opened
 
 # 1. INTENTION
 
-Faire en sorte que le créateur puisse travailler sur différents projet même si la méthodologie clia n'est pas aboutit et doit 
+Faire en sorte que le créateur puisse travailler sur différents projets même si la méthodologie clia n'est pas aboutit. 
+
+L'utilisateur de clia sur un autre repo que clia doit être en mesure de mettre à jour les fichiers sous la gestion de `clia`
 
 # 2. CONTEXTE
 
@@ -21,7 +23,9 @@ Faire en sorte que le créateur puisse travailler sur différents projet même s
 
 # 3. LIVRABLES
 
-À rédiger.
+- ressources
+- code
+- et tout autres livrables nécessaires
 
 # 4. CRITÈRES de convergences
 
@@ -155,3 +159,13 @@ TODO => disagnostiquer. Ouvrir un BUG pour documenter cet incident. Proposer une
 TODO => Après chaque exécuton de plan, dire les fonctionnalités qui ont été implémentés et comment l'utiliser
 
 Mettre cette directive dans la méthodologie qui guide l'exécution des plans
+
+## 10. [plan de rémédiation] analyse, diagnostique et planification pour BUG-001
+
+L'humain a rapporté le bogue BUG-001.
+
+Analysez-le. Inclure dans ANL produit le diagnostique et des pistes de correctifs. Émettre des objections pour toute ambiguité ou demande de clarification à fournir par l'humain. 
+
+Choisir l'option de rémédiation la plus prometteuse et proruire un plan SMART.
+
+## 11. []

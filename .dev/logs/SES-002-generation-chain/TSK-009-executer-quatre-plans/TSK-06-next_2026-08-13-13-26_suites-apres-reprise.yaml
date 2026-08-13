@@ -1,0 +1,21 @@
+# derive-de : TSK-06-next_2026-08-13-12-49_suites.yaml
+# Les cinq suites du premier next restent ouvertes. Trois s'y ajoutent, nees
+# de la correction de focus.sh a la reprise de la tache.
+suites:
+  - id: N6
+    quoi: "Renseigner le champ etat de BUG-001 et BUG-003"
+    pourquoi: "Leur gabarit porte encore « À RENSEIGNER » : clia focus les range a defricher au lieu de les proposer a la correction, et BUG-001 fait l'objet de la tache 10"
+    qui: humain
+  - id: N7
+    quoi: "Statuer sur NON-013"
+    pourquoi: "Deux lignes, aucun champ etat, aucune question posee : ce n'est pas une objection. La supprimer ou la rediger appartient a l'humain"
+    qui: humain
+  - id: N8
+    quoi: "Contraindre les instances par leur schema au moment de l'ecriture"
+    pourquoi: "Seize instances ne passent pas cue vet, et rien ne le signale : c'est ce qui a laisse trois items sortir du focus"
+fait-a-la-reprise:
+  - "Les sept criteres des quatre plans reexecutes un par un, sans se fier au journal"
+  - "PLN-012 chantier A echouait : trois items ouverts n'avaient aucune categorie, dont BUG-001. Corrige, 5 assertions"
+  - "Le critere de PLN-013 eprouve par jugement sur les 39 objections : 26 arreter, 12 avancer, 1 non range"
+  - "Le compteur passe de 55 a 58 : il monte, et c'est le chiffre juste"
+  - "270 -> 275 assertions"

@@ -20,6 +20,8 @@ porte-sur: [lib/clia/focus.sh, bin/clia]
 
 **Un écart déclaré** : le chantier A annonçait quatre catégories, l'implémentation en compte cinq. Les bogues ouverts sont des items ouverts, et le critère exigeait que chacun reçoive une catégorie.
 
+**Le chantier A a d'abord échoué.** Réexécuté à la reprise de la tâche, son critère — *chaque* item ouvert reçoit une catégorie — a montré que trois items disparaissaient : `NON-013` sans champ `etat`, `BUG-001` et `BUG-003` dont le gabarit n'est pas rempli. Corrigé le 2026-08-13, cinq assertions ajoutées.
+
 ## Intention
 
 Que le dépôt réponde à « que dois-je faire maintenant ? ».
