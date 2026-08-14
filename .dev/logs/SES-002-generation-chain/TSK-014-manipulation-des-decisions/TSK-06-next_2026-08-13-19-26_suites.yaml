@@ -1,0 +1,24 @@
+# MET-005 etape 6 : une directive, une seule.
+suites:
+  - id: N1
+    quoi: "clia git save : quatre messages de commit attendent"
+    pourquoi: "Rien n'est commite depuis le debut de la session. C'est ce que clia focus laisse a l'humain une fois les items d'agent ecartes"
+    qui: humain
+dette-nommee:
+  - id: D1
+    quoi: "Eprouver clia res explain sur les 35 autres types"
+    pourquoi: "La sortie a ete verifiee sur decision, bogue et le type d'essai du banc. Une definition mal remplie donne une explication pauvre, et c'est le bon signal — encore faut-il le voir"
+  - id: D2
+    quoi: "Rediger DCN-019 et DCN-020, creees pendant la session"
+    pourquoi: "Toutes deux portent effet: À RENSEIGNER. Une decision non redigee ne prescrit rien, et chacune ajoute une instance non conforme"
+    qui: humain
+  - id: D3
+    quoi: "Repondre a ISU-013 : qu'est-ce que la portee"
+    pourquoi: "Ouverte pendant la tache, avec etat: À RENSEIGNER. Le champ portee est declare libre par clia res explain, faute de contrainte au schema"
+    qui: humain
+fait-en-cours-de-tache:
+  - "ADR-018 : la documentation d'un type est fournie par le CLI, derivee et jamais redigee"
+  - "PLN-016 : trois chantiers SMART, verifies avant d'ecrire une ligne de code"
+  - "clia res explain livre et clos : PLN-016 passe a execute"
+  - "Trois defauts trouves en eprouvant, tous corriges"
+  - "297 -> 308 assertions"

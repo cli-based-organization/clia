@@ -18,6 +18,7 @@ Verbes :
   ls TYPE                  liste les instances d'un type
   new TYPE DESCRIPTION     cree une ressource, slug derive de la description
   show ID                  affiche une ressource
+  explain ID               explique le TYPE de cette ressource : champs, valeurs, cycle de vie
   edit ID                  ouvre une ressource avec CLIA_EDITOR
   check [TYPE]             signale un champ obligatoire constant sur toutes les instances
 
@@ -33,6 +34,7 @@ Aide detaillee d'un verbe :
   clia res ls --help
   clia res new --help
   clia res show --help
+  clia res explain --help
   clia res edit --help
   clia res check --help
 EOF
@@ -100,6 +102,32 @@ sequence n'est pas un identifiant : voir NON-001.
 Les ressources archivees ne sont pas trouvees. Voir CLIA_EXCLUDE_DIRS.
 
 Alias : cat
+EOF
+;;
+    explain) cat <<'EOF'
+Usage : clia resource explain ID
+
+Explique le TYPE de la ressource designee : ses champs obligatoires et les
+valeurs que chacun admet, son cycle de vie, son regime d'edition, ses
+relations admissibles, et le nombre d'instances qui existent.
+
+ID accepte une instance comme une definition. Les deux formes suivantes
+donnent la meme sortie, celle du type « decision » :
+  clia res explain DCN-016     une instance
+  clia res explain RES-009     la definition du type
+
+C'est ADR-018 D3 : celui qui bute sur une decision a DCN-016 sous les yeux,
+non RES-009.
+
+L'explication est DERIVEE, jamais redigee. Ses sources sont le frontmatter de
+la definition et le schema cue du type. Un champ que le schema ne contraint
+pas est affiche « libre », jamais omis.
+
+Ce qu'elle ne fait pas : dire le SENS. Pourquoi le champ effet existe et ce
+que « suspendue » engage vivent dans la definition, que la commande designe
+en derniere ligne.
+
+Alias : help
 EOF
 ;;
     edit) cat <<'EOF'
@@ -229,6 +257,171 @@ clia_resource_champ_etat() {
     fi
   done
   printf 'status\n'
+}
+
+# --------------------------------------------------------------------------
+# clia res explain : PLN-016, chantiers A a C
+# --------------------------------------------------------------------------
+#
+# ADR-018 D2 : l'explication est DERIVEE, jamais redigee. Ses deux sources
+# sont le frontmatter de la definition et le schema cue du type. Une
+# documentation redigee a part se perime ; une derivation ne le peut pas.
+#
+# Motif, tache 14 : « c'est difficile de comprendre comment fonctionne les
+# metadata de decision DCN et son cycle de vie ». Tout etait ecrit, disperse
+# dans trois endroits dont un schema cue qui n'est pas fait pour etre lu.
+
+# Les valeurs admises d'un champ enumere, lues dans le schema cue du type.
+#
+# PLN-016 chantier A. Le piege, mesure a la tache 11 : une declaration cue
+# longue s'ecrit sur plusieurs lignes, et une lecture naive deborde sur les
+# champs suivants — effet ramenait aussi attestation et diffusion. La
+# declaration s'arrete a la premiere ligne qui ne se termine PAS par « | ».
+clia_resource_valeurs_admises() {
+  local type="$1" champ="$2" schema ligne bloc n
+  schema="$(clia_dev_dir)/schemas/${type}.cue"
+  [[ -f "$schema" ]] || return 1
+
+  n=0
+  while IFS= read -r ligne; do
+    n=$((n + 1))
+    if [[ "$ligne" =~ ^[[:space:]]*\"?${champ}\"?:[[:space:]]*(.*)$ ]]; then
+      bloc="${BASH_REMATCH[1]}"
+      while [[ "${bloc%"${bloc##*[![:space:]]}"}" == *\| ]]; do
+        IFS= read -r ligne || break
+        bloc+=" ${ligne#"${ligne%%[![:space:]]*}"}"
+      done
+      local valeurs
+      # paste -sd', ' emploie les deux caracteres en alternance, non comme un
+      # separateur unique : « a,b c,d ». Le separateur se pose apres coup.
+      valeurs=$(printf '%s\n' "$bloc" | grep -oE '"[^"]+"' | tr -d '"' \
+                  | paste -sd, | sed 's/,/, /g')
+      # Un champ dont le schema ne donne aucune valeur litterale n'est pas
+      # enumere : id, title, version renvoient a une contrainte de forme.
+      # ADR-018 D4 veut qu'il s'affiche « libre », donc l'appel doit echouer.
+      [[ -n "$valeurs" ]] || return 1
+      printf '%s\n' "$valeurs"
+      return 0
+    fi
+  done < "$schema"
+  return 1
+}
+
+# La definition qui decrit le type d'un fichier donne.
+clia_resource_definition_de() {
+  local fichier="$1" type f
+  type=$(clia_frontmatter_field "$fichier" type 2>/dev/null) || return 1
+  [[ -n "$type" ]] || return 1
+
+  # Une definition se decrit elle-meme : son type est « ressource ».
+  for f in "$(clia_resources_dir)"/RES-*.md; do
+    [[ -f "$f" ]] || continue
+    if [[ "$(basename "$f" .md)" =~ ^RES-[0-9]{3}-(.*)$ ]] \
+       && [[ "${BASH_REMATCH[1]}" == "$type" ]]; then
+      printf '%s\n' "$f"
+      return 0
+    fi
+  done
+  return 1
+}
+
+clia_resource_explain_ligne() {
+  printf '%s\t%s\n' "$1" "${2:-—}"
+}
+
+clia_resource_explain() {
+  # PDC-001 : l'aide est reconnue AVANT toute validation d'argument.
+  if clia_is_help "${1:-}"; then clia_resource_usage_verb explain; return 0; fi
+  clia_require_repo
+
+  local wanted="${1:-}"
+  [[ -n "$wanted" ]] || { clia_resource_usage_verb explain >&2; return 2; }
+
+  local fichier definition
+  if ! fichier=$(clia_resource_find "$wanted"); then
+    clia_warn "introuvable : $wanted"
+    return 1
+  fi
+
+  # ADR-018 D3 : l'argument peut etre une instance ou la definition. L'humain
+  # qui bute sur une decision a DCN-016 sous les yeux, pas RES-009.
+  if [[ "$(clia_frontmatter_field "$fichier" type 2>/dev/null)" == "ressource" ]]; then
+    definition="$fichier"
+  elif ! definition=$(clia_resource_definition_de "$fichier"); then
+    clia_warn "aucune definition pour le type de $wanted"
+    clia_hint "un type sans definition RES n'a rien a deriver"
+    return 1
+  fi
+
+  local type titre prefixe emplacement famille cycle edition
+  local champs relations sections skill adr dir n
+  type=$(basename "$definition" .md | sed -E 's/^RES-[0-9]{3}-//')
+  titre=$(clia_frontmatter_field "$definition" title)
+  prefixe=$(clia_frontmatter_field "$definition" prefixe)
+  emplacement=$(clia_frontmatter_field "$definition" emplacement)
+  famille=$(clia_frontmatter_field "$definition" famille)
+  cycle=$(clia_frontmatter_field "$definition" cycle-de-vie)
+  edition=$(clia_frontmatter_field "$definition" edition)
+  champs=$(clia_frontmatter_field "$definition" champs-obligatoires)
+  relations=$(clia_frontmatter_field "$definition" relations-admissibles)
+  sections=$(clia_frontmatter_field "$definition" sections)
+  skill=$(clia_frontmatter_field "$definition" skill)
+  adr=$(clia_frontmatter_field "$definition" adr)
+
+  dir=$(clia_resource_dir_of "$emplacement")
+  n=$(find -L "$dir" -maxdepth 1 -type f -name "${prefixe}-*.md" 2>/dev/null | grep -c '') || n=0
+
+  printf '%s — %s\n\n' "$titre" "$type"
+
+  {
+    clia_resource_explain_ligne 'prefixe' "$prefixe"
+    clia_resource_explain_ligne 'emplacement' "$emplacement"
+    clia_resource_explain_ligne 'famille' "$famille"
+    clia_resource_explain_ligne 'cycle de vie' "$cycle"
+    clia_resource_explain_ligne 'edition' "$edition"
+    clia_resource_explain_ligne 'instances' "$n"
+    clia_resource_explain_ligne 'skill' "$skill"
+    clia_resource_explain_ligne 'adr' "$adr"
+    clia_resource_explain_ligne 'definition' "${definition#"$CLIA_REPO_ROOT_RESOLVED"/}"
+  } | column -t -s $'\t'
+
+  # ADR-018 D4 : un champ que le schema ne contraint pas s'affiche « libre »,
+  # jamais omis. Une definition mal remplie doit se voir.
+  printf '\nCHAMPS OBLIGATOIRES\n'
+  {
+    printf 'CHAMP\tVALEURS ADMISES\n'
+    local c valeurs
+    # « || [[ -n "$c" ]] » : le dernier champ n'est pas suivi d'un saut de
+    # ligne, et read echoue en le lisant. Sans cette garde, diffusion — le
+    # dernier champ obligatoire de la decision — disparaissait de la sortie.
+    while IFS= read -r c || [[ -n "$c" ]]; do
+      [[ -n "$c" ]] || continue
+      if valeurs=$(clia_resource_valeurs_admises "$type" "$c"); then
+        printf '%s\t%s\n' "$c" "$valeurs"
+      else
+        printf '%s\t%s\n' "$c" 'libre'
+      fi
+    done < <(printf '%s' "$champs" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+  } | column -t -s $'\t'
+
+  # domain-status n'est pas declare dans le schema du type : commun.cue le
+  # porte comme une chaine libre, et ce sont les RES qui en declarent
+  # l'enumeration. DCN-016 pose qu'il REPREND les valeurs du champ propre du
+  # type — effet pour la decision, etat pour l'objection. C'est donc la que
+  # ses valeurs se lisent.
+  local propre ds
+  propre=$(clia_resource_champ_etat "$(basename "$definition" .md)")
+  if [[ -n "$propre" && "$propre" != "status" ]] \
+     && ds=$(clia_resource_valeurs_admises "$type" "$propre"); then
+    printf '\ndomain-status : %s\n' "$ds"
+    printf '                reprises du champ %s, DCN-016\n' "$propre"
+  fi
+
+  [[ -n "$relations" ]] && printf '\nrelations admissibles : %s\n' "$relations"
+  [[ -n "$sections" ]] && printf 'sections attendues    : %s\n' "$sections"
+
+  clia_hint "clia res show $(basename "$definition" .md | grep -oE '^RES-[0-9]{3}') pour le sens, les frontieres et les objections"
+  return 0
 }
 
 clia_resource_ls_instances() {
@@ -587,6 +780,7 @@ clia_resource_main() {
       else clia_resource_ls_instances "$1"; fi ;;
     new|create)   clia_resource_new "$@" ;;
     show|cat)     clia_resource_show "$@" ;;
+    explain|help) clia_resource_explain "$@" ;;
     edit)         clia_resource_edit "$@" ;;
     check)        clia_resource_check "$@" ;;
     ''|-h|--help|help) clia_resource_usage ;;

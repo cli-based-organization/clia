@@ -184,3 +184,24 @@ Dire pourquoi dans une analyse ANL. Proposer une solution.
 
 Réécrire les skills et les méthodes d'exécution et d'écriture de plans pour que cette situation ne se produise pas.
 
+## 14. [conception etc.] manipulation des décisions
+
+Actuellement, c'est difficile de comprendre comment fonctionne les métadata de décision DCN et son cycle de vie également.
+
+Ajouter un ADR qui impose de fournir la documentation des ressources à partir du cli pour satisfaire à PCD-001: `clia res explain|help RES-<SEQ>`
+
+Faire un plan d'exécution. et si ce plan est SMART, implémenter la commande.
+
+## x. [plan de rémédiation] initialisation d'un repo clia: comportement attendu
+
+suite à l'initialisation du repo ~/git/cli-based-organization/clia-repos avec la commande `clia setup init --dev ... `, je constate les défauts suivant
+
+
+- Il n'y a pas de harnais IA CONSTITUTION.md
+- Le fichier INTENTION.md a été peuplé avec le fichier intention du repo clia
+
+Ce qu'il faut faire =>
+
+- tout les harnais générés (CLAUDE.md, SKILLs, ) proviennent d'un fichier de source de vérité yaml + génération à partir d'un template
+- fournir un fichier constitution.
+- 

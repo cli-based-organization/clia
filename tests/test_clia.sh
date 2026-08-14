@@ -291,6 +291,41 @@ out=$(run_out res ls trace)
 assert_contains 'ls TYPE tolere le singulier' 'TRC-' "$out"
 
 # --------------------------------------------------------------------------
+printf '\nresource explain\n'
+# --------------------------------------------------------------------------
+#
+# PLN-016, ADR-018. L'explication est derivee du frontmatter de la definition
+# et du schema cue du type. Elle porte la forme, non le sens.
+
+# PDC-001 : l aide est reconnue AVANT toute validation d argument.
+out=$(run res explain --help 2>&1); rc=$?
+assert_rc 'explain --help n exige pas d argument' 0 "$rc"
+assert_contains 'explain --help dit ce qu il ne fait pas' 'SENS' "$out"
+
+run res explain >/dev/null 2>&1
+assert_rc 'explain sans argument echoue en 2' 2 "$?"
+run res explain XXX-999 >/dev/null 2>&1
+assert_rc 'explain d un identifiant inconnu echoue en 1' 1 "$?"
+
+out=$(run_out res explain CHO-001)
+assert_contains 'explain nomme le prefixe' 'CHO' "$out"
+assert_contains 'explain donne l emplacement' 'emplacement' "$out"
+assert_contains 'explain compte les instances' 'instances' "$out"
+assert_contains 'explain liste les champs obligatoires' 'CHAMPS OBLIGATOIRES' "$out"
+out=$(run res explain CHO-001 2>&1)
+assert_contains 'explain renvoie a la definition pour le sens' 'clia res show' "$out"
+
+# ADR-018 D3 : une instance et sa definition donnent la meme sortie.
+a=$(run_out res explain CHO-001)
+b=$(run_out res explain RES-001)
+if [[ "$a" == "$b" ]]; then ok 'instance et definition donnent la meme sortie'
+else ko 'instance et definition donnent la meme sortie' 'sorties differentes'; fi
+
+# ADR-018 D4 : un champ que le schema ne contraint pas s affiche, il n est
+# jamais omis.
+assert_contains 'un champ non contraint est dit libre' 'libre' "$a"
+
+# --------------------------------------------------------------------------
 printf '\nresource show et edit\n'
 # --------------------------------------------------------------------------
 

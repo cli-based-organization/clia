@@ -1,0 +1,43 @@
+type: feat
+portee: cli
+sujet: "clia res explain : le dépôt explique ses propres types"
+corps: |
+  « C'est difficile de comprendre comment fonctionne les métadata de décision
+  DCN et son cycle de vie. » Tout était écrit, et dispersé en trois endroits
+  dont un schéma cue qui n'est pas fait pour être lu. clia res show exécute
+  cat : il rend un document, il ne répond pas à une question.
+
+  ADR-018 pose que tout type déclaré est explicable par le CLI, sans ouvrir
+  aucun fichier. Cinq décisions : un verbe d'explication ; une explication
+  dérivée du frontmatter et du schéma, jamais rédigée, parce qu'une
+  documentation écrite à part se périme ; un argument qui accepte une instance
+  comme une définition, car celui qui bute sur une décision a DCN-016 sous les
+  yeux et non RES-009 ; un champ non contraint affiché « libre » plutôt
+  qu'omis ; et la forme seulement, le sens restant dans la définition.
+
+  PLN-016 porte trois chantiers SMART. La condition posée par la tâche — « si
+  ce plan est SMART, implémenter la commande » — a été vérifiée avant
+  d'écrire une ligne de code : 3 chantiers, 3 livrables, 3 critères
+  exécutables, 3 limites. C'est ce qui autorise l'écart à MET-005 étape 1,
+  pour ce cas seulement.
+
+  clia res explain DCN-016 rend les onze champs obligatoires d'une décision
+  avec leurs valeurs admises, son cycle de vie, son régime d'édition, les
+  valeurs de domain-status et le champ dont elles sont reprises, le nombre
+  d'instances, et le chemin de la définition.
+
+  Trois défauts trouvés en éprouvant, tous corrigés. paste -sd', ' alterne les
+  deux caractères au lieu de séparer par l'un. Un champ sans énumération
+  renvoyait un succès vide au lieu d'échouer, et ne s'affichait pas « libre ».
+  Le dernier champ de la liste disparaissait, faute de saut de ligne final :
+  diffusion manquait à l'appel.
+
+  297 à 308 assertions.
+note_pour_l_humain: |
+  Quatre messages de commit attendent maintenant, dont celui-ci.
+fichiers:
+  - .dev/adr/ADR-018-la-documentation-d-un-type-est-fournie-par-le-cli.md
+  - .dev/plans/PLN-016-commande-d-explication-d-un-type.md
+  - lib/clia/resource.sh
+  - tests/test_clia.sh
+  - .dev/logs/SES-002-generation-chain/TSK-014-manipulation-des-decisions/
