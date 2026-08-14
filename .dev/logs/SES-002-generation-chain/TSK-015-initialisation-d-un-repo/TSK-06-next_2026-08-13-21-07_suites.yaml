@@ -1,0 +1,23 @@
+# MET-005 etape 6 : une directive, une seule.
+suites:
+  - id: N1
+    quoi: "clia git save : cinq messages de commit attendent"
+    pourquoi: "Rien n'est commite depuis le debut de la session. C'est le seul geste d'humain que clia focus laisse une fois les items d'agent ecartes"
+    qui: humain
+dette-nommee:
+  - id: D1
+    quoi: "Executer PLN-017"
+    pourquoi: "Quatre chantiers SMART, neuf heures declarees. C'est du travail d'agent, et l'humain decide quand"
+  - id: D2
+    quoi: "Reprendre clia-repos une fois PLN-017 execute"
+    pourquoi: "Son INTENTION.md et son CLAUDE.md portent le contenu de clia. Le plan livre le mecanisme ; l'appliquer a ce depot est un geste sur le depot de l'humain"
+    qui: humain
+  - id: D3
+    quoi: "Etablir la regle de derivation des skills"
+    pourquoi: "ADR-016 D3 les declare derivables de RES, ADR, SPC et RQF. Aucun generateur n'existe, et c'est ce qui a fait sortir les skills de PLN-017. ISU-002 et NON-025 le portent depuis le 2026-08-11"
+fait-en-cours-de-tache:
+  - "Trois defauts mesures sur clia-repos, dont un non releve par l'humain : CLAUDE.md est lui aussi identique a celui de clia"
+  - "La cause tient en une ligne : clia_setup_poser copie le fichier du depot source"
+  - "BUG-006 ouvert, PLN-017 propose : quatre chantiers SMART"
+  - "La generation des skills sortie du plan, faute de regle de derivation"
+  - "Aucun chantier execute : la tache produit un plan, elle ne l'execute pas"

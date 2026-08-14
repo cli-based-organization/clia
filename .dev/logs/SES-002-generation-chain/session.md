@@ -192,7 +192,7 @@ Ajouter un ADR qui impose de fournir la documentation des ressources à partir d
 
 Faire un plan d'exécution. et si ce plan est SMART, implémenter la commande.
 
-## x. [plan de rémédiation] initialisation d'un repo clia: comportement attendu
+## 15. [plan de rémédiation] initialisation d'un repo clia: comportement attendu
 
 suite à l'initialisation du repo ~/git/cli-based-organization/clia-repos avec la commande `clia setup init --dev ... `, je constate les défauts suivant
 
@@ -202,6 +202,9 @@ suite à l'initialisation du repo ~/git/cli-based-organization/clia-repos avec l
 
 Ce qu'il faut faire =>
 
-- tout les harnais générés (CLAUDE.md, SKILLs, ) proviennent d'un fichier de source de vérité yaml + génération à partir d'un template
+- tout les harnais générés (CLAUDE.md, SKILLs, CONSTITUTION.md, ARCHITECTURE.md ) proviennent de fichiers de source de vérité yaml + génération à partir d'un template
 - fournir un fichier constitution.
-- 
+- le fichier ARCHITECTURE.md est optionnel
+- le fichier INTENTION.md est un symlink sur .dev/intentions/INT-001.md
+- le fichier INTENTION.md est un template vide à remplir.
+- si un fichier INTENTION.md existe déjà, le déplacer vers INT-001.md et en faire un symlink sur INTENTION.md

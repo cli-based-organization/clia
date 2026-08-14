@@ -7,7 +7,7 @@ status: draft
 instance: À RENSEIGNER
 date-de-decision: 2026-08-13
 portee: À RENSEIGNER
-effet: À RENSEIGNER
+effet: en-vigueur
 attestation: À RENSEIGNER
 diffusion: À RENSEIGNER
 ---

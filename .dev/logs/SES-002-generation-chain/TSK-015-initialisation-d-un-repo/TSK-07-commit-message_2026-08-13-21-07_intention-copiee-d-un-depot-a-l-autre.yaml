@@ -1,0 +1,40 @@
+type: docs
+portee: dev
+sujet: "un dépôt neuf hérite de l'intention de clia"
+corps: |
+  clia setup init copie les harnais depuis le dépôt source. Mesuré sur
+  clia-repos, initialisé le 2026-08-13 : diff INTENTION.md contre celui de
+  clia est vide, les deux fichiers sont identiques. CLAUDE.md aussi — même
+  défaut, non relevé dans le rapport. Ni CONSTITUTION.md ni ARCHITECTURE.md
+  n'existent, et ni l'un ni l'autre des deux fichiers posés n'est un lien.
+
+  La cause tient en une ligne : clia_setup_poser fait cp -p du fichier source,
+  et clia_setup_fichiers_harnais n'en déclare que deux. Le mécanisme ne
+  distingue pas un harnais d'un contenu. CLAUDE.md décrit un mode opératoire,
+  le copier se défend ; INTENTION.md porte ce qu'un dépôt veut accomplir, et
+  aucun dépôt ne partage l'intention d'un autre. En régime lié, la fonction
+  poserait un lien vers le dépôt source : modifier l'intention du dépôt neuf
+  modifierait celle de clia.
+
+  PLN-017 porte quatre chantiers SMART, neuf heures déclarées. Une source de
+  vérité YAML avec un gabarit par harnais, ARCHITECTURE.md déclaré optionnel
+  et CONSTITUTION.md obligatoire. La génération remplaçant la copie, dont le
+  critère exige un diff NON vide contre le dépôt source — c'est la mesure
+  directe du bogue. L'intention devenant une ressource, INTENTION.md n'étant
+  plus qu'un lien relatif vers .dev/intentions/INT-001, comme PLN-008 l'a fait
+  pour la session. Et la migration d'un dépôt déjà instrumenté, dont le critère
+  protège le contenu préexistant.
+
+  La génération des skills est sortie du plan. ADR-016 D3 les déclare
+  dérivables de RES, ADR, SPC et RQF, et aucun générateur n'existe : ISU-002
+  et NON-025 le portent depuis le 2026-08-11. Aucun critère exécutable ne peut
+  être écrit tant que la règle de dérivation n'est pas établie.
+
+  Le plan reste propose : une tâche de planification produit un plan, elle ne
+  l'exécute pas.
+note_pour_l_humain: |
+  Cinq messages de commit attendent maintenant.
+fichiers:
+  - .dev/bogues/BUG-006-l-initialisation-copie-l-intention-du-depot-source.md
+  - .dev/plans/PLN-017-harnais-generes-et-intention-par-ressource.md
+  - .dev/logs/SES-002-generation-chain/TSK-015-initialisation-d-un-repo/
