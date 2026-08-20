@@ -1,0 +1,33 @@
+# harnais.yaml - Source de verite des harnais que clia setup init genere.
+#
+# PLN-017 chantier A. BUG-006 : l'installation copiait les harnais du depot
+# source avec cp -p ; un depot neuf heritait donc de tout ce que le fichier
+# du depot source contenait, intention comprise. Chaque harnais est desormais
+# declare ici, avec son gabarit et son caractere obligatoire, et la
+# generation lit ce fichier plutot que de copier un fichier racine.
+#
+# CLAUDE.md et CONSTITUTION.md decrivent le systeme clia, pas le projet clia :
+# leur gabarit peut legitimement produire un contenu identique d'un depot a
+# l'autre. Ce que la generation garantit n'est pas une difference de facade,
+# c'est que la sortie depend du gabarit et jamais du fichier racine du depot
+# source — voir le journal de la tache 16 pour la mesure.
+#
+# INTENTION.md n'a pas de gabarit fichier : son contenu est PROPRE a chaque
+# depot par nature, donc rien de statique ne peut le porter. Il est derive de
+# RES-003, qui declare deja les champs et sections d'une intention — ADR-018
+# D2, deriver plutot que rediger. Voir clia_setup_intention dans setup.sh.
+
+version: 0.1.0
+harnais:
+  - nom: CLAUDE.md
+    gabarit: CLAUDE.md.tmpl
+    obligatoire: true
+  - nom: CONSTITUTION.md
+    gabarit: CONSTITUTION.md.tmpl
+    obligatoire: true
+  - nom: ARCHITECTURE.md
+    gabarit: ARCHITECTURE.md.tmpl
+    obligatoire: false
+  - nom: INTENTION.md
+    gabarit: "RES-003 (derive, pas un fichier statique)"
+    obligatoire: true

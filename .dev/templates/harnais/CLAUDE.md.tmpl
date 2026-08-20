@@ -1,0 +1,153 @@
+---
+type: harnais IA
+version: 0.2.0-1
+status: actif
+title: CLAUDE.md
+---
+
+# CLAUDE.md
+
+> Mode opératoire de l'agent IA dans ce repo. Point d'entrée du harnais IA.
+> Responsabilité: 
+>   1. interpréte la demande (intention + contexte)
+>   2. définit quel(s) ressource(s) librable(s) produire ou modifier
+>   3. dispatche le travail au(x) skill(s) approprié(s)
+
+## Prend en charge la demande 
+
+### Interprète la demande
+
+1. Trouves l'**intention**, ce que veut accomplir l'humain;
+2. Comprends le **contexte**: quel est la situation actuellement? quel est l'historique? Qui sont les parties prenantes? Comment se sent l'humain? ;
+
+### Définit les ressources livrables pour cette demande
+
+Le résultat de toute demande est la production ou la modification d'une ressource livrable.
+
+Idenfifie le ou les livrables appropriées pour satisfaire la demande.
+
+### Dispatche la demande
+
+Pour chaque demande, produire un ordre de travail correspondant à:
+
+- type de livrables
+- type de travail (création, modification, publication, etc.) d'un livrable
+
+## Comprends la méthodologie de travail
+
+### Lexique
+
+- Harnais IA: ensemble des documents d'autorité décrivant le fonctionnement de l'agent IA 
+- clia: système d'augmentation IA du travail DeepTech
+- cli clia: le terme `clia` peut également désigner le cli du système clia
+
+### Intention ultime
+
+Toujours prioriser l'intention ultime du repo dans le fichier @INTENTION.md
+
+SI IL Y A CONFLIT entre l'intention d'une tâche et l'intention ultime => émettre des objections
+
+### Harnais IA
+
+- Point d'entrée (priorité) => @CLAUDE.md
+- Description du système clia => @ARCHITECTURE.md
+
+SEUL les harnais avec le status `actif` doivent être pris en compte.
+
+### Core du système clia
+
+
+**Ressouces fondamentales**:
+
+- Ressource: ADR-001, RES-001, skl-001
+- Contexte (CTX): ADR-002, RES-002, skl-002
+- Intention (INT): ADR-003, RES-003, skl-003
+- Objection (NON): ADR-004, RES-004, skl-004
+- Faits (FCT): ADR-005, RES-005, skl-005
+- Ontologie (ONT): ADR-006, RES-006, skl-006
+- Concept (CPT): ADR-007, RES-007, skl-007
+
+
+**Ressources de conception**:
+
+
+- Analyse critique (ANL): ADR-008, RES-008, skl-008
+- Recherche de Fondation (FND): ADR-009, RES-009, skl-009
+- Principes de conception (PDC): ADR-010, RES-010, skl-010
+- Methodologie (MET): ADR-011, RES-011, skl-011
+
+
+**Ressouces de contrôle (Harnais IA)**:
+- CLAUDE.md: ADR-012, RES-012, skl-012
+- Skills: ADR-0, RES-0, skl-0
+- ARCHITEC/TURE.md: ADR-0, RES-0, skl-0
+- CONSTITUTION.md: ADR-0, RES-0, skl-0
+- GOUVERNANCE.md: ADR-0, RES-0, skl-0
+
+
+**Ressources de préparation**:
+- Décisions d'architecture (ADR): ADR-0, RES-0, skl-0 
+- Spécification (SPC): ADR-0, RES-0, skl-0
+- Requis fonctionnels (RQF): ADR-0, RES-0, skl-0
+- Requis non-fonctionnels (RQNF): ADR-0, RES-0, skl-0
+- Cas d'usage (USE): ADR-0, RES-0, skl-0
+- Comportement attendu (CMP): ADR-0, RES-0, skl-0
+
+**Ressource d'implémentation**:
+- Code (CDE): ADR-0, RES-0, skl-0
+- Rapport de recherche (RPT): ADR-0, RES-0, skl-0
+- Article scientifique (ART): ADR-0, RES-0, skl-0
+- Présentation (PRS): ADR-0, RES-0, skl-0
+- Entrevue (ENT): ADR-0, RES-0, skl-0
+
+**Commandes cli**:
+
+```sh
+cli   # informations à propos de clia
+clia -h|--help     # aide et usage
+clia -v|--version  # numéro de version
+clia -c|--config   # configuration active
+```
+
+```sh
+clia config (ls|edit)
+clia ls|list [RESSOURCE]
+clia ses|session CMD
+```
+
+**Utilitaire de gestion**
+
+
+```sh
+. setup.sh install
+clia setup upgrade|downgrade
+clia remote CMD
+```
+
+### Extensions de clia
+
+Des extentions peuvent ajouter des ressources et/ou des commandes à `clia`
+
+### Espace actif (contexte documentaire)
+
+Sous-ensemble de documents à prendre en considération
+
+## Directives
+
+### Session
+
+- Le seul point d'entré des demandes est le fichier @workspace/session.md
+- Exécuter uniquement la ou les tâches demandés par l'humain
+- Si la requête de l'humain n'est pas l'exécution d'une tâche du fichier session, refuser
+
+### Journalisation
+
+- Chaque requête à un répertoire de journalisation dans `@.dev/logs/<YYYY-MM-DD>-SES-<SLUG>/`
+- Chaque catégorie d'information concernant la requête est renseignée dans son propre fichier. Par exemple:
+  - demande.md => interprétation de la demande (contexte, intention et skill)
+  - commit-message.yaml => renseignement nécessaire à l'écriture du message de commit
+  - analyse.md => résumé de la réflexion avant la réalisation de la tâche
+  - fait.md => ce qui a été fait
+  - validation.md => ce qui a été fait pour valider que la tâche a bien été exécutée
+  - resultat-validation.md => ce qui a été constaté par la validation
+  - next.yaml => suggestion de prochaines étapes

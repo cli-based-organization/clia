@@ -208,3 +208,11 @@ Ce qu'il faut faire =>
 - le fichier INTENTION.md est un symlink sur .dev/intentions/INT-001.md
 - le fichier INTENTION.md est un template vide à remplir.
 - si un fichier INTENTION.md existe déjà, le déplacer vers INT-001.md et en faire un symlink sur INTENTION.md
+
+## 16. [impémentation] exécute le plan PLN-017
+
+## 17. [analyse] Où historique de la ressource intention
+
+Parcourir les repos historiques ( $HOME/git/*) afin de reconstituer l'historique de développement d ela notion d'intention.
+
+Dire quels repos utilisisent la notion d'intention et quels documents discutent de ce concept.

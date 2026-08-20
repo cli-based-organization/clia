@@ -1,0 +1,45 @@
+type: fix
+portee: cli
+sujet: "clia setup init génère les harnais, il ne les copie plus"
+corps: |
+  Exécution de PLN-017, quatre chantiers. BUG-006 : clia setup init copiait
+  les harnais du dépôt source, et un dépôt neuf héritait de l'intention de
+  clia mot pour mot ; ni CONSTITUTION.md ni ARCHITECTURE.md n'étaient posés.
+
+  harnais.yaml devient la source de vérité des quatre harnais, chacun
+  déclarant son gabarit et son caractère obligatoire. CLAUDE.md et
+  CONSTITUTION.md sont désormais générés depuis .dev/templates/harnais/,
+  découplés du fichier racine du dépôt source.
+
+  Le critère du chantier B a été corrigé en l'exécutant. Il exigeait un diff
+  non vide entre les harnais générés et ceux du dépôt source ; CLAUDE.md et
+  CONSTITUTION.md décrivent le système clia et non le projet clia, et un
+  contenu identique d'un dépôt à l'autre y est correct. Ce que BUG-006
+  reproche est la dépendance au fichier source, pas une identité de contenu.
+  Le critère devient : modifier le fichier racine du dépôt source ne change
+  rien à la sortie, modifier le gabarit la change. Les deux sont au banc.
+
+  INTENTION.md devient un lien relatif vers .dev/intentions/INT-001, la
+  première instance du type intention défini par RES-003 depuis le
+  2026-08-09. Son contenu est dérivé des champs et sections de RES-003, un
+  gabarit vide, jamais copié du dépôt source. Un INTENTION.md déjà écrit à la
+  main est déplacé vers .dev/intentions/ et remplacé par un lien, son contenu
+  intact — vérifié mot pour mot.
+
+  BUG-007, trouvé en préparant le chantier C et non corrigé ici : clia res
+  new ne pose plus maturity, adoption, activated depuis que DCN-016 est en
+  vigueur. Trois instances du dépôt en portent la marque.
+
+  308 à 322 assertions. Les 20 instances non conformes du dépôt sont
+  exactement celles d'avant la tâche.
+note_pour_l_humain: |
+  clia focus désigne BUG-001 comme prochain travail d'agent ; BUG-007 juste
+  derrière.
+fichiers:
+  - .dev/harnais.yaml
+  - .dev/templates/harnais/
+  - .dev/bogues/BUG-007-clia-res-new-ne-pose-plus-les-trois-champs-universels-depuis-dcn-016.md
+  - lib/clia/setup.sh
+  - tests/test_clia.sh
+  - .dev/plans/PLN-017-harnais-generes-et-intention-par-ressource.md
+  - .dev/logs/SES-002-generation-chain/TSK-016-executer-pln-017/

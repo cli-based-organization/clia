@@ -6,8 +6,8 @@ status: draft
 maturity: conception
 adoption: propose
 activated: true
-domain-status: "propose"
-statut-plan: propose
+domain-status: "execute"
+statut-plan: execute
 date: 2026-08-13
 initiateur: agent
 sert: [FNC-003]  # instrumentation d'un dépôt
@@ -20,7 +20,13 @@ porte-sur: [BUG-006, lib/clia/setup.sh]
 
 ## Statut
 
-`propose`. Produit par la tâche 15 de `SES-002`, qui ne l'exécute pas — `MET-005` étape 1.
+`execute`. **Les quatre chantiers ont été exécutés par la tâche 16 de `SES-002`, le 2026-08-13.**
+
+**Le critère du chantier B a été corrigé en l'exécutant.** Il exigeait un `diff` non vide entre les harnais générés et ceux du dépôt source, pour `CLAUDE.md` et `CONSTITUTION.md`. Les deux fichiers décrivent le système `clia`, pas le projet `clia` : leur contenu peut être identique d'un dépôt à l'autre sans que ce soit un défaut. Le critère corrigé exige l'**indépendance** de la sortie envers le fichier racine du dépôt source, prouvée par deux essais symétriques : modifier `$source/CLAUDE.md` ne change rien à la sortie ; modifier le gabarit dans `.dev/templates/harnais/` la change. Les deux ont été éprouvés sur un dépôt jetable, et le second est devenu un test du banc.
+
+**Un bogue trouvé en préparant le chantier C, non corrigé ici** : `clia_resource_new` ne pose plus `maturity`, `adoption`, `activated` depuis que `DCN-016` est en vigueur. `BUG-007` le documente. Ma propre génération de `INT-001`, chantier C, pose les trois champs directement et n'en dépend pas.
+
+Produit par la tâche 15, qui ne l'a pas exécuté : `MET-005` étape 1.
 
 ## Intention
 
@@ -55,13 +61,15 @@ Qu'un dépôt neuf reçoive les harnais que `clia` prescrit, et déclare sa prop
 | Élément | Valeur |
 |---|---|
 | **Livrable** | `lib/clia/setup.sh`, fonction de génération remplaçant `cp -p` pour les harnais |
-| **Critère de réussite** | Sur un dépôt jetable, `clia setup init` produit `CLAUDE.md` et `CONSTITUTION.md` ; **`diff` contre les fichiers du dépôt source est non vide pour les deux** |
+| **Critère de réussite** | ~~Sur un dépôt jetable, `clia setup init` produit `CLAUDE.md` et `CONSTITUTION.md` ; `diff` contre les fichiers du dépôt source est non vide pour les deux~~ **corrigé en exécutant, voir ci-dessous** |
 | **Limite de temps** | 3 heures |
 | **Dépend de** | A |
 
-**Le critère est écrit à l'envers de l'habitude**, et c'est voulu : il exige une **différence**. C'est la mesure directe de `BUG-006`, dont le constat est un `diff` vide.
+**Critère corrigé, tâche 16.** Un `diff` non vide forçait une différence artificielle : `CLAUDE.md` et `CONSTITUTION.md` décrivent le système `clia`, pas le projet `clia`, et un contenu identique d'un dépôt à l'autre y est correct. Ce que `BUG-006` reproche est la **dépendance** au fichier racine du dépôt source, pas une éventuelle identité de contenu.
 
-**Ce que la génération remplace.** `clia_setup_poser` copie ou lie le fichier source. Pour un harnais, elle lira le gabarit et le YAML.
+**Le critère devient : la sortie dépend du gabarit, jamais du fichier racine du dépôt source.** Éprouvé par deux essais symétriques sur un dépôt jetable — modifier `$source/CLAUDE.md` ne change rien à la sortie ; modifier le gabarit dans `.dev/templates/harnais/` la change. Les deux figurent au banc de tests.
+
+**Ce que la génération remplace.** `clia_setup_poser` copiait ou liait le fichier source. `clia_setup_generer_harnais` lit le gabarit déclaré par `harnais.yaml`, jamais le fichier racine.
 
 ### Chantier C - L'intention devient une ressource
 

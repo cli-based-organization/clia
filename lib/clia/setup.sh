@@ -25,10 +25,42 @@
 # changer ne change pas la specification. Ils sont donc declares ici, une
 # seule fois, et les trois verbes les lisent.
 
-# Fichiers de harnais, repris du depot source.
+# Fichiers de harnais, lus depuis harnais.yaml du depot source.
+#
+# PLN-017 chantier A. BUG-006 : la liste vivait ici a la main, et
+# INTENTION.md s'y trouvait avec CLAUDE.md sans que rien ne les distingue.
+# Source de verite unique desormais : .dev/harnais.yaml. Un depot source qui
+# n'en porte pas encore retombe sur les deux noms anterieurs, pour que la
+# commande reste utilisable pendant une migration.
 clia_setup_fichiers_harnais() {
+  local yaml="${CLIA_HOME:-}/${CLIA_DEV_DIR_NAME:-.dev}/harnais.yaml"
+  if [[ -f "$yaml" ]]; then
+    python3 -c "
+import yaml, sys
+d = yaml.safe_load(open(sys.argv[1], encoding='utf-8'))
+for h in d.get('harnais', []):
+    print(h['nom'])
+" "$yaml" 2>/dev/null && return 0
+  fi
   printf 'CLAUDE.md\n'
   printf 'INTENTION.md\n'
+}
+
+# Les harnais generes depuis un gabarit fichier, TSV : nom, gabarit,
+# obligatoire. INTENTION.md est exclu : son gabarit n'est pas un fichier,
+# clia_setup_intention le traite a part — voir harnais.yaml.
+clia_setup_harnais_a_generer() {
+  local source="$1" yaml
+  yaml="$source/${CLIA_DEV_DIR_NAME:-.dev}/harnais.yaml"
+  [[ -f "$yaml" ]] || return 1
+  python3 -c "
+import yaml, sys
+d = yaml.safe_load(open(sys.argv[1], encoding='utf-8'))
+for h in d.get('harnais', []):
+    if h['nom'] == 'INTENTION.md':
+        continue
+    print('%s\t%s\t%s' % (h['nom'], h.get('gabarit', ''), h.get('obligatoire', False)))
+" "$yaml"
 }
 
 # Repertoires crees vides.
@@ -333,6 +365,143 @@ clia_setup_poser() {
   return 0
 }
 
+# Genere un harnais depuis son gabarit, plutot que de copier le fichier
+# racine du depot source.
+#
+# PLN-017 chantier B, BUG-006. clia_setup_poser copiait "$source/$nom" : un
+# depot neuf heritait donc de ce que le fichier racine du depot source
+# contenait. Ici la sortie depend du gabarit dans .dev/templates/harnais/,
+# jamais du fichier racine du depot source : editer le gabarit change ce qui
+# est genere, editer $source/CLAUDE.md ne le change pas.
+#
+# Ce decouplage n'oblige pas la sortie a DIFFERER de $source/CLAUDE.md. Le
+# critere initial du plan exigeait un diff non vide ; corrige en executant,
+# journal de la tache 16 : CLAUDE.md et CONSTITUTION.md decrivent le systeme
+# clia et non le projet clia, et un contenu identique d'un depot a l'autre y
+# est correct. Ce que BUG-006 reproche est la dependance a la source, pas
+# une eventuelle identite de contenu.
+clia_setup_generer_harnais() {
+  local source="$1" cible="$2" regime="$3" nom="$4" gabarit="$5"
+  local chemin_gabarit="$source/${CLIA_DEV_DIR_NAME:-.dev}/templates/harnais/$gabarit"
+
+  if [[ -e "$cible" ]]; then
+    clia_warn "conserve, non touche : $nom"
+    clia_setup_conserves=$(( clia_setup_conserves + 1 ))
+    return 0
+  fi
+  if [[ ! -f "$chemin_gabarit" ]]; then
+    clia_warn "gabarit absent du depot source, ignore : $nom"
+    return 0
+  fi
+
+  mkdir -p "$(dirname "$cible")"
+  if [[ "$regime" == "lie" ]]; then
+    local rel
+    rel=$(realpath --relative-to="$(dirname "$cible")" "$chemin_gabarit" 2>/dev/null) || rel="$chemin_gabarit"
+    ln -s "$rel" "$cible"
+  else
+    cp -p "$chemin_gabarit" "$cible"
+  fi
+  clia_setup_poses=$(( clia_setup_poses + 1 ))
+  return 0
+}
+
+# Cree la premiere instance du type intention, et pose INTENTION.md comme un
+# lien relatif vers elle.
+#
+# PLN-017 chantiers C et D, BUG-006. Motif : le fichier de session vit dans
+# .dev/logs/ et workspace/session.md n'est qu'un lien symbolique (PLN-008) ;
+# l'intention suit la meme regle. Le contenu est un gabarit VIDE, derive des
+# champs et sections que RES-003 declare — ADR-018 D2, deriver plutot que
+# rediger — et non copie du fichier source : aucune phrase de l'intention du
+# depot source ne doit s'y trouver.
+clia_setup_intention() {
+  local source="$1" cible="$2"
+  local lien="$cible/INTENTION.md"
+  local dir_int="$cible/${CLIA_DEV_DIR_NAME:-.dev}/intentions"
+
+  # Chantier D : un INTENTION.md deja instrumente A LA MAIN, avant que ce
+  # mecanisme existe, est un fichier reel non vide a cet emplacement — pas un
+  # lien. On le deplace vers .dev/intentions/INT-001-*.md et on pose le lien
+  # a sa place, SANS reecrire son contenu : ANL-005 T1, un renommage
+  # accompagne d'une reecriture coupe l'historique.
+  if [[ -e "$lien" && ! -L "$lien" && -s "$lien" ]]; then
+    mkdir -p "$dir_int"
+    local slug fichier
+    slug=$(basename "$lien" .md | tr '[:upper:]' '[:lower:]')
+    fichier="$dir_int/INT-001-${slug}.md"
+    mv "$lien" "$fichier"
+    local rel
+    rel=$(realpath --relative-to="$cible" "$fichier" 2>/dev/null) || rel="$fichier"
+    ln -s "$rel" "$lien"
+    clia_setup_poses=$(( clia_setup_poses + 1 ))
+    clia_warn "migre : INTENTION.md -> ${dir_int#$cible/}/INT-001-${slug}.md"
+    return 0
+  fi
+
+  if [[ -e "$lien" ]]; then
+    clia_warn "conserve, non touche : INTENTION.md"
+    clia_setup_conserves=$(( clia_setup_conserves + 1 ))
+    return 0
+  fi
+
+  local def_res003 champs sections
+  def_res003="$source/$(clia_setup_definitions_dir)/RES-003-intention.md"
+  if [[ -f "$def_res003" ]]; then
+    champs=$(clia_frontmatter_field "$def_res003" champs-obligatoires 2>/dev/null)
+    sections=$(clia_frontmatter_field "$def_res003" sections 2>/dev/null)
+  fi
+  champs=$(printf '%s' "${champs:-}" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//')
+  [[ -n "$champs" ]] || champs=$(printf 'type\nid\ntitle\nversion\nstatus\nportee\ncritere-de-satisfaction\n')
+
+  mkdir -p "$dir_int"
+  local fichier="$dir_int/INT-001-intention.md"
+
+  {
+    printf -- '---\n'
+    local c
+    while IFS= read -r c; do
+      [[ -n "$c" ]] || continue
+      case "$c" in
+        type)    printf 'type: intention\n' ;;
+        id)      printf 'id: INT-001\n' ;;
+        title)   printf 'title: "À définir"\n' ;;
+        status)  printf 'status: draft\n' ;;
+        version) printf 'version: 0.1.0\n' ;;
+        *)       printf '%s: À RENSEIGNER\n' "$c" ;;
+      esac
+    done <<< "$champs"
+    # DCN-016 : trois champs universels, non declares par RES-003 ni aucune
+    # autre definition — voir RES-001, section « Les quatre champs d'etat ».
+    # Absents ici, l'instance echoue cue vet des sa creation.
+    printf 'maturity: conception\n'
+    printf 'adoption: propose\n'
+    printf 'activated: true\n'
+    printf -- '---\n\n'
+    printf '# INT-001 - À définir\n\n'
+    printf '> À rédiger.\n'
+    if [[ -n "${sections:-}" ]]; then
+      # « || [[ -n "$sec" ]] » : sans cette garde, la derniere section de la
+      # liste n'est pas suivie d'un saut de ligne et « read » echoue en la
+      # lisant. Meme piege que celui corrige a la tache 14 sur clia res
+      # explain — Relations, derniere section de RES-003, disparaissait.
+      printf '%s' "$sections" | tr -d '[]' | tr ',' '\n' | sed 's/^ *//;s/ *$//' \
+        | while IFS= read -r sec || [[ -n "$sec" ]]; do
+            [[ -n "$sec" ]] || continue
+            printf '\n## %s\n' "$sec"
+          done
+    else
+      printf '\n## Relations\n'
+    fi
+  } > "$fichier"
+
+  local rel
+  rel=$(realpath --relative-to="$cible" "$fichier" 2>/dev/null) || rel="$fichier"
+  ln -s "$rel" "$lien"
+  clia_setup_poses=$(( clia_setup_poses + 1 ))
+  return 0
+}
+
 clia_setup_init() {
   if clia_is_help "${1:-}"; then clia_setup_usage_verb init; return 0; fi
 
@@ -401,10 +570,15 @@ clia_setup_init() {
     fi
   done < <(clia_setup_repertoires)
 
-  while IFS= read -r chemin; do
-    [[ -n "$chemin" ]] || continue
-    clia_setup_poser "$source/$chemin" "$cible/$chemin" "$regime" "$chemin"
-  done < <(clia_setup_fichiers_harnais)
+  # PLN-017 chantiers B, C, D : les harnais sont GENERES depuis un gabarit,
+  # jamais copies du fichier racine du depot source. BUG-006.
+  local nom gabarit obligatoire
+  while IFS=$'\t' read -r nom gabarit obligatoire; do
+    [[ -n "$nom" ]] || continue
+    clia_setup_generer_harnais "$source" "$cible/$nom" "$regime" "$nom" "$gabarit"
+  done < <(clia_setup_harnais_a_generer "$source")
+
+  clia_setup_intention "$source" "$cible"
 
   # Les definitions de types, fichier par fichier : le repertoire cible peut
   # deja en contenir, et P2 interdit d'ecraser.

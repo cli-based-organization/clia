@@ -1,0 +1,24 @@
+# MET-005 etape 6 : la directive rendue est celle que clia focus designe.
+suites:
+  - id: N1
+    quoi: "clia res show BUG-001 : lire, puis corriger la cause"
+    pourquoi: "C'est ce que clia focus designe a l'instant, priorite agent la plus citee. BUG-007, trouve dans cette tache, vient juste derriere"
+dette-nommee:
+  - id: D1
+    quoi: "Corriger BUG-007 : clia_resource_new ne pose plus les trois champs universels"
+    pourquoi: "Trouve en preparant le chantier C, non corrige car resource.sh n'est touche par aucun chantier de PLN-017. Trois instances du depot en portent la marque"
+  - id: D2
+    quoi: "Reprendre clia-repos avec le mecanisme desormais disponible"
+    pourquoi: "PLN-017 livre le mecanisme ; l'appliquer au depot reel de l'humain est son geste, sur son depot"
+    qui: humain
+  - id: D3
+    quoi: "Etendre le controle des six sections aux 36 autres types"
+    pourquoi: "Le controle 5 de cette tache n'a ete rejoue que sur intention. La garde ajoutee vaut pour tous, mais ce n'est verifie que sur un cas"
+fait-en-cours-de-tache:
+  - "Les quatre chantiers de PLN-017 executes et eprouves sur des depots jetables"
+  - "Critere du chantier B corrige en executant : l'independance au fichier source remplace un diff non vide, qui aurait force une difference artificielle"
+  - "BUG-006 resolu de bout en bout : INTENTION.md ne porte plus l'intention de clia, CONSTITUTION.md et ARCHITECTURE.md sont poses"
+  - "BUG-007 ouvert : clia res new omet les trois champs universels depuis DCN-016, trois instances en portent la marque"
+  - "Un octet perdu dans le dev du test, corrige avant tout commit : diff CLAUDE.md du depot clia contre lui-meme, vide"
+  - "308 -> 322 assertions"
+  - "20 instances non conformes avant et apres, exactement les memes"

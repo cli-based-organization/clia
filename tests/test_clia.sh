@@ -992,6 +992,73 @@ assert_file 'init pose la version' "$CIBLE/.dev/version"
 if [[ -d "$CIBLE/.git" ]]; then ok 'init cree le depot de gestion de versions'
 else ko 'init cree le depot de gestion de versions' '.git absent'; fi
 
+# PLN-017, BUG-006 : les harnais sont generes depuis harnais.yaml, jamais
+# copies du fichier racine du depot source.
+assert_file 'init pose CONSTITUTION.md, obligatoire' "$CIBLE/CONSTITUTION.md"
+assert_file 'init pose ARCHITECTURE.md, optionnel mais fourni' "$CIBLE/ARCHITECTURE.md"
+
+if [[ -L "$CIBLE/INTENTION.md" ]]; then ok 'INTENTION.md est un lien'
+else ko 'INTENTION.md est un lien' 'fichier reel'; fi
+case "$(readlink "$CIBLE/INTENTION.md")" in
+  /*) ko 'le lien de INTENTION.md est relatif' 'lien absolu' ;;
+  .dev/intentions/INT-001-*) ok 'le lien de INTENTION.md est relatif' ;;
+  *)  ko 'le lien de INTENTION.md est relatif' "cible inattendue : $(readlink "$CIBLE/INTENTION.md")" ;;
+esac
+assert_file 'la ressource INT-001 existe' "$CIBLE/.dev/intentions/INT-001-intention.md"
+out=$(cat "$CIBLE/INTENTION.md")
+assert_contains 'INT-001 porte les trois champs universels' 'maturity: conception' "$out"
+if printf '%s' "$out" | grep -qi 'DeepTech'; then
+  ko 'INTENTION.md ne porte pas l intention de clia' 'contenu de clia present'
+else ok 'INTENTION.md ne porte pas l intention de clia'; fi
+assert_contains 'INT-001 porte les six sections de RES-003' 'Relations' "$out"
+n=$(printf '%s\n' "$out" | grep -c '^## ')
+if (( n == 6 )); then ok 'INT-001 porte exactement six sections'
+else ko 'INT-001 porte exactement six sections' "obtenu $n"; fi
+
+# BUG-006 : la sortie depend du gabarit decouple, jamais du fichier racine
+# du depot source. Deux preuves symetriques.
+#
+# La sauvegarde et la restauration passent par cp, jamais par une variable :
+# $(cat fichier) perd le saut de ligne final, et une restauration par printf
+# laisse le fichier source du depot reellement modifie. Constate ici meme :
+# CLAUDE.md du depot clia s'est retrouve modifie d'un octet apres un premier
+# jet de ce test.
+DECOUPLE1="$USETUP/decouple1"
+DECOUPLE2="$USETUP/decouple2"
+CLAUDE_SAUVE="$TMP/CLAUDE.md.sauve"
+cp -p "$CLIA_TEST_ROOT/CLAUDE.md" "$CLAUDE_SAUVE"
+printf '\nMARQUEUR-RACINE-NE-DOIT-PAS-FUIR\n' >> "$CLIA_TEST_ROOT/CLAUDE.md"
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$DECOUPLE1" ) >/dev/null 2>&1
+cp -p "$CLAUDE_SAUVE" "$CLIA_TEST_ROOT/CLAUDE.md"
+if grep -q 'MARQUEUR-RACINE-NE-DOIT-PAS-FUIR' "$DECOUPLE1/CLAUDE.md" 2>/dev/null; then
+  ko 'modifier le fichier racine source ne change pas la sortie' 'le marqueur a fuite'
+else ok 'modifier le fichier racine source ne change pas la sortie'; fi
+if diff -q "$CLAUDE_SAUVE" "$CLIA_TEST_ROOT/CLAUDE.md" >/dev/null 2>&1; then
+  ok 'le fichier racine du depot clia est restaure a l identique'
+else ko 'le fichier racine du depot clia est restaure a l identique' 'diff non vide apres restauration'; fi
+
+GABARIT="$CLIA_TEST_ROOT/.dev/templates/harnais/CLAUDE.md.tmpl"
+GABARIT_SAUVE="$TMP/CLAUDE.md.tmpl.sauve"
+cp -p "$GABARIT" "$GABARIT_SAUVE"
+printf '\nMARQUEUR-GABARIT-DOIT-APPARAITRE\n' >> "$GABARIT"
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$DECOUPLE2" ) >/dev/null 2>&1
+cp -p "$GABARIT_SAUVE" "$GABARIT"
+assert_contains 'modifier le gabarit change la sortie' 'MARQUEUR-GABARIT-DOIT-APPARAITRE' \
+  "$(cat "$DECOUPLE2/CLAUDE.md" 2>/dev/null)"
+
+# Chantier D : un INTENTION.md ecrit a la main avant ce mecanisme est
+# deplace, jamais reecrit.
+MIGRE="$USETUP/migre"
+mkdir -p "$MIGRE"
+printf '# Une intention ecrite a la main\n\nAvant que ce mecanisme existe.\n' > "$MIGRE/INTENTION.md"
+CONTENU_HUMAIN=$(cat "$MIGRE/INTENTION.md")
+( cd "$USETUP" && CLIA_HOME="$CLIA_TEST_ROOT" "$CLIA_BIN" setup init "$MIGRE" ) >/dev/null 2>&1
+if [[ -L "$MIGRE/INTENTION.md" ]]; then ok 'un INTENTION.md existant devient un lien'
+else ko 'un INTENTION.md existant devient un lien' 'reste un fichier reel'; fi
+if [[ "$(cat "$MIGRE/INTENTION.md" 2>/dev/null)" == "$CONTENU_HUMAIN" ]]; then
+  ok 'le contenu migre est intact, mot pour mot'
+else ko 'le contenu migre est intact, mot pour mot' 'contenu modifie'; fi
+
 out=$( cd "$CIBLE" && "$CLIA_BIN" setup check 2>/dev/null )
 assert_contains 'apres init : instrumente' 'instrumente' "$out"
 assert_contains 'apres init : conforme' 'conforme' "$out"
