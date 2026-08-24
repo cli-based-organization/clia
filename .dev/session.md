@@ -10,8 +10,14 @@ Nous redémarrons de zéro le développement en concervant ce qui fonctionne bie
 
 Fournir le plus rapidement possible un cli `clia` utilisable pour un usage dans une variété de projets réels.
 
-## LIVRABLES attendu
+## LIVRABLES attendus
 
 - un système d'information clia utile pour une variété d'usages 
 - un cli `clia` permettant d'instrumenter n'importe quel repo git
 - des observations et recommandations pertinante pour la prochaine génération du SI clia
+
+## Tâches
+
+### 1. [implémentation] `clia harness-ia|skill|feature`
+
+Reproduire les commandes `harness-ia`, `skill` et `feature` tel qu'implémentées dans le repo @../../llm-wiki/noumanity-wiki

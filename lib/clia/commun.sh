@@ -93,6 +93,55 @@ _clia_msg()    { printf '%s: %s\n' "${_CLIA_NOM:-clia}" "$*" >&2; }
 _clia_detail() { printf '%*s  %s\n' "${#_CLIA_NOM}" '' "$*" >&2; }
 
 # --------------------------------------------------------------------------
+# Le catalogue
+# --------------------------------------------------------------------------
+#
+# Ce que clia sait installer vit dans son dépôt source, et ce qu'il installe
+# va dans le dépôt de travail. noumanity-wiki, d'où ces commandes sont
+# reprises, confondait les deux : son CLI n'instrumentait que son propre
+# dépôt. clia instrumente n'importe quel dépôt git, ce qui oblige à nommer
+# les deux côtés séparément.
+
+_clia_catalogue_skills()    { printf '%s/skills\n'    "${CLIA_SOURCE_DIR:-}"; }
+_clia_catalogue_features()  { printf '%s/features\n'  "${CLIA_SOURCE_DIR:-}"; }
+_clia_catalogue_templates() { printf '%s/templates\n' "${CLIA_SOURCE_DIR:-}"; }
+
+# --------------------------------------------------------------------------
+# Le périmètre d'exécution
+# --------------------------------------------------------------------------
+#
+# Le mode d'installation ne décide pas seulement de la durée de vie de la
+# commande : il décide de ce sur quoi elle a le droit de travailler.
+#
+#   activate  le dépôt source, et lui seul
+#   dev       le dépôt git courant, quel qu'il soit
+#   direct    idem, la commande ayant été appelée par son chemin
+#
+# La garde est appliquée une fois, par le dispatcher, pour toute commande
+# déclarant « Périmètre: dépôt ».
+
+_clia_depot_de_travail() {
+  local depot
+  depot=$(_clia_depot_git "$PWD") || {
+    _clia_msg "le répertoire courant n'est pas dans un dépôt git"
+    _clia_detail "clia travaille sur un dépôt ; placez-vous dans un dépôt git"
+    return 1
+  }
+
+  if [[ "$(_clia_mode_constate)" == 'activate' ]]; then
+    if [[ "$depot" != "${CLIA_HOME:-}" ]]; then
+      _clia_msg "hors périmètre : l'activation ne permet que le dépôt source"
+      _clia_detail "dépôt courant : $depot"
+      _clia_detail "dépôt source  : ${CLIA_HOME:-inconnu}"
+      _clia_detail "pour travailler sur tout dépôt : . setup.sh install --dev"
+      return 1
+    fi
+  fi
+
+  printf '%s\n' "$depot"
+}
+
+# --------------------------------------------------------------------------
 # Le mode d'installation constaté
 # --------------------------------------------------------------------------
 #

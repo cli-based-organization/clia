@@ -51,54 +51,8 @@ EMPREINTE_SOURCE=$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)
 # Assertions
 # --------------------------------------------------------------------------
 
-NB=0; ECHECS=0; SORTIE=''
-
-ok()    { NB=$((NB+1)); printf '  ok     %s\n' "$1"; }
-echec() { NB=$((NB+1)); ECHECS=$((ECHECS+1)); printf '  ÉCHEC  %s\n' "$1"
-          [[ -n "${2:-}" ]] && printf '         %s\n' "$2"; return 0; }
-
-# rc TITRE ATTENDU COMMANDE... — exécute, compare le code de retour, et
-# conserve la sortie pour les assertions de texte qui suivent.
-rc() {
-  local titre="$1" attendu="$2"; shift 2
-  local reel
-  SORTIE=$("$@" 2>&1); reel=$?
-  if (( reel == attendu )); then
-    ok "$titre"
-  else
-    echec "$titre" "code $reel, attendu $attendu — $(printf '%s' "$SORTIE" | tr '\n' '|' | cut -c1-140)"
-  fi
-}
-
-dit() {
-  local titre="$1" motif="$2"
-  if grep -q -- "$motif" <<<"$SORTIE"; then
-    ok "$titre"
-  else
-    echec "$titre" "le motif « $motif » est absent de la sortie"
-  fi
-}
-
-ne_dit_pas() {
-  local titre="$1" motif="$2"
-  if grep -q -- "$motif" <<<"$SORTIE"; then
-    echec "$titre" "le motif « $motif » est présent alors qu'il ne devrait pas"
-  else
-    ok "$titre"
-  fi
-}
-
-vrai() {
-  local titre="$1"; shift
-  if "$@"; then ok "$titre"; else echec "$titre" "condition fausse : $*"; fi
-}
-
-faux() {
-  local titre="$1"; shift
-  if "$@"; then echec "$titre" "condition vraie alors qu'elle devait être fausse : $*"; else ok "$titre"; fi
-}
-
-titre() { printf '\n%s\n' "$1"; }
+# shellcheck source=banc.sh
+. "$(dirname "${BASH_SOURCE[0]}")/banc.sh"
 
 # Sourcer setup.sh depuis un shell neuf, et rendre son code de retour.
 sourcer() {
@@ -135,7 +89,9 @@ vrai "la configuration est écrite"            test -f "$CONF"
 vrai "clia est disponible"                    bash -c 'command -v clia >/dev/null'
 
 rc  "clia -h répond"                          0 clia -h
-dit "l'aide nomme setup uninstall"            'setup uninstall'
+dit "l'aide liste la commande setup"          '^  setup '
+rc  "clia setup --help répond"                0 clia setup --help
+dit "et il nomme le verbe uninstall"          'uninstall'
 rc  "clia --version rend la version"          0 clia --version
 vrai "la version est celle du dépôt"          test "$SORTIE" = "$VERSION"
 rc  "clia setup status répond"                0 clia setup status
@@ -245,10 +201,4 @@ vrai "aucun changement dans le dépôt source"  test "$(cd "$RACINE" && git stat
 
 # --------------------------------------------------------------------------
 
-printf '\n%s\n' '----------------------------------------------------------'
-if (( ECHECS == 0 )); then
-  printf '%d cas, aucun échec\n' "$NB"
-  exit 0
-fi
-printf '%d cas, %d échec(s)\n' "$NB" "$ECHECS"
-exit 1
+bilan
