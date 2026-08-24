@@ -1,0 +1,71 @@
+# La définition du type « intention ».
+#
+# Une intention énonce un but et le rend opposable. Sans critère de
+# satisfaction, une intention est un souhait : rien ne permet de dire qu'elle
+# est atteinte, et rien ne permet d'objecter en son nom.
+
+type: ressource
+nom: intention
+titre: Intention
+prefixe: INT
+version: 0.1.0
+
+emplacement: .dev/intentions/INT-<SEQ>-<SLUG>.md
+gabarit: templates/intention.template.md
+
+# L'humain seul écrit une intention. L'agent lit, cite, commente, objecte, et
+# ne modifie jamais. La règle vient d'un dégât réel : un agent avait écrasé un
+# INTENTION.md avec du contenu générique.
+edition: humain
+cycle-de-vie: vivant
+
+resume: >
+  Une intention énonce un but poursuivi, la raison qui l'a rendu nécessaire,
+  et les critères qui permettent de dire s'il est atteint ou s'il est trahi.
+  Elle est la référence de toute objection.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - portee                    # ultime | derivee
+  - critere-de-satisfaction
+
+sections:
+  - Le but
+  - La raison
+  - Critère de satisfaction
+  - Critère de trahison
+  - Ce que cette intention exclut
+
+relations-admissibles:
+  - derive-de
+  - reference
+
+# Deux portées, et deux seulement.
+#
+#   ultime    exactement une par dépôt, celle vers laquelle INTENTION.md
+#             pointe. C'est la raison d'être du dépôt.
+#   derivee   autant que nécessaire. Toute intention dérivée doit pouvoir se
+#             rattacher à l'ultime par une chaîne de derive-de ; celle qui ne
+#             s'y rattache pas signale soit un travail hors périmètre, soit
+#             une intention ultime incomplète.
+portees:
+  - ultime
+  - derivee
+
+notes: >
+  INTENTION.md à la racine d'un dépôt n'est pas une ressource : c'est un lien
+  symbolique vers l'instance qui porte l'intention ultime, par défaut
+  .dev/intentions/INT-001-<slug>.md. Le document le plus important du dépôt
+  garde ainsi son adresse fixe sans que le type ait besoin d'un emplacement
+  dérogatoire, et l'instance porte un frontmatter comme toute ressource.
+
+  Le critère de satisfaction est obligatoire : il permet de clore. Le critère
+  de trahison est facultatif : il permet d'objecter, mais le rendre
+  obligatoire le ferait renseigner pour la forme, ce qui est pire que son
+  absence. Un bon critère de trahison est spécifique et vérifiable.
+
+  Une révision majeure de l'intention ultime est un changement de cap, et
+  exige une trace écrite de la décision.

@@ -1,0 +1,34 @@
+# Gabarit d'une définition de type. À copier vers
+# _ressources/<NOM>/schemas/<NOM>.yaml, puis à renseigner.
+#
+# Les champs obligatoires sont ceux que déclare _ressources/ressource/schemas/
+# ressource.yaml. Un champ facultatif qui n'a rien à dire se retire, il ne se
+# laisse pas vide.
+
+type: ressource
+nom: <NOM>
+titre: <Titre lisible>
+prefixe: <XXX>
+version: 0.1.0
+
+emplacement: .dev/<REPERTOIRE>/<XXX>-<SEQ>-<SLUG>.md
+gabarit: templates/<NOM>.template.md
+
+edition: <humain | ia | hybride | co-edition>
+cycle-de-vie: <vivant | point-fixe | travail>
+
+resume: >
+  Ce qu'est ce type, et à quoi il sert. Trois lignes au plus, qui tiennent
+  debout seules.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+
+sections:
+  - <Premier titre attendu dans le corps>
+
+relations-admissibles:
+  - reference

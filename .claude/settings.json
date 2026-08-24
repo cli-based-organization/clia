@@ -46,6 +46,7 @@
       "Bash(clia:*)",
       "Bash(bash _scripts/tests/test_clia.sh)",
       "Bash(bash _scripts/tests/test_harnais.sh)",
+      "Bash(bash _scripts/tests/test_init.sh)",
       "Bash(bash .claude/hooks/test_refuser-git-en-ecriture.sh)",
       "Bash(cue vet:*)",
       "Bash(cue version:*)",

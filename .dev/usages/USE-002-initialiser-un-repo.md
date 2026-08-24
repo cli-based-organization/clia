@@ -24,3 +24,6 @@ clia init REPO_PATH
 
 **post-condition**: le répertoire REPO_PATH est un repo git contenant un fichier CLAUDE.md, INTENTION.md et .dev/session.md
 
+## Cas d'usage 2: repo git existant
+
+cas d'usage non supporté => retourne une erreur

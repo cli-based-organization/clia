@@ -1,0 +1,74 @@
+# La définition du type « ressource », qui est aussi la forme que prend toute
+# définition de type. Ce fichier se prend lui-même pour objet : il décrit les
+# champs qu'il porte, et il les porte.
+#
+# Une définition de type vit dans _ressources/<nom>/schemas/<nom>.yaml. Il n'y
+# en a qu'une par type, et rien de ce qu'elle déclare n'est écrit ailleurs.
+#
+# La génération précédente écrivait ces définitions en markdown de cent
+# cinquante lignes, dont l'essentiel était de la justification. ANL-004 en a
+# mesuré le coût. Ce qui est gardé ici est le contrat ; le pourquoi appartient
+# aux décisions, et le comment aux skills.
+
+type: ressource
+nom: ressource
+titre: Ressource
+prefixe: RES
+version: 0.1.0
+
+emplacement: _ressources/<NOM>/schemas/<NOM>.yaml
+gabarit: templates/ressource.template.yaml
+
+# Qui écrit : humain | ia | hybride | co-edition.
+edition: co-edition
+
+# Comment le type vieillit : vivant (versionné en semver) | point-fixe (daté,
+# non modifié) | travail (séquencé, journal en tête).
+cycle-de-vie: vivant
+
+resume: >
+  Une ressource est un ensemble identifiable et auto-cohérent d'informations,
+  dont un type déclaré gouverne la forme. Elle déplace la vérité du travail
+  hors de la conversation, qui est volatile, vers un objet versionné.
+
+# Les champs qu'une définition de type doit porter, et ce que chacun dit.
+champs-obligatoires:
+  - type          # vaut toujours « ressource » : ce fichier est une définition
+  - nom           # nom canonique du type, en minuscules, sans accent
+  - titre         # nom lisible
+  - prefixe       # trois lettres, préfixe de l'alias des instances
+  - version       # semver de la définition
+  - emplacement   # où vivent les instances, motif de nom compris
+  - edition       # qui écrit
+  - cycle-de-vie  # comment le type vieillit
+  - resume        # ce qu'est le type, en trois lignes au plus
+
+# Facultatifs, mais reconnus.
+champs-facultatifs:
+  - gabarit                 # chemin du modèle d'instance, relatif à la ressource
+  - sections                # titres attendus dans le corps d'une instance
+  - champs-d-instance       # frontmatter attendu d'une instance
+  - relations-admissibles   # types vers lesquels une instance peut pointer
+  - notes                   # ce qu'un lecteur doit savoir et que rien d'autre ne dit
+
+# Une relation est un renvoi typé d'une ressource vers une autre. Vocabulaire
+# réduit à ce qui est effectivement employé ; une relation dont la cible
+# n'existe pas est un défaut.
+relations-admissibles:
+  - specifie          # la source fixe la forme de la cible
+  - derive-de         # la source procède de la cible
+  - compose           # la source assemble la cible comme atome
+  - fait-partie-de    # la source est un atome de la cible
+  - remplace          # succession d'identité
+  - reference         # renvoi simple, sans engagement
+
+notes: >
+  Une ressource est composable : elle peut être un fichier, un répertoire de
+  fichiers, ou un dépôt. Chaque atome d'un composite est une ressource de
+  plein droit, qui se lit seule. Un fichier qui ne se comprend qu'après avoir
+  lu son composite n'est pas un atome, c'est une section mal découpée.
+
+  L'alias <PREFIXE>-<SEQ> désigne une instance à l'intérieur d'un dépôt. Ce
+  n'est pas une identité : c'est une adresse locale, courte et tapable sans
+  copier-coller. Corriger le slug d'un nom de fichier n'a donc aucune
+  conséquence, et déplacer un fichier ne casse aucun renvoi.

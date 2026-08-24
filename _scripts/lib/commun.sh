@@ -109,6 +109,34 @@ _clia_detail() { printf '%*s  %s\n' "${#_CLIA_NOM}" '' "$*" >&2; }
 _clia_ressource_dir() { printf '%s/_ressources/%s\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
 _clia_primitives()    { printf '%s/_ressources/%s/primitives\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
 _clia_templates()     { printf '%s/_ressources/%s/templates\n'  "${CLIA_SOURCE_DIR:-}" "$1"; }
+_clia_definition()    { printf '%s/_ressources/%s/schemas/%s.yaml\n' "${CLIA_SOURCE_DIR:-}" "$1" "$1"; }
+
+# Un champ de la définition d'un type. Extraction à plat : les champs lus par
+# le CLI sont des chaînes simples en tête de ligne, jamais des listes ni des
+# blocs. Ce n'est pas un analyseur YAML, et ça n'a pas à en devenir un — le
+# jour où un champ structuré devra être lu, c'est cette fonction qu'il faudra
+# remplacer, et elle seule.
+_clia_def_champ() {
+  local fichier
+  fichier=$(_clia_definition "$1")
+  [[ -f "$fichier" ]] || return 1
+  local ligne
+  ligne=$(grep -m1 -E "^${2}:[[:space:]]" "$fichier" 2>/dev/null) || return 1
+  ligne="${ligne#*:}"
+  # Retire les espaces de tête, puis les guillemets s'il y en a.
+  ligne="${ligne#"${ligne%%[![:space:]]*}"}"
+  ligne="${ligne%\"}"
+  ligne="${ligne#\"}"
+  printf '%s\n' "$ligne"
+}
+
+# Le gabarit d'instance déclaré par un type, résolu en chemin complet.
+_clia_gabarit_de() {
+  local nom="$1" relatif
+  relatif=$(_clia_def_champ "$nom" gabarit) || return 1
+  [[ -n "$relatif" ]] || return 1
+  printf '%s/%s\n' "$(_clia_ressource_dir "$nom")" "$relatif"
+}
 
 # --------------------------------------------------------------------------
 # Le périmètre d'exécution
@@ -124,6 +152,23 @@ _clia_templates()     { printf '%s/_ressources/%s/templates\n'  "${CLIA_SOURCE_D
 # La garde est appliquée une fois, par le dispatcher, pour toute commande
 # déclarant « Périmètre: dépôt ».
 
+# Le périmètre autorise-t-il d'agir sur ce chemin ? La cible peut ne pas
+# exister encore : clia init crée le dépôt qu'il instrumente, et il doit être
+# refusé avant de créer quoi que ce soit, non après.
+_clia_perimetre_permet() {
+  local cible="$1"
+  [[ "$(_clia_mode_constate)" == 'activate' ]] || return 0
+
+  if [[ "$cible" != "${CLIA_HOME:-}" ]]; then
+    _clia_msg "hors périmètre : l'activation ne permet que le dépôt source"
+    _clia_detail "demandé      : $cible"
+    _clia_detail "dépôt source : ${CLIA_HOME:-inconnu}"
+    _clia_detail "pour travailler sur tout dépôt : . setup.sh install --dev"
+    return 1
+  fi
+  return 0
+}
+
 _clia_depot_de_travail() {
   local depot
   depot=$(_clia_depot_git "$PWD") || {
@@ -132,16 +177,7 @@ _clia_depot_de_travail() {
     return 1
   }
 
-  if [[ "$(_clia_mode_constate)" == 'activate' ]]; then
-    if [[ "$depot" != "${CLIA_HOME:-}" ]]; then
-      _clia_msg "hors périmètre : l'activation ne permet que le dépôt source"
-      _clia_detail "dépôt courant : $depot"
-      _clia_detail "dépôt source  : ${CLIA_HOME:-inconnu}"
-      _clia_detail "pour travailler sur tout dépôt : . setup.sh install --dev"
-      return 1
-    fi
-  fi
-
+  _clia_perimetre_permet "$depot" || return 1
   printf '%s\n' "$depot"
 }
 
