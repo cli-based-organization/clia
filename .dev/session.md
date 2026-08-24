@@ -21,3 +21,7 @@ Fournir le plus rapidement possible un cli `clia` utilisable pour un usage dans 
 ### 1. [implémentation] `clia harness-ia|skill|feature`
 
 Reproduire les commandes `harness-ia`, `skill` et `feature` tel qu'implémentées dans le repo @../../llm-wiki/noumanity-wiki
+
+### 2. [refactor] conventions d'usage des répertoires
+
+Réorganiser le répertoire afin de respecter le requis @.dev/reqs/REQ-002-convention-repertoires.md
