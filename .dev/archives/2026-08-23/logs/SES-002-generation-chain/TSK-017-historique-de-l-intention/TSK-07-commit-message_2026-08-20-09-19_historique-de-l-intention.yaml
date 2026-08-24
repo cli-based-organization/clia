@@ -1,0 +1,27 @@
+type: docs
+portee: analyse
+sujet: "ANL-014 : l'intention de clia descend d'une lignée de six mois"
+corps: |
+  Tâche 17 de SES-002 : reconstituer, à travers les 191 dépôts sous
+  $HOME/git/*, l'historique de développement de la notion d'intention que
+  RES-003 formalise aujourd'hui dans clia.
+
+  ANL-014 établit une lignée continue en six étapes, de mars à août 2026 :
+  naissance comme critère de priorisation d'issues
+  (noumanity-ai-assisted-development-toolkit), pic de complexité façon plan
+  d'affaires (cryptosecops, mi-juin), consolidation par
+  TKT-001-definir-l-intention (21 juin), stabilisation et identification
+  INT-001 (intentional-doers-governance, début juillet), diffusion sans
+  reconception dans une quarantaine de dépôts, puis reprise dans clia avec
+  l'ajout propre à ce dépôt : les critères de satisfaction et de trahison.
+
+  Un embranchement isolé (intention-writer, disruptiva-dev/devops-cli, façon
+  produit anglophone) n'a jamais convergé avec cette lignée. Trois dépôts
+  portent le nom du concept sans aucun commit.
+note_pour_l_humain: |
+  ANL-014 répond à la tâche 17 : la lignée d'où vient RES-003, les dépôts qui
+  emploient la notion, et les quatre documents qui la discutent réellement
+  plutôt que de l'employer.
+fichiers:
+  - .dev/analyses/ANL-014-historique-du-developpement-de-la-notion-d-intention.md
+  - .dev/logs/SES-002-generation-chain/TSK-017-historique-de-l-intention/

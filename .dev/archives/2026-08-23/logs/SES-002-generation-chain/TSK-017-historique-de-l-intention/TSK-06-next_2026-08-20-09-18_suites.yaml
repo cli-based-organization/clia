@@ -1,0 +1,16 @@
+# MET-005 etape 6 : la tache est une analyse pure, aucun geste ne debloque
+# quoi que ce soit d'autre. La suite est de la dette nommee, pas une directive.
+suites: []
+dette-nommee:
+  - id: D1
+    quoi: "Lire l'ensemble des ~50 fichiers INTENTION.md recenses, pas seulement l'echantillon"
+    pourquoi: "ANL-014 declare la limite : au-dela de l'etape 5 de la chronologie, les fichiers restants sont probablement des copies du gabarit stabilise, mais ce n'est pas verifie exhaustivement"
+  - id: D2
+    quoi: "Verifier si l'embranchement intention-writer (disruptiva-dev/devops-cli) merite d'etre reconcilie avec RES-003"
+    pourquoi: "Sa distinction goals/non-goals n'existe pas dans la lignee reprise par clia ; ANL-014 ne juge pas de sa pertinence, seulement de son isolement historique"
+fait-en-cours-de-tache:
+  - "191 depots git recenses sous $HOME/git/"
+  - "Six etapes chronologiques identifiees, de mars a aout 2026"
+  - "Un embranchement isole (intention-writer, disruptiva-dev/devops-cli) jamais reconcilie avec la lignee reprise par clia"
+  - "Trois depots nommes au nom du concept, sans aucun commit"
+  - "ANL-014 produite dans .dev/analyses/"

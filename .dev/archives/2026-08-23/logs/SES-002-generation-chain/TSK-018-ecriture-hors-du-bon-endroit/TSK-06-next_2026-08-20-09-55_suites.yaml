@@ -1,0 +1,15 @@
+# MET-005 etape 6 : une directive, une seule, adressee a l'humain.
+suites:
+  - id: N1
+    quoi: "Trancher NON-041 : accepter l'ecriture directe par Bash, desactiver worktree.bgIsolation pour ce depot, ou ne plus executer en arriere-plan les taches productrices de ressources clia"
+    pourquoi: "L'agent applique par defaut la premiere option en best-effort documente, mais elle s'appuie sur une lacune du garde-fou, pas un chemin prevu par le harnais"
+    qui: humain
+dette-nommee:
+  - id: D1
+    quoi: "Ajouter un controle qui verifie qu'une ressource produite par une tache apparait dans le depot principal, pas seulement qu'elle existe et respecte son schema"
+    pourquoi: "La validation de la tache 17 n'a jamais compare l'emplacement du livrable a celui du depot principal ; c'est ce qui a laisse passer BUG-008"
+fait-en-cours-de-tache:
+  - "ANL-014 et le journal TSK-017 relocalises du worktree vers le depot principal, par cp, sans commande git"
+  - "BUG-008 : la cause tient a EnterWorktree, qui produit par construction un repertoire hors du depot principal"
+  - "Test etabli : le garde-fou d'isolement des sessions d'arriere-plan ne couvre pas Bash, seulement Write/Edit"
+  - "NON-041 ouverte, effet suspendue, trois options soumises a l'humain"

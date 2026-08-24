@@ -1,1 +1,0 @@
-/home/jvtrudel/git/cli-based-organization/clia/.dev/logs/SES-002-generation-chain/session.md

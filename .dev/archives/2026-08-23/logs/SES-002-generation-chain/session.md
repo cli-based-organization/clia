@@ -216,3 +216,10 @@ Ce qu'il faut faire =>
 Parcourir les repos historiques ( $HOME/git/*) afin de reconstituer l'historique de développement d ela notion d'intention.
 
 Dire quels repos utilisisent la notion d'intention et quels documents discutent de ce concept.
+
+## 18. [bogue] écriture d'un fichier dans un autre worktree
+
+Voici le comportement attendu:
+
+- les ressources produites doivent être déposé au "bon endroit"
+- il est strictement INTERDIT à l'agent IA d'utiliser git
