@@ -1,7 +1,7 @@
 # shellcheck shell=bash
-# tests/banc.sh — les assertions, communes aux bancs.
+# _scripts/tests/banc.sh — les assertions, communes aux bancs.
 #
-# Sourcé par tests/test_*.sh. Chaque assertion imprime une ligne, compte un
+# Sourcé par _scripts/tests/test_*.sh. Chaque assertion imprime une ligne, compte un
 # cas, et n'interrompt jamais le banc : un échec doit laisser voir ceux qui
 # suivent, sinon corriger le premier ne renseigne que sur le premier.
 

@@ -10,7 +10,7 @@ set -uo pipefail
 
 _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
-. "$CLIA_SOURCE_DIR/lib/clia/commun.sh"
+. "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
 # --------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ _clia_uninstall() {
     if [[ -L "$lien" ]]; then
       local cible
       cible=$(readlink "$lien")
-      if [[ "$cible" == "$source_declaree/bin/clia" || "$cible" == "$CLIA_SOURCE_DIR/bin/clia" ]]; then
+      if [[ "$cible" == "$source_declaree/_scripts/bin/clia" || "$cible" == "$CLIA_SOURCE_DIR/_scripts/bin/clia" ]]; then
         rm -f "$lien" && retire=1
         _clia_msg "lien retiré : $lien"
       else

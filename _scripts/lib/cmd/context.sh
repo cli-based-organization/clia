@@ -10,7 +10,7 @@ set -uo pipefail
 
 _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
-. "$CLIA_SOURCE_DIR/lib/clia/commun.sh"
+. "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
 case "${1:-}" in
   -h|--help|help)

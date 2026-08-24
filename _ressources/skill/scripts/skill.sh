@@ -13,13 +13,13 @@
 set -euo pipefail
 
 _CLIA_NOM='clia'
-# shellcheck source=../commun.sh
-. "$CLIA_SOURCE_DIR/lib/clia/commun.sh"
-# shellcheck source=../texte.sh
-. "$CLIA_SOURCE_DIR/lib/clia/texte.sh"
+# shellcheck source=../../../_scripts/lib/commun.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
+# shellcheck source=../../../_scripts/lib/texte.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/texte.sh"
 
 HARNAIS=$(_clia_harnais)
-CATALOGUE=$(_clia_catalogue_skills)
+CATALOGUE=$(_clia_primitives skill)
 
 # --------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/clia/commun.sh — ce que setup.sh et bin/clia partagent.
+# _scripts/lib/commun.sh — ce que setup.sh et le CLI partagent.
 #
 # Ce fichier est sourcé par les deux, et par rien d'autre. Il ne fait aucune
 # action : il déclare la version, les emplacements, et les fonctions de
@@ -93,7 +93,7 @@ _clia_msg()    { printf '%s: %s\n' "${_CLIA_NOM:-clia}" "$*" >&2; }
 _clia_detail() { printf '%*s  %s\n' "${#_CLIA_NOM}" '' "$*" >&2; }
 
 # --------------------------------------------------------------------------
-# Le catalogue
+# Les ressources
 # --------------------------------------------------------------------------
 #
 # Ce que clia sait installer vit dans son dépôt source, et ce qu'il installe
@@ -101,10 +101,14 @@ _clia_detail() { printf '%*s  %s\n' "${#_CLIA_NOM}" '' "$*" >&2; }
 # reprises, confondait les deux : son CLI n'instrumentait que son propre
 # dépôt. clia instrumente n'importe quel dépôt git, ce qui oblige à nommer
 # les deux côtés séparément.
+#
+# REQ-002 range chaque ressource sous _ressources/<nom>/, avec ses scripts,
+# ses primitives, ses templates et ses schémas. Ces trois fonctions sont le
+# seul endroit qui connaît cette disposition.
 
-_clia_catalogue_skills()    { printf '%s/skills\n'    "${CLIA_SOURCE_DIR:-}"; }
-_clia_catalogue_features()  { printf '%s/features\n'  "${CLIA_SOURCE_DIR:-}"; }
-_clia_catalogue_templates() { printf '%s/templates\n' "${CLIA_SOURCE_DIR:-}"; }
+_clia_ressource_dir() { printf '%s/_ressources/%s\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
+_clia_primitives()    { printf '%s/_ressources/%s/primitives\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
+_clia_templates()     { printf '%s/_ressources/%s/templates\n'  "${CLIA_SOURCE_DIR:-}" "$1"; }
 
 # --------------------------------------------------------------------------
 # Le périmètre d'exécution

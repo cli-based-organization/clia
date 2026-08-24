@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# tests/test_harnais.sh — banc des commandes harness-ia, skill et feature.
+# _scripts/tests/test_harnais.sh — banc des commandes harness-ia, skill et feature.
 #
 # Deux dépôts jetables, parce que les commandes en distinguent deux : un
 # dépôt source, copie du dépôt réel augmentée de skills de fixture, et un
 # dépôt de travail, qui reçoit le harnais. Le dépôt réel n'est jamais écrit —
 # ni comme source, ni comme cible — et c'est vérifié en fin de banc.
 #
-# Lancement :  bash tests/test_harnais.sh
+# Lancement :  bash _scripts/tests/test_harnais.sh
 
 set -uo pipefail
 
-RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)
+RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." >/dev/null 2>&1 && pwd)
 
 # shellcheck source=banc.sh
 . "$(dirname "${BASH_SOURCE[0]}")/banc.sh"
@@ -24,11 +24,13 @@ trap 'rm -rf "$BAC"' EXIT
 
 SOURCE="$BAC/source"
 mkdir -p "$SOURCE"
-cp -r "$RACINE/bin" "$RACINE/lib" "$RACINE/templates" "$RACINE/features" "$RACINE/skills" "$SOURCE/"
+cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$SOURCE/"
+
+CAT_SKILLS="$SOURCE/_ressources/skill/primitives"
 
 # Deux skills de fixture : le catalogue réel est vide, et un banc qui
 # écrirait dedans violerait la règle qu'il est là pour vérifier.
-cat > "$SOURCE/skills/exemple.md" <<'EOF'
+cat > "$CAT_SKILLS/exemple.md" <<'EOF'
 ---
 name: exemple
 description: Skill de fixture, sans autre usage que d'être installé puis retiré.
@@ -38,19 +40,19 @@ description: Skill de fixture, sans autre usage que d'être installé puis retir
 
 Procédure de fixture.
 EOF
-cat > "$SOURCE/skills/sans-frontmatter.md" <<'EOF'
+cat > "$CAT_SKILLS/sans-frontmatter.md" <<'EOF'
 # sans-frontmatter
 
 Un skill dont le frontmatter manque : la description doit alors être suppléée.
 EOF
 
-CLIA="$SOURCE/bin/clia"
+CLIA="$SOURCE/_scripts/bin/clia"
 PROJET="$BAC/projet"
 mkdir -p "$PROJET"
 git -C "$PROJET" init -q >/dev/null 2>&1 || { printf 'banc: git init a échoué\n' >&2; exit 1; }
 
 HARNAIS="$PROJET/CLAUDE.md"
-PRIMITIVE="$SOURCE/templates/harness-ia/CLAUDE.primitive.md"
+PRIMITIVE="$SOURCE/_ressources/harness-ia/primitives/CLAUDE.primitive.md"
 EMPREINTE_SOURCE=$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)
 
 # Exécute clia depuis le dépôt de travail, comme le ferait l'utilisateur.
@@ -99,7 +101,7 @@ titre 'skill install'
 
 rc  "install aboutit"                         0 clia skill install exemple
 vrai "le fichier du skill est posé"           test -f "$PROJET/.claude/skills/exemple/SKILL.md"
-vrai "il est identique à sa source"           diff -q "$SOURCE/skills/exemple.md" "$PROJET/.claude/skills/exemple/SKILL.md"
+vrai "il est identique à sa source"           diff -q "$CAT_SKILLS/exemple.md" "$PROJET/.claude/skills/exemple/SKILL.md"
 vrai "la section est dans la zone gérée"      bash -c 'grep -q "BEGIN exemple skill" <<<"$(awk -v b="<!-- CLIA:SKILLS:BEGIN -->" -v e="<!-- CLIA:SKILLS:END -->" "index(\$0,b){d=1;next} index(\$0,e){d=0;next} d" "'"$HARNAIS"'")"'
 rc  "la description du frontmatter est reprise" 0 grep -q "Skill de fixture" "$HARNAIS"
 rc  "un second install ne duplique rien"      0 clia skill install exemple
@@ -205,8 +207,11 @@ rc  "feature list hors dépôt git est refusé"  1 clia_hors_depot feature list
 
 titre 'Le dépôt source réel n'\''est pas modifié'
 
+# Le dépôt réel est lui-même instrumenté : son CLAUDE.md et ses catalogues
+# existent. Ce qui est vérifié n'est donc pas leur absence, mais qu'aucune
+# commande du banc ne les a touchés.
 vrai "aucun changement dans le dépôt réel"    test "$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)" = "$EMPREINTE_SOURCE"
-faux "et il n'a pas reçu de harnais"          test -s "$RACINE/CLAUDE.md"
+faux "le catalogue réel n'a pas reçu de fixture" test -e "$RACINE/_ressources/skill/primitives/exemple.md"
 
 # --------------------------------------------------------------------------
 

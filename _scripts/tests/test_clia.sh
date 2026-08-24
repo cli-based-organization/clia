@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# tests/test_clia.sh — banc de vérification de USE-001, installer clia.
+# _scripts/tests/test_clia.sh — banc de vérification de USE-001, installer clia.
 #
 # Le banc n'installe rien dans le compte de l'utilisateur : il se donne un
 # HOME jetable, un PATH réduit, et un second dépôt git pour éprouver le
 # périmètre d'exécution. Le dépôt source, lui, est le dépôt réel — l'usage
 # exige que rien n'y soit écrit, et c'est vérifié.
 #
-# Lancement :  bash tests/test_clia.sh
+# Lancement :  bash _scripts/tests/test_clia.sh
 
 set -uo pipefail
 
-RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." >/dev/null 2>&1 && pwd)
+RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." >/dev/null 2>&1 && pwd)
 
 # --------------------------------------------------------------------------
 # Le bac
@@ -84,7 +84,7 @@ titre 'Scénario 1 — la commande clia n'\''est pas disponible'
 faux "clia est absent au départ"              command -v clia
 rc  "install --dev aboutit"                   0 sourcer install --dev
 vrai "le lien est posé"                       test -L "$LIEN"
-vrai "il pointe sur bin/clia du dépôt source" test "$(readlink "$LIEN")" = "$RACINE/bin/clia"
+vrai "il pointe sur bin/clia du dépôt source" test "$(readlink "$LIEN")" = "$RACINE/_scripts/bin/clia"
 vrai "la configuration est écrite"            test -f "$CONF"
 vrai "clia est disponible"                    bash -c 'command -v clia >/dev/null'
 
@@ -138,7 +138,7 @@ dit "il nomme le lien retiré"                 "$LIEN"
 faux "le lien a disparu"                      test -e "$LIEN"
 faux "la configuration a disparu"             test -e "$CONF"
 faux "clia n'est plus accessible"             bash -c 'hash -r; command -v clia >/dev/null'
-rc  "uninstall est idempotent"                0 bash "$RACINE/bin/clia" setup uninstall
+rc  "uninstall est idempotent"                0 bash "$RACINE/_scripts/bin/clia" setup uninstall
 dit "et il le dit"                            'aucune installation'
 
 titre 'Une installation que clia n'\''a pas posée'
@@ -156,7 +156,7 @@ rc  "install --dev est refusé"                1 bash -c 'PATH="$2:$PATH"; . "$1
 dit "il rapporte la version trouvée"          '0\.0\.1'
 dit "il dit que clia ne la retirera pas"      "clia ne retire pas ce qu'il n'a pas posé"
 ne_dit_pas "il n'oriente pas vers uninstall"  'clia setup uninstall'
-rc  "uninstall ne prétend pas l'avoir fait"   0 bash -c 'PATH="$2:$PATH"; "$1/bin/clia" setup uninstall' banc "$RACINE" "$FAUX"
+rc  "uninstall ne prétend pas l'avoir fait"   0 bash -c 'PATH="$2:$PATH"; "$1/_scripts/bin/clia" setup uninstall' banc "$RACINE" "$FAUX"
 dit "il signale que clia reste disponible"    'reste pourtant disponible'
 vrai "et le clia étranger est intact"         test -x "$FAUX/clia"
 

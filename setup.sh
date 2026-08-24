@@ -42,14 +42,14 @@ fi
 
 _clia_racine=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)
 
-if [[ ! -f "$_clia_racine/lib/clia/commun.sh" ]]; then
-  printf 'setup: lib/clia/commun.sh est introuvable sous %s\n' "$_clia_racine" >&2
+if [[ ! -f "$_clia_racine/_scripts/lib/commun.sh" ]]; then
+  printf 'setup: _scripts/lib/commun.sh est introuvable sous %s\n' "$_clia_racine" >&2
   printf '       lancez setup.sh depuis le dépôt clia, sans le déplacer\n' >&2
   return 1 2>/dev/null || exit 1
 fi
 
-# shellcheck source=lib/clia/commun.sh
-. "$_clia_racine/lib/clia/commun.sh"
+# shellcheck source=_scripts/lib/commun.sh
+. "$_clia_racine/_scripts/lib/commun.sh"
 
 # --------------------------------------------------------------------------
 # Prérequis
@@ -72,12 +72,12 @@ _clia_prerequis() {
     manque=1
   fi
 
-  if [[ ! -f "$_clia_racine/bin/clia" ]]; then
-    _clia_msg "bin/clia est introuvable sous $_clia_racine"
+  if [[ ! -f "$_clia_racine/_scripts/bin/clia" ]]; then
+    _clia_msg "_scripts/bin/clia est introuvable sous $_clia_racine"
     manque=1
-  elif [[ ! -x "$_clia_racine/bin/clia" ]]; then
-    chmod +x "$_clia_racine/bin/clia" 2>/dev/null || {
-      _clia_msg "bin/clia n'est pas exécutable, et chmod a échoué"
+  elif [[ ! -x "$_clia_racine/_scripts/bin/clia" ]]; then
+    chmod +x "$_clia_racine/_scripts/bin/clia" 2>/dev/null || {
+      _clia_msg "_scripts/bin/clia n'est pas exécutable, et chmod a échoué"
       manque=1
     }
   fi
@@ -162,7 +162,7 @@ _clia_activate() {
   _clia_prerequis || return 1
 
   if (( force == 0 )); then
-    _clia_refus_deja_disponible activate "$_clia_racine/bin/clia" || return 1
+    _clia_refus_deja_disponible activate "$_clia_racine/_scripts/bin/clia" || return 1
   fi
 
   export CLIA_HOME="$_clia_racine"
@@ -170,8 +170,8 @@ _clia_activate() {
 
   # Idempotent : une seconde activation ne dépose pas un second chemin.
   case ":${PATH}:" in
-    *":$_clia_racine/bin:"*) ;;
-    *) export PATH="$_clia_racine/bin:$PATH" ;;
+    *":$_clia_racine/_scripts/bin:"*) ;;
+    *) export PATH="$_clia_racine/_scripts/bin:$PATH" ;;
   esac
   hash -r 2>/dev/null
 
@@ -202,7 +202,7 @@ _clia_deactivate() {
   local reste='' part
   local IFS=':'
   for part in $PATH; do
-    [[ "$part" == "${CLIA_HOME:-}/bin" ]] && continue
+    [[ "$part" == "${CLIA_HOME:-}/_scripts/bin" ]] && continue
     reste="${reste:+$reste:}$part"
   done
   export PATH="$reste"
@@ -247,7 +247,7 @@ _clia_install_dev() {
   fi
 
   mkdir -p "$bindir" || { _clia_msg "impossible de créer $bindir"; return 1; }
-  ln -sfn "$_clia_racine/bin/clia" "$lien" || {
+  ln -sfn "$_clia_racine/_scripts/bin/clia" "$lien" || {
     _clia_msg "impossible de poser le lien $lien"
     return 1
   }
@@ -264,7 +264,7 @@ _clia_install_dev() {
 
   _clia_msg "clia est installé pour $(id -un 2>/dev/null || printf 'cet utilisateur')"
   _clia_detail "version      : $_CLIA_VERSION"
-  _clia_detail "lien         : $lien -> $_clia_racine/bin/clia"
+  _clia_detail "lien         : $lien -> $_clia_racine/_scripts/bin/clia"
   _clia_detail "dépôt source : $_clia_racine"
   _clia_detail "portée       : toute session, et tout dépôt git"
 

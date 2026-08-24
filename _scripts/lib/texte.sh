@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# lib/clia/texte.sh — le harnais vu comme un texte à zones.
+# _scripts/lib/texte.sh — le harnais vu comme un texte à zones.
 #
 # CLAUDE.md est écrit par un humain et par clia à la fois. La cohabitation
 # tient à deux marqueurs qui délimitent ce que clia écrit ; hors de ces

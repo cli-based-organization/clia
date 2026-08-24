@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
-# bin/clia — le CLI du système d'information clia.
+# _scripts/bin/clia — le CLI du système d'information clia.
 #
-# Ce fichier ne porte aucune commande : il les trouve. Chaque commande est un
-# fichier lib/clia/cmd/<nom>.sh portant deux lignes de déclaration :
+# Ce fichier ne porte aucune commande : il les trouve. Une commande est un
+# fichier <nom>.sh portant deux lignes de déclaration :
 #
 #   # Description: ce que la commande fait, en une ligne
 #   # Périmètre: dépôt | aucun
 #
-# Déposer un fichier là suffit à l'exposer dans l'aide et à le rendre
-# invocable. Le mécanisme est emprunté à _scripts/clia du dépôt
+# Deux emplacements sont fouillés, et REQ-002 dit lequel selon la nature de
+# la commande :
+#
+#   _scripts/lib/cmd/<nom>.sh              une commande du CLI lui-même
+#   _ressources/<nom>/scripts/<nom>.sh     une commande propre à une ressource
+#
+# Déposer un fichier à l'un ou l'autre suffit à l'exposer dans l'aide et à le
+# rendre invocable. Le mécanisme est emprunté à _scripts/clia du dépôt
 # noumanity-wiki ; le champ Périmètre lui est ajouté, parce que clia — à la
 # différence de ce dépôt-là — travaille sur un dépôt qui n'est pas le sien.
 #
@@ -31,8 +37,8 @@ _CLIA_NOM='clia'
 # En mode --dev, ce fichier est atteint par un lien symbolique depuis le
 # répertoire des exécutables de l'utilisateur. Ses modules sont dans le dépôt
 # source, pas à côté du lien : il faut donc résoudre les liens avant de
-# chercher lib/. La même résolution existe dans lib/clia/commun.sh, mais
-# elle ne peut pas servir ici — c'est elle qu'il s'agit d'aller chercher.
+# chercher _scripts/lib. La même résolution existe dans _scripts/lib/commun.sh,
+# mais elle ne peut pas servir ici — c'est elle qu'il s'agit d'aller chercher.
 
 _clia_amorcer() {
   local src="${BASH_SOURCE[0]}" dir
@@ -42,7 +48,7 @@ _clia_amorcer() {
     [[ "$src" != /* ]] && src="$dir/$src"
   done
   dir=$(cd -P "$(dirname "$src")" >/dev/null 2>&1 && pwd)
-  printf '%s\n' "${dir%/bin}"
+  printf '%s\n' "${dir%/_scripts/bin}"
 }
 
 CLIA_SOURCE_DIR=$(_clia_amorcer)
@@ -52,20 +58,42 @@ CLIA_SOURCE_DIR=$(_clia_amorcer)
 CLIA_EXECUTABLE="${BASH_SOURCE[0]}"
 export CLIA_SOURCE_DIR CLIA_EXECUTABLE
 
-if [[ ! -f "$CLIA_SOURCE_DIR/lib/clia/commun.sh" ]]; then
-  printf 'clia: lib/clia/commun.sh est introuvable sous %s\n' "$CLIA_SOURCE_DIR" >&2
+if [[ ! -f "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh" ]]; then
+  printf 'clia: _scripts/lib/commun.sh est introuvable sous %s\n' "$CLIA_SOURCE_DIR" >&2
   printf '      le dépôt source a-t-il été déplacé ? relancez : . setup.sh install --dev --force\n' >&2
   exit 1
 fi
 
-# shellcheck source=../lib/clia/commun.sh
-. "$CLIA_SOURCE_DIR/lib/clia/commun.sh"
-
-CMD_DIR="$CLIA_SOURCE_DIR/lib/clia/cmd"
+# shellcheck source=../lib/commun.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
 # --------------------------------------------------------------------------
-# Les déclarations d'une commande
+# Les commandes, et leurs déclarations
 # --------------------------------------------------------------------------
+
+# Les fichiers de commande, dans l'ordre où ils sont fouillés : le CLI
+# d'abord, les ressources ensuite. Un même nom aux deux endroits n'a pas de
+# sens — le premier trouvé l'emporte, et clia le signale plutôt que de
+# choisir en silence.
+# Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
+_clia_fichiers_de_commande() {
+  local f
+  for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh \
+           "$CLIA_SOURCE_DIR"/_ressources/*/scripts/*.sh; do
+    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+  done
+  return 0
+}
+
+# Le fichier qui porte une commande, ou rien. Le premier trouvé l'emporte.
+#
+# awk lit la liste jusqu'au bout plutôt que de sortir au premier match : sous
+# « set -o pipefail », un awk qui referme le tube tôt fait recevoir SIGPIPE à
+# la boucle en amont, et la commande entière sortirait en 141.
+_clia_fichier_de() {
+  _clia_fichiers_de_commande \
+    | awk -F'\t' -v n="$1" '$1 == n && !trouve { print $2; trouve = 1 }'
+}
 
 _clia_description_de() {
   grep -m1 -E '^#[[:space:]]*Description:' "$1" 2>/dev/null \
@@ -92,13 +120,16 @@ Usage : clia <commande> [arguments]
 
 Commandes :
 EOF
-  local f nom desc
-  for f in "$CMD_DIR"/*.sh; do
-    [[ -f "$f" ]] || continue
-    nom=$(basename "$f" .sh)
+  local nom f desc vus=' '
+  while IFS=$'\t' read -r nom f; do
+    if [[ "$vus" == *" $nom "* ]]; then
+      printf '  %-12s (masquée : %s porte déjà ce nom)\n' "$nom" "$nom"
+      continue
+    fi
+    vus+="$nom "
     desc=$(_clia_description_de "$f")
     printf '  %-12s %s\n' "$nom" "${desc:-(sans description)}"
-  done
+  done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
   cat <<'EOF'
 
 Options :
@@ -131,15 +162,15 @@ esac
 COMMANDE="$1"
 shift
 
-# Le nom sert à construire un chemin : il est restreint pour qu'il ne puisse
-# pas sortir de cmd/ — ni « / », ni « .. ».
+# Le nom est comparé à des noms de fichiers : il est restreint pour qu'il ne
+# puisse désigner qu'une commande — ni « / », ni « .. ».
 if [[ ! "$COMMANDE" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
   _clia_msg "nom de commande invalide : $COMMANDE"
   exit 2
 fi
 
-FICHIER="$CMD_DIR/${COMMANDE}.sh"
-if [[ ! -f "$FICHIER" ]]; then
+FICHIER=$(_clia_fichier_de "$COMMANDE")
+if [[ -z "$FICHIER" ]]; then
   _clia_msg "commande inconnue : $COMMANDE"
   _clia_detail "l'aide, et la liste des commandes : clia --help"
   exit 2
