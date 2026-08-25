@@ -5,6 +5,6 @@
 # pouvait pas l'être, faute de quoi rien ne dit d'où vient une ressource.
 
 namespace: noumanity.com/clia
-version: 0.1.1
+version: 0.1.2
 maturity: unstable
 generation: 3
