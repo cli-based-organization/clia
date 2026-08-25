@@ -75,7 +75,7 @@ titre 'res ls — le nombre d'\''instances est celui du dépôt courant'
 # comptage suit l'emplacement que chaque définition déclare.
 dit "l'intention du dépôt est comptée"        'INT *intention *1'
 dit "la session aussi"                        'SES *session *1'
-dit "et le skill, qu'\''il n'\''a pas, est à zéro" 'SKL *skill *0'
+dit "et le skill, qu'il n'a pas, est à zéro" 'SKL *skill *0'
 
 titre 'res new'
 
@@ -89,9 +89,9 @@ rc  "elle se déclare de type ressource"       0 grep -q '^type: ressource$' "$D
 rc  "elle porte le nom demandé"               0 grep -q '^nom: decision$' "$DEF"
 rc  "et le préfixe demandé"                   0 grep -q '^prefixe: DEC$' "$DEF"
 rc  "la description devient le résumé"        0 grep -q 'Une décision tranchée et sa raison' "$DEF"
-rc  "l'\''emplacement est dérivé du nom"       0 grep -q '^emplacement: \.dev/decisions/DEC-<SEQ>-<SLUG>\.md$' "$DEF"
+rc  "l'emplacement est dérivé du nom"       0 grep -q '^emplacement: \.dev/decisions/DEC-<SEQ>-<SLUG>\.md$' "$DEF"
 faux "aucun marqueur <NOM> ne subsiste"       grep -q '<NOM>' "$DEF"
-faux "l'\''entête du gabarit est retiré"       grep -q 'À copier vers' "$DEF"
+faux "l'entête du gabarit est retiré"       grep -q 'À copier vers' "$DEF"
 vrai "la première ligne est une clé"          bash -c "head -1 '$DEF' | grep -q '^type:'"
 
 # Le méta-type déclare ce qu'une définition doit porter : ce qui est créé
@@ -123,7 +123,7 @@ dit "nom qualifié"                            'ART *edition/article'
 titre 'res new — ce qui est refusé'
 
 rc  "un emplacement occupé est refusé"        1 clia res new XXX decision
-dit "et rien n'\''est créé"                    "rien n'a été créé"
+dit "et rien n'est créé"                    "rien n'a été créé"
 rc  "un préfixe déjà pris est refusé"         1 clia res new DEC autre-chose
 dit "il nomme la ressource qui le porte"      'déjà celui de decision'
 rc  "un préfixe en minuscules est refusé"     2 clia res new dec truc
@@ -131,8 +131,8 @@ dit "il dit la règle"                         'majuscules'
 rc  "un nom avec majuscule est refusé"        2 clia res new TRC Truc
 rc  "une catégorie invalide est refusée"      2 clia res new TRC truc --category Edition
 rc  "new sans argument est refusé"            2 clia res new
-dit "il rappelle l'\''usage"                   'clia res new'
-faux "aucune ressource fantôme n'\''a été créée" test -e "$PROJET/_ressources/truc"
+dit "il rappelle l'usage"                   'clia res new'
+faux "aucune ressource fantôme n'a été créée" test -e "$PROJET/_ressources/truc"
 
 titre 'res ls NAMESPACE'
 
@@ -153,9 +153,9 @@ dit "et la génération"                        '^génération'
 
 rc  "info sur une ressource locale répond"    0 clia res info decision
 dit "il donne le préfixe"                     '^prefixe *DEC$'
-dit "l'\''emplacement"                         '^emplacement'
-dit "l'\''état"                                '^état *activée$'
-dit "le nombre d'\''instances"                 '^instances'
+dit "l'emplacement"                         '^emplacement'
+dit "l'état"                                '^état *activée$'
+dit "le nombre d'instances"                 '^instances'
 dit "et le résumé en clair"                   'Une décision tranchée'
 
 rc  "info sur une ressource du remote répond" 0 clia res info intention
