@@ -93,16 +93,21 @@ lister() {
     lignes+=$(decrire "$nom" "$dir" "${NAMESPACE_LOCAL:-—}" 'activée')$'\n'
   done < <(_clia_ressources_de "$CLIA_WORK_DIR")
 
-  if (( remote == 1 )) && [[ "$CLIA_SOURCE_DIR" != "$CLIA_WORK_DIR" ]]; then
-    local connus=$'\n'
+  # Tous les remotes, et non le seul dépôt source : une extension en est un
+  # comme un autre. USE-006.
+  if (( remote == 1 )); then
+    local connus=$'\n' ns chemin
     while IFS=$'\t' read -r nom dir; do
       [[ -n "$nom" ]] && connus+="$nom"$'\n'
     done < <(_clia_ressources_de "$CLIA_WORK_DIR")
-    while IFS=$'\t' read -r nom dir; do
-      [[ -n "$nom" ]] || continue
-      [[ "$connus" == *$'\n'"$nom"$'\n'* ]] && continue
-      lignes+=$(decrire "$nom" "$dir" "${NAMESPACE_SOURCE:-—}" 'disponible')$'\n'
-    done < <(_clia_ressources_de "$CLIA_SOURCE_DIR")
+    while IFS=$'\t' read -r ns chemin; do
+      [[ -n "$chemin" ]] || continue
+      while IFS=$'\t' read -r nom dir; do
+        [[ -n "$nom" ]] || continue
+        [[ "$connus" == *$'\n'"$nom"$'\n'* ]] && continue
+        lignes+=$(decrire "$nom" "$dir" "${ns:-—}" 'disponible')$'\n'
+      done < <(_clia_ressources_de "$chemin")
+    done < <(_clia_remotes)
   fi
 
   # Le filtre par namespace ne s'applique qu'à la colonne du même nom : une
@@ -156,9 +161,14 @@ info() {
   done < <(_clia_ressources_de "$CLIA_WORK_DIR")
 
   if [[ -z "$dir" ]]; then
-    while IFS=$'\t' read -r n d; do
-      [[ "$n" == "$nom" ]] && { dir="$d"; namespace="$NAMESPACE_SOURCE"; etat='disponible'; break; }
-    done < <(_clia_ressources_de "$CLIA_SOURCE_DIR")
+    local ns chemin
+    while IFS=$'\t' read -r ns chemin; do
+      [[ -n "$chemin" ]] || continue
+      while IFS=$'\t' read -r n d; do
+        [[ "$n" == "$nom" ]] && { dir="$d"; namespace="$ns"; etat='disponible'; break; }
+      done < <(_clia_ressources_de "$chemin")
+      [[ -n "$dir" ]] && break
+    done < <(_clia_remotes)
   fi
 
   if [[ -z "$dir" ]]; then

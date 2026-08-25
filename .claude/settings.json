@@ -51,6 +51,7 @@
       "Bash(bash _scripts/tests/test_res.sh)",
       "Bash(bash _scripts/tests/test_release.sh)",
       "Bash(bash _scripts/tests/test_activate.sh)",
+      "Bash(bash _scripts/tests/test_extension.sh)",
       "Bash(bash .claude/hooks/test_refuser-git-en-ecriture.sh)",
       "Bash(cue vet:*)",
       "Bash(cue version:*)",

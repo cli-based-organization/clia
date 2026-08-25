@@ -149,12 +149,78 @@ _clia_concept_fichier() {
 #
 # Sortie : « namespace<TAB>chemin ».
 _clia_remotes() {
-  local ns
+  local ns nom chemin
   # Un dépôt n'est pas son propre remote : dans le dépôt source de clia, il
   # n'y a donc rien à reprendre, tout y est déjà.
-  [[ "$CLIA_SOURCE_DIR" != "${CLIA_WORK_DIR:-}" ]] || return 0
-  ns=$(_clia_carte_champ "$CLIA_SOURCE_DIR" namespace 2>/dev/null || printf '')
-  printf '%s\t%s\n' "${ns:-—}" "$CLIA_SOURCE_DIR"
+  if [[ "$CLIA_SOURCE_DIR" != "${CLIA_WORK_DIR:-}" ]]; then
+    ns=$(_clia_carte_champ "$CLIA_SOURCE_DIR" namespace 2>/dev/null || printf '')
+    printf '%s\t%s\n' "${ns:-—}" "$CLIA_SOURCE_DIR"
+  fi
+  # Les extensions déclarées par le dépôt, et effectivement clonées. Une
+  # extension déclarée mais absente du cache n'est pas un remote : il n'y a
+  # rien à y lire. USE-006 le nomme « not installed ».
+  # L'URI n'est pas lue ici : ce qui compte est le namespace, qui nomme le
+  # cache. L'URI ne sert qu'à rétablir un clone manquant.
+  while IFS=$'\t' read -r nom _; do
+    [[ -n "$nom" ]] || continue
+    chemin=$(_clia_extension_cache "$nom")
+    [[ -d "$chemin" ]] && printf '%s\t%s\n' "$nom" "$chemin"
+  done < <(_clia_extensions_declarees)
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# Les extensions
+# --------------------------------------------------------------------------
+#
+# Une extension est un dépôt clia dont le dépôt courant reprend des
+# ressources. USE-006.
+#
+# Deux choses, et deux endroits :
+#
+#   la déclaration  .dev/extensions.yaml du dépôt, versionnée. Elle dit d'où
+#                   vient l'extension, et elle suit le dépôt quand il est
+#                   cloné ailleurs.
+#   le clone        un cache de la machine, hors du dépôt. C'est un artefact
+#                   local : le versionner reviendrait à vendre le dépôt d'un
+#                   autre avec le sien.
+#
+# De là vient le statut que USE-006 demande : déclarée et clonée, ou déclarée
+# seulement.
+
+_clia_extensions_fichier() {
+  printf '%s/.dev/extensions.yaml\n' "${1:-${CLIA_WORK_DIR:-$PWD}}"
+}
+
+_clia_extensions_cache_dir() {
+  printf '%s/clia/extensions\n' "${XDG_CACHE_HOME:-$HOME/.cache}"
+}
+
+_clia_extension_cache() {
+  printf '%s/%s\n' "$(_clia_extensions_cache_dir)" "$1"
+}
+
+# Sortie : « namespace<TAB>uri », dans l'ordre de déclaration.
+#
+# Le format est une liste YAML d'objets à deux clés. L'extraction reste à
+# plat, comme partout ailleurs : ce n'est pas un analyseur YAML, et le jour
+# où il en faudra un, c'est ici et dans _clia_champ_de_fichier qu'il ira.
+# shellcheck disable=SC2120  # le dépôt est facultatif, et vaut celui de travail
+_clia_extensions_declarees() {
+  local fichier
+  fichier=$(_clia_extensions_fichier "${1:-}")
+  [[ -f "$fichier" ]] || return 0
+  awk '
+    /^[[:space:]]*-[[:space:]]*namespace:[[:space:]]*/ {
+      sub(/^[[:space:]]*-[[:space:]]*namespace:[[:space:]]*/, "")
+      gsub(/"/, ""); ns = $0; uri = ""; next
+    }
+    /^[[:space:]]+uri:[[:space:]]*/ {
+      sub(/^[[:space:]]+uri:[[:space:]]*/, "")
+      gsub(/"/, "")
+      if (ns != "") { print ns "\t" $0; ns = "" }
+    }
+  ' "$fichier"
   return 0
 }
 
