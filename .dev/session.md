@@ -67,3 +67,6 @@ Décrire correctement les spécifications de ceci dans @.dev/specs/... et les re
   - mettre @_ressources/feature/primitives/session.md dans => _resources/session/features/...
   - mettre @_templates/session/sesion.template.md dans => _ressources/session/_features/...
 
+### 7. [implémentation] mettre en place la commande `clia res` tel que décrite par USE-003
+
+## 8. [implémentation] mettre en place la commande `clia release ...` tel que décrite dans USE-004

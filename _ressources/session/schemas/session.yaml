@@ -1,0 +1,49 @@
+# La définition du type « session ».
+#
+# Une session est l'unité de travail : elle porte le contexte, l'intention et
+# les tâches d'une période de travail. C'est le point d'entrée des demandes
+# adressées à l'agent, et le seul document que l'humain tient à jour lui-même.
+
+type: ressource
+nom: session
+titre: Session
+prefixe: SES
+version: 0.1.0
+
+emplacement: .dev/session.md
+gabarit: _features/session.template.md
+
+# L'humain écrit la session : ses tâches sont sa demande. L'agent la lit,
+# l'exécute et rapporte, mais n'y coche rien et n'y ajoute pas de statut —
+# modifier la demande en la traitant fait perdre la trace de ce qui a été
+# demandé.
+edition: humain
+cycle-de-vie: travail
+
+resume: >
+  Une session porte le contexte, l'intention, les livrables attendus et les
+  tâches d'une période de travail. Elle est le point d'entrée des demandes
+  adressées à l'agent.
+
+champs-d-instance: []
+
+sections:
+  - CONTEXTE
+  - INTENTION
+  - LIVRABLES attendus
+  - Tâches
+
+relations-admissibles:
+  - derive-de
+  - reference
+
+notes: >
+  Le gabarit de ce type est rangé dans _features/ et non dans templates/ :
+  ce qu'il pose dans un dépôt cible est indissociable de la fonctionnalité
+  session, qui apprend à l'agent à lire ce fichier et à en exécuter les
+  tâches. Poser le fichier sans la directive donnerait un document que
+  personne ne lit ; activer la directive sans le fichier donnerait une
+  directive sans objet.
+
+  Le corps d'une tâche décrit une intention d'usage, pas une spécification.
+  Ce qu'il laisse ouvert se demande, il ne se devine pas.

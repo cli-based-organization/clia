@@ -26,7 +26,8 @@ SOURCE="$BAC/source"
 mkdir -p "$SOURCE"
 cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$SOURCE/"
 
-CAT_SKILLS="$SOURCE/_ressources/skill/primitives"
+CAT_SKILLS="$SOURCE/_ressources/skill/skills"
+mkdir -p "$CAT_SKILLS"
 
 # Deux skills de fixture : le catalogue réel est vide, et un banc qui
 # écrirait dedans violerait la règle qu'il est là pour vérifier.
@@ -75,7 +76,7 @@ titre 'Le dépôt de travail avant instrumentation'
 rc  "harness-ia status répond"                0 clia harness-ia status
 dit "il dit que CLAUDE.md est absent"         'absent'
 rc  "skill list répond"                       0 clia skill list
-dit "le catalogue nomme le skill de fixture"  'exemple'
+dit "les skills offerts nomment la fixture"   'exemple'
 dit "et le donne pour non installé"           'non installé'
 rc  "feature list répond"                     0 clia feature list
 dit "le catalogue nomme session"              'session'
@@ -111,12 +112,12 @@ rc  "status le voit"                          0 clia skill status exemple
 dit "le fichier est rapporté"                 '\.claude/skills/exemple/SKILL\.md'
 dit "la section aussi"                        "section d'activation présente"
 rc  "list le donne pour installé"             0 clia skill list
-dit "installé"                                'exemple  *\[installé\]'
+dit "avec la ressource qui l'offre"           'exemple  *skill  *\[installé\]'
 
 rc  "un skill sans frontmatter s'installe"    0 clia skill install sans-frontmatter
 rc  "sa description est suppléée"             0 grep -q 'Voir `\?\.claude/skills/sans-frontmatter/SKILL\.md' "$HARNAIS"
 rc  "skill inconnu est refusé"                1 clia skill install absent-du-catalogue
-dit "et il renvoie au catalogue"              'clia skill list'
+dit "et il renvoie à la liste"                'clia skill list'
 
 titre 'feature install'
 
@@ -131,6 +132,30 @@ vrai "une seule section"                      test "$(grep -c 'BEGIN session fea
 rc  "fonctionnalité inconnue est refusée"     1 clia feature install absente
 rc  "status répond"                           0 clia feature status session
 dit "elle est active"                         '^état            active$'
+dit "et sa ressource est nommée"              '^fournie par     session$'
+
+titre 'Les catalogues sont distribués — SPC-001 S6'
+
+# Une ressource peut vivre sous une catégorie : le balayage doit la trouver
+# au second niveau comme au premier, sans qu'aucune liste ne la déclare.
+mkdir -p "$SOURCE/_ressources/edition/article/features"
+cat > "$SOURCE/_ressources/edition/article/features/relecture.md" <<'EOF'
+---
+name: relecture
+description: Fonctionnalité de fixture, fournie par une ressource dans un namespace.
+---
+
+Relire avant de publier.
+EOF
+
+rc  "feature list trouve le namespace"        0 clia feature list
+dit "la fonctionnalité est listée"            'relecture'
+dit "et sa ressource est nommée en entier"    'relecture  *edition/article'
+rc  "elle s'installe"                         0 clia feature install relecture
+rc  "son corps est injecté"                   0 grep -q 'Relire avant de publier' "$HARNAIS"
+rc  "status nomme la ressource qui l'offre"   0 clia feature status relecture
+dit "avec son namespace"                      '^fournie par     edition/article$'
+rc  "elle se désactive"                       0 clia feature uninstall relecture
 
 titre 'harness-ia status avec des extensions'
 

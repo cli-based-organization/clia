@@ -124,6 +124,40 @@ export CLIA_WORK_DIR="$CIBLE"
 mkdir -p "$CIBLE/.dev/intentions"
 
 # --------------------------------------------------------------------------
+# La carte du dépôt
+# --------------------------------------------------------------------------
+#
+# USE-003 : le namespace ne peut pas être deviné, mais sa déclaration ne peut
+# pas être reportée — sans elle, rien ne dit d'où vient une ressource. Il est
+# donc posé à compléter, avec le nom du dépôt pour moitié.
+#
+# Le déduire d'un remote git serait tentant, mais le dépôt vient d'être créé
+# par cette commande et n'en a aucun : ce serait du code que rien n'atteint.
+#
+# Le contenu est écrit ici plutôt que tiré d'un gabarit : .dev/clia.yaml n'est
+# pas une ressource, il est la carte d'identité qui permet d'en avoir.
+
+CARTE="$CIBLE/.dev/clia.yaml"
+if [[ -f "$CARTE" ]]; then
+  _clia_msg "conservé : .dev/clia.yaml existe déjà"
+else
+  NAMESPACE="<publisher>/$(basename "$CIBLE")"
+  {
+    printf '# La carte d'\''identité de ce dépôt clia.\n#\n'
+    printf '# Le namespace dérive du couple (publisher|user)/repo_name. Il désigne la\n'
+    printf '# provenance des ressources de ce dépôt, et rien d'\''autre : une catégorie\n'
+    printf '# sous _ressources/ n'\''en est pas un.\n\n'
+    printf 'namespace: %s\n' "$NAMESPACE"
+    printf 'version: 0.1.0\n'
+    printf 'maturity: unstable\n'
+    printf 'generation: 1\n'
+  } > "$CARTE"
+
+  _clia_msg "installé : .dev/clia.yaml"
+  _clia_detail "namespace à compléter : $NAMESPACE"
+fi
+
+# --------------------------------------------------------------------------
 # Le harnais IA
 # --------------------------------------------------------------------------
 #
@@ -190,7 +224,14 @@ fi
 # La session
 # --------------------------------------------------------------------------
 
-GABARIT_SES="$CLIA_SOURCE_DIR/_templates/session/session.template.md"
+# Comme l'intention, la session est une ressource, et c'est sa définition qui
+# dit où vit son gabarit — ici sous _features/, parce que le fichier posé est
+# indissociable de la fonctionnalité qui apprend à l'agent à le lire.
+GABARIT_SES=$(_clia_gabarit_de session) || {
+  _clia_msg "le type session ne déclare pas de gabarit"
+  _clia_detail "attendu dans $(_clia_definition session)"
+  exit 1
+}
 SESSION="$CIBLE/.dev/session.md"
 
 if [[ -f "$SESSION" ]]; then

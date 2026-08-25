@@ -20,7 +20,13 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/texte.sh"
 
 HARNAIS=$(_clia_harnais)
-PRIMITIVE="$(_clia_primitives harness-ia)/CLAUDE.primitive.md"
+# Le chemin de la primitive n'est pas écrit ici : c'est la définition du type
+# qui le déclare, comme pour toute autre ressource.
+PRIMITIVE=$(_clia_gabarit_de harness-ia) || {
+  _clia_msg "le type harness-ia ne déclare pas de gabarit"
+  _clia_detail "attendu dans $(_clia_definition harness-ia)"
+  exit 1
+}
 
 # --------------------------------------------------------------------------
 

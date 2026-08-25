@@ -1,0 +1,40 @@
+# La définition du type « skill ».
+#
+# Un skill est une procédure exécutable par l'agent, chargée à la demande. À
+# la différence d'une fonctionnalité, qui vit dans le harnais et se trouve
+# donc toujours dans le contexte, un skill n'y entre qu'à son invocation.
+# C'est ce qui permet d'en avoir beaucoup sans saturer le contexte.
+
+type: ressource
+nom: skill
+titre: Skill
+prefixe: SKL
+version: 0.1.0
+
+emplacement: .claude/skills/<NOM>/SKILL.md
+gabarit: templates/skill.template.md
+
+edition: co-edition
+cycle-de-vie: vivant
+
+resume: >
+  Un skill est une procédure exécutable par l'agent, installée dans un dépôt
+  et référencée depuis son harnais. Il encode une suite d'actions plutôt
+  qu'une règle, et n'entre dans le contexte qu'à son invocation.
+
+champs-d-instance:
+  - name
+  - description
+
+relations-admissibles:
+  - reference
+
+notes: >
+  Un skill opère sur une ressource, et vit sous elle :
+  _ressources/<RESSOURCE>/skills/<nom>.md. Il n'y a pas de catalogue central.
+  SPC-001 S6.
+
+  La description du frontmatter n'est pas décorative : c'est elle que
+  l'installation recopie dans le harnais, et donc elle qui décide si l'agent
+  invoquera le skill au bon moment. Une description qui ne dit pas quand
+  s'en servir produit un skill que personne n'appelle.

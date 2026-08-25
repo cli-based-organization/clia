@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Description: Les fonctionnalités du catalogue — install, uninstall, status, list.
+# Description: Les fonctionnalités offertes par les ressources — install, uninstall, status, list.
 # Périmètre: dépôt
 #
 # Contrairement à un skill — dont la procédure vit dans un fichier chargé
@@ -7,17 +7,21 @@
 # n'a pas de fichier propre dans le dépôt de travail : son corps est injecté
 # directement dans la zone CLIA:FEATURES du harnais. Elle est donc toujours
 # dans le contexte de l'agent, là où un skill n'y entre qu'à l'invocation.
+#
+# Une fonctionnalité n'est pas une ressource : elle est toujours la
+# fonctionnalité de quelque chose. SPC-001 S7. Cette commande vit donc parmi
+# celles du CLI, et non sous _ressources/, et elle opère sur les
+# fonctionnalités de toutes les ressources à la fois.
 
 set -euo pipefail
 
 _CLIA_NOM='clia'
-# shellcheck source=../../../_scripts/lib/commun.sh
+# shellcheck source=../commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
-# shellcheck source=../../../_scripts/lib/texte.sh
+# shellcheck source=../texte.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/texte.sh"
 
 HARNAIS=$(_clia_harnais)
-CATALOGUE=$(_clia_primitives feature)
 
 # --------------------------------------------------------------------------
 
@@ -29,10 +33,11 @@ Verbes :
   install <nom>    injecte la fonctionnalité dans la zone gérée de CLAUDE.md
   uninstall <nom>  retire sa section de CLAUDE.md
   status <nom>     dit si la fonctionnalité est active
-  list, ls         liste le catalogue, avec l'état et la description de chacune
+  list, ls         liste les fonctionnalités offertes, avec leur état
 
-Le catalogue vit dans le dépôt source de clia ; l'activation se fait dans le
-CLAUDE.md du dépôt git courant.
+Une fonctionnalité est fournie par une ressource, et vit sous elle :
+_ressources/<RESSOURCE>/features/<nom>.md. Il n'y a pas de catalogue central.
+L'activation, elle, se fait dans le CLAUDE.md du dépôt git courant.
 EOF
 }
 
@@ -41,36 +46,39 @@ est_active() {
 }
 
 lister() {
-  printf 'Catalogue des fonctionnalités (%s) :\n\n' "$CATALOGUE"
-  if ! compgen -G "$CATALOGUE/*.md" >/dev/null 2>&1; then
+  local sortie
+  sortie=$(_clia_concept_partout features)
+
+  printf 'Fonctionnalités offertes par les ressources :\n\n'
+  if [[ -z "$sortie" ]]; then
     printf '  (aucune)\n'
     return 0
   fi
-  local f nom desc
-  for f in "$CATALOGUE"/*.md; do
-    [[ -f "$f" ]] || continue
-    nom=$(basename "$f" .md)
+
+  local nom ressource f desc
+  while IFS=$'\t' read -r nom ressource f; do
     if est_active "$nom"; then
-      printf '  %-35s [active]\n' "$nom"
+      printf '  %-28s %-16s [active]\n' "$nom" "$ressource"
     else
-      printf '  %-35s [inactive]\n' "$nom"
+      printf '  %-28s %-16s [inactive]\n' "$nom" "$ressource"
     fi
     desc=$(_clia_frontmatter_champ "$f" description)
     # Voir la note de cmd/skill.sh : sous set -e, un « && » en dernière
     # position déciderait du code de retour de la commande.
     if [[ -n "$desc" ]]; then printf '      %s\n' "$desc"; fi
-  done
+  done <<<"$sortie"
 }
 
 installer() {
   local nom="$1"
-  local source="$CATALOGUE/${nom}.md"
+  local source
+  source=$(_clia_concept_fichier features "$nom")
   local debut="<!-- BEGIN ${nom} feature -->"
   local fin="<!-- END ${nom} feature -->"
 
-  if [[ ! -f "$source" ]]; then
+  if [[ -z "$source" || ! -f "$source" ]]; then
     _clia_msg "fonctionnalité inconnue : $nom"
-    _clia_detail "le catalogue : clia feature list"
+    _clia_detail "celles qui sont offertes : clia feature list"
     exit 1
   fi
   if [[ ! -f "$HARNAIS" ]]; then
@@ -129,9 +137,13 @@ desinstaller() {
 }
 
 etat() {
-  local nom="$1"
-  if [[ ! -f "$CATALOGUE/${nom}.md" ]]; then
-    printf 'fonctionnalité  %s — absente du catalogue\n' "$nom"
+  local nom="$1" source
+  source=$(_clia_concept_fichier features "$nom")
+  if [[ -n "$source" ]]; then
+    local ressource="${source#"$CLIA_SOURCE_DIR"/_ressources/}"
+    printf 'fournie par     %s\n' "${ressource%/features/*}"
+  else
+    printf 'fournie par     aucune ressource — %s est inconnue\n' "$nom"
   fi
   if est_active "$nom"; then
     printf 'état            active\n'

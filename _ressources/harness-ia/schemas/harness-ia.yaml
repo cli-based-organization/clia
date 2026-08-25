@@ -1,0 +1,46 @@
+# La définition du type « harnais IA ».
+#
+# Le harnais est le document d'autorité qui gouverne le comportement de
+# l'agent dans un dépôt. Il n'est pas une ressource comme les autres : son
+# nom est fixe, il n'a pas d'alias séquencé, et il n'y en a qu'un par dépôt.
+
+type: ressource
+nom: harness-ia
+titre: Harnais IA
+prefixe: HRN
+version: 0.1.0
+
+emplacement: CLAUDE.md
+gabarit: primitives/CLAUDE.primitive.md
+
+# Deux mains écrivent ce fichier, mais pas aux mêmes endroits : clia possède
+# les zones gérées, le dépôt possède tout le reste. C'est ce partage qui
+# permet de régénérer le harnais sans perdre ce qu'un dépôt y a écrit.
+edition: co-edition
+cycle-de-vie: vivant
+
+resume: >
+  Le harnais IA est le document d'autorité qui gouverne le comportement de
+  l'agent dans un dépôt. Il est généré à partir d'une primitive, et porte
+  deux zones que clia écrit : les skills installés et les fonctionnalités
+  activées.
+
+sections:
+  - Le cadre de travail
+  - Les ressources générées
+  - Les commandes
+  - Extensions installées
+
+relations-admissibles:
+  - reference
+
+notes: >
+  Les deux zones gérées sont délimitées par des marqueurs HTML :
+  CLIA:SKILLS et CLIA:FEATURES. Ce sont ceux de noumanity-wiki, gardés à
+  l'identique pour qu'un dépôt instrumenté par l'un reste lisible par
+  l'autre.
+
+  PDC-003 s'applique dans les deux sens. Hors des zones gérées, le fichier
+  appartient à son dépôt et n'est jamais réécrit sans --force ; dans les
+  zones, il est généré et une modification à la main sera perdue à la
+  prochaine installation.

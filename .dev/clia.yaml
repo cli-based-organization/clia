@@ -1,0 +1,10 @@
+# La carte d'identité de ce dépôt clia.
+#
+# USE-003 : le namespace dérive du couple (publisher|user)/repo_name. La
+# question de son unicité et de son contrôle est reportée ; sa déclaration ne
+# pouvait pas l'être, faute de quoi rien ne dit d'où vient une ressource.
+
+namespace: noumanity.com/clia
+version: 0.1.0
+maturity: unstable
+generation: 3

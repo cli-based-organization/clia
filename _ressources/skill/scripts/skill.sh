@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Description: Les skills du catalogue — install, uninstall, status, list.
+# Description: Les skills offerts par les ressources — install, uninstall, status, list.
 # Périmètre: dépôt
 #
 # Un skill est une procédure exécutable par l'agent. Son fichier est copié du
@@ -19,7 +19,6 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/texte.sh"
 
 HARNAIS=$(_clia_harnais)
-CATALOGUE=$(_clia_primitives skill)
 
 # --------------------------------------------------------------------------
 
@@ -32,51 +31,50 @@ Verbes :
                    courant, et pose sa section d'activation dans CLAUDE.md
   uninstall <nom>  retire le skill installé et sa section d'activation
   status <nom>     dit si le skill est installé, et si CLAUDE.md est à jour
-  list, ls         liste le catalogue, avec l'état et la description de chacun
+  list, ls         liste les skills offerts, avec leur état et leur description
 
-Le catalogue vit dans le dépôt source de clia ; l'installation se fait dans
-le dépôt git courant.
+Un skill opère sur une ressource, et vit sous elle :
+_ressources/<RESSOURCE>/skills/<nom>.md. Il n'y a pas de catalogue central.
+L'installation, elle, se fait dans le dépôt git courant.
 EOF
 }
 
-catalogue_vide() {
-  ! compgen -G "$CATALOGUE/*.md" >/dev/null 2>&1
-}
-
 lister() {
-  printf 'Catalogue des skills (%s) :\n\n' "$CATALOGUE"
-  if catalogue_vide; then
+  local sortie
+  sortie=$(_clia_concept_partout skills)
+
+  printf 'Skills offerts par les ressources :\n\n'
+  if [[ -z "$sortie" ]]; then
     printf '  (aucun)\n'
     return 0
   fi
-  local f nom desc
-  for f in "$CATALOGUE"/*.md; do
-    [[ -f "$f" ]] || continue
-    nom=$(basename "$f" .md)
+  local nom ressource f desc
+  while IFS=$'\t' read -r nom ressource f; do
     if [[ -f "$CLIA_WORK_DIR/.claude/skills/${nom}/SKILL.md" ]]; then
-      printf '  %-35s [installé]\n' "$nom"
+      printf '  %-28s %-16s [installé]\n' "$nom" "$ressource"
     else
-      printf '  %-35s [non installé]\n' "$nom"
+      printf '  %-28s %-16s [non installé]\n' "$nom" "$ressource"
     fi
     desc=$(_clia_frontmatter_champ "$f" description)
     # Un « && » suffirait, mais sous set -e la dernière commande d'une
     # fonction décide de son code de retour : un skill sans description en
     # fin de catalogue ferait échouer la commande entière.
     if [[ -n "$desc" ]]; then printf '      %s\n' "$desc"; fi
-  done
+  done <<<"$sortie"
 }
 
 installer() {
   local nom="$1"
-  local source="$CATALOGUE/${nom}.md"
+  local source
+  source=$(_clia_concept_fichier skills "$nom")
   local cible_dir="$CLIA_WORK_DIR/.claude/skills/${nom}"
   local cible="$cible_dir/SKILL.md"
   local debut="<!-- BEGIN ${nom} skill -->"
   local fin="<!-- END ${nom} skill -->"
 
-  if [[ ! -f "$source" ]]; then
+  if [[ -z "$source" || ! -f "$source" ]]; then
     _clia_msg "skill inconnu : $nom"
-    _clia_detail "le catalogue : clia skill list"
+    _clia_detail "ceux qui sont offerts : clia skill list"
     exit 1
   fi
 
@@ -166,8 +164,13 @@ etat() {
   local cible="$CLIA_WORK_DIR/.claude/skills/${nom}/SKILL.md"
   local debut="<!-- BEGIN ${nom} skill -->"
 
-  if [[ ! -f "$CATALOGUE/${nom}.md" ]]; then
-    printf 'skill           %s — absent du catalogue\n' "$nom"
+  local source
+  source=$(_clia_concept_fichier skills "$nom")
+  if [[ -n "$source" ]]; then
+    local ressource="${source#"$CLIA_SOURCE_DIR"/_ressources/}"
+    printf 'offert par      %s\n' "${ressource%/skills/*}"
+  else
+    printf 'offert par      aucune ressource — %s est inconnu\n' "$nom"
   fi
   if [[ -f "$cible" ]]; then
     printf 'fichier         %s\n' "$(_clia_chemin_court "$cible")"

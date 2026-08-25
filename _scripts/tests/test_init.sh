@@ -20,7 +20,7 @@ trap 'rm -rf "$BAC"' EXIT
 
 SOURCE="$BAC/source"
 mkdir -p "$SOURCE"
-cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$RACINE/_templates" "$SOURCE/"
+cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$SOURCE/"
 CLIA="$SOURCE/_scripts/bin/clia"
 
 EMPREINTE_SOURCE=$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)

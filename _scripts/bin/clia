@@ -75,24 +75,44 @@ fi
 # d'abord, les ressources ensuite. Un même nom aux deux endroits n'a pas de
 # sens — le premier trouvé l'emporte, et clia le signale plutôt que de
 # choisir en silence.
-# Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
+# Sortie : « nom<TAB>fichier », dans l'ordre de fouille. Le nom est celui du
+# fichier ; les alias sont résolus à part, pour que l'aide n'affiche chaque
+# commande qu'une fois.
 _clia_fichiers_de_commande() {
   local f
+  # Le second motif de ressource couvre les catégories : une ressource peut
+  # vivre sous l'une d'elles. SPC-001 S2 arrête la profondeur à deux.
   for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh \
-           "$CLIA_SOURCE_DIR"/_ressources/*/scripts/*.sh; do
+           "$CLIA_SOURCE_DIR"/_ressources/*/scripts/*.sh \
+           "$CLIA_SOURCE_DIR"/_ressources/*/*/scripts/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
   done
   return 0
 }
 
 # Le fichier qui porte une commande, ou rien. Le premier trouvé l'emporte.
+# Le nom de fichier d'abord, puis les alias déclarés.
 #
 # awk lit la liste jusqu'au bout plutôt que de sortir au premier match : sous
 # « set -o pipefail », un awk qui referme le tube tôt fait recevoir SIGPIPE à
 # la boucle en amont, et la commande entière sortirait en 141.
 _clia_fichier_de() {
-  _clia_fichiers_de_commande \
-    | awk -F'\t' -v n="$1" '$1 == n && !trouve { print $2; trouve = 1 }'
+  local demande="$1" trouve nom f
+  trouve=$(_clia_fichiers_de_commande \
+    | awk -F'\t' -v n="$demande" '$1 == n && !vu { print $2; vu = 1 }')
+  if [[ -n "$trouve" ]]; then
+    printf '%s\n' "$trouve"
+    return 0
+  fi
+  while IFS=$'\t' read -r nom f; do
+    for a in $(_clia_alias_de "$f"); do
+      if [[ "$a" == "$demande" ]]; then
+        printf '%s\n' "$f"
+        return 0
+      fi
+    done
+  done < <(_clia_fichiers_de_commande)
+  return 0
 }
 
 _clia_description_de() {
@@ -105,6 +125,14 @@ _clia_perimetre_de() {
   declaration=$(grep -m1 -E '^#[[:space:]]*Périmètre:' "$1" 2>/dev/null \
     | sed -E 's/^#[[:space:]]*Périmètre:[[:space:]]*//' || true)
   printf '%s\n' "${declaration:-dépôt}"
+}
+
+# Les autres noms sous lesquels une commande répond, séparés par des espaces.
+# USE-003 écrit « clia res|ressource ls » : les trois noms désignent la même
+# commande, et un seul fichier la porte.
+_clia_alias_de() {
+  grep -m1 -E '^#[[:space:]]*Alias:' "$1" 2>/dev/null \
+    | sed -E 's/^#[[:space:]]*Alias:[[:space:]]*//' || true
 }
 
 # --------------------------------------------------------------------------
