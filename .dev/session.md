@@ -70,3 +70,8 @@ Décrire correctement les spécifications de ceci dans @.dev/specs/... et les re
 ### 7. [implémentation] mettre en place la commande `clia res` tel que décrite par USE-003
 
 ## 8. [implémentation] mettre en place la commande `clia release ...` tel que décrite dans USE-004
+
+
+## 9. [implémentation] permettre l'installation de ressource, skill et fonctionnalité tel que décrite dans USE-005
+
+## 10. [implémentation] permettre l'ajout d'extensions tel que décrit dans USE-006

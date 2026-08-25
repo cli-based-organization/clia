@@ -25,6 +25,8 @@ trap 'rm -rf "$BAC"' EXIT
 SOURCE="$BAC/source"
 mkdir -p "$SOURCE"
 cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$SOURCE/"
+mkdir -p "$SOURCE/.dev"
+cp "$RACINE/.dev/clia.yaml" "$SOURCE/.dev/clia.yaml"
 
 CAT_SKILLS="$SOURCE/_ressources/skill/skills"
 mkdir -p "$CAT_SKILLS"
@@ -75,11 +77,16 @@ titre 'Le dépôt de travail avant instrumentation'
 
 rc  "harness-ia status répond"                0 clia harness-ia status
 dit "il dit que CLAUDE.md est absent"         'absent'
-rc  "skill list répond"                       0 clia skill list
+# Sans --remote, une liste ne montre que ce que le dépôt a repris : USE-005
+# réserve à --remote ce que les remotes offrent.
+rc  "skill ls ne montre rien en local"        0 clia skill ls
+dit "il le dit"                               '(aucun)'
+dit "et renvoie au remote"                    'clia skill ls --remote'
+rc  "skill ls --remote répond"                0 clia skill ls --remote
 dit "les skills offerts nomment la fixture"   'exemple'
 dit "et le donne pour non installé"           'non installé'
-rc  "feature list répond"                     0 clia feature list
-dit "le catalogue nomme session"              'session'
+rc  "feature ls --remote répond"              0 clia feature ls --remote
+dit "les fonctionnalités nomment session"     'session'
 dit "et la donne pour inactive"               'inactive'
 rc  "feature install sans harnais est refusé" 1 clia feature install session
 dit "et il dit quoi lancer d'abord"           'clia harness-ia init'
@@ -111,13 +118,14 @@ vrai "une seule section dans le fichier"      test "$(grep -c 'BEGIN exemple ski
 rc  "status le voit"                          0 clia skill status exemple
 dit "le fichier est rapporté"                 '\.claude/skills/exemple/SKILL\.md'
 dit "la section aussi"                        "section d'activation présente"
-rc  "list le donne pour installé"             0 clia skill list
-dit "avec la ressource qui l'offre"           'exemple  *skill  *\[installé\]'
+rc  "list le donne pour installé"             0 clia skill ls --remote
+dit "avec la ressource qui l'offre"           'exemple  *skill  *installé'
+dit "et la provenance du remote"              'installé *noumanity\.com/clia'
 
 rc  "un skill sans frontmatter s'installe"    0 clia skill install sans-frontmatter
 rc  "sa description est suppléée"             0 grep -q 'Voir `\?\.claude/skills/sans-frontmatter/SKILL\.md' "$HARNAIS"
 rc  "skill inconnu est refusé"                1 clia skill install absent-du-catalogue
-dit "et il renvoie à la liste"                'clia skill list'
+dit "et il renvoie à la liste"                'clia skill ls --remote'
 
 titre 'feature install'
 
@@ -148,7 +156,7 @@ description: Fonctionnalité de fixture, fournie par une ressource dans un names
 Relire avant de publier.
 EOF
 
-rc  "feature list trouve le namespace"        0 clia feature list
+rc  "feature ls --remote trouve la catégorie" 0 clia feature ls --remote
 dit "la fonctionnalité est listée"            'relecture'
 dit "et sa ressource est nommée en entier"    'relecture  *edition/article'
 rc  "elle s'installe"                         0 clia feature install relecture

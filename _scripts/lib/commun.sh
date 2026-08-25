@@ -108,30 +108,65 @@ _clia_detail() { printf '%*s  %s\n' "${#_CLIA_NOM}" '' "$*" >&2; }
 
 _clia_ressource_dir() { printf '%s/_ressources/%s\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
 
-# Les fichiers d'un concept rattaché, pour toutes les ressources. SPC-001 S6 :
-# il n'y a pas de catalogue central, un concept vit sous la ressource dont il
-# relève. Deux motifs, parce qu'une ressource peut vivre dans un namespace.
+# Les fichiers d'un concept rattaché, pour toutes les ressources d'un dépôt.
+# SPC-001 S6 : il n'y a pas de catalogue central, un concept vit sous la
+# ressource dont il relève. Deux motifs, parce qu'une ressource peut vivre
+# sous une catégorie.
 #
 # Sortie : « nom<TAB>ressource<TAB>fichier », triée par nom.
 _clia_concept_partout() {
-  local concept="$1" f nom ressource
-  for f in "${CLIA_SOURCE_DIR:-}"/_ressources/*/"$concept"/*.md \
-           "${CLIA_SOURCE_DIR:-}"/_ressources/*/*/"$concept"/*.md; do
+  local depot="$1" concept="$2" f nom ressource
+  local base="$depot/_ressources"
+  for f in "$base"/*/"$concept"/*.md "$base"/*/*/"$concept"/*.md; do
     [[ -f "$f" ]] || continue
     nom=$(basename "$f" .md)
     # Le nom qualifié de la ressource : ce qui suit _ressources/ jusqu'au
     # répertoire du concept.
-    ressource="${f#"${CLIA_SOURCE_DIR:-}"/_ressources/}"
+    ressource="${f#"$base"/}"
     ressource="${ressource%/"$concept"/*}"
     printf '%s\t%s\t%s\n' "$nom" "$ressource" "$f"
   done | sort -t"$(printf '\t')" -k1,1
   return 0
 }
 
-# Le fichier qui porte un concept nommé, ou rien. Le premier trouvé l'emporte.
+# Le fichier qui porte un concept nommé dans un dépôt, ou rien.
 _clia_concept_fichier() {
-  _clia_concept_partout "$1" \
-    | awk -F'\t' -v n="$2" '$1 == n && !trouve { print $3; trouve = 1 }'
+  _clia_concept_partout "$1" "$2" \
+    | awk -F'\t' -v n="$3" '$1 == n && !trouve { print $3; trouve = 1 }'
+}
+
+# --------------------------------------------------------------------------
+# Les remotes
+# --------------------------------------------------------------------------
+#
+# Un remote est un dépôt d'où le dépôt courant peut reprendre des ressources,
+# des skills et des fonctionnalités. USE-005.
+#
+# Il n'y en a qu'un aujourd'hui, le dépôt source de clia. USE-006 en ajoutera
+# d'autres, déclarés comme extensions et identifiés par leur namespace : c'est
+# pour cela que cette fonction rend une liste et que les commandes filtrent
+# par namespace plutôt que de tenir le dépôt source pour acquis.
+#
+# Sortie : « namespace<TAB>chemin ».
+_clia_remotes() {
+  local ns
+  # Un dépôt n'est pas son propre remote : dans le dépôt source de clia, il
+  # n'y a donc rien à reprendre, tout y est déjà.
+  [[ "$CLIA_SOURCE_DIR" != "${CLIA_WORK_DIR:-}" ]] || return 0
+  ns=$(_clia_carte_champ "$CLIA_SOURCE_DIR" namespace 2>/dev/null || printf '')
+  printf '%s\t%s\n' "${ns:-—}" "$CLIA_SOURCE_DIR"
+  return 0
+}
+
+# Les remotes qui répondent à un namespace, ou tous s'il est vide. Rend un
+# code non nul, sans rien écrire, quand le namespace demandé n'existe pas.
+_clia_remotes_filtres() {
+  local demande="${1:-}" lignes
+  lignes=$(_clia_remotes)
+  [[ -n "$demande" ]] || { printf '%s' "${lignes:+$lignes$'\n'}"; return 0; }
+  lignes=$(printf '%s' "$lignes" | awk -F'\t' -v n="$demande" '$1 == n')
+  [[ -n "$lignes" ]] || return 1
+  printf '%s\n' "$lignes"
 }
 _clia_primitives()    { printf '%s/_ressources/%s/primitives\n' "${CLIA_SOURCE_DIR:-}" "$1"; }
 _clia_templates()     { printf '%s/_ressources/%s/templates\n'  "${CLIA_SOURCE_DIR:-}" "$1"; }

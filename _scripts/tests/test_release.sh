@@ -35,6 +35,10 @@ CLIA="$SOURCE/_scripts/bin/clia"
 
 EMPREINTE_SOURCE=$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)
 TETE_REELLE=$(cd "$RACINE" && git rev-parse HEAD 2>/dev/null || printf '')
+# Les tags que le dépôt réel porte déjà : le banc ne doit ni en ajouter, ni
+# en retirer. « for-each-ref » est une lecture, là où « git tag » est un verbe
+# d'écriture même quand on ne lui demande que de lister.
+TAGS_REELS=$(cd "$RACINE" && git for-each-ref --format='%(refname)' refs/tags 2>/dev/null | sort)
 
 # Un dépôt jetable instrumenté, avec une identité git à lui.
 depot_neuf() {
@@ -188,7 +192,7 @@ titre 'Le dépôt réel n'\''a pas été touché'
 
 vrai "aucun changement de fichier"            test "$(cd "$RACINE" && git status --porcelain 2>/dev/null | sort)" = "$EMPREINTE_SOURCE"
 vrai "HEAD n'a pas bougé"                   test "$(cd "$RACINE" && git rev-parse HEAD 2>/dev/null || printf '')" = "$TETE_REELLE"
-faux "aucun tag de version n'y a été posé"  bash -c "git -C '$RACINE' rev-parse --verify --quiet refs/tags/v0.1.1 >/dev/null"
+vrai "ses tags sont les mêmes qu'au départ"   test "$(cd "$RACINE" && git for-each-ref --format='%(refname)' refs/tags 2>/dev/null | sort)" = "$TAGS_REELS"
 
 # --------------------------------------------------------------------------
 

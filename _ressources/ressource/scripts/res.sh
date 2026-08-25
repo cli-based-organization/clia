@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Description: Les ressources du dépôt — ls, info, new.
+# Description: Les ressources du dépôt — ls, info, new, activate.
 # Périmètre: dépôt
 # Alias: ressource resource
 #
@@ -32,9 +32,8 @@ Usage : clia res <verbe> [arguments]
 Verbes :
   ls [NAMESPACE] [--remote]
         liste les ressources activées du dépôt courant : préfixe, nom,
-        nombre d'instances, namespace. --remote ajoute celles que le dépôt
-        source offre et que le dépôt courant n'a pas encore. NAMESPACE
-        restreint la liste à un namespace.
+        nombre d'instances, namespace. --remote y ajoute celles que les
+        remotes offrent. NAMESPACE restreint la liste à un namespace.
 
   info [RESSOURCE]
         sans argument, la carte du dépôt : namespace, version, maturité,
@@ -44,6 +43,11 @@ Verbes :
   new [--category CATEGORIE] PREFIXE NOM [DESCRIPTION]
         crée une ressource dans _ressources/NOM, ou _ressources/CATEGORIE/NOM.
         PREFIXE est en majuscules, NOM en minuscules sans accent.
+
+  activate [NAMESPACE] RESSOURCE
+        reprend dans le dépôt courant une ressource qu'un remote offre, avec
+        tout ce qu'elle porte : sa définition, ses gabarits, ses skills et
+        ses fonctionnalités.
 
 clia ressource et clia resource répondent aussi.
 
@@ -186,6 +190,82 @@ info() {
   fi
 }
 
+# Reprendre dans le dépôt courant une ressource qu'un remote offre.
+#
+# Tout le répertoire est copié, et non la seule définition : ce qu'une
+# ressource porte lui appartient, et trier ici à sa place obligerait à
+# décider, pour chaque concept, s'il voyage avec elle. Un dépôt qui n'a que
+# faire d'un skill peut le retirer ; il ne peut pas deviner qu'il existait.
+activer() {
+  local namespace='' nom=''
+  case $# in
+    1) nom="$1" ;;
+    2) namespace="$1"; nom="$2" ;;
+    *) _clia_msg "activate attend une ressource, précédée au besoin d'un namespace"
+       _clia_detail "usage : clia res activate [NAMESPACE] RESSOURCE"
+       exit 2 ;;
+  esac
+
+  local dir_local="$CLIA_WORK_DIR/_ressources/$nom"
+  if [[ -e "$dir_local" ]]; then
+    _clia_msg "la ressource $nom est déjà dans ce dépôt"
+    _clia_detail "rien n'a été modifié"
+    return 0
+  fi
+
+  local remotes
+  if ! remotes=$(_clia_remotes_filtres "$namespace"); then
+    _clia_msg "aucun remote pour le namespace $namespace"
+    _clia_detail "celui du dépôt source est ${NAMESPACE_SOURCE:-non déclaré}"
+    exit 1
+  fi
+
+  local ns chemin source='' provenance=''
+  while IFS=$'\t' read -r ns chemin; do
+    [[ -n "$chemin" ]] || continue
+    local n d
+    while IFS=$'\t' read -r n d; do
+      if [[ "$n" == "$nom" ]]; then source="$d"; provenance="$ns"; break; fi
+    done < <(_clia_ressources_de "$chemin")
+    [[ -n "$source" ]] && break
+  done <<<"$remotes"
+
+  if [[ -z "$source" ]]; then
+    _clia_msg "aucun remote n'offre la ressource $nom"
+    _clia_detail "ce qui est offert : clia res ls --remote"
+    exit 1
+  fi
+
+  # Le préfixe doit rester distinctif dans le dépôt d'accueil, comme pour une
+  # ressource créée sur place.
+  local prefixe autre n d
+  prefixe=$(_clia_champ_de_fichier "$source/schemas/$(basename "$source").yaml" prefixe 2>/dev/null || printf '')
+  while IFS=$'\t' read -r n d; do
+    [[ -n "$n" ]] || continue
+    autre=$(_clia_champ_de_fichier "$d/schemas/$(basename "$d").yaml" prefixe 2>/dev/null || printf '')
+    if [[ -n "$prefixe" && "$autre" == "$prefixe" ]]; then
+      _clia_msg "le préfixe $prefixe est déjà celui de $n dans ce dépôt"
+      _clia_detail "rien n'a été repris ; deux types au même préfixe rendent les alias ambigus"
+      exit 1
+    fi
+  done < <(_clia_ressources_de "$CLIA_WORK_DIR")
+
+  mkdir -p "$(dirname "$dir_local")"
+  cp -r "$source" "$dir_local"
+
+  _clia_msg "activée : _ressources/$nom"
+  _clia_detail "reprise de $provenance"
+  _clia_detail "préfixe $prefixe, instances dans $(_clia_champ_de_fichier "$dir_local/schemas/$(basename "$nom").yaml" emplacement 2>/dev/null || printf '?')"
+
+  local skills features
+  skills=$(_clia_concept_partout "$CLIA_WORK_DIR" skills | awk -F'\t' -v r="$nom" '$2 == r' | wc -l)
+  features=$(_clia_concept_partout "$CLIA_WORK_DIR" features | awk -F'\t' -v r="$nom" '$2 == r' | wc -l)
+  if (( skills > 0 || features > 0 )); then
+    _clia_detail "elle apporte $skills skill(s) et $features fonctionnalité(s)"
+    _clia_detail "à poser au besoin : clia skill install, clia feature install"
+  fi
+}
+
 creer() {
   local categorie='' prefixe='' nom='' description=''
   while (( $# > 0 )); do
@@ -304,9 +384,10 @@ case "$VERBE" in
   ls|list)           lister "$@" ;;
   info)              info "$@" ;;
   new)               creer "$@" ;;
+  activate)          activer "$@" ;;
   -h|--help|help|'') aide ;;
   *)
     _clia_msg "verbe inconnu pour res : $VERBE"
-    _clia_detail "les verbes connus : ls, info, new"
+    _clia_detail "les verbes connus : ls, info, new, activate"
     exit 2 ;;
 esac
