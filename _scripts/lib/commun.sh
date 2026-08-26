@@ -196,19 +196,11 @@ _clia_extension_cache() {
   printf '%s/%s\n' "$(_clia_extensions_cache_dir)" "$1"
 }
 
-# Sortie : « namespace<TAB>uri », dans l'ordre de déclaration.
-#
-# Les extensions sont des entrées de l'inventaire de .dev/clia.yaml. Un
-# .dev/extensions.yaml reste lu s'il existe : les dépôts instrumentés avant
-# que la configuration ne soit unifiée en portent un, et les priver de leurs
-# extensions pour cela serait les punir d'avoir été instrumentés tôt.
-# clia check le signale, et dit comment migrer.
-# shellcheck disable=SC2120  # le dépôt est facultatif, et vaut celui de travail
-_clia_extensions_declarees() {
-  local depot="${1:-${CLIA_WORK_DIR:-$PWD}}" ancien
-  _clia_installe "$depot" extension | awk -F'\t' 'NF { print $2 "\t" $5 }'
-
-  ancien="$depot/.dev/extensions.yaml"
+# Les extensions que porte un ancien .dev/extensions.yaml, s'il existe.
+# Sortie : « namespace<TAB>uri ». Lue à part parce que clia check --fix la
+# fond dans l'inventaire : il lui faut l'ancien fichier seul, non le cumul.
+_clia_extensions_ancien_fichier() {
+  local ancien="$1"
   [[ -f "$ancien" ]] || return 0
   awk '
     /^[[:space:]]*-[[:space:]]*namespace:[[:space:]]*/ {
@@ -221,6 +213,21 @@ _clia_extensions_declarees() {
       if (ns != "") { print ns "\t" $0; ns = "" }
     }
   ' "$ancien"
+  return 0
+}
+
+# Sortie : « namespace<TAB>uri », dans l'ordre de déclaration.
+#
+# Les extensions sont des entrées de l'inventaire de .dev/clia.yaml. Un
+# .dev/extensions.yaml reste lu s'il existe : les dépôts instrumentés avant
+# que la configuration ne soit unifiée en portent un, et les priver de leurs
+# extensions pour cela serait les punir d'avoir été instrumentés tôt.
+# clia check le signale, et clia check --fix le fond dans l'inventaire.
+# shellcheck disable=SC2120  # le dépôt est facultatif, et vaut celui de travail
+_clia_extensions_declarees() {
+  local depot="${1:-${CLIA_WORK_DIR:-$PWD}}"
+  _clia_installe "$depot" extension | awk -F'\t' 'NF { print $2 "\t" $5 }'
+  _clia_extensions_ancien_fichier "$depot/.dev/extensions.yaml"
   return 0
 }
 
@@ -310,18 +317,133 @@ _clia_ressources_de() {
   return 0
 }
 
-# Le nombre d'instances d'un type dans un dépôt, d'après l'emplacement que sa
-# définition déclare. Les segments <...> du motif deviennent des jokers : ils
-# désignent ce qui varie d'une instance à l'autre.
+# Les fichiers d'instance d'un type dans un dépôt, d'après l'emplacement que
+# sa définition déclare. Les segments <...> du motif deviennent des jokers :
+# ils désignent ce qui varie d'une instance à l'autre.
 #
 # find -path est employé plutôt qu'un glob du shell parce que son « * »
-# traverse les séparateurs : un même motif compte donc les ressources rangées
+# traverse les séparateurs : un même motif trouve donc les ressources rangées
 # dans une catégorie comme celles qui n'en ont pas.
-_clia_instances() {
+_clia_instances_liste() {
   local depot="$1" emplacement="$2" motif
-  [[ -n "$emplacement" ]] || { printf '0\n'; return 0; }
+  [[ -n "$emplacement" ]] || return 0
   motif=$(printf '%s' "$emplacement" | sed -E 's/<[^>]*>/*/g')
-  find "$depot" -path "$depot/$motif" -type f 2>/dev/null | wc -l
+  find "$depot" -path "$depot/$motif" -type f 2>/dev/null | sort
+  return 0
+}
+
+_clia_instances() {
+  _clia_instances_liste "$1" "$2" | grep -c . || true
+}
+
+# Un champ du frontmatter d'une instance. Le frontmatter est le bloc entre les
+# deux premiers « --- » ; au-delà commence le corps, où une ligne « version: »
+# serait du texte et non une déclaration.
+_clia_frontmatter_champ() {
+  local fichier="$1" champ="$2"
+  [[ -f "$fichier" ]] || return 1
+  awk -v c="$champ" '
+    NR == 1 && $0 == "---" { dedans = 1; next }
+    dedans && $0 == "---"  { exit }
+    dedans && index($0, c ":") == 1 {
+      val = substr($0, length(c) + 2)
+      sub(/^[[:space:]]+/, "", val)
+      gsub(/"/, "", val)
+      print val
+      exit
+    }
+  ' "$fichier"
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# Les versions d'une ressource
+# --------------------------------------------------------------------------
+#
+# USE-007 : une ressource porte son propre numéro de version, déclaré par sa
+# définition. Ce que le dépôt en a installé est une copie, et l'inventaire dit
+# à quelle version elle a été prise.
+#
+# D'où viennent « les versions disponibles » : de l'historique git du dépôt
+# qui offre la ressource. Aucun registre n'est tenu à côté — c'est le même
+# choix que pour les versions du dépôt lui-même (clia release), et pour la
+# même raison : un registre parallèle finit par mentir.
+
+# Compare deux versions. Écrit -1, 0 ou 1 selon que la première est
+# antérieure, égale ou postérieure à la seconde. Un composant absent vaut 0,
+# ce qui fait de 1.2 l'égal de 1.2.0.
+_clia_semver_cmp() {
+  local a="$1" b="$2" i x y
+  local -a ca cb
+  IFS='.' read -r -a ca <<<"${a%%[-+]*}"
+  IFS='.' read -r -a cb <<<"${b%%[-+]*}"
+  for i in 0 1 2; do
+    x="${ca[$i]:-0}"; y="${cb[$i]:-0}"
+    [[ "$x" =~ ^[0-9]+$ ]] || x=0
+    [[ "$y" =~ ^[0-9]+$ ]] || y=0
+    if (( x < y )); then printf -- '-1\n'; return 0; fi
+    if (( x > y )); then printf '1\n'; return 0; fi
+  done
+  printf '0\n'
+  return 0
+}
+
+# Le remote qui offre une ressource, et où elle s'y trouve. Un namespace donné
+# restreint la recherche à lui seul.
+# Sortie : « namespace<TAB>dépôt<TAB>répertoire ».
+_clia_offre_ressource() {
+  local nom="$1" namespace="${2:-}" ns chemin n d
+  while IFS=$'\t' read -r ns chemin; do
+    [[ -n "$chemin" ]] || continue
+    [[ -n "$namespace" && "$ns" != "$namespace" ]] && continue
+    while IFS=$'\t' read -r n d; do
+      if [[ "$n" == "$nom" ]]; then
+        printf '%s\t%s\t%s\n' "$ns" "$chemin" "$d"
+        return 0
+      fi
+    done < <(_clia_ressources_de "$chemin")
+  done < <(_clia_remotes)
+  return 1
+}
+
+# Les versions qu'un dépôt a données à une ressource, de la plus récente à la
+# plus ancienne. Sortie : « version<TAB>commit<TAB>date ».
+#
+# Le répertoire de travail du dépôt vient en tête, sous le commit « travail »,
+# quand sa version n'est pas celle de HEAD : c'est ce que ce dépôt offre
+# aujourd'hui, et c'est ce que clia res activate copie. L'historique donne le
+# reste, un commit par version — le plus récent qui la déclare, pour que la
+# reprise emporte les retouches faites à version constante.
+_clia_versions_ressource() {
+  local depot="$1" nom="$2"
+  local rel="_ressources/$nom"
+  local def
+  def="_ressources/$nom/schemas/$(basename "$nom").yaml"
+  local travail tete commit v vus=$'\n'
+
+  travail=$(_clia_champ_de_fichier "$depot/$def" version 2>/dev/null || printf '')
+  tete=$(git -C "$depot" show "HEAD:$def" 2>/dev/null \
+         | grep -m1 -E '^version:[[:space:]]' \
+         | sed -E 's/^version:[[:space:]]*//; s/^"//; s/"$//' || printf '')
+
+  if [[ -n "$travail" && "$travail" != "$tete" ]]; then
+    printf '%s\ttravail\t—\n' "$travail"
+    vus+="$travail"$'\n'
+  fi
+
+  while IFS= read -r commit; do
+    [[ -n "$commit" ]] || continue
+    v=$(git -C "$depot" show "$commit:$def" 2>/dev/null \
+        | grep -m1 -E '^version:[[:space:]]' \
+        | sed -E 's/^version:[[:space:]]*//; s/^"//; s/"$//' || printf '')
+    [[ -n "$v" ]] || continue
+    [[ "$vus" == *$'\n'"$v"$'\n'* ]] && continue
+    vus+="$v"$'\n'
+    printf '%s\t%s\t%s\n' "$v" \
+      "$(git -C "$depot" rev-parse --short "$commit")" \
+      "$(git -C "$depot" show -s --format=%cs "$commit")"
+  done < <(git -C "$depot" log --format=%H -- "$rel" 2>/dev/null || true)
+  return 0
 }
 
 # --------------------------------------------------------------------------

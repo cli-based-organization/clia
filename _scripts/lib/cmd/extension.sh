@@ -32,6 +32,11 @@ Verbes :
                    reprend dans le dépôt tout ce que l'extension offre :
                    ses ressources, avec les skills et fonctionnalités
                    qu'elles portent
+  upgrade [NAMESPACE]
+                   met à jour le clone — toutes les extensions, ou la seule
+                   nommée — et dit ce que le dépôt en tient qui est resté en
+                   arrière. La reprise elle-même se demande ressource par
+                   ressource : clia res upgrade RESSOURCE
 
 Deux endroits, et c'est voulu :
   .dev/clia.yaml         la déclaration, versionnée, qui suit le dépôt
@@ -249,6 +254,91 @@ installer() {
   fi
 }
 
+# Mettre à jour le clone d'une extension, et dire ce que cela change.
+#
+# USE-007 : une extension est un dépôt, et un dépôt avance. Le clone est un
+# artefact de la machine — le remettre à jour ne touche à rien de versionné,
+# hormis la version inscrite à l'inventaire.
+#
+# Ce qui a déjà été repris de l'extension n'est pas repris de nouveau : une
+# ressource installée peut avoir été modifiée sur place, et clia res upgrade
+# est le seul endroit qui sache le vérifier. La commande dit donc ce qui est
+# devenu reprenable, et laisse la reprise à qui la demande.
+mettre_a_jour() {
+  local demande="${1:-}"
+  if (( $# > 1 )); then
+    _clia_msg "upgrade ne prend qu'un namespace : $*"
+    exit 2
+  fi
+
+  local lignes
+  lignes=$(_clia_extensions_declarees)
+  if [[ -z "$lignes" ]]; then
+    _clia_msg "aucune extension déclarée dans ce dépôt"
+    _clia_detail "pour en ajouter une : clia extension add URI"
+    return 0
+  fi
+
+  local ns uri cache avant apres nom vues=0 avancees=0 echecs=0
+  while IFS=$'\t' read -r ns uri; do
+    [[ -n "$ns" ]] || continue
+    [[ -n "$demande" && "$ns" != "$demande" ]] && continue
+    vues=$((vues + 1))
+    cache=$(_clia_extension_cache "$ns")
+
+    if [[ ! -d "$cache" ]]; then
+      _clia_msg "$ns : déclarée, non clonée"
+      _clia_detail "pour rétablir le clone : clia extension add ${uri:-<uri>}"
+      echecs=$((echecs + 1))
+      continue
+    fi
+
+    avant=$(_clia_carte_champ "$cache" version 2>/dev/null || printf '—')
+    if ! git -C "$cache" pull --ff-only --quiet >/dev/null 2>&1; then
+      _clia_msg "$ns : la mise à jour du clone a échoué"
+      _clia_detail "clone : $cache"
+      _clia_detail "son dépôt d'origine est-il joignable ? git -C $cache pull le dira"
+      echecs=$((echecs + 1))
+      continue
+    fi
+    apres=$(_clia_carte_champ "$cache" version 2>/dev/null || printf '—')
+
+    nom=$(basename "$ns")
+    _clia_enregistrer "$CLIA_WORK_DIR" extension "$ns" "$nom" "$apres" "$uri" \
+      2>/dev/null || true
+
+    if [[ "$avant" == "$apres" ]]; then
+      _clia_msg "$ns : déjà à jour, en $apres"
+    else
+      _clia_msg "$ns : $avant -> $apres"
+      avancees=$((avancees + 1))
+    fi
+
+    # Ce que le dépôt tient de cette extension, et qui est resté en arrière.
+    local type ns_e n_e v_e reste=0 offerte dir
+    while IFS=$'\t' read -r type ns_e n_e v_e _; do
+      [[ "$type" == 'ressource' && "$ns_e" == "$ns" ]] || continue
+      dir="$cache/_ressources/$n_e"
+      [[ -d "$dir" ]] || continue
+      offerte=$(_clia_champ_de_fichier "$dir/schemas/$(basename "$n_e").yaml" version 2>/dev/null || printf '')
+      [[ -n "$offerte" ]] || continue
+      if [[ "$(_clia_semver_cmp "${v_e:-0}" "$offerte")" == '-1' ]]; then
+        _clia_detail "en retard : $n_e ($v_e -> $offerte) — clia res upgrade $n_e"
+        reste=$((reste + 1))
+      fi
+    done < <(_clia_installe "$CLIA_WORK_DIR")
+    (( reste == 0 )) && _clia_detail "rien de ce qui en vient n'est en retard"
+  done <<<"$lignes"
+
+  if (( vues == 0 )); then
+    _clia_msg "extension inconnue : $demande"
+    _clia_detail "celles qui sont déclarées : clia extension ls"
+    exit 1
+  fi
+  (( echecs > 0 )) && exit 1
+  return 0
+}
+
 # --------------------------------------------------------------------------
 
 VERBE="${1:-}"
@@ -258,9 +348,10 @@ case "$VERBE" in
   add)               ajouter "$@" ;;
   ls|list)           lister ;;
   install)           installer "$@" ;;
+  upgrade|update)    mettre_a_jour "$@" ;;
   -h|--help|help|'') aide ;;
   *)
     _clia_msg "verbe inconnu pour extension : $VERBE"
-    _clia_detail "les verbes connus : add, ls, install"
+    _clia_detail "les verbes connus : add, ls, install, upgrade"
     exit 2 ;;
 esac
