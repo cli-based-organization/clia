@@ -247,12 +247,23 @@ installer() {
     _clia_detail "ajoutée en fin de $(_clia_chemin_court "$HARNAIS"), la zone gérée étant absente"
   fi
   _clia_normaliser_lignes_vides "$HARNAIS"
+
+  # La provenance ne se lit pas sur la section injectée : l'inventaire la garde.
+  local ns_source v_source
+  IFS=$'\t' read -r ns_source v_source < <(_clia_provenance_de "$source")
+  _clia_enregistrer "$CLIA_WORK_DIR" feature "$ns_source" "$nom" "$v_source" \
+    2>/dev/null || true
 }
 
 desinstaller() {
   local nom="$1"
   local debut="<!-- BEGIN ${nom} feature -->"
   local fin="<!-- END ${nom} feature -->"
+
+  # L'oubli vient en premier, et il a lieu même quand la section est déjà
+  # absente : une entrée sans section est précisément l'écart que clia check
+  # signale, et désactiver doit pouvoir le solder.
+  _clia_oublier "$CLIA_WORK_DIR" feature "$nom" 2>/dev/null || true
 
   if [[ ! -f "$HARNAIS" ]] || ! est_active "$nom"; then
     _clia_msg "rien à désactiver : $nom n'est pas active"

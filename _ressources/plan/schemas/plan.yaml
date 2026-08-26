@@ -1,0 +1,59 @@
+# La définition du type « plan ».
+#
+# Un plan est ce qui se lit avant d'agir, et ce qui se relit après pour dire
+# si ce qui était prévu a été fait. Il n'est pas un compte rendu.
+
+type: ressource
+nom: plan
+titre: Plan
+prefixe: PLN
+version: 0.1.0
+
+emplacement: .dev/plans/PLN-<SEQ>-<SLUG>.md
+gabarit: templates/plan.template.md
+
+edition: ia
+cycle-de-vie: travail
+
+resume: >
+  Un plan propose une intervention en réponse à un problème, avant de
+  l'exécuter. Il découpe le travail en chantiers vérifiables, porte ses
+  propres objections, et n'est pas une exécution.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - etat
+  - repond-a
+
+sections:
+  - Le problème
+  - Ce que ce plan fait, et ce qu'il ne fait pas
+  - Chantiers
+  - Livrables attendus
+  - Comment on saura que c'est fait
+  - Objections de l'agent
+
+relations-admissibles:
+  - repond-a
+  - derive-de
+  - reference
+
+notes: >
+  Un chantier se vérifie ou n'existe pas. « Améliorer la cohérence » n'est pas
+  un chantier ; « toute définition de type porte les neuf champs obligatoires,
+  et le banc le vérifie » en est un.
+
+  La section « Comment on saura que c'est fait » se remplit avant d'exécuter,
+  jamais après. Écrite après coup, elle décrit ce qui a été fait et ne peut
+  plus rien réfuter.
+
+  Un plan qui, à l'exécution, ne produit rien est un défaut du plan, pas un
+  résultat. Cette règle vient d'un incident réel : un plan tenu pour exécutable
+  n'a rien produit, et l'agent a rapporté que c'était normal.
+
+  « Objections de l'agent » porte ce que l'agent ne peut pas trancher seul.
+  Un plan sans objection alors que l'énoncé était incomplet a comblé les
+  trous en silence.

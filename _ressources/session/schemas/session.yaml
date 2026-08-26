@@ -31,6 +31,7 @@ sections:
   - CONTEXTE
   - INTENTION
   - LIVRABLES attendus
+  - CRITÈRES DE CONVERGENCE
   - Tâches
 
 relations-admissibles:
@@ -47,3 +48,9 @@ notes: >
 
   Le corps d'une tâche décrit une intention d'usage, pas une spécification.
   Ce qu'il laisse ouvert se demande, il ne se devine pas.
+
+  Les critères de convergence disent à quoi l'on reconnaîtra que la session
+  a abouti. PDC-007 : chaque itération doit rapprocher du comportement
+  attendu, et sans critère écrit rien ne permet de dire si elle en rapproche.
+  La section avait été perdue puis rétablie dans la génération précédente ;
+  elle est ici d'emblée.

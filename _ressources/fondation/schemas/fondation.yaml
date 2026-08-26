@@ -1,0 +1,58 @@
+# La définition du type « fondation ».
+#
+# Forme reprise de la génération 2026-07, dont l'implémentation était plus
+# efficace que celle de 2026-08 : cinq champs de frontmatter au lieu de sept,
+# et une structure de corps qui se remplit dans l'ordre où la recherche se
+# fait — cadrer, exposer, synthétiser, avouer ses limites, citer.
+
+type: ressource
+nom: fondation
+titre: Fondation
+prefixe: FND
+version: 0.1.0
+
+emplacement: .dev/fondations/FND-<SEQ>-<SLUG>.md
+gabarit: templates/fondation.template.md
+
+# L'agent rédige, l'humain lit et conteste. Une fondation est un travail de
+# revue : c'est ce que l'IA fait le mieux, à condition qu'elle cite.
+edition: ia
+cycle-de-vie: point-fixe
+
+resume: >
+  Une fondation établit ce que d'autres ont déjà établi sur un sujet, avec
+  ses sources et le crédit de chacune. Elle rapporte, elle ne décide pas :
+  ce que le dépôt en fait appartient à une analyse ou à une décision.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - status
+  - date
+
+sections:
+  - Note de rigueur
+  - Cadrage
+  - Corps
+  - Synthèse
+  - Limites
+  - Sources
+
+relations-admissibles:
+  - reference
+  - derive-de
+
+notes: >
+  Point fixe : une fondation porte une date et n'est pas révisée. Ce que l'on
+  sait ensuite fait une autre fondation, qui remplace la première sans
+  l'effacer — l'état du savoir à une date est lui-même une information.
+
+  La note de rigueur n'est pas une politesse : elle dit sur quoi la fondation
+  s'appuie, sources primaires ou secondaires, et à quelle vitesse le sujet
+  vieillit. Une fondation sans elle laisse le lecteur croire que tout s'y
+  vaut.
+
+  Sans source, ce n'est pas une fondation : c'est une opinion mise en forme.
+  Une affirmation normative se rattache à qui l'énonce.

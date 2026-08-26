@@ -69,12 +69,56 @@ Décrire correctement les spécifications de ceci dans @.dev/specs/... et les re
 
 ### 7. [implémentation] mettre en place la commande `clia res` tel que décrite par USE-003
 
-## 8. [implémentation] mettre en place la commande `clia release ...` tel que décrite dans USE-004
+### 8. [implémentation] mettre en place la commande `clia release ...` tel que décrite dans USE-004
 
 
-## 9. [implémentation] permettre l'installation de ressource, skill et fonctionnalité tel que décrite dans USE-005
+### 9. [implémentation] permettre l'installation de ressource, skill et fonctionnalité tel que décrite dans USE-005
 
-## 10. [implémentation] permettre l'ajout d'extensions tel que décrit dans USE-006
+### 10. [implémentation] permettre l'ajout d'extensions tel que décrit dans USE-006
 
-## 11. [implementation] conformité et migration des assets
+### 11. [conception] produire les ressources core suivantes: FND, ANL, NON, PLN, SES et LOG
 
+Consulter les générations précédentes de clia dans @.archives/* afin de comprendre ces ressources.
+
+Respecter tous les principes PND de @.dev/principes/* et rapporter toute incohérence.
+
+Pour FND, utiliser l'implémentation de la génération 2026-07 qui était beaucoup plus efficace
+
+### 12. [enhance behavior] repo clia config
+
+Tout repo clia doit contenir un fichier de configuration. L'emplacement par défaut est @.dev/clia.yaml. Ce fichier doit contenir:
+
+- les infos de ce repo: version, génération, maturité, namespace
+- la namespace+version du harness clia installé
+- namespace+version des extensions installés
+- namespace+version des autres ressources et skills et features et scripts installés
+
+TODO: générer un use case (USE) qui décrit la vérification de la conformité d'un repo clia avec la commande `clia check`
+
+le repo @../../clia-experiments-repo/offre-service-cscn ne contient pas de fichier de config clia.yaml et les extensions sont déclarés dans un fichier extension.yaml
+
+Ceci aurait dû être déclaré par clia. Minimalement, signalé lorsque la version des harness IA installés ne correspondent pas à la version de clia utilisée.
+
+TODO: Fournir un script `clia check` qui vérifie a conformité des repos.
+
+
+**notes** à propos des versions.
+
+Un repo a une version. Mais chaque ressource d'un repo a aussi sa version propre.
+
+il y a un mapping unique pour chaque version de repo => versions des ressources (identifiable par le hash des fichiers+répertoires)
+
+### 13. [implémentation]
+
+Fournir une commande pour "réparer" un repo non conforme
+
+```sh
+clia check --fix
+```
+
+### 14. [implementation] permettre la mise à jour des ressources et des extensions tel que décrit dans USE-007
+
+
+### x. [implémentaiton] Fragments et Plans
+
+Créer les ressource FRG et PLN (voir la génération 2026-08-23)

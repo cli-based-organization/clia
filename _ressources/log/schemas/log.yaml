@@ -1,0 +1,53 @@
+# La définition du type « log ».
+#
+# Un log est le seul type écrit pendant le travail plutôt qu'avant ou après.
+# C'est ce qui le rend fiable, et c'est aussi ce qui le rend fragile : écrit
+# plus tard, il devient un souvenir.
+
+type: ressource
+nom: log
+titre: Log
+prefixe: LOG
+version: 0.1.0
+
+emplacement: .dev/logs/LOG-<SEQ>-<SLUG>.md
+gabarit: templates/log.template.md
+
+edition: ia
+cycle-de-vie: point-fixe
+
+resume: >
+  Un log rapporte un travail au moment où il se fait : ce qui a été demandé,
+  ce qui a été constaté, ce qui a été produit. Il constate, il ne reconstruit
+  pas.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - ecrit-le
+  - porte-sur
+
+sections:
+  - Demande
+  - Ce qui a été fait
+  - Ce qui a été vérifié
+  - Ce qui reste ouvert
+
+relations-admissibles:
+  - reference
+  - derive-de
+
+notes: >
+  Point fixe, et strictement : un log ne se corrige pas. Une erreur constatée
+  après coup fait un second log, qui dit ce que le premier a manqué. Corriger
+  le premier reviendrait à effacer ce que l'on croyait sur le moment, qui est
+  précisément ce qu'un journal sert à garder.
+
+  « Ce qui a été vérifié » se distingue de « ce qui a été fait » : la première
+  section dit ce qui a été lancé et constaté, la seconde ce qui a été écrit.
+  Confondre les deux produit des succès jamais éprouvés.
+
+  Le log est rattaché à ce sur quoi il porte — une session, une tâche, une
+  ressource — par son champ porte-sur.

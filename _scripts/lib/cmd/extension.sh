@@ -6,9 +6,9 @@
 # Implémente .dev/usages/USE-006-ajout-dun-repo-externe.md.
 #
 # Une extension est un dépôt clia dont le dépôt courant reprend des
-# ressources. Elle est déclarée dans .dev/extensions.yaml, qui est versionné,
-# et clonée dans un cache de la machine, qui ne l'est pas — voir la note de
-# _scripts/lib/commun.sh.
+# ressources. Elle est déclarée dans l'inventaire de .dev/clia.yaml, qui est
+# versionné, et clonée dans un cache de la machine, qui ne l'est pas — voir la
+# note de _scripts/lib/commun.sh.
 #
 # Une extension n'est pas une ressource : elle est une provenance, pas une
 # chose que le dépôt produit. SPC-001 S7, d'où la place de ce fichier.
@@ -18,8 +18,6 @@ set -euo pipefail
 _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
-
-FICHIER=$(_clia_extensions_fichier)
 
 # --------------------------------------------------------------------------
 
@@ -36,7 +34,7 @@ Verbes :
                    qu'elles portent
 
 Deux endroits, et c'est voulu :
-  .dev/extensions.yaml   la déclaration, versionnée, qui suit le dépôt
+  .dev/clia.yaml         la déclaration, versionnée, qui suit le dépôt
   ~/.cache/clia/…        le clone, propre à cette machine
 
 Une extension déclarée dont le clone manque est dite « non clonée » : elle
@@ -144,24 +142,16 @@ ajouter() {
   rm -rf "$cache"
   cp -r "$tmp/depot" "$cache"
 
-  mkdir -p "$(dirname "$FICHIER")"
-  if [[ ! -f "$FICHIER" ]]; then
-    {
-      printf '# Les extensions de ce dépôt : les dépôts clia dont il reprend des\n'
-      printf '# ressources. USE-006.\n#\n'
-      printf '# Ce fichier est versionné ; les clones, eux, vivent dans un cache de la\n'
-      printf '# machine. Un dépôt cloné ailleurs connaît donc ses extensions, et les\n'
-      printf '# retrouve avec : clia extension add <uri>\n\n'
-      printf 'extensions:\n'
-    } > "$FICHIER"
+  local version
+  version=$(_clia_carte_champ "$tmp/depot" version 2>/dev/null || printf '—')
+  if ! _clia_enregistrer "$CLIA_WORK_DIR" extension "$ns" "$(basename "$ns")" "$version" "$uri"; then
+    _clia_msg "ce dépôt n'a pas de .dev/clia.yaml, l'extension ne peut pas être déclarée"
+    _clia_detail "un dépôt clia en porte un : clia check dira ce qui manque"
+    exit 1
   fi
-  {
-    printf '  - namespace: %s\n' "$ns"
-    printf '    uri: %s\n' "$uri"
-  } >> "$FICHIER"
 
   _clia_msg "extension ajoutée : $ns"
-  _clia_detail "déclarée dans .dev/extensions.yaml"
+  _clia_detail "déclarée dans .dev/clia.yaml"
   _clia_detail "clonée dans $cache"
   _clia_detail ''
   _clia_detail "ce qu'elle offre : clia res ls --remote $ns"

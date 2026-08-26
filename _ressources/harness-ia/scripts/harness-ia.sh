@@ -109,6 +109,14 @@ init() {
   fi
 
   _clia_normaliser_lignes_vides "$HARNAIS"
+
+  # Ce qui est posé est inscrit à l'inventaire : sans cela, rien ne dirait
+  # avec quelle version du harnais ce dépôt a été instrumenté, ni d'où elle
+  # venait. C'est le défaut que la tâche 12 relève.
+  local ns version
+  ns=$(_clia_carte_champ "$CLIA_SOURCE_DIR" namespace 2>/dev/null || printf '—')
+  version=$(_clia_def_champ harness-ia version 2>/dev/null || printf '?')
+  _clia_enregistrer "$CLIA_WORK_DIR" harness "$ns" harness-ia "$version" 2>/dev/null || true
 }
 
 status() {

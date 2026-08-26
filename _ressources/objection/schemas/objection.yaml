@@ -1,0 +1,59 @@
+# La définition du type « objection ».
+#
+# L'objection est ce qui permet à un désaccord d'exister sans bloquer le
+# travail : elle nomme ce qui est contesté, pose les questions, et dit ce qui
+# la lèverait. Sans elle, un doute se règle en conversation, et disparaît
+# avec elle.
+
+type: ressource
+nom: objection
+titre: Objection
+prefixe: NON
+version: 0.1.0
+
+emplacement: .dev/objections/NON-<SEQ>-<SLUG>.md
+gabarit: templates/objection.template.md
+
+# Hybride, avec propriété par bloc : celui qui objecte possède les questions,
+# celui qui répond possède les réponses. Aucun des deux ne réécrit l'autre.
+edition: hybride
+cycle-de-vie: travail
+
+resume: >
+  Une objection est une contestation motivée qui suspend ou conditionne une
+  avancée, formulée comme un faisceau de questions portant sur un même thème.
+  Elle dit ce qui la lèverait.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - initiateur
+  - porte-sur
+  - etat
+
+sections:
+  - Ce qui est contesté
+  - Pourquoi cela ne peut pas rester implicite
+  - Questions
+  - Ce qui lèverait cette objection
+  - Journal
+
+relations-admissibles:
+  - objecte-a
+  - repond-a
+  - reference
+
+notes: >
+  L'agent objecte, l'humain tranche. C'est la seule manière pour un agent de
+  refuser d'avancer sans désobéir : il expose ce qui manque, et le travail
+  continue sur ce qui n'en dépend pas.
+
+  « Ce qui lèverait cette objection » est la section qui compte. Une objection
+  qui ne dit pas à quelle condition elle tombe n'est pas une objection, c'est
+  un veto — et un veto ne se lève jamais.
+
+  Une objection groupe les questions d'un même thème. Une question par
+  objection multiplie les documents sans rien clarifier ; toutes les questions
+  dans une seule empêche d'en clore aucune.

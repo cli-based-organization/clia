@@ -3,8 +3,64 @@
 # USE-003 : le namespace dérive du couple (publisher|user)/repo_name. La
 # question de son unicité et de son contrôle est reportée ; sa déclaration ne
 # pouvait pas l'être, faute de quoi rien ne dit d'où vient une ressource.
+#
+# La section « installe » inventorie ce qui est posé ici. Ce dépôt est la
+# source de clia : ses ressources n'y ont pas été reprises d'ailleurs, elles y
+# sont nées. Elles s'y inventorient tout de même, sous leur propre namespace —
+# un dépôt qui ne satisfait pas la commande qu'il fournit ne peut pas demander
+# aux autres de la satisfaire.
 
 namespace: noumanity.com/clia
 version: 0.1.2
 maturity: unstable
 generation: 3
+
+installe:
+  - type: harness
+    namespace: noumanity.com/clia
+    nom: harness-ia
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: analyse
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: fondation
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: harness-ia
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: intention
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: log
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: objection
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: plan
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: ressource
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: session
+    version: 0.1.0
+  - type: ressource
+    namespace: noumanity.com/clia
+    nom: skill
+    version: 0.1.0
+  - type: feature
+    namespace: noumanity.com/clia
+    nom: session
+    version: 0.1.2

@@ -263,6 +263,12 @@ activer() {
   mkdir -p "$(dirname "$dir_local")"
   cp -r "$source" "$dir_local"
 
+  # La copie perd la provenance : l'inventaire la garde. C'est tout ce qu'il
+  # apporte que le disque ne dit pas déjà.
+  _clia_enregistrer "$CLIA_WORK_DIR" ressource "$provenance" "$nom" \
+    "$(_clia_champ_de_fichier "$dir_local/schemas/$(basename "$nom").yaml" version 2>/dev/null || printf '—')" \
+    2>/dev/null || true
+
   _clia_msg "activée : _ressources/$nom"
   _clia_detail "reprise de $provenance"
   _clia_detail "préfixe $prefixe, instances dans $(_clia_champ_de_fichier "$dir_local/schemas/$(basename "$nom").yaml" emplacement 2>/dev/null || printf '?')"
@@ -376,6 +382,9 @@ creer() {
       { passe = 0; print }
     ' "$def" > "$def.tmp" && mv "$def.tmp" "$def"
   fi
+
+  _clia_enregistrer "$CLIA_WORK_DIR" ressource "${NAMESPACE_LOCAL:-—}" "$qualifie" \
+    "$(_clia_champ_de_fichier "$def" version 2>/dev/null || printf '—')" 2>/dev/null || true
 
   _clia_msg "créée : _ressources/$qualifie"
   _clia_detail "définition : _ressources/$qualifie/schemas/$nom.yaml"

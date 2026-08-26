@@ -14,6 +14,12 @@ pouvoir se rattacher à l'intention ultime du dépôt, dans INTENTION.md.
 
 - À rédiger.
 
+## CRITÈRES DE CONVERGENCE
+
+À rédiger. À quoi l'on reconnaîtra que cette session a abouti. Sans critère
+écrit, rien ne permet de dire si une itération rapproche du but ou s'en
+éloigne.
+
 ## Tâches
 
 ### 1. [implémentation] <titre>

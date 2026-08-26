@@ -146,6 +146,97 @@ for d in "$RES"/*/ "$RES"/*/*/; do
   done
 done
 
+titre 'Un gabarit tient ce que sa définition déclare'
+
+# Une définition qui annonce des sections et des champs sans que son gabarit
+# les porte laisse celui qui s'en sert les inventer. Le contrôle est
+# générique : il vaut pour toute ressource qui déclare un gabarit.
+
+liste_yaml() {
+  awk -v cle="$2" '
+    $0 ~ "^" cle ":[[:space:]]*$" { dedans = 1; next }
+    dedans && /^[^[:space:]#]/    { dedans = 0 }
+    dedans && /^[[:space:]]*-[[:space:]]/ {
+      sub(/^[[:space:]]*-[[:space:]]*/, ""); sub(/[[:space:]]*#.*$/, "")
+      if (length($0)) print
+    }
+  ' "$1"
+}
+
+champ_yaml() {
+  grep -m1 -E "^${2}:[[:space:]]" "$1" 2>/dev/null | sed -E "s/^${2}:[[:space:]]*//; s/^\"//; s/\"$//"
+}
+
+prefixes=' '
+for def in "$RES"/*/schemas/*.yaml "$RES"/*/*/schemas/*.yaml; do
+  [[ -f "$def" ]] || continue
+  nom=$(basename "$def" .yaml)
+  dir=$(dirname "$(dirname "$def")")
+
+  # Deux types au même préfixe rendent tout alias ambigu dans le dépôt.
+  p=$(champ_yaml "$def" prefixe)
+  if [[ "$prefixes" == *" $p "* ]]; then
+    echec "$nom a un préfixe distinctif" "$p est déjà pris"
+  else
+    prefixes+="$p "
+    ok "$nom a un préfixe distinctif : $p"
+  fi
+
+  gabarit=$(champ_yaml "$def" gabarit)
+  [[ -n "$gabarit" ]] || continue
+  if [[ ! -f "$dir/$gabarit" ]]; then
+    echec "$nom : son gabarit existe" "déclaré : $gabarit"
+    continue
+  fi
+  g="$dir/$gabarit"
+
+  # Quand une instance porte un champ « type », c'est lui qui la rattache à sa
+  # définition, et il doit donc valoir le nom du type. Toutes n'en portent pas :
+  # le frontmatter d'un skill est celui qu'attend l'agent qui le charge, non
+  # celui que clia préférerait. Le contrôle suit la déclaration, il ne lui
+  # impose pas une convention qu'elle n'a pas prise.
+  if liste_yaml "$def" champs-d-instance | grep -qx 'type'; then
+    attendu=$(grep -m1 -E '^type:' "$g" | sed -E 's/^type:[[:space:]]*//' || true)
+    if [[ "$attendu" == "$nom" ]]; then
+      ok "$nom : son gabarit se déclare du bon type"
+    else
+      echec "$nom : son gabarit se déclare du bon type" "trouvé : ${attendu:-aucun}"
+    fi
+  fi
+
+  manquants=''
+  while IFS= read -r champ; do
+    [[ -n "$champ" ]] || continue
+    grep -qE "^${champ}:" "$g" || manquants+="$champ "
+  done < <(liste_yaml "$def" champs-d-instance)
+  if [[ -z "$manquants" ]]; then
+    ok "$nom : son gabarit porte les champs d'instance"
+  else
+    echec "$nom : son gabarit porte les champs d'instance" "manquants : $manquants"
+  fi
+
+  absentes=''
+  while IFS= read -r section; do
+    [[ -n "$section" ]] || continue
+    grep -qF "# $section" "$g" || absentes+="« $section » "
+  done < <(liste_yaml "$def" sections)
+  if [[ -z "$absentes" ]]; then
+    ok "$nom : son gabarit porte les sections déclarées"
+  else
+    echec "$nom : son gabarit porte les sections déclarées" "absentes : $absentes"
+  fi
+done
+
+titre 'Les six ressources core de la tâche 11'
+
+for r in fondation analyse objection plan session log; do
+  if [[ -f "$RES/$r/schemas/$r.yaml" ]]; then
+    ok "$r est définie"
+  else
+    echec "$r est définie" "pas de $RES/$r/schemas/$r.yaml"
+  fi
+done
+
 titre 'S5 — aucun répertoire vide'
 
 vides=$(find "$RES" "$RACINE/_scripts" -type d -empty 2>/dev/null | sed "s|$RACINE/||")
@@ -179,7 +270,7 @@ titre 'Les commandes restent toutes découvrables'
 # posée ici une fois, plutôt que de relancer l'aide à chaque assertion.
 # shellcheck disable=SC2034
 SORTIE=$("$RACINE/_scripts/bin/clia" --help 2>&1)
-for c in context feature harness-ia init setup skill; do
+for c in check context extension feature harness-ia init release res setup skill; do
   dit "clia --help annonce $c" "^  $c "
 done
 ne_dit_pas "aucune commande n'est masquée"    'masquée'

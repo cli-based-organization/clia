@@ -1,0 +1,52 @@
+# La définition du type « analyse ».
+#
+# L'analyse est le pendant de la fondation : celle-ci rapporte ce que
+# d'autres ont établi, celle-là examine ce que ce dépôt a réellement produit.
+# Les deux sont des points fixes, et aucune des deux ne décide.
+
+type: ressource
+nom: analyse
+titre: Analyse
+prefixe: ANL
+version: 0.1.0
+
+emplacement: .dev/analyses/ANL-<SEQ>-<SLUG>.md
+gabarit: templates/analyse.template.md
+
+edition: ia
+cycle-de-vie: point-fixe
+
+resume: >
+  Une analyse porte sur un existant matériel, à une date donnée, et en tire
+  des constats. Elle répond à une question posée, ou elle n'a pas d'objet.
+
+champs-d-instance:
+  - type
+  - id
+  - titre
+  - version
+  - status
+  - date
+
+sections:
+  - Question posée
+  - Méthode
+  - Constats
+  - Réponse
+  - Limites
+
+relations-admissibles:
+  - reference
+  - derive-de
+
+notes: >
+  Une analyse sans question posée dérive en inventaire : elle décrit
+  longuement et ne conclut sur rien. La question se pose avant de commencer,
+  et la section « Réponse » y répond en propres termes.
+
+  La méthode dit ce qui a été examiné et comment — quels fichiers, quelle
+  commande, quel décompte. C'est ce qui permet à un autre de refaire le
+  constat, et donc de le contester.
+
+  Un constat porte sur ce qui est, pas sur ce qu'il faudrait faire. Ce qu'il
+  faudrait faire appartient à un plan ; ce qui est contesté, à une objection.

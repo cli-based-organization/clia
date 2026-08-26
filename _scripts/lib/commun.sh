@@ -188,10 +188,6 @@ _clia_remotes() {
 # De là vient le statut que USE-006 demande : déclarée et clonée, ou déclarée
 # seulement.
 
-_clia_extensions_fichier() {
-  printf '%s/.dev/extensions.yaml\n' "${1:-${CLIA_WORK_DIR:-$PWD}}"
-}
-
 _clia_extensions_cache_dir() {
   printf '%s/clia/extensions\n' "${XDG_CACHE_HOME:-$HOME/.cache}"
 }
@@ -202,25 +198,29 @@ _clia_extension_cache() {
 
 # Sortie : « namespace<TAB>uri », dans l'ordre de déclaration.
 #
-# Le format est une liste YAML d'objets à deux clés. L'extraction reste à
-# plat, comme partout ailleurs : ce n'est pas un analyseur YAML, et le jour
-# où il en faudra un, c'est ici et dans _clia_champ_de_fichier qu'il ira.
+# Les extensions sont des entrées de l'inventaire de .dev/clia.yaml. Un
+# .dev/extensions.yaml reste lu s'il existe : les dépôts instrumentés avant
+# que la configuration ne soit unifiée en portent un, et les priver de leurs
+# extensions pour cela serait les punir d'avoir été instrumentés tôt.
+# clia check le signale, et dit comment migrer.
 # shellcheck disable=SC2120  # le dépôt est facultatif, et vaut celui de travail
 _clia_extensions_declarees() {
-  local fichier
-  fichier=$(_clia_extensions_fichier "${1:-}")
-  [[ -f "$fichier" ]] || return 0
+  local depot="${1:-${CLIA_WORK_DIR:-$PWD}}" ancien
+  _clia_installe "$depot" extension | awk -F'\t' 'NF { print $2 "\t" $5 }'
+
+  ancien="$depot/.dev/extensions.yaml"
+  [[ -f "$ancien" ]] || return 0
   awk '
     /^[[:space:]]*-[[:space:]]*namespace:[[:space:]]*/ {
       sub(/^[[:space:]]*-[[:space:]]*namespace:[[:space:]]*/, "")
-      gsub(/"/, ""); ns = $0; uri = ""; next
+      gsub(/"/, ""); ns = $0; next
     }
     /^[[:space:]]+uri:[[:space:]]*/ {
       sub(/^[[:space:]]+uri:[[:space:]]*/, "")
       gsub(/"/, "")
       if (ns != "") { print ns "\t" $0; ns = "" }
     }
-  ' "$fichier"
+  ' "$ancien"
   return 0
 }
 
@@ -385,4 +385,173 @@ _clia_mode_constate() {
   else
     printf 'direct\n'
   fi
+}
+
+# --------------------------------------------------------------------------
+# L'inventaire de ce qui est installé
+# --------------------------------------------------------------------------
+#
+# Un dépôt clia porte un fichier de configuration, .dev/clia.yaml, et un seul.
+# Il dit ce qu'est le dépôt — namespace, version, maturité, génération — et ce
+# qui y a été installé, avec la provenance et la version de chaque chose.
+#
+# Pourquoi un inventaire alors que le disque porte déjà les ressources : parce
+# que le disque ne dit pas d'où elles viennent. Une ressource reprise d'une
+# extension est, sur le disque, indiscernable d'une ressource écrite sur
+# place. L'inventaire garde ce que la copie perd.
+#
+# Une seule liste, et un champ « type » par entrée, plutôt qu'une liste par
+# nature : ajouter une nature ne change alors ni le format ni le code qui le
+# lit. PDC-006.
+#
+# Sortie : « type<TAB>namespace<TAB>nom<TAB>version<TAB>uri ».
+_clia_installe() {
+  local depot="${1:-${CLIA_WORK_DIR:-$PWD}}" filtre="${2:-}" fichier
+  fichier=$(_clia_carte "$depot")
+  [[ -f "$fichier" ]] || return 0
+  awk -v filtre="$filtre" '
+    function emettre() {
+      if (t != "" && (filtre == "" || filtre == t))
+        printf "%s\t%s\t%s\t%s\t%s\n", t, ns, nom, v, uri
+    }
+    /^installe:[[:space:]]*$/ { dedans = 1; next }
+    dedans && /^[^[:space:]#-]/ { emettre(); t = ""; dedans = 0 }
+    !dedans { next }
+    /^[[:space:]]*-[[:space:]]/ {
+      emettre()
+      t = ns = nom = v = uri = ""
+      sub(/^[[:space:]]*-[[:space:]]*/, "")
+    }
+    {
+      ligne = $0
+      sub(/^[[:space:]]+/, "", ligne)
+      sub(/[[:space:]]+$/, "", ligne)
+      if (ligne == "" || ligne ~ /^#/) next
+      cle = ligne; sub(/:.*$/, "", cle)
+      val = ligne; sub(/^[^:]*:[[:space:]]*/, "", val)
+      gsub(/"/, "", val)
+      if (cle == "type") t = val
+      else if (cle == "namespace") ns = val
+      else if (cle == "nom") nom = val
+      else if (cle == "version") v = val
+      else if (cle == "uri") uri = val
+    }
+    END { emettre() }
+  ' "$fichier"
+  return 0
+}
+
+# Une entrée de l'inventaire, ou rien.
+_clia_installe_entree() {
+  _clia_installe "$1" "$2" | awk -F'\t' -v n="$3" '$3 == n && !vu { print; vu = 1 }'
+}
+
+_clia_ecrire_entree() {
+  local f="$1"
+  {
+    printf '  - type: %s\n' "$2"
+    printf '    namespace: %s\n' "$3"
+    printf '    nom: %s\n' "$4"
+    printf '    version: %s\n' "$5"
+    [[ -n "$6" ]] && printf '    uri: %s\n' "$6"
+  } >> "$f"
+  return 0
+}
+
+# Le fichier de configuration privé de sa section installe, et prêt à la
+# recevoir de nouveau. Les lignes vides de queue partiraient avec la section :
+# la substitution les rétablit.
+_clia_entete_seule() {
+  local fichier="$1" tmp entete
+  tmp=$(mktemp)
+  entete=$(awk '
+    /^installe:[[:space:]]*$/ { dedans = 1; next }
+    dedans && /^[^[:space:]#-]/ { dedans = 0 }
+    !dedans { print }
+  ' "$fichier")
+  printf '%s\n\ninstalle:\n' "$entete" > "$tmp"
+  printf '%s\n' "$tmp"
+}
+
+# Inscrire une entrée, ou remplacer celle qui porte le même type et le même
+# nom. Le fichier est réécrit en entier : c'est le seul moyen de remplacer une
+# entrée sans tenir d'index, et un fichier de configuration est court.
+_clia_enregistrer() {
+  local depot="$1" type="$2" ns="$3" nom="$4" version="$5" uri="${6:-}"
+  local fichier tmp
+  fichier=$(_clia_carte "$depot")
+  [[ -f "$fichier" ]] || return 1
+  tmp=$(_clia_entete_seule "$fichier")
+
+  local t n2 nom2 v2 u2 ecrite=0
+  while IFS=$'\t' read -r t n2 nom2 v2 u2; do
+    [[ -n "$t" ]] || continue
+    if [[ "$t" == "$type" && "$nom2" == "$nom" ]]; then
+      _clia_ecrire_entree "$tmp" "$type" "$ns" "$nom" "$version" "$uri"
+      ecrite=1
+    else
+      _clia_ecrire_entree "$tmp" "$t" "$n2" "$nom2" "$v2" "$u2"
+    fi
+  done < <(_clia_installe "$depot")
+
+  (( ecrite == 0 )) && _clia_ecrire_entree "$tmp" "$type" "$ns" "$nom" "$version" "$uri"
+
+  mv "$tmp" "$fichier"
+  return 0
+}
+
+# Retirer une entrée de l'inventaire. Le pendant de _clia_enregistrer : une
+# désinstallation qui laisse son entrée fait mentir l'inventaire, et clia check
+# signale alors comme une dérive ce qui est un retrait délibéré.
+_clia_oublier() {
+  local depot="$1" type="$2" nom="$3"
+  local fichier tmp
+  fichier=$(_clia_carte "$depot")
+  [[ -f "$fichier" ]] || return 0
+  [[ -n "$(_clia_installe_entree "$depot" "$type" "$nom")" ]] || return 0
+  tmp=$(_clia_entete_seule "$fichier")
+
+  local t n2 nom2 v2 u2
+  while IFS=$'\t' read -r t n2 nom2 v2 u2; do
+    [[ -n "$t" ]] || continue
+    [[ "$t" == "$type" && "$nom2" == "$nom" ]] && continue
+    _clia_ecrire_entree "$tmp" "$t" "$n2" "$nom2" "$v2" "$u2"
+  done < <(_clia_installe "$depot")
+
+  mv "$tmp" "$fichier"
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# La provenance d'un fichier repris
+# --------------------------------------------------------------------------
+#
+# Un skill ou une fonctionnalité installés sont des copies : le fichier posé
+# ne dit plus d'où il vient. C'est au moment de la copie que la provenance se
+# lit, et l'inventaire la garde.
+#
+# La version inscrite est celle du dépôt d'origine, non celle du fichier : un
+# skill n'a pas de version propre, il est livré par un dépôt qui en a une. Le
+# jour où une ressource se versionnera d'elle-même — la note de la tâche 12
+# l'envisage, par un hash de ses fichiers — c'est ici que cette version-là se
+# lira, et ici seulement.
+#
+# Sortie : « namespace<TAB>version ».
+_clia_provenance_de() {
+  local f="$1" depot='' ns chemin
+  if [[ "$f" == "${CLIA_WORK_DIR:-}"/* ]]; then
+    depot="$CLIA_WORK_DIR"
+  else
+    while IFS=$'\t' read -r ns chemin; do
+      [[ -n "$chemin" ]] || continue
+      [[ "$f" == "$chemin"/* ]] && { depot="$chemin"; break; }
+    done < <(_clia_remotes)
+  fi
+  [[ -n "$depot" ]] || { printf '—\t—\n'; return 0; }
+
+  local v
+  v=$(_clia_carte_champ "$depot" version 2>/dev/null || printf '')
+  printf '%s\t%s\n' \
+    "$(_clia_carte_champ "$depot" namespace 2>/dev/null || printf '—')" \
+    "${v:-—}"
 }

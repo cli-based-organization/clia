@@ -213,6 +213,12 @@ installer() {
   cp "$source" "$cible"
   _clia_msg "installé : $(_clia_chemin_court "$cible")"
 
+  # La provenance ne se lit pas sur le fichier copié : l'inventaire la garde.
+  local ns_source v_source
+  IFS=$'\t' read -r ns_source v_source < <(_clia_provenance_de "$source")
+  _clia_enregistrer "$CLIA_WORK_DIR" skill "$ns_source" "$nom" "$v_source" \
+    2>/dev/null || true
+
   if [[ ! -f "$HARNAIS" ]]; then
     _clia_detail "CLAUDE.md est absent : le skill est en place, mais rien ne"
     _clia_detail "l'annonce à l'agent. Lancez : clia harness-ia init"
@@ -288,6 +294,10 @@ desinstaller() {
   else
     _clia_detail "CLAUDE.md : aucune section d'activation à retirer"
   fi
+
+  # Ce qui est retiré sort de l'inventaire : l'entrée laissée derrière ferait
+  # dire à clia check qu'un skill a disparu du disque, là où il a été désinstallé.
+  _clia_oublier "$CLIA_WORK_DIR" skill "$nom" 2>/dev/null || true
 }
 
 etat() {
