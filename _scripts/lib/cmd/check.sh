@@ -34,13 +34,14 @@ Usage : clia check [PATH] [--fix]
 Vérifie la conformité d'un dépôt clia. PATH vaut le répertoire courant par
 défaut. Sans --fix, rien n'est modifié : la commande constate.
 
-Six contrôles :
+Sept contrôles :
   C1  le dépôt porte .dev/clia.yaml, avec ses quatre champs
   C2  le harnais installé est de la version qu'offre clia
   C3  chaque extension déclarée est clonée sur cette machine
   C4  chaque chose inventoriée existe encore sur le disque
   C5  chaque ressource du disque est inventoriée
   C6  aucune déclaration ne subsiste dans un emplacement abandonné
+  C7  aucune ressource n'est en retard sur sa provenance
 
 Avec --fix, les écarts réparables le sont, puis le dépôt est vérifié de
 nouveau : le rapport rendu est celui d'après réparation.
@@ -51,6 +52,7 @@ nouveau : le rapport rendu est celui d'après réparation.
   C4  une entrée inventoriée sans objet sur le disque est retirée
   C5  une ressource du disque est inscrite à l'inventaire
   C6  .dev/extensions.yaml est fondu dans l'inventaire, puis retiré
+  C7  une ressource en retard est reprise, sauf si elle a été modifiée ici
 
 Ce que --fix ne répare pas, parce que ce sont des décisions :
   le namespace du dépôt, posé à compléter et jamais deviné
@@ -157,7 +159,7 @@ reparable() {
 }
 
 # --------------------------------------------------------------------------
-# Les six contrôles
+# Les sept contrôles
 # --------------------------------------------------------------------------
 #
 # Rassemblés dans une fonction parce que --fix les joue deux fois : une fois
@@ -297,6 +299,26 @@ verifier() {
     reparable C6 extensions-fondre
   else
     verdict C6 ok "aucun emplacement abandonné"
+  fi
+
+  # C7 — le retard d'une ressource sur sa provenance.
+  #
+  # Un retard n'empêche rien aujourd'hui : le dépôt travaille avec la version
+  # qu'il a. Il avertit, parce qu'une ressource qui reste en arrière sans que
+  # personne le sache finit par diverger de ce que les autres dépôts en font.
+  local n_retard=0 installee offerte
+  while IFS=$'\t' read -r nom installee offerte ns; do
+    [[ -n "$nom" ]] || continue
+    verdict C7 avert "ressource $nom : en $installee, sa provenance offre $offerte"
+    reparable C7 ressource-reprendre "$nom" "$offerte"
+    n_retard=$((n_retard + 1))
+  done < <(_clia_ressources_en_retard "$CIBLE")
+  if (( n_retard == 0 )); then
+    verdict C7 ok "aucune ressource n'est en retard sur sa provenance"
+  else
+    conseil "$n_retard ressource(s) sont en retard. Une par une :"
+    conseil "  clia res upgrade RESSOURCE"
+    conseil "toutes à la fois : clia upgrade"
   fi
 
   return 0
@@ -474,6 +496,21 @@ extensions_fondre() {
   fi
 }
 
+# C7 — reprendre une ressource en retard. Délégué à res upgrade, qui sait
+# refuser une copie modifiée sur place : la garde vaut ici comme ailleurs, et
+# la dupliquer la ferait diverger.
+ressource_reprendre() {
+  local nom="$1" offerte="$2" sortie
+  local script="$CLIA_SOURCE_DIR/_ressources/ressource/scripts/res.sh"
+  if sortie=$(CLIA_WORK_DIR="$CIBLE" bash "$script" upgrade "$nom" 2>&1); then
+    geste C7 "ressource $nom : reprise en $offerte"
+  elif printf '%s' "$sortie" | grep -q 'modifiée dans ce dépôt'; then
+    manque C7 "ressource $nom : modifiée dans ce dépôt, reprise refusée"
+  else
+    manque C7 "ressource $nom : la reprise a échoué — clia res upgrade $nom dira pourquoi"
+  fi
+}
+
 appliquer() {
   local code action a1 a2 a3 a4
   while IFS=$'\t' read -r code action a1 a2 a3 a4; do
@@ -486,6 +523,7 @@ appliquer() {
       inventaire-oublier)  inventaire_oublier "$a1" "$a2" ;;
       inventaire-inscrire) inventaire_inscrire "$a1" "$a2" ;;
       extensions-fondre)   extensions_fondre ;;
+      ressource-reprendre) ressource_reprendre "$a1" "$a2" ;;
       *)                   manque "$code" "geste inconnu : $action" ;;
     esac
   done <<<"$REPARATIONS"

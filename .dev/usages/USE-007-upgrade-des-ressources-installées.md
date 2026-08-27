@@ -147,21 +147,78 @@ clia res RESSOURCE migrate --all
 
 ```
 
-## Ce qui n'est pas livré, et pourquoi
+## Ce qui est livré
 
-Cette seconde moitié attend une décision qui n'est pas écrite : « le SI clia »
-désigne-t-il le dépôt instrumenté, ou l'installation de clia elle-même ?
+**Ce que ces trois verbes mettent à jour, c'est le dépôt courant** : ce qui y
+est installé, repris de l'installation de clia et des dépôts d'extension. Ils
+ne déplacent pas clia lui-même — l'installation appartient à `setup.sh`, et un
+dépôt ne réécrit pas le code qui l'instrumente.
 
-* Si c'est le dépôt, `clia version` dirait autre chose que `clia --version`,
-  et `clia upgrade` recouvrirait `clia res upgrade` appliqué à tout — utile,
-  mais c'est une commande de plus à faire tenir avec `clia release`, qui
-  gouverne déjà la version du dépôt.
-* Si c'est l'installation, `clia upgrade X.Y.Z` déplacerait le dépôt source de
-  clia sur cette machine — un `git checkout` du code en train de s'exécuter.
-  Cela appartient à `setup.sh`, qui pose l'installation, et non à une commande
-  qui travaille sur un dépôt tiers.
+```sh
+clia upgrade   [NAMESPACE] [X.Y.Z] [--migrate] [--force]
+clia downgrade [NAMESPACE] [X.Y.Z] [--force]
+clia migrate   [RESSOURCE] [--to X.Y.Z]
+```
 
-Les deux lectures mènent à des commandes différentes. `clia res upgrade` et
-`clia extension upgrade` couvrent ce que la tâche demandait — la mise à jour
-des ressources et des extensions — et la question reste ouverte plutôt que
-tranchée en silence.
+**`clia upgrade` est `clia res upgrade` appliqué à tout ce que le dépôt tient
+d'ailleurs**, dans l'ordre où l'un dépend de l'autre :
+
+1. les clones d'extension sont remis à jour — sans quoi la suite reprendrait
+   d'un état périmé ;
+2. chaque ressource installée est reprise à la version offerte ;
+3. les skills et fonctionnalités des ressources reprises sont reposés ;
+4. le harnais est signalé s'il est en retard, jamais réécrit.
+
+**Aucune garde ne lui est propre.** Chaque geste est délégué à la commande qui
+le porte déjà — `clia res upgrade`, `clia extension upgrade`, `clia skill
+install`. Le refus d'écraser une copie modifiée, la reprise à la bonne
+version, l'inscription à l'inventaire vivent donc à un seul endroit :
+`clia upgrade` ordonne et rapporte, il ne réimplémente rien. Une ressource
+modifiée sur place est sautée et nommée, non écrasée ; `--force` passe outre,
+avec les mêmes conséquences qu'à l'unité.
+
+**`X.Y.Z` est la version d'une provenance, non celle d'une ressource.**
+`clia upgrade acme.com/outils 0.4.0` reprend les ressources d'`acme.com/outils`
+telles qu'elles étaient quand ce dépôt-là se déclarait en `0.4.0` — c'est la
+seule lecture qui ait un sens pour plusieurs ressources à la fois, puisqu'elles
+ont chacune leur numéro. La version demandée est cherchée dans l'historique de
+`.dev/clia.yaml` de la provenance, comme `clia release ls` le fait pour le
+dépôt courant. Avec plusieurs provenances, le namespace est exigé plutôt que
+choisi au hasard. Une ressource pour qui le déplacement irait dans l'autre sens
+est sautée, et le rapport renvoie à l'autre verbe.
+
+**`clia downgrade` ne touche pas les clones d'extension.** Reculer ne demande
+rien de neuf, et tirer le dépôt d'origine pour ensuite reculer serait un geste
+qui se contredit.
+
+**Une ressource née dans le dépôt n'a pas de provenance** : elle n'est pas
+touchée. Le harnais IA non plus — hors de ses deux zones gérées, son corps
+appartient au dépôt, et seul `clia harness-ia init --force` le régénère. C'est
+une décision, et elle reste à l'humain (PDC-002).
+
+**`clia migrate` balaie les instances du dépôt.** Sans argument, toutes les
+ressources ; avec un nom, celle-là seule. Une ressource sans instance n'est
+nommée que si elle a été demandée : dans un balayage, elle se tait.
+
+### Ce qui distingue de `clia check`
+
+`clia check` constate le retard (C7, voir USE-008) et ne reprend rien ;
+`clia upgrade` reprend. `clia check --fix` fait le pont, en déléguant à
+`clia res upgrade` ressource par ressource.
+
+### `clia version`
+
+Il n'y a pas de commande `clia version` : la version du dépôt est déjà
+gouvernée par `clia release` — `clia release ls` donne les versions publiées et
+la version effective, `clia release major|minor|patch` l'incrémente. Un second
+nom pour la même chose ferait deux commandes là où il n'y a qu'un concept.
+`clia --version` reste celle de l'installation de clia.
+
+## Codes de retour de la seconde moitié
+
+```
+0  la demande est satisfaite, même s'il n'y avait rien à faire
+1  refus : pas de .dev/clia.yaml, namespace ou version inconnus de ce dépôt,
+   ou au moins un geste en échec
+2  demande mal formée
+```

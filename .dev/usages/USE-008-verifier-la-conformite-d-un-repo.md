@@ -55,6 +55,15 @@ d'après réparation.
 | C4 | chaque chose inventoriée existe encore sur le disque |
 | C5 | chaque ressource du disque est inventoriée |
 | C6 | aucune déclaration ne subsiste dans un emplacement abandonné |
+| C7 | aucune ressource n'est en retard sur sa provenance |
+
+**C7 n'empêche rien aujourd'hui** : un dépôt travaille avec la version qu'il a.
+Il avertit, parce qu'une ressource qui reste en arrière sans que personne le
+sache finit par diverger de ce que les autres dépôts en font. Deux ressources
+sont hors de la question, et non « à jour » : celle qui est née dans le dépôt,
+qui n'a personne à interroger, et celle dont l'inventaire ne désigne aucune
+provenance — C5 voit la seconde. La version offerte est celle que la
+provenance déclare aujourd'hui, comme pour `clia res version`.
 
 ## Ce que `--fix` répare
 
@@ -70,6 +79,12 @@ décide rien à la place de l'humain.
 | C4 | une entrée inventoriée dont l'objet a disparu est retirée |
 | C5 | une ressource du disque est inscrite, provenance supposée locale |
 | C6 | `.dev/extensions.yaml` est fondu dans l'inventaire, puis retiré |
+| C7 | une ressource en retard est reprise, sauf si elle a été modifiée ici |
+
+Le geste de C7 est délégué à `clia res upgrade`, qui sait refuser d'écraser une
+copie modifiée sur place. Une ressource dans ce cas est rapportée comme un
+geste en échec, non comme une réparation : `--fix` ne perd pas du travail pour
+faire paraître un dépôt sain.
 
 ## Ce que `--fix` ne répare pas
 
@@ -106,7 +121,7 @@ commande ne demande pas de confirmation.
 Un écart **bloquant** empêche clia de travailler correctement sur le dépôt :
 configuration absente, extension déclarée introuvable. Un **avertissement**
 signale une dérive qui n'empêche rien aujourd'hui : harnais en retard d'une
-version, ressource non inventoriée.
+version, ressource non inventoriée, ressource en retard sur sa provenance.
 
 ## Le cas qui a motivé cet usage
 

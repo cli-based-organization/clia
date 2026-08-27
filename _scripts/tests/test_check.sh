@@ -58,6 +58,29 @@ empreinte() {
       | sort -z | xargs -0 sha1sum 2>/dev/null )
 }
 
+# Un commit dans un dépôt jetable. Jamais ailleurs : le chemin est vérifié.
+commiter() {
+  local d="$1" message="$2"
+  [[ "$d" == "$BAC"/* ]] || { printf 'banc: commit hors du bac : %s\n' "$d" >&2; exit 1; }
+  git -C "$d" -c user.email='banc@example.invalid' -c user.name='banc' add -A
+  git -C "$d" -c user.email='banc@example.invalid' -c user.name='banc' commit -q -m "$message"
+}
+
+# Une extension jetable dont la ressource a deux versions commitées. C7 se
+# juge sur l'écart entre ce qu'un dépôt a installé et ce que sa provenance
+# offre : il faut donc une provenance, et un historique à interroger.
+fabriquer_provenance() {
+  local d="$BAC/provenance"
+  rm -rf "$d"
+  "$CLIA" init "$d" >/dev/null 2>&1 || return 1
+  sed -i 's|^namespace: .*|namespace: acme.com/provenance|' "$d/.dev/clia.yaml"
+  ( cd "$d" && "$CLIA" res new VIE vieux 'Ressource de la provenance.' >/dev/null 2>&1 ) || return 1
+  commiter "$d" 'vieux 0.1.0' >/dev/null 2>&1
+  sed -i 's|^version: 0.1.0$|version: 0.2.0|' "$d/_ressources/vieux/schemas/vieux.yaml"
+  commiter "$d" 'vieux 0.2.0' >/dev/null 2>&1
+  printf '%s\n' "$d"
+}
+
 # --------------------------------------------------------------------------
 
 printf 'banc de USE-008 — la conformité d%sun dépôt\n' "'"
@@ -79,6 +102,7 @@ dit "C3 passe"                                'C3 *ok'
 dit "C4 passe"                                'C4 *ok'
 dit "C5 passe"                                'C5 *ok'
 dit "C6 passe"                                'C6 *ok'
+dit "C7 passe"                                'C7 *ok'
 vrai "et rien n'a été modifié"                test "$(empreinte "$PROJET")" = "$AVANT"
 
 titre 'La demande mal formée'
@@ -212,6 +236,63 @@ rc  "l'ancien fichier reste lu"               1 clia check "$CSCN"
 dit "C6 signale l'emplacement"                'C6 *avert'
 dit "et C3 le clone manquant"                 'C3 *ÉCHEC'
 dit "l'extension y est nommée"                'acme\.com/x'
+
+titre 'C7 — une ressource en retard sur sa provenance'
+
+PROV=$(fabriquer_provenance) || { printf 'banc: provenance impossible\n' >&2; exit 1; }
+RETARD=$(neuf retard) || exit 1
+tard() { ( cd "$RETARD" && "$CLIA" "$@" ); }
+
+rc  "l'extension s'ajoute"                    0 tard extension add "$PROV"
+rc  "sa ressource est reprise"                0 tard res activate vieux
+rc  "à jour, C7 passe"                        0 tard check
+dit "il le dit"                               'C7 *ok'
+
+rc  "on la fait reculer d'une version"        0 tard res downgrade vieux 0.1.0
+AVANT_RETARD=$(empreinte "$RETARD")
+rc  "check aboutit sans bloquer"              0 tard check
+dit "C7 avertit"                              'C7 *avert'
+dit "il dit l'écart, et dans quel sens"       'ressource vieux : en 0\.1\.0, sa provenance offre 0\.2\.0'
+dit "il conseille la reprise une par une"     'clia res upgrade'
+dit "et toutes à la fois"                     'clia upgrade'
+dit "le dépôt reste conforme"                 'conforme, avec 1 avertissement'
+vrai "et rien n'a été modifié"                test "$(empreinte "$RETARD")" = "$AVANT_RETARD"
+
+# Une ressource née dans le dépôt n'a pas de provenance à interroger : elle
+# n'est pas « à jour », elle est hors de la question.
+rc  "une ressource née ici se crée"           0 tard res new MAI maison 'Née ici.'
+rc  "check ne la compte pas en retard"        0 tard check
+dit "un seul avertissement, toujours"         'conforme, avec 1 avertissement'
+ne_dit_pas "et maison n'y est pas"            'ressource maison : en'
+
+titre '--fix reprend une ressource en retard'
+
+rc  "--fix aboutit"                           0 tard check --fix
+dit "il dit la reprise"                       'réparé *C7 *ressource vieux : reprise en 0\.2\.0'
+dit "et C7 passe ensuite"                     'C7 *ok'
+dit "le dépôt est conforme"                   'conforme'
+rc  "la définition est celle offerte"         0 grep -q '^version: 0.2.0$' "$RETARD/_ressources/vieux/schemas/vieux.yaml"
+rc  "l'inventaire suit"                       0 tard check
+ne_dit_pas "plus rien n'est en retard"        'C7 *avert'
+
+titre '--fix ne reprend pas une ressource modifiée sur place'
+
+BRICOLE=$(neuf bricole) || exit 1
+bric() { ( cd "$BRICOLE" && "$CLIA" "$@" ); }
+rc  "l'extension s'ajoute"                    0 bric extension add "$PROV"
+rc  "sa ressource est reprise"                0 bric res activate vieux
+rc  "on la fait reculer"                      0 bric res downgrade vieux 0.1.0
+printf 'bricolage local\n' >> "$BRICOLE/_ressources/vieux/schemas/vieux.yaml"
+
+# Un retard ne bloque pas : le code reste 0, comme pour tout avertissement.
+# Ce que --fix doit montrer, c'est que le geste a échoué et que l'écart tient.
+rc  "--fix aboutit sans bloquer"              0 bric check --fix
+dit "le geste est compté en échec"            'échec *C7'
+dit "il dit pourquoi"                         'modifiée dans ce dépôt, reprise refusée'
+dit "le bilan le compte"                      '1 échec'
+dit "et C7 avertit toujours"                  'C7 *avert'
+vrai "le bricolage est intact"                grep -q 'bricolage local' "$BRICOLE/_ressources/vieux/schemas/vieux.yaml"
+rc  "la ressource n'a pas bougé"              0 grep -q '^version: 0.1.0$' "$BRICOLE/_ressources/vieux/schemas/vieux.yaml"
 
 titre 'Un cycle installation/désinstallation est neutre'
 

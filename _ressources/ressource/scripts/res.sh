@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Description: Les ressources du dépôt — ls, info, new, activate.
+# Description: Les ressources du dépôt — ls, info, new, activate, version, upgrade.
 # Périmètre: dépôt
 # Alias: ressource resource
 #

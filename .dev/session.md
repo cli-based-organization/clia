@@ -119,6 +119,24 @@ clia check --fix
 ### 14. [implementation] permettre la mise à jour des ressources et des extensions tel que décrit dans USE-007
 
 
+### 15. [implémentation]
+
+> La seconde moitié de USE-007 — clia version|upgrade|downgrade|migrate pour « le SI clia » — attend une décision qui n'est pas écrite : le SI, est-ce le dépôt instrumenté ou l'installation de clia ? 
+
+L'usage de clia est le suivant =>  Les commandes s'appliquent sur le repo cible, c'est-à-dire le repo dans lequel clia est exécuté
+
+Les commandes upgrade, downgrade et migrate fonctionnent de cette façon.
+
+En d'autre terme, ils produisent la mise à jour de ce qui est installé dans un repo à partir de l'installation de clia et des autres repos d'extension.
+
+Implémentez.
+
+### 16. [implémentation] contrôle du retard des ressources
+
+> À signaler aussi : clia check ne contrôle pas encore le retard d'une ressource sur sa provenance. Ce serait un septième contrôle naturel (C7)
+
+oui, ajoutez ce 7e contrôle à clia check
+
 ### x. [implémentaiton] Fragments et Plans
 
 Créer les ressource FRG et PLN (voir la génération 2026-08-23)

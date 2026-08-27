@@ -446,6 +446,83 @@ _clia_versions_ressource() {
   return 0
 }
 
+# La version qu'une ressource portait à un commit d'un dépôt, ou rien.
+_clia_version_ressource_au_commit() {
+  local depot="$1" nom="$2" commit="$3"
+  git -C "$depot" show "$commit:_ressources/$nom/schemas/$(basename "$nom").yaml" 2>/dev/null \
+    | grep -m1 -E '^version:[[:space:]]' \
+    | sed -E 's/^version:[[:space:]]*//; s/^"//; s/"$//' || true
+  return 0
+}
+
+# La version qu'un dépôt se déclarait à un commit, ou rien. La source de
+# vérité est celle de clia release : le champ version de .dev/clia.yaml, non
+# un tag, qu'un effacement ferait disparaître.
+_clia_version_depot_au_commit() {
+  git -C "$1" show "$2:.dev/clia.yaml" 2>/dev/null \
+    | grep -m1 -E '^version:[[:space:]]' \
+    | sed -E 's/^version:[[:space:]]*//; s/^"//; s/"$//' || true
+  return 0
+}
+
+# Le commit où un dépôt s'est déclaré à telle version — le plus récent s'il y
+# en a plusieurs.
+_clia_commit_de_version() {
+  local depot="$1" version="$2" commit
+  while IFS= read -r commit; do
+    [[ -n "$commit" ]] || continue
+    if [[ "$(_clia_version_depot_au_commit "$depot" "$commit")" == "$version" ]]; then
+      printf '%s\n' "$commit"
+      return 0
+    fi
+  done < <(git -C "$depot" log --format=%H -- .dev/clia.yaml 2>/dev/null || true)
+  return 1
+}
+
+# Les versions qu'un dépôt s'est déclarées, de la plus récente à la plus
+# ancienne, une fois chacune. Sert à nommer les possibles quand une version
+# demandée n'en est pas une.
+_clia_versions_de_depot() {
+  local depot="$1" commit v vues=$'\n'
+  while IFS= read -r commit; do
+    [[ -n "$commit" ]] || continue
+    v=$(_clia_version_depot_au_commit "$depot" "$commit")
+    [[ -n "$v" ]] || continue
+    [[ "$vues" == *$'\n'"$v"$'\n'* ]] && continue
+    vues+="$v"$'\n'
+    printf '%s\n' "$v"
+  done < <(git -C "$depot" log --format=%H -- .dev/clia.yaml 2>/dev/null || true)
+  return 0
+}
+
+# Les ressources d'un dépôt qui sont en retard sur leur provenance.
+# Sortie : « nom<TAB>installée<TAB>offerte<TAB>namespace ».
+#
+# Deux ressources sont hors de la question, et non « à jour » : celle qui est
+# née dans le dépôt, qui n'a personne à interroger, et celle dont l'inventaire
+# est muet, qui ne désigne aucune provenance. clia check les voit ailleurs.
+_clia_ressources_en_retard() {
+  local depot="$1" locale nom dir entree ns installee ligne odir offerte
+  locale=$(_clia_carte_champ "$depot" namespace 2>/dev/null || printf '')
+  while IFS=$'\t' read -r nom dir; do
+    [[ -n "$nom" ]] || continue
+    entree=$(_clia_installe_entree "$depot" ressource "$nom")
+    [[ -n "$entree" ]] || continue
+    ns=$(printf '%s' "$entree" | awk -F'\t' '{print $2}')
+    installee=$(printf '%s' "$entree" | awk -F'\t' '{print $4}')
+    [[ -n "$ns" && "$ns" != '—' ]] || continue
+    [[ -n "$locale" && "$ns" == "$locale" ]] && continue
+    [[ -n "$installee" && "$installee" != '—' ]] || continue
+    ligne=$(_clia_offre_ressource "$nom" "$ns") || continue
+    odir=$(printf '%s' "$ligne" | awk -F'\t' '{print $3}')
+    offerte=$(_clia_champ_de_fichier "$odir/schemas/$(basename "$nom").yaml" version 2>/dev/null || printf '')
+    [[ -n "$offerte" ]] || continue
+    [[ "$(_clia_semver_cmp "$installee" "$offerte")" == '-1' ]] \
+      && printf '%s\t%s\t%s\t%s\n' "$nom" "$installee" "$offerte" "$ns"
+  done < <(_clia_ressources_de "$depot")
+  return 0
+}
+
 # --------------------------------------------------------------------------
 # Le périmètre d'exécution
 # --------------------------------------------------------------------------
