@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+# _scripts/bin/clia — le CLI du système d'information clia.
+#
+# Ce fichier ne porte aucune commande : il les trouve. Une commande est un
+# fichier <nom>.sh déposé sous _scripts/lib/cmd/, portant deux lignes de
+# déclaration :
+#
+#   # Description: ce que la commande fait, en une ligne
+#   # Périmètre: dépôt | aucun
+#
+# Déposer un fichier suffit à l'exposer dans l'aide et à le rendre invocable.
+#
+# Pourquoi une découverte plutôt qu'une liste écrite. C'est le seul mécanisme
+# que toutes les générations précédentes ont porté sans qu'aucune ne le
+# conteste, et le seul qui rende l'extensibilité mécanique plutôt que
+# déclarative : ajouter une commande ne demande pas de modifier ce fichier.
+# La génération 4 en avait fait le constat après l'avoir éprouvé ; celle-ci
+# part de là.
+#
+#   Périmètre: dépôt   la commande agit sur un dépôt git. Le point d'entrée
+#                      le résout et le passe dans CLIA_WORK_DIR.
+#   Périmètre: aucun   la commande n'a besoin d'aucun dépôt.
+#
+# Sans déclaration, le périmètre vaut « dépôt » : oublier la ligne restreint,
+# et n'ouvre jamais.
+
+set -euo pipefail
+
+_CLIA_NOM='clia'
+
+# --------------------------------------------------------------------------
+# Amorçage
+# --------------------------------------------------------------------------
+#
+# Ce fichier peut être atteint par un lien symbolique. Ses modules sont dans
+# le dépôt source, pas à côté du lien : les liens sont donc suivis jusqu'au
+# bout avant de chercher _scripts/lib.
+
+_clia_amorcer() {
+  local src="${BASH_SOURCE[0]}" dir
+  while [[ -L "$src" ]]; do
+    dir=$(cd -P "$(dirname "$src")" >/dev/null 2>&1 && pwd)
+    src=$(readlink "$src")
+    [[ "$src" != /* ]] && src="$dir/$src"
+  done
+  dir=$(cd -P "$(dirname "$src")" >/dev/null 2>&1 && pwd)
+  printf '%s\n' "${dir%/_scripts/bin}"
+}
+
+CLIA_SOURCE_DIR=$(_clia_amorcer)
+CLIA_EXECUTABLE="${BASH_SOURCE[0]}"
+export CLIA_SOURCE_DIR CLIA_EXECUTABLE
+
+if [[ ! -f "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh" ]]; then
+  printf 'clia: _scripts/lib/commun.sh est introuvable sous %s\n' "$CLIA_SOURCE_DIR" >&2
+  printf '      le dépôt source a-t-il été déplacé ?\n' >&2
+  exit 1
+fi
+
+# shellcheck source=../lib/commun.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
+
+# --------------------------------------------------------------------------
+# Les commandes, et leurs déclarations
+# --------------------------------------------------------------------------
+
+# Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
+_clia_fichiers_de_commande() {
+  local f
+  for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh; do
+    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+  done
+  return 0
+}
+
+# Le fichier qui porte une commande, ou rien. Le premier trouvé l'emporte.
+#
+# awk lit la liste jusqu'au bout plutôt que de sortir au premier résultat :
+# sous « set -o pipefail », un awk qui referme le tube tôt fait recevoir
+# SIGPIPE à la boucle en amont, et la commande entière sortirait en 141.
+_clia_fichier_de() {
+  _clia_fichiers_de_commande \
+    | awk -F'\t' -v n="$1" '$1 == n && !vu { print $2; vu = 1 }'
+}
+
+_clia_description_de() {
+  grep -m1 -E '^#[[:space:]]*Description:' "$1" 2>/dev/null \
+    | sed -E 's/^#[[:space:]]*Description:[[:space:]]*//' || true
+}
+
+_clia_perimetre_de() {
+  local declaration
+  declaration=$(grep -m1 -E '^#[[:space:]]*Périmètre:' "$1" 2>/dev/null \
+    | sed -E 's/^#[[:space:]]*Périmètre:[[:space:]]*//' || true)
+  printf '%s\n' "${declaration:-dépôt}"
+}
+
+# --------------------------------------------------------------------------
+# Aide
+# --------------------------------------------------------------------------
+#
+# L'aide est composée à partir de ce qui a été trouvé. Elle ne peut donc pas
+# annoncer une commande qui n'existe pas, ni taire une commande qui existe.
+
+_clia_aide() {
+  cat <<'EOF'
+clia — système d'information collaboratif entre humains, automatismes et
+intelligences artificielles.
+
+Usage : clia <commande> [arguments]
+
+Commandes :
+EOF
+  local nom f desc
+  while IFS=$'\t' read -r nom f; do
+    desc=$(_clia_description_de "$f")
+    printf '  %-12s %s\n' "$nom" "${desc:-(sans description)}"
+  done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
+  cat <<'EOF'
+
+Options :
+  -h, --help        cette aide
+  -v, --version     la version — équivaut à « clia version »
+
+Aide d'une commande :
+  clia <commande> --help
+
+Codes de retour :
+  0  la demande est satisfaite
+  1  refus : la demande est comprise, et clia ne la satisfait pas
+  2  demande mal formée
+EOF
+}
+
+# --------------------------------------------------------------------------
+# Dispatch
+# --------------------------------------------------------------------------
+
+case "${1:-}" in
+  ''|-h|--help|help) _clia_aide; exit 0 ;;
+  # -v et --version ne sont pas une commande à part : SES-001 tâche 1 pose
+  # que la version du CLI est celle du SI. Deux orthographes pour un même
+  # objet doivent rendre la même chose, sinon le mot « version » désigne deux
+  # choses selon le nombre de tirets qui le précèdent.
+  -v|--version)      set -- version ;;
+esac
+
+COMMANDE="$1"
+shift
+
+# Le nom est comparé à des noms de fichiers : il est restreint pour qu'il ne
+# puisse désigner qu'une commande — ni « / », ni « .. ».
+if [[ ! "$COMMANDE" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+  _clia_msg "nom de commande invalide : $COMMANDE"
+  _clia_detail "la liste des commandes : clia --help"
+  exit 2
+fi
+
+FICHIER=$(_clia_fichier_de "$COMMANDE")
+if [[ -z "$FICHIER" ]]; then
+  _clia_msg "commande inconnue : $COMMANDE"
+  _clia_detail "la liste des commandes : clia --help"
+  exit 2
+fi
+
+# Le périmètre est résolu ici, une fois, plutôt que dans chaque commande :
+# une commande nouvelle en hérite sans rien déclarer.
+if [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]]; then
+  if ! CLIA_WORK_DIR=$(_clia_depot_git "$PWD"); then
+    _clia_msg "le répertoire courant n'est pas dans un dépôt git"
+    _clia_detail "clia $COMMANDE agit sur un dépôt ; placez-vous dans l'un d'eux"
+    exit 1
+  fi
+  export CLIA_WORK_DIR
+fi
+
+exec bash "$FICHIER" "$@"
