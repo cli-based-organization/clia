@@ -22,6 +22,7 @@ trap 'rm -rf "$BAC"' EXIT
 
 REEL_HEAD=$(git -C "$RACINE" rev-parse HEAD)
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
+REEL_RESSOURCES=$(ls "$RACINE/_ressources" 2>/dev/null | sort)
 
 # --------------------------------------------------------------------------
 # Outils
@@ -301,6 +302,7 @@ vrai 'HEAD est le meme qu au depart' \
   test "$(git -C "$RACINE" rev-parse HEAD)" = "$REEL_HEAD"
 vrai 'et son etat de travail aussi' \
   test "$(git -C "$RACINE" status --porcelain | sort)" = "$REEL_ETAT"
-vrai 'et aucune ressource n y a ete creee' test ! -e "$RACINE/_ressources"
+vrai 'et son inventaire de ressources est inchange' \
+  test "$(ls "$RACINE/_ressources" 2>/dev/null | sort)" = "$REEL_RESSOURCES"
 
 bilan

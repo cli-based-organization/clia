@@ -253,3 +253,26 @@ _clia_man() {
   printf '\n'
   _clia_man_ligne 'clia' "$_CLIA_MAN_DATE" "$etiquette"
 }
+
+# --------------------------------------------------------------------------
+# Les harnais que clia offre
+# --------------------------------------------------------------------------
+#
+# Le harnais IA est une ressource comme une autre : ses primitives sont les
+# fichiers qu'un dépôt instrumenté reçoit. La liste n'est donc écrite nulle
+# part — elle est ce que le répertoire contient, et ajouter un harnais se
+# fait en y déposant un fichier.
+#
+# C'est la règle qui vaut déjà pour les commandes : le noyau trouve, il
+# n'énumère pas.
+
+_CLIA_HARNAIS_PRIMITIVES='_ressources/harness-ia/primitives'
+
+# « nom<TAB>chemin de la primitive », triés par nom.
+_clia_harnais_offerts() {
+  local f
+  for f in "${CLIA_SOURCE_DIR:-}/$_CLIA_HARNAIS_PRIMITIVES"/*; do
+    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f")" "$f"
+  done | sort
+  return 0
+}

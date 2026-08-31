@@ -275,7 +275,8 @@ Lire le manuel d'une commande :
        $ clia version --man
 
 VOIR AUSSI
-clia-version(1), clia-res(1), clia-setup(1), git(1)
+clia-version(1), clia-res(1), clia-check(1), clia-init(1),
+clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
