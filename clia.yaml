@@ -1,0 +1,61 @@
+namespace: clia.noumanity.com/clia
+version: 0.1.0
+maturity: unstable
+generation: 5
+
+harness-ia:
+  - name: CLAUDE.md
+    provider: clia.noumanity.com
+  - name: CONSTITUTION.md
+    provider: clia.noumanity.com
+scripts:
+  - name: setup.sh
+    provider: clia.noumanity.com
+
+use:
+  core:
+  - ressource: clia.noumanity.com/RES
+    version: 0.1.0
+  - ressource: clia.noumanity.com/INT
+  harness-ia:
+  - resource: clia.noumanity.com/HRN
+    version: 0.1.0
+  extensions:
+  - resource: session.clia.noumanity.com/SES
+    version: 0.1.0
+  - resource: session.clia.noumanity.com/LOG
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/DIA
+    version: 0.1.0
+  - resource: deeptech.clia.noumanity.com/FND
+    version: 0.1.0
+  - resource: deeptech.clia.noumanity.com/ANL
+    version: 0.1.0
+  - resource: ontology.clia.noumanity.com/FGN
+    version: 0.1.0
+  - resource: ontology.clia.noumanity.com/ONT
+    version: 0.1.0
+  - resource: methodology.clia.noumanity.com/MTH
+    version: 0.1.0
+  - resource: methodology.clia.noumanity.com/NON
+    version: 0.1.0
+
+sources:
+  - provider: clia.noumanity.com
+    type: local
+    uri: ./
+  - provider: session.clia.noumanity.com
+    type: local
+    uri: ../clia-session
+  - provider: arhitecture.clia.noumanity.com
+    type: local
+    uri: ../clia-arhitecture
+  - provider: deeptech.clia.noumanity.com
+    type: local
+    uri: ../clia-deeptech
+  - provider: ontology.clia.noumanity.com
+    type: local
+    uri: ../clia-ontology
+  - provider: methodology.clia.noumanity.com
+    type: local
+    uri: ../clia-methodology
