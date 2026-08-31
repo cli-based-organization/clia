@@ -270,6 +270,195 @@ dit 'et il renvoie a l usage' 'clia version --help'
 rc '--true ne prend pas d argument' 2 bash -c "cd '$D' && '$CLIA' version --true bogus"
 
 # ==========================================================================
+titre 'Publier : les trois post-conditions de SES-001 tache 2'
+# ==========================================================================
+
+# publiable <nom> <version> — un depot propre, d un seul commit, publiable.
+publiable() {
+  local d
+  d=$(depot "$1")
+  carte "$d" clia.yaml "$2"
+  commit "$d" 'premier commit'
+  printf '%s\n' "$d"
+}
+
+D=$(publiable post-conditions 1.2.3)
+AVANT=$(dans "$D" version 2>/dev/null)
+rc 'clia version release patch est satisfaite' 0 bash -c "cd '$D' && '$CLIA' version release patch"
+
+APRES=$(dans "$D" version 2>/dev/null)
+vrai 'post-condition 1 : la version rapportee est une version publiee' \
+  test "$APRES" = "${APRES%%+*}"
+faux 'et elle ne porte donc pas de suffixe de travail' \
+  test "$APRES" != "${APRES%%+*}"
+vrai 'post-condition 2 : elle est superieure a la precedente' \
+  test "$(printf '%s\n%s\n' "$AVANT" "$APRES" | sort -V | tail -1)" = "$APRES"
+vrai 'post-condition 3 : l increment est celui demande' test "$APRES" = '1.2.4'
+
+# ==========================================================================
+titre 'Les trois niveaux d increment'
+# ==========================================================================
+
+D=$(publiable incr-patch 1.2.3)
+vrai 'patch incremente le troisieme nombre' \
+  test "$(dans "$D" version release patch 2>/dev/null)" = '1.2.4'
+
+D=$(publiable incr-minor 1.2.3)
+vrai 'minor incremente le deuxieme et remet le troisieme a zero' \
+  test "$(dans "$D" version release minor 2>/dev/null)" = '1.3.0'
+
+D=$(publiable incr-major 1.2.3)
+vrai 'major incremente le premier et remet les deux autres a zero' \
+  test "$(dans "$D" version release major 2>/dev/null)" = '2.0.0'
+
+# Regression. Une premiere ecriture decoupait la correspondance en champs
+# separes par des espaces ; un prefixe absent y produisait un champ vide que
+# le decoupage faisait disparaitre, et 1.2.3 devenait 12.3.1.
+D=$(publiable regression-decalage 1.2.3)
+SORTIE=$(dans "$D" version release patch 2>/dev/null)
+faux 'les nombres ne se decalent pas quand le prefixe est absent' \
+  test "$SORTIE" = '12.3.1'
+vrai 'et le resultat est bien 1.2.4' test "$SORTIE" = '1.2.4'
+
+D=$(publiable zero-en-tete 1.08.0)
+vrai 'un nombre a zero en tete est lu en base dix' \
+  test "$(dans "$D" version release minor 2>/dev/null)" = '1.9.0'
+
+D=$(publiable majuscules 1.2.3)
+vrai 'le niveau s ecrit aussi en majuscules' \
+  test "$(dans "$D" version release PATCH 2>/dev/null)" = '1.2.4'
+
+# ==========================================================================
+titre 'Ce que l alias porte est conserve, ou dit'
+# ==========================================================================
+
+D=$(publiable prefixe-v v1.2.3)
+vrai 'le prefixe v est conserve' \
+  test "$(dans "$D" version release patch 2>/dev/null)" = 'v1.2.4'
+
+D=$(publiable pre-publication 1.2.3-beta)
+SORTIE=$(dans "$D" version release patch 2>/dev/null)
+vrai 'le tag de pre-publication est retire' test "$SORTIE" = '1.2.4'
+rc 'et le retrait est annonce' 0 bash -c "cd '$(publiable pre-publication-bis 2.0.0-rc.1)' && '$CLIA' version release patch"
+dit 'en nommant le tag retire' 'pré-publication'
+
+D=$(depot commentaire)
+cat > "$D/clia.yaml" <<'CARTE'
+namespace: exemple.test/banc
+version: 1.2.3   # l alias lisible, tenu a la main
+maturity: unstable
+
+use:
+  core:
+  - ressource: exemple.test/RES
+    version: 9.9.9
+CARTE
+commit "$D" 'carte avec commentaire'
+dans "$D" version release patch >/dev/null 2>&1
+vrai 'le commentaire de fin de ligne est conserve' \
+  grep -q 'version: 1.2.4  # l alias lisible' "$D/clia.yaml"
+vrai 'la version imbriquee sous use: n est pas touchee' \
+  grep -q '    version: 9.9.9' "$D/clia.yaml"
+vrai 'le reste de la carte est intact' \
+  grep -q '^namespace: exemple.test/banc' "$D/clia.yaml"
+
+D=$(depot carte-dev-release)
+carte "$D" .dev/clia.yaml 0.4.0
+commit "$D" 'carte en .dev'
+vrai 'la publication trouve la carte a ses autres emplacements' \
+  test "$(dans "$D" version release minor 2>/dev/null)" = '0.5.0'
+
+# ==========================================================================
+titre 'La pre-condition : le depot doit etre propre'
+# ==========================================================================
+
+D=$(publiable sale-non-suivi 1.2.3)
+printf 'brouillon\n' > "$D/brouillon.txt"
+rc 'un fichier non suivi empeche la publication' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+dit 'et clia dit pourquoi' "n'est pas propre"
+dit 'et montre ce qui salit le depot' 'brouillon.txt'
+vrai 'la version n a pas bouge' test "$(dans "$D" version 2>/dev/null)" = '1.2.3'
+vrai 'et aucun commit n a ete cree' \
+  test "$(git -C "$D" rev-list --count HEAD)" -eq 1
+
+D=$(publiable sale-modifie 1.2.3)
+printf 'change\n' >> "$D/clia.yaml"
+rc 'un fichier suivi modifie empeche la publication' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+vrai 'et la carte n est pas reecrite' \
+  test "$(git -C "$D" diff --name-only)" = 'clia.yaml'
+
+D=$(publiable sale-indexe 1.2.3)
+printf 'indexe\n' > "$D/indexe.txt"
+git -C "$D" add indexe.txt
+rc 'un changement indexe empeche la publication' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+vrai 'la version n a pas bouge' test "$(dans "$D" version 2>/dev/null)" = '1.2.3'
+
+# ==========================================================================
+titre 'Ce que le commit de publication porte'
+# ==========================================================================
+
+D=$(publiable commit-propre 1.2.3)
+dans "$D" version release minor >/dev/null 2>&1
+vrai 'le commit ne porte qu un seul fichier' \
+  test "$(git -C "$D" show --name-only --format= HEAD | grep -c .)" -eq 1
+vrai 'et ce fichier est la carte' \
+  test "$(git -C "$D" show --name-only --format= HEAD | tr -d '[:space:]')" = 'clia.yaml'
+vrai 'le message de commit nomme la version publiee' \
+  test "$(git -C "$D" log -1 --format=%s)" = 'release 1.3.0'
+vrai 'aucune etiquette n est posee' \
+  test "$(git -C "$D" tag -l | wc -l)" -eq 0
+vrai 'le depot est propre apres la publication' \
+  test -z "$(git -C "$D" status --porcelain)"
+vrai 'la sortie standard tient sur une ligne' \
+  test "$(lignes_stdout "$D" version)" -eq 1
+
+# Deux publications de suite : chacune est publiee, et l historique le montre.
+D=$(publiable deux-publications 1.0.0)
+dans "$D" version release minor >/dev/null 2>&1
+dans "$D" version release patch >/dev/null 2>&1
+vrai 'deux publications successives sont chacune publiees' \
+  test "$(dans "$D" version 2>/dev/null)" = '1.1.1'
+vrai 'et l historique porte les deux' \
+  test "$(git -C "$D" rev-list --count HEAD)" -eq 3
+
+# Un commit ordinaire apres une publication rend la version au travail.
+printf 'suite\n' > "$D/suite.txt"
+commit "$D" 'du travail apres la publication'
+COURT=$(git -C "$D" rev-parse --short HEAD)
+vrai 'un commit ordinaire apres une publication rend une version de travail' \
+  test "$(dans "$D" version 2>/dev/null)" = "1.1.1+$COURT"
+
+# ==========================================================================
+titre 'Les refus de publication'
+# ==========================================================================
+
+D=$(publiable niveau-absent 1.2.3)
+rc 'sans niveau, la demande est mal formee' 2 bash -c "cd '$D' && '$CLIA' version release"
+dit 'et les niveaux sont nommes' 'major, minor et patch'
+
+rc 'un niveau inconnu est refuse' 2 bash -c "cd '$D' && '$CLIA' version release majeur"
+rc 'deux niveaux sont refuses' 2 bash -c "cd '$D' && '$CLIA' version release patch minor"
+vrai 'et rien n a ete publie' test "$(dans "$D" version 2>/dev/null)" = '1.2.3'
+
+D=$(publiable alias-non-incrementable tout-neuf)
+rc 'un alias non semantique n est pas incrementable' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+dit 'et clia dit ce qu il faut corriger' "n'est pas incrémentable"
+vrai 'la carte n est pas touchee' \
+  test -z "$(git -C "$D" status --porcelain)"
+
+D=$(depot publier-sans-carte)
+printf 'rien\n' > "$D/fichier.txt"
+commit "$D" 'aucune carte'
+rc 'publier sans carte est refuse' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+dit 'et clia dit ce qui manque' 'aucune carte'
+
+D=$(depot publier-sans-commit)
+rc 'publier sans commit est refuse' 1 bash -c "cd '$D' && '$CLIA' version release patch"
+dit 'et clia dit qu il n y a rien a incrementer' 'aucun commit'
+
+rc 'publier hors d un depot git est refuse' 1 bash -c "cd '$HORS' && '$CLIA' version release patch"
+
+# ==========================================================================
 titre 'Le depot reel n a pas bouge'
 # ==========================================================================
 
