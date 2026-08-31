@@ -53,6 +53,8 @@ set -euo pipefail
 _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
+# shellcheck source=../version.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/version.sh"
 
 # Le point d'entrée pose CLIA_WORK_DIR pour toute invocation qui travaille, et
 # ne le pose pas pour une demande de manuel : une page de manuel ne dépend
@@ -188,7 +190,7 @@ Publier un correctif :
        0.3.1
 
 VOIR AUSSI
-clia(1), git-rev-parse(1), git-log(1)
+clia(1), clia-res(1), git-rev-parse(1), git-log(1)
 
 La forme X.Y.Z est celle de la gestion sémantique de version,
 décrite sur https://semver.org.
@@ -196,50 +198,23 @@ EOF
 }
 
 # --------------------------------------------------------------------------
-# Lecture
-# --------------------------------------------------------------------------
-
-# L'alias que porte la carte du dépôt à un commit donné, ou rien. Les trois
-# emplacements sont essayés : la carte a pu être déplacée dans l'historique.
-alias_au_commit() {
-  local commit="$1" emplacement contenu ligne
-  for emplacement in "${_CLIA_CARTE_EMPLACEMENTS[@]}"; do
-    contenu=$(git_ show "$commit:$emplacement" 2>/dev/null) || continue
-    ligne=$(printf '%s\n' "$contenu" | grep -m1 -E '^version:[[:space:]]') || continue
-    _clia_valeur_yaml "${ligne#*:}"
-    return 0
-  done
-  return 1
-}
-
-# L'alias que porte la carte sur le disque, ou rien.
-alias_sur_disque() {
-  local carte
-  carte=$(_clia_carte "$DEPOT") || return 1
-  _clia_champ_yaml "$carte" version
-}
-
-# Un alias sémantique : X.Y.Z, un « v » facultatif devant, un tag facultatif
-# derrière. Ce contrôle n'échoue pas la commande — il avertit. Un alias mal
-# formé reste ce que la carte déclare, et le taire serait pire que le dire.
-alias_est_semantique() {
-  [[ "$1" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]
-}
-
-# --------------------------------------------------------------------------
 # Les deux sorties
 # --------------------------------------------------------------------------
+#
+# Les règles — quel commit fait foi, publiée ou de travail, comment un alias
+# s'incrémente — vivent dans _scripts/lib/version.sh, partagées avec les
+# ressources. Ce qui suit n'est que la mise en forme et les messages.
 
 version_exacte() {
   local tete
-  if ! tete=$(git_ rev-parse --verify --quiet HEAD 2>/dev/null) || [[ -z "$tete" ]]; then
+  if ! tete=$(_clia_v_commit "$DEPOT" '') || [[ -z "$tete" ]]; then
     _clia_msg "le dépôt n'a aucun commit : il n'y a pas de version exacte"
     _clia_detail "la version exacte est un hash de commit ; commitez d'abord"
     return 1
   fi
   printf '%s\n' "$tete"
 
-  if [[ -n "$(git_ status --porcelain 2>/dev/null)" ]]; then
+  if ! _clia_v_depot_propre "$DEPOT"; then
     _clia_msg "le répertoire de travail a changé depuis ce commit"
     _clia_detail "le hash désigne HEAD, non ce qui est sur le disque"
   fi
@@ -247,11 +222,13 @@ version_exacte() {
 }
 
 alias_de_version() {
-  local tete parent alias_tete alias_parent alias_disque retenu court
+  local carte tete alias_tete alias_disque resolu commit alias etat court
 
-  tete=$(git_ rev-parse --verify --quiet HEAD 2>/dev/null || printf '')
+  carte=$(_clia_carte "$DEPOT" || printf '')
+  alias_disque=''
+  [[ -n "$carte" ]] && alias_disque=$(_clia_v_alias_disque "$carte" || printf '')
 
-  alias_disque=$(alias_sur_disque || printf '')
+  tete=$(_clia_v_commit "$DEPOT" '' || printf '')
 
   # Sans commit, il n'y a ni source de vérité ni parent à comparer. Ce que la
   # carte déclare est tout ce qu'on a, et cela se dit.
@@ -267,7 +244,8 @@ alias_de_version() {
     return 0
   fi
 
-  alias_tete=$(alias_au_commit "$tete" || printf '')
+  alias_tete=$(_clia_v_alias_au_commit "$DEPOT" "$tete" \
+    "${_CLIA_CARTE_EMPLACEMENTS[@]}" || printf '')
 
   if [[ -z "$alias_tete" ]]; then
     if [[ -z "$alias_disque" ]]; then
@@ -281,8 +259,6 @@ alias_de_version() {
     return 0
   fi
 
-  retenu="$alias_tete"
-
   # L'alias rapporté est celui de HEAD, non celui du disque : la source de
   # vérité est le commit. Quand les deux diffèrent, le taire ferait croire
   # que ce qui est écrit dans la carte est déjà une version.
@@ -291,28 +267,18 @@ alias_de_version() {
     _clia_detail "l'alias rapporté est celui de HEAD ; commitez pour le publier"
   fi
 
-  parent=$(git_ rev-parse --verify --quiet "${tete}^" 2>/dev/null || printf '')
-  if [[ -n "$parent" ]]; then
-    alias_parent=$(alias_au_commit "$parent" || printf '')
-  else
-    alias_parent=''
-  fi
+  resolu=$(_clia_v_resoudre "$DEPOT" '' "${_CLIA_CARTE_EMPLACEMENTS[@]}") || return 1
+  IFS=$'\t' read -r commit alias etat <<<"$resolu"
+  court=$(git_ rev-parse --short "$commit")
 
-  # Version de travail : le parent porte le même alias, donc rien n'a été
-  # publié à ce commit. Le hash court rend l'alias univoque à nouveau.
-  if [[ "$alias_tete" == "$alias_parent" ]]; then
-    court=$(git_ rev-parse --short HEAD)
-    retenu="${alias_tete}+${court}"
-  fi
-
-  alias_est_semantique "$alias_tete" || {
-    _clia_msg "l'alias « $alias_tete » n'a pas la forme X.Y.Z[-tag]"
+  _clia_v_est_semantique "$alias" || {
+    _clia_msg "l'alias « $alias » n'a pas la forme X.Y.Z[-tag]"
     _clia_detail "il est rapporté tel quel ; --true donne la version exacte"
   }
 
-  printf '%s\n' "$retenu"
+  _clia_v_alias_affiche "$alias" "$etat" "$court"
 
-  if [[ -n "$(git_ status --porcelain 2>/dev/null)" ]]; then
+  if ! _clia_v_depot_propre "$DEPOT"; then
     _clia_msg "le répertoire de travail a changé depuis ce commit"
     _clia_detail "l'alias désigne HEAD, non ce qui est sur le disque"
   fi
@@ -334,72 +300,8 @@ alias_de_version() {
 # l'emporterait avec lui, et l'historique dirait qu'une version a été publiée
 # là où quelqu'un a surtout sauvegardé son travail.
 
-depot_est_propre() {
-  [[ -z "$(git_ status --porcelain 2>/dev/null)" ]]
-}
-
-# L'alias incrémenté, ou un échec si l'alias n'a pas la forme attendue.
-#
-# Le préfixe « v » facultatif est conservé : la commande incrémente ce que la
-# carte déclare, elle ne la reformate pas. Le tag de pré-publication, lui, est
-# retiré — une version publiée n'est pas une pré-publication, et le garder
-# ferait qu'un « release patch » depuis 0.1.0-beta rendrait 0.1.1-beta, qui
-# n'en est toujours pas une.
-#
-# Les groupes de la correspondance sont lus directement, sans passer par une
-# ligne à découper : un préfixe absent y produit un champ vide que le
-# découpage par espaces ferait disparaître, et tous les nombres se
-# décaleraient d'un rang. C'était le cas — 1.2.3 devenait 12.3.1.
-#
-# La base dix est forcée : un alias tel que 1.08.0 est mal formé au regard de
-# semver, mais le motif l'accepte, et l'arithmétique du shell lirait 08 comme
-# un octal invalide plutôt que comme huit.
-incrementer() {
-  local alias="$1" niveau="$2" prefixe major minor patch
-  [[ "$alias" =~ ^(v?)([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.-]+)?$ ]] || return 1
-  prefixe="${BASH_REMATCH[1]}"
-  major=$((10#${BASH_REMATCH[2]}))
-  minor=$((10#${BASH_REMATCH[3]}))
-  patch=$((10#${BASH_REMATCH[4]}))
-  case "$niveau" in
-    major) major=$((major + 1)); minor=0; patch=0 ;;
-    minor) minor=$((minor + 1)); patch=0 ;;
-    patch) patch=$((patch + 1)) ;;
-    *)     return 1 ;;
-  esac
-  printf '%s%s.%s.%s\n' "$prefixe" "$major" "$minor" "$patch"
-}
-
-# Réécrit le champ « version » de la carte, et rien d'autre.
-#
-# Seule la première ligne « version: » en colonne zéro est touchée : les
-# champs « version » imbriqués sous « use: » désignent la version d'une
-# ressource, non celle du dépôt. Un commentaire de fin de ligne est conservé.
-# L'écriture passe par un fichier temporaire : une écriture interrompue
-# laisserait la carte tronquée, et la carte est ce qui identifie le dépôt.
-ecrire_alias() {
-  local carte="$1" nouveau="$2" tmp
-  tmp=$(mktemp "${carte}.XXXXXX") || return 1
-  if ! awk -v nouveau="$nouveau" '
-        /^version:[ \t]/ && !fait {
-          commentaire = ""
-          if (match($0, /#.*/)) commentaire = "  " substr($0, RSTART)
-          print "version: " nouveau commentaire
-          fait = 1
-          next
-        }
-        { print }
-      ' "$carte" > "$tmp"; then
-    rm -f "$tmp"
-    return 1
-  fi
-  # Les droits du fichier d'origine, non ceux que mktemp a posés.
-  chmod --reference="$carte" "$tmp" 2>/dev/null || true
-  mv -f "$tmp" "$carte"
-}
-
 publier() {
-  local niveau="$1" tete carte relative ancien nouveau
+  local niveau="$1" tete relative ancien nouveau
 
   case "$niveau" in
     major|minor|patch) ;;
@@ -408,14 +310,14 @@ publier() {
        return 2 ;;
   esac
 
-  if ! depot_est_propre; then
+  if ! _clia_v_depot_propre "$DEPOT"; then
     _clia_msg "le dépôt n'est pas propre : la publication est refusée"
     _clia_detail "un commit de publication ne porte que le changement de version"
     git_ status --short >&2
     return 1
   fi
 
-  tete=$(git_ rev-parse --verify --quiet HEAD 2>/dev/null || printf '')
+  tete=$(_clia_v_commit "$DEPOT" '' || printf '')
   if [[ -z "$tete" ]]; then
     _clia_msg "le dépôt n'a aucun commit : il n'y a pas de version à incrémenter"
     _clia_detail "commitez une carte portant « version: X.Y.Z », puis publiez"
@@ -427,16 +329,15 @@ publier() {
     _clia_detail "déclarez « version: X.Y.Z » dans clia.yaml, puis commitez"
     return 1
   fi
-  carte="$DEPOT/$relative"
 
-  ancien=$(_clia_champ_yaml "$carte" version || printf '')
+  ancien=$(_clia_v_alias_disque "$DEPOT/$relative" || printf '')
   if [[ -z "$ancien" ]]; then
     _clia_msg "la carte $relative ne déclare pas de champ « version »"
     _clia_detail "déclarez « version: X.Y.Z », puis publiez"
     return 1
   fi
 
-  if ! nouveau=$(incrementer "$ancien" "$niveau"); then
+  if ! nouveau=$(_clia_v_incrementer "$ancien" "$niveau"); then
     _clia_msg "l'alias « $ancien » n'a pas la forme X.Y.Z : il n'est pas incrémentable"
     _clia_detail "corrigez le champ « version » de $relative, puis publiez"
     return 1
@@ -447,21 +348,7 @@ publier() {
     _clia_detail "une version publiée n'est pas une pré-publication"
   }
 
-  ecrire_alias "$carte" "$nouveau" || {
-    _clia_msg "la carte $relative n'a pas pu être réécrite"
-    return 1
-  }
-
-  # Ce seul fichier est indexé : le dépôt était propre, rien d'autre ne doit
-  # entrer dans ce commit.
-  if ! git_ add -- "$relative" \
-     || ! git_ commit -q -m "release $nouveau" -- "$relative"; then
-    _clia_msg "le commit de publication a échoué : rien n'est publié"
-    _clia_detail "la carte est remise dans l'état de HEAD"
-    git_ reset -q HEAD -- "$relative" 2>/dev/null || true
-    git_ checkout -q -- "$relative" 2>/dev/null || true
-    return 1
-  fi
+  _clia_v_publier "$DEPOT" "$relative" "$nouveau" "release $nouveau" || return 1
 
   printf '%s\n' "$nouveau"
   _clia_msg "$ancien -> $nouveau, publié par $(git_ rev-parse --short HEAD)"
