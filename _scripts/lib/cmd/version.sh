@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # Description: La version du dépôt — l'alias lisible, ou le hash exact.
 # Périmètre: dépôt
+# Signature: version
+# Signature: version --true
+# Signature: version release major|minor|patch
+# Option: version --true
 #
-# Implémente SES-001 tâche 1.
+# Implémente SES-001 tâches 1 et 2. L'aide brève n'est pas écrite ici : elle
+# découle des quatre déclarations ci-dessus, que le point d'entrée lit. Ce
+# fichier ne porte donc que le manuel, et le travail.
 #
 # Le lexique, et pourquoi il compte
 # ---------------------------------
@@ -48,55 +54,144 @@ _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
-DEPOT="$CLIA_WORK_DIR"
+# Le point d'entrée pose CLIA_WORK_DIR pour toute invocation qui travaille, et
+# ne le pose pas pour une demande de manuel : une page de manuel ne dépend
+# d'aucun dépôt, et l'exiger la rendrait illisible hors d'un dépôt git. La
+# valeur peut donc être vide, et elle ne l'est que sur ce chemin-là, qui sort
+# avant d'avoir touché à git.
+DEPOT="${CLIA_WORK_DIR:-}"
 
 git_() { git -C "$DEPOT" "$@"; }
 
 # --------------------------------------------------------------------------
 
-aide() {
-  cat <<'EOF'
-Usage : clia version [--true]
-        clia version release major|minor|patch
+manuel() {
+  cat <<'EOF' | _clia_man clia-version 1 "Manuel de l'utilisateur clia"
+NOM
+clia-version - rapporter la version du dépôt courant, et la publier
 
-Sans argument, l'alias de version lisible du dépôt courant :
+SYNOPSIS
+clia version
+clia version --true
+clia version release major|minor|patch
 
-  X.Y.Z              version publiée — l'alias a changé à ce commit
-  X.Y.Z+<hash>       version de travail — l'alias n'a pas changé depuis le
-                     commit précédent, et le hash dit de quel état il s'agit
+DESCRIPTION
+La version d'un dépôt s'énonce de deux façons, et les confondre est
+la source de la plupart des erreurs de publication.
 
-  --true             la version exacte : le hash complet du commit
+La source de vérité est le commit. Un commit désigne un et un seul
+état du dépôt, et son empreinte ne peut pas mentir. C'est la version
+exacte, et c'est elle qu'il faut employer pour valider.
 
-La source de vérité est le commit, non l'alias. L'alias est inscrit à la main
-dans la carte du dépôt et peut n'avoir pas été incrémenté ; --true ne peut
-pas se tromper. Utilisez --true dès qu'il s'agit de valider.
+L'alias de version est la forme lisible, X.Y.Z, inscrite à la main
+dans le champ « version » de la carte du dépôt. Il est commode et
+faillible : rien n'oblige à l'incrémenter, et deux commits peuvent
+donc porter le même.
 
-La carte du dépôt est cherchée à trois emplacements, dans cet ordre :
-clia.yaml, .clia.yaml, .dev/clia.yaml. Le premier trouvé l'emporte.
+Une version est dite publiée quand l'alias que porte HEAD diffère de
+celui que portait son parent : quelqu'un l'a délibérément changé à ce
+commit. Son alias est rendu tel quel, X.Y.Z.
 
-Publier une version
--------------------
+Une version est dite de travail quand HEAD porte le même alias que
+son parent : rien n'a été publié depuis, et le dépôt a seulement
+avancé. Son alias est alors X.Y.Z+<hash court>, ce qui le rend
+univoque à nouveau sans prétendre qu'il a été publié.
 
-  release major      X.Y.Z  ->  X+1.0.0
-  release minor      X.Y.Z  ->  X.Y+1.0
-  release patch      X.Y.Z  ->  X.Y.Z+1
+Un commit sans parent est traité comme une publication : il n'existe
+pas d'alias antérieur dont celui-ci pourrait être la répétition.
 
-La commande incrémente l'alias dans la carte, puis commite ce seul fichier.
-Le dépôt doit être propre : sans cela, la publication emporterait du travail
-en cours dont personne n'a demandé la publication.
+L'alias rapporté est celui de HEAD, jamais celui du disque. Quand la
+carte a été modifiée sans être commitée, la commande rapporte l'alias
+de HEAD et le signale sur la sortie d'erreur.
 
-Elle ne pose pas d'étiquette git et ne pousse rien : publier une version est
-un fait inscrit dans l'historique du dépôt, et ce qu'on en fait ensuite
-appartient à qui le publie.
+SOUS-COMMANDES
+release major|minor|patch
+       Incrémente l'alias dans la carte, puis commite ce seul
+       fichier. Le message du commit est « release X.Y.Z ».
 
-Ce que la commande écrit sur la sortie standard tient sur une ligne, pour
-qu'une autre commande puisse la lire. Tout le reste va sur l'erreur standard.
+       major porte X.Y.Z à X+1.0.0, minor à X.Y+1.0, patch à
+       X.Y.Z+1. Le niveau s'écrit indifféremment en majuscules ou
+       en minuscules.
 
-Codes de retour :
-  0  la demande est satisfaite
-  1  refus : aucun commit, aucun alias à rapporter, dépôt non propre, ou
-     alias non incrémentable
-  2  demande mal formée
+       Un préfixe « v » est conservé. Un tag de pré-publication est
+       retiré, et le retrait est signalé : une version publiée n'est
+       pas une pré-publication.
+
+       Le dépôt doit être propre — aucun fichier modifié, indexé ni
+       non suivi. Sans cette condition, le commit de publication
+       emporterait du travail en cours dont personne n'a demandé la
+       publication.
+
+       Aucune étiquette git n'est posée, et rien n'est poussé.
+       Publier est un fait inscrit dans l'historique ; ce qu'on en
+       fait ensuite appartient à qui publie.
+
+       Si le commit échoue, la carte est remise dans l'état de
+       HEAD : la publication est tout ou rien.
+
+OPTIONS
+--true
+       Rend la version exacte, c'est-à-dire l'empreinte complète du
+       commit HEAD, sur quarante caractères. Ne prend aucun argument.
+
+SORTIE
+La sortie standard ne porte qu'une seule ligne, pour qu'une autre
+commande puisse la lire sans la filtrer : l'alias, l'empreinte, ou
+l'alias nouvellement publié selon l'invocation.
+
+Tout le reste — avertissements, refus, compte rendu de publication —
+va sur la sortie d'erreur.
+
+CODE DE RETOUR
+0
+       La demande est satisfaite. Des avertissements ont pu être
+       écrits sur la sortie d'erreur : un alias qui n'a pas la forme
+       X.Y.Z, un répertoire de travail modifié, une carte non
+       commitée.
+
+1
+       Refus : aucun commit, aucun alias à rapporter, dépôt non
+       propre, ou alias non incrémentable.
+
+2
+       Demande mal formée : argument inattendu, niveau de
+       publication absent, inconnu, ou fourni plusieurs fois.
+
+FICHIERS
+clia.yaml, .clia.yaml, .dev/clia.yaml
+       La carte du dépôt. Les trois emplacements sont cherchés dans
+       cet ordre, et le premier trouvé l'emporte. Seul le champ
+       « version » en colonne zéro est lu et réécrit : les champs
+       « version » imbriqués désignent la version d'une ressource,
+       non celle du dépôt. Un commentaire de fin de ligne est
+       conservé.
+
+EXEMPLES
+L'alias d'une version publiée :
+
+       $ clia version
+       0.3.0
+
+L'alias d'une version de travail, deux commits plus loin :
+
+       $ clia version
+       0.3.0+a1b2c3d
+
+La version exacte, celle sur laquelle on valide :
+
+       $ clia version --true
+       04cddad0e1f2a3b4c5d6e7f8091a2b3c4d5e6f70
+
+Publier un correctif :
+
+       $ clia version release patch
+       0.3.1
+
+VOIR AUSSI
+clia(1), git-rev-parse(1), git-log(1)
+
+La forme X.Y.Z est celle de la gestion sémantique de version,
+décrite sur https://semver.org.
 EOF
 }
 
@@ -378,6 +473,16 @@ publier() {
 # Dispatch
 # --------------------------------------------------------------------------
 
+# Le manuel est reconnu à n'importe quelle profondeur : « clia version
+# release --man » rend la même page que « clia version --man ». L'unité de
+# manuel est la commande, comme dans unix — il n'existe pas de page distincte
+# pour chaque sous-commande.
+for _arg in "$@"; do
+  [[ "$_arg" == '--man' ]] || continue
+  manuel
+  exit 0
+done
+
 case "${1:-}" in
   '')            alias_de_version ;;
   --true)        [[ $# -eq 1 ]] || { _clia_msg "--true ne prend pas d'argument"; exit 2; }
@@ -395,7 +500,9 @@ case "${1:-}" in
                  # Les niveaux sont écrits en majuscules dans SES-001 et en
                  # minuscules dans les autres commandes : les deux répondent.
                  publier "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')" ;;
-  -h|--help)     aide; exit 0 ;;
+  # -h et --help n'apparaissent pas ici : le point d'entrée les intercepte à
+  # toute profondeur et rend l'aide brève à partir des déclarations de tête.
+  # Une commande n'écrit pas son aide, elle déclare ses signatures.
   *)             _clia_msg "argument inattendu : $1"
                  _clia_detail "l'usage : clia version --help"
                  exit 2 ;;

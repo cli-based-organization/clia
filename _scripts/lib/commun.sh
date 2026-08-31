@@ -99,3 +99,157 @@ _clia_valeur_yaml() {
   brut="${brut%\'}"; brut="${brut#\'}"
   printf '%s\n' "$brut"
 }
+
+# --------------------------------------------------------------------------
+# Les déclarations que porte un fichier de commande
+# --------------------------------------------------------------------------
+#
+# Une commande se décrit elle-même, en tête de son propre fichier. Le point
+# d'entrée lit ces lignes sans exécuter le fichier, ce qui lui permet de
+# composer l'aide de tout le CLI sans lancer une seule commande.
+#
+#   # Description: ce que la commande fait, en une ligne
+#   # Périmètre:   dépôt | aucun
+#   # Signature:   <une forme d'invocation valide>      (répétable)
+#   # Option:      <chemin> <option telle qu'elle s'écrit> (répétable)
+#
+# Signature et Option sont ce dont l'aide brève est faite. Les déclarer ici
+# plutôt que dans un texte d'aide écrit à la main évite qu'ils divergent : il
+# n'y a qu'une source, et c'est celle que le point d'entrée lit.
+#
+# Une option porte le chemin auquel elle s'applique, parce qu'une option d'une
+# commande n'est pas valide pour ses sous-commandes : « version --true » ne
+# doit pas paraître dans l'aide de « version release ». Le chemin est ce qui
+# précède le premier mot commençant par un tiret.
+
+# _clia_declarations <fichier> <clé> — les valeurs, une par ligne.
+_clia_declarations() {
+  grep -E "^#[[:space:]]*$2:" "$1" 2>/dev/null \
+    | sed -E "s/^#[[:space:]]*$2:[[:space:]]*//" || true
+}
+
+_clia_signatures_de() { _clia_declarations "$1" 'Signature'; }
+_clia_options_de()    { _clia_declarations "$1" 'Option'; }
+
+# --------------------------------------------------------------------------
+# L'aide brève
+# --------------------------------------------------------------------------
+#
+# SES-001 tâche 3 : « la version de base ne doit pas contenir d'information
+# textuelle. Seulement une liste des commandes, la ou les signatures valides
+# pour chaque commande ou sous-commande et les options disponibles. »
+#
+# Ce que cela impose, et qui est vérifié par le banc : toute ligne de l'aide
+# brève est soit un titre de bloc, soit une entrée indentée de deux espaces.
+# Aucune phrase. Ce qui explique appartient au manuel, que --man rend.
+
+# Celles que le point d'entrée traite lui-même. --version n'est reconnue qu'en
+# première position — « clia version --version » n'a pas de sens — alors que
+# l'aide et le manuel répondent à toute profondeur.
+_CLIA_OPTIONS_GLOBALES=('-h, --help' '--man' '-v, --version')
+_CLIA_OPTIONS_UNIVERSELLES=('-h, --help' '--man')
+
+# _clia_lignes_options <chemin> — lit des déclarations d'option sur l'entrée
+# standard et rend celles dont le chemin est exactement celui demandé.
+_clia_lignes_options() {
+  local demande="$1" ligne chemin option
+  while IFS= read -r ligne; do
+    [[ -n "$ligne" ]] || continue
+    chemin=''
+    option="$ligne"
+    while [[ "$option" == [!-]* && "$option" == *' '* ]]; do
+      chemin="${chemin:+$chemin }${option%% *}"
+      option="${option#* }"
+    done
+    [[ "$chemin" == "$demande" ]] && printf '%s\n' "$option"
+  done
+  return 0
+}
+
+# _clia_lignes_usage <préfixe> — lit des signatures sur l'entrée standard et
+# rend celles qui commencent par le préfixe, préfixées du nom de l'outil.
+# Un préfixe vide les rend toutes.
+_clia_lignes_usage() {
+  local prefixe="$1" ligne
+  while IFS= read -r ligne; do
+    [[ -n "$ligne" ]] || continue
+    if [[ -z "$prefixe" || "$ligne" == "$prefixe" || "$ligne" == "$prefixe "* ]]; then
+      printf '  %s %s\n' "${_CLIA_NOM:-clia}" "$ligne"
+    fi
+  done
+}
+
+# _clia_bloc <titre> <entrée…> — un bloc de l'aide brève, ou rien s'il est
+# vide. Un bloc vide vaut mieux tu qu'affiché : il ferait chercher.
+_clia_bloc() {
+  local titre="$1"; shift
+  (( $# )) || return 0
+  printf '\n%s :\n' "$titre"
+  printf '  %s\n' "$@"
+}
+
+# --------------------------------------------------------------------------
+# Le manuel
+# --------------------------------------------------------------------------
+#
+# Le format est celui des pages de manuel unix, tel que man(1) le rend sur
+# cette machine : titres de section en capitales en colonne zéro, corps
+# indenté de sept caractères, description d'une option indentée de sept de
+# plus, lignes d'en-tête et de pied sur la largeur de la page.
+#
+# Les noms de section sont ceux des pages francophones — NOM, SYNOPSIS,
+# DESCRIPTION, OPTIONS, CODE DE RETOUR, ENVIRONNEMENT, FICHIERS, EXEMPLES,
+# VOIR AUSSI — parce que c'est ce que man rend ici et que tout le reste de ce
+# dépôt est en français.
+#
+# La date est une constante et non la date du jour : une sortie qui change
+# d'une exécution à l'autre ne serait pas vérifiable.
+
+_CLIA_MAN_LARGEUR=80
+_CLIA_MAN_DATE='31 août 2026'
+
+# _clia_man_ligne <gauche> <centre> <droite> — une ligne d'en-tête ou de pied.
+_clia_man_ligne() {
+  local g="$1" c="$2" d="$3" reste avant apres
+  reste=$(( _CLIA_MAN_LARGEUR - ${#g} - ${#d} ))
+  avant=$(( (reste - ${#c}) / 2 ))
+  apres=$(( reste - ${#c} - avant ))
+  (( avant < 1 )) && avant=1
+  (( apres < 1 )) && apres=1
+  printf '%s%*s%s%*s%s\n' "$g" "$avant" '' "$c" "$apres" '' "$d"
+}
+
+# Indente le corps lu sur l'entrée standard. Une ligne entièrement en
+# capitales est un titre de section et reste en colonne zéro ; tout le reste
+# est décalé de sept, ce qui porte à quatorze une ligne déjà indentée de sept
+# dans la source — l'indentation d'une description d'option.
+#
+# Le motif est nommé plutôt qu'écrit dans la condition : il contient une
+# espace et un tiret, et une classe de caractères écrite à même un test
+# conditionnel y serait découpée en deux mots.
+_CLIA_MAN_TITRE='^[A-Z][A-Z -]*$'
+
+_clia_man_corps() {
+  local ligne
+  while IFS= read -r ligne; do
+    if [[ -z "$ligne" ]]; then
+      printf '\n'
+    elif [[ "$ligne" =~ $_CLIA_MAN_TITRE ]]; then
+      printf '%s\n' "$ligne"
+    else
+      printf '       %s\n' "$ligne"
+    fi
+  done
+}
+
+# _clia_man <nom> <section> <titre-centre> — la page complète, corps lu sur
+# l'entrée standard.
+_clia_man() {
+  local nom="$1" section="$2" centre="$3" etiquette
+  etiquette="$(printf '%s' "$nom" | tr '[:lower:]-' '[:upper:]-')($section)"
+  _clia_man_ligne "$etiquette" "$centre" "$etiquette"
+  printf '\n'
+  _clia_man_corps
+  printf '\n'
+  _clia_man_ligne 'clia' "$_CLIA_MAN_DATE" "$etiquette"
+}

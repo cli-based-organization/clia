@@ -77,10 +77,6 @@ titre 'Le point d entree'
 
 rc 'clia sans argument affiche l aide' 0 "$CLIA"
 dit 'et elle nomme la commande version' 'version'
-dit 'et elle documente les codes de retour' 'Codes de retour'
-
-rc 'clia --help' 0 "$CLIA" --help
-dit 'la description est lue dans le fichier de commande' "l'alias lisible, ou le hash exact"
 
 rc 'une commande inconnue est une demande mal formee' 2 "$CLIA" pas-une-commande
 dit 'et elle renvoie a l aide' 'clia --help'
@@ -89,7 +85,16 @@ rc 'un nom de commande avec un separateur est refuse' 2 "$CLIA" ../evil
 rc 'un nom de commande vide de sens est refuse' 2 "$CLIA" 'Version'
 
 rc 'clia version --help' 0 "$CLIA" version --help
-dit 'l aide dit que la source de verite est le commit' 'source de vérité est le commit'
+
+# Ce qui explique a quitté l'aide brève pour le manuel — SES-001 tâche 3. Ces
+# trois cas suivent le texte à son nouvel emplacement plutôt que de
+# disparaître : ce qu'ils gardaient reste gardé.
+rc 'clia --man' 0 "$CLIA" --man
+dit 'le manuel documente les codes de retour' '^CODE DE RETOUR$'
+dit 'et la description du fichier de commande y est reprise' "l'alias lisible, ou le hash exact"
+
+rc 'clia version --man' 0 "$CLIA" version --man
+dit 'le manuel dit que la source de verite est le commit' 'source de vérité est le commit'
 
 # ==========================================================================
 titre 'Hors d un depot git'

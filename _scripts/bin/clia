@@ -96,40 +96,166 @@ _clia_perimetre_de() {
 }
 
 # --------------------------------------------------------------------------
-# Aide
+# Aide brève
 # --------------------------------------------------------------------------
 #
-# L'aide est composée à partir de ce qui a été trouvé. Elle ne peut donc pas
-# annoncer une commande qui n'existe pas, ni taire une commande qui existe.
+# Composée à partir de ce qui a été trouvé : elle ne peut donc pas annoncer
+# une commande qui n'existe pas, ni taire une commande qui existe.
+#
+# Elle ne porte aucune phrase — SES-001 tâche 3. Une ligne y est un titre de
+# bloc ou une entrée indentée de deux espaces, et rien d'autre. Ce qui
+# explique appartient au manuel : clia --man.
+#
+# Le point d'entrée la rend pour tous les niveaux, y compris ceux d'une
+# sous-commande, à partir des seules déclarations des fichiers. Une commande
+# n'écrit donc pas son aide : elle déclare ses signatures, et l'aide en
+# découle. C'est la même raison qui fait appliquer la garde de périmètre ici
+# plutôt que dans chaque commande — ce qui est uniforme se tient à un seul
+# endroit.
 
-_clia_aide() {
-  cat <<'EOF'
-clia — système d'information collaboratif entre humains, automatismes et
-intelligences artificielles.
+_CLIA_SIGNATURES_GLOBALES=(
+  '[-h | --help | --man | -v | --version]'
+  '<commande> [-h | --help | --man]'
+)
 
-Usage : clia <commande> [arguments]
-
-Commandes :
-EOF
-  local nom f desc
+# Toutes les signatures déclarées, celles du CLI puis celles des commandes.
+_clia_toutes_signatures() {
+  local s f nom
+  for s in "${_CLIA_SIGNATURES_GLOBALES[@]}"; do printf '%s\n' "$s"; done
   while IFS=$'\t' read -r nom f; do
-    desc=$(_clia_description_de "$f")
-    printf '  %-12s %s\n' "$nom" "${desc:-(sans description)}"
+    _clia_signatures_de "$f"
   done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
-  cat <<'EOF'
+}
 
-Options :
-  -h, --help        cette aide
-  -v, --version     la version — équivaut à « clia version »
+# _clia_aide <chemin> — l'aide brève, restreinte aux signatures qui
+# commencent par ce chemin. Un chemin vide rend l'aide générale.
+_clia_aide() {
+  local chemin="${1:-}" f nom commandes=() options=()
 
-Aide d'une commande :
-  clia <commande> --help
+  if [[ -z "$chemin" ]]; then
+    _clia_toutes_signatures | _clia_lignes_usage '' | sed '1i Usage :'
+    while IFS=$'\t' read -r nom f; do
+      commandes+=("$nom")
+    done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
+    _clia_bloc 'Commandes' "${commandes[@]}"
+    _clia_bloc 'Options' "${_CLIA_OPTIONS_GLOBALES[@]}"
+    return 0
+  fi
 
-Codes de retour :
-  0  la demande est satisfaite
-  1  refus : la demande est comprise, et clia ne la satisfait pas
-  2  demande mal formée
+  f=$(_clia_fichier_de "${chemin%% *}")
+  printf 'Usage :\n'
+  _clia_signatures_de "$f" | _clia_lignes_usage "$chemin"
+  mapfile -t options < <(_clia_options_de "$f" | _clia_lignes_options "$chemin")
+  options+=("${_CLIA_OPTIONS_UNIVERSELLES[@]}")
+  _clia_bloc 'Options' "${options[@]}"
+}
+
+# --------------------------------------------------------------------------
+# Manuel
+# --------------------------------------------------------------------------
+
+_clia_manuel() {
+  local nom f desc
+  {
+    cat <<'EOF'
+NOM
+clia - système d'information collaboratif entre humains, automatismes et
+intelligences artificielles
+
+SYNOPSIS
 EOF
+    _clia_toutes_signatures | _clia_lignes_usage '' | sed 's/^  //'
+    cat <<'EOF'
+
+DESCRIPTION
+clia outille un dépôt git. Il n'a pas de commande à lui : il les
+trouve. Un fichier déposé sous _scripts/lib/cmd/ et portant ses
+déclarations en tête apparaît dans l'aide et devient invocable, sans
+qu'aucun fichier du noyau soit modifié.
+
+Une commande déclare son périmètre. Celles dont le périmètre est
+« dépôt » n'agissent que dans un dépôt git, et le point d'entrée le
+résout avant de leur passer la main. Une déclaration absente vaut
+« dépôt » : l'oubli restreint, il n'ouvre jamais.
+
+La sortie standard ne porte que ce qu'un autre programme viendrait
+lire. Tout le reste — diagnostics, avertissements, refus — va sur la
+sortie d'erreur. Une commande dont la sortie tient sur une ligne peut
+donc être lue par une autre sans être filtrée.
+
+COMMANDES
+EOF
+    while IFS=$'\t' read -r nom f; do
+      desc=$(_clia_description_de "$f")
+      printf '%s\n' "$nom"
+      printf '       %s\n' "${desc:-(sans description)}"
+      printf '       Le manuel de cette commande : clia %s --man\n' "$nom"
+    done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
+    cat <<'EOF'
+
+OPTIONS
+-h, --help
+       L'aide brève du niveau demandé : les signatures valides et les
+       options disponibles, sans aucune prose. Elle est acceptée à tout
+       niveau, y compris celui d'une sous-commande.
+
+--man
+       Le manuel complet, au format des pages de manuel unix. Sans
+       commande, celui de clia ; avec une commande, le sien.
+
+-v, --version
+       Équivaut à « clia version ». SES-001 pose que la version du
+       CLI est celle du système d'information qu'il outille ; deux
+       orthographes du même mot ne doivent pas désigner deux objets.
+       Reconnue en première position seulement.
+
+CODE DE RETOUR
+0
+       La demande est satisfaite, même s'il n'y avait rien à faire.
+
+1
+       Refus. La demande est comprise, et clia ne la satisfait pas : hors
+       d'un dépôt git, pré-condition non tenue, ou rien à rapporter.
+
+2
+       Demande mal formée. L'appelant doit reformuler.
+
+ENVIRONNEMENT
+CLIA_SOURCE_DIR
+       Le dépôt d'où vient le code exécuté. Résolu par le point d'entrée,
+       les liens symboliques suivis, et exporté vers la commande.
+
+CLIA_WORK_DIR
+       Le dépôt sur lequel la commande travaille. Posé par le point
+       d'entrée pour les commandes de périmètre « dépôt » seulement.
+
+CLIA_EXECUTABLE
+       Le chemin par lequel clia a été appelé.
+
+FICHIERS
+clia.yaml, .clia.yaml, .dev/clia.yaml
+       La carte du dépôt : ce qu'il est, et ce qu'il tient
+       d'ailleurs. Les trois emplacements sont cherchés dans cet
+       ordre, et le premier trouvé l'emporte.
+
+_scripts/lib/cmd/*.sh
+       Les commandes. Chaque fichier porte ses déclarations en tête :
+       Description, Périmètre, Signature et Option.
+
+EXEMPLES
+Rendre l'alias de version lisible du dépôt courant :
+
+       $ clia version
+       0.3.0
+
+Lire le manuel d'une commande :
+
+       $ clia version --man
+
+VOIR AUSSI
+clia-version(1), git(1)
+EOF
+  } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
 
 # --------------------------------------------------------------------------
@@ -138,6 +264,7 @@ EOF
 
 case "${1:-}" in
   ''|-h|--help|help) _clia_aide; exit 0 ;;
+  --man)             _clia_manuel; exit 0 ;;
   # -v et --version ne sont pas une commande à part : SES-001 tâche 1 pose
   # que la version du CLI est celle du SI. Deux orthographes pour un même
   # objet doivent rendre la même chose, sinon le mot « version » désigne deux
@@ -163,9 +290,35 @@ if [[ -z "$FICHIER" ]]; then
   exit 2
 fi
 
+# Une demande de documentation est reconnue ici, à n'importe quelle
+# profondeur : « clia version release --help » doit répondre comme « clia
+# version --help ». Le chemin retenu est fait des arguments qui précèdent, et
+# les options n'en font pas partie — elles nomment une variante d'appel, pas
+# un niveau de commande.
+CHEMIN="$COMMANDE"
+DEMANDE_AIDE=0
+DEMANDE_MAN=0
+for _arg in "$@"; do
+  case "$_arg" in
+    -h|--help) DEMANDE_AIDE=1; break ;;
+    --man)     DEMANDE_MAN=1;  break ;;
+    -*)        ;;
+    *)         CHEMIN="$CHEMIN $_arg" ;;
+  esac
+done
+
+if (( DEMANDE_AIDE )); then
+  _clia_aide "$CHEMIN"
+  exit 0
+fi
+
 # Le périmètre est résolu ici, une fois, plutôt que dans chaque commande :
 # une commande nouvelle en hérite sans rien déclarer.
-if [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]]; then
+#
+# La documentation y échappe : un manuel ne dépend d'aucun dépôt, et exiger
+# d'être dans un dépôt git pour lire une page de manuel rendrait inaccessible
+# ce que la tâche 3 veut justement accessible partout.
+if (( ! DEMANDE_MAN )) && [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]]; then
   if ! CLIA_WORK_DIR=$(_clia_depot_git "$PWD"); then
     _clia_msg "le répertoire courant n'est pas dans un dépôt git"
     _clia_detail "clia $COMMANDE agit sur un dépôt ; placez-vous dans l'un d'eux"
