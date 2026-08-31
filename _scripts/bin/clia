@@ -2,13 +2,17 @@
 # _scripts/bin/clia — le CLI du système d'information clia.
 #
 # Ce fichier ne porte aucune commande : il les trouve. Une commande est un
-# fichier <nom>.sh déposé sous _scripts/lib/cmd/, portant deux lignes de
-# déclaration :
+# fichier <nom>.sh déposé sous _scripts/lib/cmd/, portant ses déclarations en
+# tête :
 #
 #   # Description: ce que la commande fait, en une ligne
-#   # Périmètre: dépôt | aucun
+#   # Périmètre:   dépôt | aucun
+#   # Signature:   une forme d'invocation valide       (répétable)
+#   # Option:      <chemin> <option>                   (répétable)
 #
 # Déposer un fichier suffit à l'exposer dans l'aide et à le rendre invocable.
+# Les deux dernières déclarations sont ce dont l'aide brève est faite : une
+# commande ne rédige pas son aide, elle déclare ses formes valides.
 #
 # Pourquoi une découverte plutôt qu'une liste écrite. C'est le seul mécanisme
 # que toutes les générations précédentes ont porté sans qu'aucune ne le
@@ -232,7 +236,25 @@ CLIA_WORK_DIR
 CLIA_EXECUTABLE
        Le chemin par lequel clia a été appelé.
 
+CLIA_INSTALLATION
+       La nature de l'installation en place, posée par setup.sh. Son
+       absence signifie que clia est appelé par son chemin, hors de
+       toute installation.
+
+CLIA_PORTEE
+       Le seul dépôt sur lequel l'installation permet de travailler.
+       Une commande de périmètre « dépôt » lancée ailleurs est
+       refusée ; la documentation, elle, répond partout.
+
+       Sans installation, aucune portée n'est déclarée et rien ne
+       restreint. La restriction appartient à l'installation, non au
+       CLI. Voir clia-setup(1).
+
 FICHIERS
+setup.sh
+       La gestion d'une installation. « . setup.sh activate » rend
+       clia disponible dans le shell courant, pour un dépôt.
+
 clia.yaml, .clia.yaml, .dev/clia.yaml
        La carte du dépôt : ce qu'il est, et ce qu'il tient
        d'ailleurs. Les trois emplacements sont cherchés dans cet
@@ -253,7 +275,7 @@ Lire le manuel d'une commande :
        $ clia version --man
 
 VOIR AUSSI
-clia-version(1), git(1)
+clia-version(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
@@ -324,6 +346,22 @@ if (( ! DEMANDE_MAN )) && [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]];
     _clia_detail "clia $COMMANDE agit sur un dépôt ; placez-vous dans l'un d'eux"
     exit 1
   fi
+
+  # La portée d'une installation, quand il y en a une. Une activation vaut
+  # pour un seul dépôt de travail — SES-001 tâche 4 — et travailler ailleurs
+  # sans s'en apercevoir est précisément ce qu'elle sert à empêcher.
+  #
+  # Sans installation, aucune portée n'est déclarée et rien ne restreint :
+  # c'est le cas quand clia est appelé par son chemin, depuis son dépôt
+  # source. La restriction appartient à l'installation, non au CLI.
+  if [[ -n "${CLIA_PORTEE:-}" && "$CLIA_WORK_DIR" != "$CLIA_PORTEE" ]]; then
+    _clia_msg "hors de la portée de l'installation en cours"
+    _clia_detail "portée : $CLIA_PORTEE"
+    _clia_detail "ici    : $CLIA_WORK_DIR"
+    _clia_detail "pour travailler ici : . setup.sh -C . activate"
+    exit 1
+  fi
+
   export CLIA_WORK_DIR
 fi
 
