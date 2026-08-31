@@ -1,142 +1,48 @@
-# SES-001
+# SES-002
+
+Extraction du savoir généré pour la conception du cli
 
 ## CONTEXTE
 
-Nous entamons une nouvelle génération de clia. Voir dans @.dev/archives/* pour consulter les générations précédentes.
+Nous avons fait plusieurs générations de clia afin de générer du savoir.
 
-Nous redémarrons de zéro le développement en concervant ce qui fonctionne bien et en éliminant le reste.
+Une chose est claire, nous auorns besoin d'un cli, même si la forme exacte n'est pas connu
 
 ## INTENTION
 
-Fournir le plus rapidement possible un cli `clia` utilisable pour un usage dans une variété de projets réels.
+Générer la documentation de conception du cli clia.
 
-## LIVRABLES attendus
-
-- un système d'information clia utile pour une variété d'usages 
-- un cli `clia` permettant d'instrumenter n'importe quel repo git
-- des observations et recommandations pertinante pour la prochaine génération du SI clia
 
 ## Tâches
 
-### 1. [implémentation] `clia harness-ia|skill|feature`
+### 1. [analyse] le cli clia
 
-Reproduire les commandes `harness-ia`, `skill` et `feature` tel qu'implémentées dans le repo @../../llm-wiki/noumanity-wiki
+Analyser le code de la génération actuelle de clia et des générations précédentes (@.archives) et de tout le code disponible dans $HOME/git/*
 
-### 2. [refactor] conventions d'usage des répertoires
+Produire une analyse sur le dévelopement, la conception et l'usage des cli jusqu'à maintenant. Et, en particulier, ce qui concerne clia.
 
-Réorganiser le répertoire afin de respecter le requis @.dev/reqs/REQ-002-convention-repertoires.md
+Raconter l'histoire de l'évolution de clia. Qu'est-ce qui marche bien? Qu'est-ce qui marche moins bien? Quels sont les composants qui ont convergés et qui semblent stabilisé? Et qu'est-ce qui reste à découvrir/concevoir?
 
-### 3. [implementation] crée les resssources 'ressource' et 'intention'
+Sortir la liste des enjeux. Dire quels sont les principes de conceptions les plus prometteurs.
 
-mettre dans les répertoires: @_ressources/ressource/ et @_ressources/intention/
+Produire un fichier ANL.
 
-Au besoin, consulter le repertoire @.archives pour mieux comprendre le système de ressource
+Également, produire la documentation d'architecture d'un cli idéal à développer lors de la prochaine génération et déposer ça dans :
 
-### 4. [implementation] clia init
+- @docs/architecture/diagrammmes => diagrammes et plans d'architecture
+- @docs/architecture/specs  => documentation de spécification (techno agnostique)
+- @docs/architecture/features => requis fonctionnels
+- @docs/architecture/requis => requis non-fonctionnels
+- @docs/architecture/usage => description des Cas d'usage
 
-initialiser la commande `clia init` tel que décrite dans le cas d'usage USE-002
+Également, proposer une raison d'être et une spécification de ces 5 ressources informationnelles. Établir les relations entre ces 5 ressources: 1. diagrammes et plans architecturaux, 2. spécifications, 3. requis non-fonctionnels, 4. requis fonctionnels, 5. cas d'usage
 
-### 5. [implementation] ce que peuvent contenir les primitives de _ressources/<RESSOURCE> 
-
-Le répertoire `@_ressources/` contient des répertoires de primitives de ressources et des répertoires de catégories qui, lui, contient des répertoires de ressources.
-
-La ressource est l'entité première du système clia. Tout autre concept doit se rattacher à une ressource.
-
-Aussi, les répertoires de ressource contiennent les primitives nécessaire à la régération des concepts suivants:
-
-- [_]principes: Principes de conception associés à cette ressource
-- [_]ontology: concepts et relations spécifiques à cette ressource
-- [_]specs: spécifications de cette ressource
-- [_]reqs: requis d'implémentation de cette ressource 
-- [_]scripts: scripts d'instrumentation de cette ressource
-- [_]skills: skills opérants sur cette ressource
-- [_]features: fonctionnalités fournis pour/par cette ressource
-- [_]methodes: méthodologies permettant d'opérer sur cette ressource
-
-Le caractère underscore indique qu'il s'agit d'un répertoire de templates d'instrumentation.
-C'est à dire que l'on met les primitives dans un répertoire et les templates associés dans un répertoire du même nom préfixé de "_"
-
-Décrire correctement les spécifications de ceci dans @.dev/specs/... et les requis dans @.dev/reqs/...
+### 2. [analyse] différence depuis la dernière génération
 
 
+En ce qui concerne le cli, dire ce qui est différent:
 
-### 6. [refactor] feature n'est pas une ressource, mais session oui
-
-- 1. feature n'est pas une ressource. Refactorer @_ressources/features pour respecter les spécifications générés à la tâche précédente
-- 2. session est une ressource: 
-  - mettre @_ressources/feature/primitives/session.md dans => _resources/session/features/...
-  - mettre @_templates/session/sesion.template.md dans => _ressources/session/_features/...
-
-### 7. [implémentation] mettre en place la commande `clia res` tel que décrite par USE-003
-
-### 8. [implémentation] mettre en place la commande `clia release ...` tel que décrite dans USE-004
-
-
-### 9. [implémentation] permettre l'installation de ressource, skill et fonctionnalité tel que décrite dans USE-005
-
-### 10. [implémentation] permettre l'ajout d'extensions tel que décrit dans USE-006
-
-### 11. [conception] produire les ressources core suivantes: FND, ANL, NON, PLN, SES et LOG
-
-Consulter les générations précédentes de clia dans @.archives/* afin de comprendre ces ressources.
-
-Respecter tous les principes PND de @.dev/principes/* et rapporter toute incohérence.
-
-Pour FND, utiliser l'implémentation de la génération 2026-07 qui était beaucoup plus efficace
-
-### 12. [enhance behavior] repo clia config
-
-Tout repo clia doit contenir un fichier de configuration. L'emplacement par défaut est @.dev/clia.yaml. Ce fichier doit contenir:
-
-- les infos de ce repo: version, génération, maturité, namespace
-- la namespace+version du harness clia installé
-- namespace+version des extensions installés
-- namespace+version des autres ressources et skills et features et scripts installés
-
-TODO: générer un use case (USE) qui décrit la vérification de la conformité d'un repo clia avec la commande `clia check`
-
-le repo @../../clia-experiments-repo/offre-service-cscn ne contient pas de fichier de config clia.yaml et les extensions sont déclarés dans un fichier extension.yaml
-
-Ceci aurait dû être déclaré par clia. Minimalement, signalé lorsque la version des harness IA installés ne correspondent pas à la version de clia utilisée.
-
-TODO: Fournir un script `clia check` qui vérifie a conformité des repos.
-
-
-**notes** à propos des versions.
-
-Un repo a une version. Mais chaque ressource d'un repo a aussi sa version propre.
-
-il y a un mapping unique pour chaque version de repo => versions des ressources (identifiable par le hash des fichiers+répertoires)
-
-### 13. [implémentation]
-
-Fournir une commande pour "réparer" un repo non conforme
-
-```sh
-clia check --fix
-```
-
-### 14. [implementation] permettre la mise à jour des ressources et des extensions tel que décrit dans USE-007
-
-
-### 15. [implémentation]
-
-> La seconde moitié de USE-007 — clia version|upgrade|downgrade|migrate pour « le SI clia » — attend une décision qui n'est pas écrite : le SI, est-ce le dépôt instrumenté ou l'installation de clia ? 
-
-L'usage de clia est le suivant =>  Les commandes s'appliquent sur le repo cible, c'est-à-dire le repo dans lequel clia est exécuté
-
-Les commandes upgrade, downgrade et migrate fonctionnent de cette façon.
-
-En d'autre terme, ils produisent la mise à jour de ce qui est installé dans un repo à partir de l'installation de clia et des autres repos d'extension.
-
-Implémentez.
-
-### 16. [implémentation] contrôle du retard des ressources
-
-> À signaler aussi : clia check ne contrôle pas encore le retard d'une ressource sur sa provenance. Ce serait un septième contrôle naturel (C7)
-
-oui, ajoutez ce 7e contrôle à clia check
-
-### x. [implémentaiton] Fragments et Plans
-
-Créer les ressource FRG et PLN (voir la génération 2026-08-23)
+- même chose
+- ajouté
+- enlevé
+- modifié
