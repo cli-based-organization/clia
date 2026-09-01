@@ -21,6 +21,14 @@ BIN="$RACINE/_scripts/bin"
 BAC=$(mktemp -d)
 trap 'rm -rf "$BAC"' EXIT
 
+# Le poste qui lance le banc peut porter une installation dev. Elle
+# répondrait aux mêmes questions que celles du banc, et « aucune
+# installation » deviendrait faux sur ce poste et vrai ailleurs. Les
+# emplacements sont donc détournés vers le bac, pour tout le banc.
+export CLIA_BIN_DIR="$BAC/poste/bin"
+export XDG_CONFIG_HOME="$BAC/poste/config"
+mkdir -p "$CLIA_BIN_DIR" "$XDG_CONFIG_HOME"
+
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
 
 # --------------------------------------------------------------------------
@@ -124,7 +132,7 @@ for section in NOM SYNOPSIS DESCRIPTION VERBES OPTIONS ENVIRONNEMENT \
                'CODE DE RETOUR' EXEMPLES 'VOIR AUSSI'; do
   dit "la section $section y est" "^$section\$"
 done
-dit 'les trois proprietes d une installation y sont nommees' 'Sa durée de vie dit'
+dit 'les trois proprietes d une installation y sont nommees' 'sa source, et sa portée'
 
 LONGUES=$(bash "$SETUP" --man 2>/dev/null | lignes_trop_longues)
 vrai 'aucune ligne du manuel ne depasse 80 colonnes' test -z "$LONGUES"

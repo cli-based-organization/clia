@@ -71,6 +71,8 @@ fi
 _CLIA_NOM='setup'
 # shellcheck source=_scripts/lib/commun.sh
 . "$_clia_racine/_scripts/lib/commun.sh"
+# shellcheck source=_scripts/lib/installation.sh
+. "$_clia_racine/_scripts/lib/installation.sh"
 
 # --------------------------------------------------------------------------
 # Documentation
@@ -84,11 +86,12 @@ _clia_setup_aide() {
   printf 'Usage :\n'
   printf '  . setup.sh [-C ROOT_PATH] activate\n'
   printf '  . setup.sh deactivate\n'
+  printf '  . setup.sh install --dev\n'
   printf '  setup.sh status\n'
   printf '  setup.sh help\n'
   printf '  setup.sh --man\n'
-  _clia_bloc 'Verbes' activate deactivate status help
-  _clia_bloc 'Options' '-C ROOT_PATH' '--man'
+  _clia_bloc 'Verbes' activate deactivate install status help
+  _clia_bloc 'Options' '-C ROOT_PATH' '--dev' '--man'
 }
 
 _clia_setup_manuel() {
@@ -99,6 +102,7 @@ clia-setup - gérer une installation de clia
 SYNOPSIS
 . setup.sh [-C ROOT_PATH] activate
 . setup.sh deactivate
+. setup.sh install --dev
 setup.sh status
 setup.sh help
 setup.sh --man
@@ -108,18 +112,23 @@ Une installation de clia est faite de trois choses : le programme
 lui-même, les variables d'environnement qui décrivent son intégration
 au système hôte, et les options qui modulent son fonctionnement.
 
-Elle a trois propriétés, et « status » les rapporte.
+Elle a trois propriétés, et « status » les rapporte : sa durée de
+vie, sa source, et sa portée.
 
-Sa durée de vie dit jusqu'à quand elle vaut. Sa source dit d'où
-viennent l'exécutable et ses fichiers de support. Sa portée dit sur
-quoi elle est utilisable.
+Il en existe deux natures.
 
-Une activation est la forme la plus légère d'installation. Sa durée
-de vie est celle du shell courant, sa source est le dépôt où vit ce
-script, et sa portée est un seul dépôt de travail.
+Une activation est la plus légère. Sa durée de vie est celle du shell
+courant, sa source est le dépôt où vit ce script, et sa portée est un
+seul dépôt de travail. Rien n'est écrit sur le disque ; fermer le
+terminal suffit à la défaire.
 
-Rien n'est écrit sur le disque. Fermer le terminal suffit à la
-défaire.
+Une installation dev est permanente. Sa durée de vie va jusqu'à son
+retrait, sa source est le dépôt d'où elle a été lancée, et sa portée
+n'est pas bornée : la commande répond dans n'importe quel dépôt git.
+
+Les deux peuvent coexister. L'activation l'emporte alors, et status
+le dit — sans quoi on attribuerait à l'une le comportement de
+l'autre.
 
 VERBES
 activate
@@ -147,8 +156,30 @@ deactivate
 
        Doit être sourcé.
 
+install --dev
+       Installe clia pour toutes les sessions : un lien symbolique
+       vers l'exécutable du dépôt courant, et une configuration qui
+       décrit l'installation.
+
+       Le lien, et non une copie : modifier le dépôt source change
+       immédiatement la commande, ce qui est le propre d'un mode
+       développement.
+
+       Aucune portée n'est déclarée, et c'est ce qui rend la commande
+       utilisable dans n'importe quel dépôt git.
+
+       Un lien menant à un autre dépôt n'est pas écrasé : il
+       appartient à une autre installation, et l'écraser la ferait
+       disparaître sans le dire.
+
+       Le retrait appartient au CLI : clia setup uninstall.
+
+       Peut être exécuté ; sourcé, la commande répond aussi tout de
+       suite dans le shell courant.
+
 status
        Rapporte l'installation en place et ses trois propriétés.
+       Rend 1 quand il n'y en a aucune, pour qu'un script en dépende.
 
 help
        L'aide brève : les signatures valides et les options.
@@ -158,8 +189,24 @@ OPTIONS
        Le répertoire dont le dépôt fixe la portée de l'activation.
        Vaut le répertoire courant par défaut. Peut être relatif.
 
+--dev
+       Le mode d'installation permanente. C'est le seul aujourd'hui,
+       et install l'exige plutôt que de le supposer.
+
 --man
        Cette page.
+
+FICHIERS
+~/.local/bin/clia
+       Le lien posé par install --dev. Son répertoire se change par
+       CLIA_BIN_DIR.
+
+~/.config/clia/installation.yaml
+       Ce que l'installation dev déclare : sa nature, sa source, son
+       lien. Son répertoire suit XDG_CONFIG_HOME.
+
+       Ces deux fichiers sont tout ce qu'une installation dev laisse
+       sur le disque, et tout ce que uninstall retire.
 
 ENVIRONNEMENT
 Ces variables sont l'installation, au sens de la définition
@@ -177,7 +224,15 @@ CLIA_SOURCE_DIR
 CLIA_PORTEE
        La racine du dépôt de travail sur lequel l'installation
        permet de travailler. Une commande lancée hors de ce dépôt
-       est refusée.
+       est refusée. Une installation dev n'en pose pas : sa portée
+       n'est pas bornée.
+
+CLIA_BIN_DIR
+       Où install --dev pose son lien. Vaut ~/.local/bin par défaut.
+
+XDG_CONFIG_HOME
+       Où install --dev pose sa configuration. Vaut ~/.config par
+       défaut.
 
 CODE DE RETOUR
 0
@@ -208,8 +263,16 @@ Défaire l'activation sans fermer le terminal :
 
        $ . setup.sh deactivate
 
+Installer clia pour toutes les sessions :
+
+       $ . setup.sh install --dev
+
+Et le retirer :
+
+       $ clia setup uninstall
+
 VOIR AUSSI
-clia(1), clia-version(1), bash(1)
+clia(1), clia-version(1), clia-check(1), bash(1)
 FIN
 }
 
@@ -220,8 +283,6 @@ FIN
 # Le répertoire des exécutables est retiré avant d'être ajouté : sans cela,
 # activer deux fois l'inscrirait deux fois, et désactiver n'en retirerait
 # qu'une.
-
-_clia_setup_bin() { printf '%s/_scripts/bin\n' "$1"; }
 
 _clia_setup_path_sans() {
   local retire="$1" reste='' element
@@ -281,10 +342,10 @@ _clia_setup_activate() {
   # Une activation antérieure est remplacée. Elle n'a rien écrit sur le
   # disque : il n'y a rien à défaire, seulement à dire.
   if [[ -n "${CLIA_INSTALLATION:-}" ]]; then
-    PATH=$(_clia_setup_path_sans "$(_clia_setup_bin "$ancienne_source")")
+    PATH=$(_clia_setup_path_sans "$(_clia_i_bin_du_source "$ancienne_source")")
   fi
 
-  bin=$(_clia_setup_bin "$_clia_racine")
+  bin=$(_clia_i_bin_du_source "$_clia_racine")
   PATH="$bin:$(_clia_setup_path_sans "$bin")"
 
   CLIA_INSTALLATION='activation'
@@ -322,7 +383,7 @@ _clia_setup_deactivate() {
     return 0
   fi
 
-  PATH=$(_clia_setup_path_sans "$(_clia_setup_bin "${CLIA_SOURCE_DIR:-}")")
+  PATH=$(_clia_setup_path_sans "$(_clia_i_bin_du_source "${CLIA_SOURCE_DIR:-}")")
   export PATH
   unset CLIA_INSTALLATION CLIA_SOURCE_DIR CLIA_PORTEE CLIA_WORK_DIR
 
@@ -330,21 +391,86 @@ _clia_setup_deactivate() {
   return 0
 }
 
-# Rapporte l'installation et ses trois propriétés. Le code de retour dit s'il
-# y en a une, pour qu'un script puisse en dépendre.
-_clia_setup_status() {
-  if [[ -z "${CLIA_INSTALLATION:-}" ]]; then
-    _clia_msg "aucune installation en place"
-    _clia_detail "pour activer clia ici : . setup.sh activate"
-    return 1
+# Rapporte l'installation en place et ses trois propriétés. Le rendu vient du
+# module partagé : « setup.sh status » et « clia setup status » doivent dire
+# la même chose du même état.
+_clia_setup_status() { _clia_i_rapport; }
+
+# Installation permanente — SES-001 tâche 7.
+#
+# Sa durée de vie va jusqu'au retrait, sa source est le dépôt d'où elle est
+# lancée, et sa portée n'est pas bornée : aucune portée n'est déclarée, et
+# c'est ce qui rend clia utilisable dans n'importe quel dépôt git.
+#
+# Elle est faite d'un lien symbolique vers l'exécutable du dépôt source, non
+# d'une copie : modifier le source change immédiatement la commande, ce qui
+# est le propre d'un mode développement.
+_clia_setup_install() {
+  local mode="$1" lien cible_actuelle bin
+
+  if [[ "$mode" != '--dev' ]]; then
+    _clia_msg "install attend un mode : --dev"
+    _clia_detail "l'usage : . setup.sh install --dev"
+    return 2
   fi
 
-  printf 'installation   %s\n' "$CLIA_INSTALLATION"
-  printf 'durée de vie   %s\n' 'le shell courant'
-  printf 'source         %s\n' "${CLIA_SOURCE_DIR:-(inconnue)}"
-  printf 'portée         %s\n' "${CLIA_PORTEE:-(inconnue)}"
-  printf 'commande       %s\n' "$(command -v clia 2>/dev/null || printf '(hors du PATH)')"
+  _clia_setup_prerequis || return 1
+
+  lien=$(_clia_i_lien)
+  bin=$(_clia_i_bin_du_source "$_clia_racine")
+
+  # Un lien déjà posé vers un autre dépôt n'est pas écrasé : il appartient à
+  # une autre installation, et l'écraser la ferait disparaître sans le dire.
+  if [[ -e "$lien" || -L "$lien" ]]; then
+    cible_actuelle=$(readlink -f "$lien" 2>/dev/null || printf '')
+    if [[ "$cible_actuelle" != "$(readlink -f "$bin/clia" 2>/dev/null)" ]]; then
+      _clia_msg "une commande clia occupe déjà cet emplacement : $lien"
+      _clia_detail "elle mène à : ${cible_actuelle:-(cible introuvable)}"
+      _clia_detail "retirez-la — clia setup uninstall — puis réinstallez"
+      return 1
+    fi
+  fi
+
+  _clia_i_poser "$_clia_racine" || return 1
+
+  _clia_msg "clia est installé, depuis $_clia_racine"
+  _clia_detail "lien   $lien"
+  _clia_detail "portée n'importe quel dépôt git"
+
+  # Sourcé, le PATH du shell courant est complété pour que la commande
+  # réponde tout de suite. Ce geste-là est éphémère ; la permanence tient au
+  # lien, et donc à ce que le répertoire soit dans le PATH des sessions
+  # suivantes.
+  local dir
+  dir=$(_clia_i_bin_dir)
+  if (( _clia_source )); then
+    PATH="$dir:$(_clia_setup_path_sans "$dir")"
+    export PATH
+  fi
+
+  if ! _clia_setup_path_contient "$dir"; then
+    _clia_msg "$dir n'est pas dans votre PATH"
+    _clia_detail "ajoutez cette ligne à votre profil, sans quoi la commande"
+    _clia_detail "ne répondra pas dans les sessions suivantes :"
+    _clia_detail ""
+    _clia_detail "  export PATH=\"$dir:\$PATH\""
+  elif (( ! _clia_source )); then
+    _clia_detail "ce shell-ci ne la voit que si $dir est déjà dans son PATH"
+  fi
+
+  _clia_detail "ce qui est en place : setup.sh status"
   return 0
+}
+
+_clia_setup_path_contient() {
+  local cherche="$1" element
+  local ancien_ifs="$IFS"
+  IFS=':'
+  for element in $PATH; do
+    if [[ "$element" == "$cherche" ]]; then IFS="$ancien_ifs"; return 0; fi
+  done
+  IFS="$ancien_ifs"
+  return 1
 }
 
 # --------------------------------------------------------------------------
@@ -352,7 +478,7 @@ _clia_setup_status() {
 # --------------------------------------------------------------------------
 
 _clia_setup_main() {
-  local verbe='' racine="$PWD"
+  local verbe='' racine="$PWD" mode=''
 
   while (( $# )); do
     case "$1" in
@@ -368,7 +494,10 @@ _clia_setup_main() {
       -h|--help|help)
           _clia_setup_aide
           return 0 ;;
-      activate|deactivate|status)
+      --dev)
+          mode='--dev'
+          shift ;;
+      activate|deactivate|status|install)
           verbe="$1"
           shift ;;
       *)  _clia_msg "verbe inconnu : $1"
@@ -380,6 +509,7 @@ _clia_setup_main() {
   case "$verbe" in
     activate)   _clia_setup_activate "$racine" ;;
     deactivate) _clia_setup_deactivate ;;
+    install)    _clia_setup_install "$mode" ;;
     status)     _clia_setup_status ;;
     '')         _clia_setup_aide ;;
   esac
