@@ -1,0 +1,53 @@
+# Les harnais IA de ce dépôt.
+#
+# Ce fichier est la primitive : c'est lui qui s'édite. Les fichiers qui
+# l'accompagnent en sont générés, et la régénération les écrase — ce qu'il y
+# a à changer est ici.
+#
+# Une section vaut « oui » ou « non » : la garder, ou la retirer. Un champ
+# vaut ce que son texte doit dire.
+#
+#   clia hrn ls        ce qui est offert, et où en est ce dépôt
+#   clia hrn gen       régénérer les livrables
+
+CLAUDE:
+  champs:
+    # Le titre du fichier, en tête.
+    titre: Conventions pour les agents
+    # Le harnais qui dit qui a le droit de quoi, et qui prime sur celui-ci.
+    constitution: CONSTITUTION.md
+  sections:
+    # Ce que clia tient, et ce qu'il ne tient pas.
+    frontiere: oui
+    # Où trouver ce que l'outil sait faire.
+    aide: oui
+    # Ce qu'est une ressource informationnelle. À retirer d'un dépôt qui n'en porte aucune.
+    ressources: oui
+    # On ne modifie pas un fichier généré : on modifie ses primitives.
+    ressources-generees: oui
+    # La source de vérité d'une version est le commit.
+    versions: oui
+    # Le cadre de travail : chacun agit dans son registre.
+    cadre: oui
+
+CONSTITUTION:
+  champs:
+    # Le titre du fichier, en tête.
+    titre: CONSTITUTION
+  sections:
+    # Le tableau des trois intervenants : ce qu'ils sont, ce qu'ils apportent.
+    intervenants: oui
+    # R1 — Chacun agit dans son registre.
+    r1-registres: oui
+    # R2 — Le tableau des permissions, geste par geste.
+    r2-permissions: oui
+    # R3 — Ce qui est incertain se dit.
+    r3-incertitude: oui
+    # R4 — Ce qui est fait se vérifie.
+    r4-verification: oui
+    # R5 — Ce qui est écrit s'adresse à un lecteur.
+    r5-lecteur: oui
+    # R6 — Ce qui prime sur quoi, en cas de conflit.
+    r6-arbitrage: oui
+    # Ce que la constitution ne garantit pas : elle rend la transgression visible, non impossible.
+    portee-reelle: oui

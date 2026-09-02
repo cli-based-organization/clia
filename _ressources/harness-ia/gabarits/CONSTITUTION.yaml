@@ -1,0 +1,45 @@
+# Le schéma du harnais CONSTITUTION.
+#
+# Il déclare ce qui se configure, et rien d'autre : un champ ou une section
+# que le gabarit n'emploie pas serait un levier qui ne commande rien.
+#
+# Les règles portent un numéro, et ce numéro fait partie de leur nom. Retirer
+# une règle laisse donc son numéro inoccupé, volontairement : R4 doit désigner
+# la même règle d'un dépôt à l'autre, sinon la citer ne veut plus rien dire.
+
+harnais: CONSTITUTION
+livrable: "CONSTITUTION.md"
+titre: "Harnais constitutionnel"
+
+description: "Les rôles et les permissions des humains, des automatismes et des agents IA."
+
+champs:
+  - nom: titre
+    defaut: "CONSTITUTION"
+    description: "Le titre du fichier, en tête."
+
+sections:
+  - nom: intervenants
+    defaut: oui
+    description: "Le tableau des trois intervenants : ce qu'ils sont, ce qu'ils apportent."
+  - nom: r1-registres
+    defaut: oui
+    description: "R1 — Chacun agit dans son registre."
+  - nom: r2-permissions
+    defaut: oui
+    description: "R2 — Le tableau des permissions, geste par geste."
+  - nom: r3-incertitude
+    defaut: oui
+    description: "R3 — Ce qui est incertain se dit."
+  - nom: r4-verification
+    defaut: oui
+    description: "R4 — Ce qui est fait se vérifie."
+  - nom: r5-lecteur
+    defaut: oui
+    description: "R5 — Ce qui est écrit s'adresse à un lecteur."
+  - nom: r6-arbitrage
+    defaut: oui
+    description: "R6 — Ce qui prime sur quoi, en cas de conflit."
+  - nom: portee-reelle
+    defaut: oui
+    description: "Ce que la constitution ne garantit pas : elle rend la transgression visible, non impossible."

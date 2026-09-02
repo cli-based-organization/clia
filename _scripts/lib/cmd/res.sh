@@ -15,7 +15,7 @@
 #   _ressources/<nom>/<nom>.yaml     sa définition — ce qui en fait une
 #   _ressources/<nom>/primitives/    ce à partir de quoi ses livrables sont produits
 #   _ressources/<nom>/skills/        les procédures qu'elle fournit
-#   _ressources/<nom>/scripts/       les automatismes qu'elle fournit
+#   _ressources/<nom>/_scripts/      les automatismes qu'elle fournit
 #
 # Un répertoire de _ressources/ est une ressource parce qu'il porte sa
 # définition, et pour aucune autre raison. Le reste est admis, jamais exigé :
@@ -173,8 +173,12 @@ _ressources/<nom>/<nom>.yaml
        champ qu'aucune commande ne fait tenir serait une promesse
        que le système ne tient pas.
 
-_ressources/<nom>/primitives/, skills/, scripts/
+_ressources/<nom>/primitives/, skills/, _scripts/
        Ce que la ressource porte. Admis, jamais exigés.
+
+       Un fichier <nom>.sh déposé sous _scripts/ devient une
+       commande de clia, découverte comme celles du noyau. Voir
+       clia(1), et clia-hrn(1) pour celle de harness-ia.
 
 EXEMPLES
 Créer une ressource :
@@ -472,7 +476,8 @@ creer() {
 #
 #   primitives/  ce à partir de quoi ses livrables sont produits
 #   skills/      les procédures qu'elle fournit
-#   scripts/     les automatismes qu'elle fournit
+#   _scripts/    les automatismes qu'elle fournit — un <nom>.sh y devient
+#                une commande de clia
 
 nom: $nom
 titre: $titre

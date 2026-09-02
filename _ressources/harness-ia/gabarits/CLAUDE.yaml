@@ -1,0 +1,42 @@
+# Le schéma du harnais CLAUDE.
+#
+# Il déclare ce qui se configure, et rien d'autre : un champ ou une section
+# que le gabarit n'emploie pas serait un levier qui ne commande rien.
+#
+# Un champ est une valeur substituée dans le texte, à l'endroit où le
+# gabarit écrit {{nom}}. Une section est un bloc que l'on garde ou que l'on
+# retire ; le gabarit la délimite par {{#section nom}} et {{/section}}.
+
+harnais: CLAUDE
+livrable: "CLAUDE.md"
+titre: "Harnais IA principal"
+
+description: "Comment travailler dans ce dépôt : ce que l'outil tient, et ce qui reste à faire."
+
+champs:
+  - nom: titre
+    defaut: "Conventions pour les agents"
+    description: "Le titre du fichier, en tête."
+  - nom: constitution
+    defaut: "CONSTITUTION.md"
+    description: "Le harnais qui dit qui a le droit de quoi, et qui prime sur celui-ci."
+
+sections:
+  - nom: frontiere
+    defaut: oui
+    description: "Ce que clia tient, et ce qu'il ne tient pas."
+  - nom: aide
+    defaut: oui
+    description: "Où trouver ce que l'outil sait faire."
+  - nom: ressources
+    defaut: oui
+    description: "Ce qu'est une ressource informationnelle. À retirer d'un dépôt qui n'en porte aucune."
+  - nom: ressources-generees
+    defaut: oui
+    description: "On ne modifie pas un fichier généré : on modifie ses primitives."
+  - nom: versions
+    defaut: oui
+    description: "La source de vérité d'une version est le commit."
+  - nom: cadre
+    defaut: oui
+    description: "Le cadre de travail : chacun agit dans son registre."

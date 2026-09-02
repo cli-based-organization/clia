@@ -8,7 +8,8 @@
 #
 #   primitives/  ce à partir de quoi ses livrables sont produits
 #   skills/      les procédures qu'elle fournit
-#   scripts/     les automatismes qu'elle fournit
+#   _scripts/    les automatismes qu'elle fournit — un <nom>.sh y devient
+#                une commande de clia
 
 nom: ressource
 titre: Ressource

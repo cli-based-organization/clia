@@ -2,8 +2,8 @@
 # _scripts/bin/clia — le CLI du système d'information clia.
 #
 # Ce fichier ne porte aucune commande : il les trouve. Une commande est un
-# fichier <nom>.sh déposé sous _scripts/lib/cmd/, portant ses déclarations en
-# tête :
+# fichier <nom>.sh déposé sous _scripts/lib/cmd/, ou sous les _scripts/ d'une
+# ressource, portant ses déclarations en tête :
 #
 #   # Description: ce que la commande fait, en une ligne
 #   # Périmètre:   dépôt | aucun
@@ -69,9 +69,18 @@ fi
 # --------------------------------------------------------------------------
 
 # Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
+#
+# Deux fouilles, et le noyau d'abord. Une ressource apporte ses automatismes
+# avec elle — c'est ce qui fait qu'ajouter une ressource ajoute ce qu'elle
+# sait faire — mais elle ne peut pas masquer une commande du noyau : le
+# premier trouvé l'emporte, et « version » ne doit pas changer de sens selon
+# les ressources installées.
 _clia_fichiers_de_commande() {
   local f
   for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh; do
+    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+  done
+  for f in "$CLIA_SOURCE_DIR"/_ressources/*/_scripts/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
   done
   return 0
@@ -173,9 +182,14 @@ EOF
 
 DESCRIPTION
 clia outille un dépôt git. Il n'a pas de commande à lui : il les
-trouve. Un fichier déposé sous _scripts/lib/cmd/ et portant ses
-déclarations en tête apparaît dans l'aide et devient invocable, sans
-qu'aucun fichier du noyau soit modifié.
+trouve. Un fichier portant ses déclarations en tête apparaît dans
+l'aide et devient invocable, sans qu'aucun fichier du noyau soit
+modifié.
+
+Deux endroits sont fouillés : _scripts/lib/cmd/ pour le noyau, et
+_ressources/<nom>/_scripts/ pour ce que chaque ressource apporte.
+Le noyau l'emporte en cas d'homonymie ; une ressource ajoute, elle
+ne remplace pas.
 
 Une commande déclare son périmètre. Celles dont le périmètre est
 « dépôt » n'agissent que dans un dépôt git, et le point d'entrée le
@@ -261,8 +275,12 @@ clia.yaml, .clia.yaml, .dev/clia.yaml
        ordre, et le premier trouvé l'emporte.
 
 _scripts/lib/cmd/*.sh
-       Les commandes. Chaque fichier porte ses déclarations en tête :
-       Description, Périmètre, Signature et Option.
+       Les commandes du noyau. Chaque fichier porte ses déclarations
+       en tête : Description, Périmètre, Signature et Option.
+
+_ressources/*/_scripts/*.sh
+       Les commandes qu'une ressource apporte, déclarées de la même
+       façon. Voir clia-hrn(1), celle de la ressource harness-ia.
 
 EXEMPLES
 Rendre l'alias de version lisible du dépôt courant :
@@ -276,7 +294,7 @@ Lire le manuel d'une commande :
 
 VOIR AUSSI
 clia-version(1), clia-res(1), clia-check(1), clia-init(1),
-clia-setup(1), git(1)
+clia-hrn(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
