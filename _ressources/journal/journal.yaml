@@ -1,0 +1,19 @@
+# La définition de la ressource « journal ».
+#
+# Elle porte ce que les commandes de clia savent tenir aujourd'hui, et rien
+# de plus : un champ qu'aucune commande n'emploie serait une promesse que le
+# système ne tient pas.
+#
+# Ce qui se range à côté de ce fichier :
+#
+#   _scripts/     les automatismes qu'elle fournit — log.sh y porte
+#                 la commande « clia log »
+#   primitives/   ce à partir de quoi ses livrables sont produits
+#   skills/       les procédures qu'elle fournit
+
+nom: journal
+titre: Journal
+prefixe: LOG
+version: 0.1.0
+
+description: "Journal : la trace de ce qui a été fait pendant une session."

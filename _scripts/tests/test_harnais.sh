@@ -100,10 +100,13 @@ titre 'Les commandes sont decouvertes et documentees'
 # ==========================================================================
 
 rc 'clia --help les liste' 0 "$CLIA" --help
-dit 'check y figure' '^  check$'
-dit 'init y figure' '^  init$'
-dit 'la signature de check --harness aussi' 'clia check --harness'
-dit 'et celle de init' 'clia init \[REPO_PATH\]'
+dit 'check y figure, avec ce qu elle fait' '^  check  *La conformité du dépôt'
+dit 'init y figure aussi' '^  init  *Crée ou instrumente un dépôt'
+
+rc 'et leurs signatures sont a leur propre niveau' 0 "$CLIA" check --help
+dit 'celle de check --harness' 'clia check --harness'
+rc 'celle de init aussi' 0 "$CLIA" init --help
+dit 'et elle y est' 'clia init \[REPO_PATH\]'
 
 for niveau in check init; do
   RESTE=$("$CLIA" $niveau --help 2>/dev/null | lignes_de_prose)

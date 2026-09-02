@@ -110,8 +110,11 @@ titre 'Une commande deposee par une ressource est decouverte'
 # ==========================================================================
 
 rc 'clia --help la liste' 0 "$CLIA" --help
-dit 'son nom y figure' '^  hrn$'
-dit 'ses signatures aussi' 'clia hrn new HARNAIS'
+dit 'son nom y figure, avec ce qu elle fait' '^  hrn  *Les harnais IA'
+dit 'et sous les ressources, non sous les commandes du noyau' '^Ressources :$'
+
+rc 'ses signatures sont a son propre niveau' 0 "$CLIA" hrn --help
+dit 'celle de new' 'clia hrn new HARNAIS'
 dit 'et celle de gen' 'clia hrn gen \[HARNAIS\]'
 
 rc 'son aide de niveau repond' 0 "$CLIA" hrn --help

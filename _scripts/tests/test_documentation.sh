@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 # _scripts/tests/test_documentation.sh — l'aide brève, et le manuel.
 #
-# Éprouve SES-001 tâche 3.
+# Éprouve SES-001 tâches 3 et 13.
+#
+# La tâche 13 a scindé l'aide en deux formes, et le banc les mesure
+# séparément. Au premier niveau, « clia --help » sert à trouver une commande :
+# il porte les commandes et ce que chacune fait, sans signatures. Aux niveaux
+# suivants, il sert à employer une commande déjà trouvée : il porte ses
+# signatures et ses options, et aucune prose.
 #
 # Deux propriétés y sont mécaniques plutôt que jugées à l'oeil, parce que
 # l'énoncé les pose comme des contraintes de forme :
 #
-#   l'aide brève ne porte aucune prose — toute ligne y est un titre de bloc
-#   ou une entrée indentée de deux espaces, et rien d'autre ;
+#   l'aide brève d'un niveau de commande ne porte aucune prose — toute ligne
+#   y est un titre de bloc ou une entrée indentée de deux espaces ;
 #
 #   le manuel tient dans la largeur d'une page — aucune ligne rendue ne
 #   dépasse quatre-vingts colonnes.
@@ -63,10 +69,13 @@ bloc_options() {
 }
 
 # ==========================================================================
-titre 'L aide breve ne porte aucune prose'
+titre 'L aide d un niveau de commande ne porte aucune prose'
 # ==========================================================================
+#
+# Le premier niveau en est exclu depuis la tâche 13 : il porte désormais une
+# description par commande, et c'est ce qu'elle demande.
 
-for niveau in '' 'version' 'version release'; do
+for niveau in 'version' 'version release'; do
   # shellcheck disable=SC2086
   RESTE=$("$CLIA" $niveau --help 2>/dev/null | lignes_de_prose)
   vrai "aucune prose dans « clia ${niveau:-} --help »" test -z "$RESTE"
@@ -78,16 +87,42 @@ ne_dit_pas 'et elle ne porte pas de phrase de presentation' 'système d.informat
 ne_dit_pas 'et elle n explique pas les codes de retour' 'Codes de retour'
 
 # ==========================================================================
-titre 'L aide breve porte la liste, les signatures et les options'
+titre 'L aide generale porte les commandes et ce que chacune fait'
 # ==========================================================================
+#
+# SES-001 tâche 13 : pas de section usage, une description par commande, et
+# les ressources séparées des commandes du noyau.
 
 rc 'clia --help' 0 "$CLIA" --help
-dit 'un bloc nomme les commandes' 'Commandes :'
-dit 'et version y figure' '^  version$'
-dit 'un bloc nomme les signatures' 'Usage :'
-dit 'la signature de l outil lui-meme y est' 'clia \[-h | --help | --man'
-dit 'celle d une commande aussi' 'clia version release major|minor|patch'
-dit 'un bloc nomme les options' 'Options :'
+ne_dit_pas 'elle ne porte pas de section usage' '^Usage :$'
+ne_dit_pas 'ni la signature de l outil lui-meme' 'clia \[-h | --help | --man'
+ne_dit_pas 'ni celle d une commande' 'clia version release major|minor|patch'
+
+dit 'un bloc nomme les commandes du noyau' '^Commandes :$'
+dit 'et version y figure, avec ce qu elle fait' '^  version  *La version du dépôt'
+dit 'extension aussi' '^  extension  *Les extensions'
+dit 'et source aussi' '^  source  *Les sources de données'
+
+dit 'un bloc nomme les ressources, a part' '^Ressources :$'
+dit 'et res y figure' '^  res  *Les ressources du dépôt'
+dit 'et hrn aussi' '^  hrn  *Les harnais IA'
+
+dit 'un bloc nomme les options' '^Options :$'
+
+# Une ressource ne figure pas parmi les commandes du noyau, ni l'inverse.
+BLOC_NOYAU=$("$CLIA" --help 2>/dev/null | sed -n '/^Commandes :$/,/^$/p')
+BLOC_RES=$("$CLIA" --help 2>/dev/null | sed -n '/^Ressources :$/,/^$/p')
+vrai 'res n est pas dans le bloc des commandes' \
+  test "$(printf '%s' "$BLOC_NOYAU" | grep -c '^  res ')" -eq 0
+vrai 'et version n est pas dans celui des ressources' \
+  test "$(printf '%s' "$BLOC_RES" | grep -c '^  version ')" -eq 0
+
+vrai 'chaque commande listee porte une description' \
+  test "$("$CLIA" --help 2>/dev/null | grep -cE '^  [a-z-]+ +[^ ]')" -ge 8
+
+LONGUES=$("$CLIA" --help 2>/dev/null | lignes_trop_longues)
+vrai 'aucune ligne de l aide generale ne depasse 80 colonnes' test -z "$LONGUES"
+[[ -n "$LONGUES" ]] && printf '         ligne fautive : %s\n' "$LONGUES"
 
 # ==========================================================================
 titre 'L aide repond a tous les niveaux, et se restreint a celui demande'
@@ -220,9 +255,12 @@ exit 0
 FIN
 
 rc 'une commande deposee apparait dans l aide' 0 "$COPIE/_scripts/bin/clia" --help
-dit 'son nom est liste' '^  fixture$'
-dit 'ses signatures aussi' 'clia fixture pousse --fort'
-ne_dit_pas 'et sa description ne figure pas dans l aide breve' 'deposee pour eprouver'
+dit 'son nom est liste, avec sa description' '^  fixture  *Une commande de banc'
+dit 'et sous les commandes du noyau, car elle vient de lib/cmd' '^Commandes :$'
+ne_dit_pas 'ses signatures ne sont pas dans l aide generale' 'clia fixture pousse --fort'
+
+rc 'ses signatures sont a son propre niveau' 0 "$COPIE/_scripts/bin/clia" fixture --help
+dit 'et elles y sont' 'clia fixture pousse --fort'
 
 rc 'son aide de niveau repond' 0 "$COPIE/_scripts/bin/clia" fixture --help
 dit 'avec son option propre' '--doucement'

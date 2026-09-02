@@ -296,11 +296,19 @@ _clia_harnais_offerts() {
 # tabulations. Un champ absent rend une valeur vide plutôt que de décaler les
 # colonnes : l'appelant lit toujours le même nombre de champs.
 
+# Les champs sont séparés par le séparateur d'unité, et non par une
+# tabulation. La tabulation est un blanc au sens de IFS : « read -r a b c » y
+# fusionne deux champs consécutifs vides, et le troisième champ se lirait dans
+# le deuxième. Un champ absent est le cas ordinaire ici — une source sans
+# « type: », une entrée sans « version: » — et il doit rester vide sans
+# décaler ceux qui suivent.
+_CLIA_SEP=$'\x1f'
+
 # _clia_bloc_yaml <fichier> <bloc> <champ…> — une ligne par entrée.
 _clia_bloc_yaml() {
   local fichier="$1" bloc="$2"; shift 2
   [[ -f "$fichier" ]] || return 0
-  awk -v bloc="$bloc" -v demandes="$*" '
+  awk -v bloc="$bloc" -v demandes="$*" -v sep="$_CLIA_SEP" '
     function valeur(l,   s) {
       s = l
       sub(/^[^:]*:[[:space:]]*/, "", s)
@@ -322,7 +330,7 @@ _clia_bloc_yaml() {
       if (!ouvert) return
       ligne = ""
       for (i = 1; i <= nb; i++)
-        ligne = ligne (i > 1 ? "\t" : "") (champ[demande[i]] "")
+        ligne = ligne (i > 1 ? sep : "") (champ[demande[i]] "")
       print ligne
       delete champ
       ouvert = 0
@@ -370,66 +378,298 @@ _clia_rendre() {
 }
 
 # --------------------------------------------------------------------------
+# Lecture d'un bloc imbriqué
+# --------------------------------------------------------------------------
+#
+# La carte porte aussi des listes rangées sous une clé de deuxième niveau :
+#
+#   use:
+#     extensions:
+#     - resource: session.clia.noumanity.com/SES
+#       version: 0.1.0
+#
+# Les entrées y sont indentées comme leur clé, et non davantage. C'est la
+# forme que l'humain a écrite, et l'analyseur l'épouse plutôt que de la
+# corriger.
+
+# _clia_sous_bloc_yaml <fichier> <parent> <bloc> <champ…> — une ligne par entrée.
+_clia_sous_bloc_yaml() {
+  local fichier="$1" parent="$2" bloc="$3"; shift 3
+  [[ -f "$fichier" ]] || return 0
+  awk -v parent="$parent" -v bloc="$bloc" -v demandes="$*" -v sep="$_CLIA_SEP" '
+    function valeur(l,   s) {
+      s = l
+      sub(/^[^:]*:[[:space:]]*/, "", s)
+      sub(/[[:space:]]*#.*$/, "", s)
+      sub(/[[:space:]]+$/, "", s)
+      if (substr(s, 1, 1) == "\"" && substr(s, length(s), 1) == "\"")
+        s = substr(s, 2, length(s) - 2)
+      return s
+    }
+    function cle(l,   s) {
+      s = l
+      sub(/^[[:space:]]*-?[[:space:]]*/, "", s)
+      sub(/:.*$/, "", s)
+      return s
+    }
+    function vider(   i, ligne) {
+      if (!ouvert) return
+      ligne = ""
+      for (i = 1; i <= nb; i++)
+        ligne = ligne (i > 1 ? sep : "") (champ[demande[i]] "")
+      print ligne
+      delete champ
+      ouvert = 0
+    }
+    BEGIN { nb = split(demandes, demande, " ") }
+    /^[[:space:]]*#/ { next }
+    /^[[:space:]]*$/ { next }
+    /^[^[:space:]]/  { vider(); dans_parent = ($0 ~ "^" parent ":[[:space:]]*$"); dans = 0; next }
+    !dans_parent     { next }
+    /^[[:space:]]+[A-Za-z][A-Za-z0-9_-]*:[[:space:]]*$/ {
+      vider(); dans = ($0 ~ "^[[:space:]]+" bloc ":[[:space:]]*$"); next
+    }
+    !dans { next }
+    /^[[:space:]]*-[[:space:]]/       { vider(); ouvert = 1; champ[cle($0)] = valeur($0); next }
+    ouvert && /^[[:space:]]+[A-Za-z]/ { champ[cle($0)] = valeur($0); next }
+    END { vider() }
+  ' "$fichier"
+}
+
+# --------------------------------------------------------------------------
+# Écrire une entrée dans la carte
+# --------------------------------------------------------------------------
+#
+# La carte est écrite par un humain : elle porte des commentaires, un ordre,
+# des blocs qu'il a rangés comme il l'entend. Une entrée s'y ajoute à la fin
+# de son bloc, et rien d'autre n'est touché — ni réindenté, ni réordonné, ni
+# recommenté. Une commande qui reformaterait la carte rendrait illisible le
+# diff de ce qu'elle a vraiment changé.
+#
+# Un bloc absent est créé à la fin du fichier. Le créer ailleurs demanderait
+# de deviner où l'humain l'aurait mis.
+
+# _clia_carte_inserer <fichier> <chemin> <ligne…> — le chemin est « bloc » ou
+# « parent.bloc ». Les lignes sont écrites telles quelles.
+_clia_carte_inserer() {
+  local fichier="$1" chemin="$2"; shift 2
+  local parent bloc lignes=() i fin=-1 debut_bloc=-1
+
+  case "$chemin" in
+    *.*) parent="${chemin%%.*}"; bloc="${chemin#*.}" ;;
+    *)   parent=''; bloc="$chemin" ;;
+  esac
+
+  mapfile -t lignes < "$fichier"
+
+  if [[ -z "$parent" ]]; then
+    for i in "${!lignes[@]}"; do
+      if [[ "${lignes[i]}" =~ ^${bloc}:[[:space:]]*$ ]]; then debut_bloc=$i; continue; fi
+      if (( debut_bloc >= 0 )) && [[ "${lignes[i]}" =~ ^[^[:space:]#] ]]; then fin=$i; break; fi
+    done
+  else
+    local dans_parent=0
+    for i in "${!lignes[@]}"; do
+      if [[ "${lignes[i]}" =~ ^${parent}:[[:space:]]*$ ]]; then dans_parent=1; continue; fi
+      if (( debut_bloc >= 0 )); then
+        # Une clé de deuxième niveau, ou un retour en colonne zéro, ferme le bloc.
+        if [[ "${lignes[i]}" =~ ^[^[:space:]#] ]] \
+           || [[ "${lignes[i]}" =~ ^[[:space:]]+[A-Za-z][A-Za-z0-9_-]*:[[:space:]]*$ ]]; then
+          fin=$i; break
+        fi
+        continue
+      fi
+      (( dans_parent )) || continue
+      if [[ "${lignes[i]}" =~ ^[^[:space:]#] ]]; then dans_parent=0; continue; fi
+      [[ "${lignes[i]}" =~ ^[[:space:]]+${bloc}:[[:space:]]*$ ]] && debut_bloc=$i
+    done
+  fi
+
+  # Bloc absent : il est créé à la fin, avec son parent au besoin.
+  if (( debut_bloc < 0 )); then
+    { printf '\n'
+      [[ -n "$parent" ]] && printf '%s:\n  %s:\n' "$parent" "$bloc"
+      [[ -n "$parent" ]] || printf '%s:\n' "$bloc"
+      printf '%s\n' "$@"
+    } >> "$fichier"
+    return 0
+  fi
+
+  (( fin < 0 )) && fin=${#lignes[@]}
+
+  # Les lignes vides qui précèdent la fin du bloc appartiennent à ce qui suit.
+  while (( fin > debut_bloc + 1 )) && [[ -z "${lignes[fin-1]}" ]]; do fin=$((fin - 1)); done
+
+  { (( fin > 0 )) && printf '%s\n' "${lignes[@]:0:fin}"
+    printf '%s\n' "$@"
+    (( fin < ${#lignes[@]} )) && printf '%s\n' "${lignes[@]:fin}"
+  } > "$fichier.nouveau"
+  mv -f "$fichier.nouveau" "$fichier"
+  return 0
+}
+
+# _clia_carte_retirer <fichier> <chemin> <champ> <valeur> — retire l'entrée
+# dont <champ> vaut <valeur>. Rend 1 si aucune entrée ne correspond.
+_clia_carte_retirer() {
+  local fichier="$1" chemin="$2" champ="$3" valeur="$4"
+  local lignes=() garde=() i debut=-1 trouve=0
+
+  mapfile -t lignes < "$fichier"
+
+  for i in "${!lignes[@]}"; do
+    if [[ "${lignes[i]}" =~ ^[[:space:]]*-[[:space:]] ]]; then
+      # Une entrée commence : celle d'avant est close.
+      if (( debut >= 0 )); then debut=-1; fi
+      if [[ "${lignes[i]}" =~ ^[[:space:]]*-[[:space:]]+${champ}:[[:space:]]*\"?${valeur}\"?[[:space:]]*$ ]]; then
+        debut=$i; trouve=1; continue
+      fi
+    elif (( debut >= 0 )) && [[ "${lignes[i]}" =~ ^[[:space:]]+[A-Za-z] ]]; then
+      continue
+    elif (( debut >= 0 )); then
+      debut=-1
+    fi
+    (( debut >= 0 )) || garde+=("${lignes[i]}")
+  done
+
+  (( trouve )) || return 1
+  printf '%s\n' "${garde[@]}" > "$fichier.nouveau"
+  mv -f "$fichier.nouveau" "$fichier"
+  return 0
+}
+
+# --------------------------------------------------------------------------
 # Les sources
 # --------------------------------------------------------------------------
 #
-# Une source est un dépôt d'où viennent des ressources. La carte du dépôt de
-# travail les déclare, et rien d'autre ne les déclare : clia ne fouille pas le
-# disque à la recherche de dépôts, et n'exécute donc que ce qu'un humain a
-# nommé dans la carte de son propre dépôt.
+# Une source est un dépôt d'où viennent des ressources ou des données. La
+# carte du dépôt de travail les déclare, et rien d'autre ne les déclare : clia
+# ne fouille pas le disque à la recherche de dépôts voisins.
 #
 #   sources:
 #     - provider: session.clia.noumanity.com
 #       type: local
 #       uri: ../clia-session
 #
-# Une source est soit un dépôt clia — elle porte une carte — soit un dépôt
-# ordinaire. Une extension doit être un dépôt clia : c'est sa carte qui dit
-# quel namespace ses ressources portent, et une ressource sans provenance
-# déclarée n'est pas identifiable.
+# Deux types. « local » désigne un répertoire, par un chemin relatif à la
+# racine du dépôt qui le déclare, ou absolu. « git » désigne un dépôt
+# distant : la déclaration porte son URI, et le clone vit dans un cache de la
+# machine.
 #
-# Le type « local » est le seul que clia tienne aujourd'hui. Un type qu'il ne
-# connaît pas est signalé et laissé de côté : mieux vaut le dire que faire
-# comme si la source n'avait pas été déclarée.
+# Deux endroits, et c'est voulu : la déclaration est versionnée et suit le
+# dépôt ; le clone est un artefact de cette machine-ci et n'a rien à faire
+# dans l'historique. C'est la répartition qu'avait retenue la génération
+# 2026-08-31, et rien depuis ne l'a mise en défaut.
 
-# _clia_source_racine <dépôt> <uri> — le chemin absolu d'une source locale,
-# l'uri étant relative à la racine du dépôt qui la déclare. Rien si le
-# répertoire n'existe pas.
+_clia_cache_racine() {
+  printf '%s/clia/extensions\n' "${XDG_CACHE_HOME:-$HOME/.cache}"
+}
+
+# _clia_extension_cache <provider> — où le clone d'une source distante vit.
+_clia_extension_cache() {
+  printf '%s/%s\n' "$(_clia_cache_racine)" "$1"
+}
+
+# _clia_source_racine <dépôt> <type> <uri> <provider> — le répertoire qu'une
+# source désigne réellement, ou rien.
 _clia_source_racine() {
-  local depot="$1" uri="$2" chemin
-  [[ -n "$uri" ]] || return 1
-  case "$uri" in
-    /*) chemin="$uri" ;;
-    *)  chemin="$depot/$uri" ;;
+  local depot="$1" type="$2" uri="$3" provider="$4" chemin
+  case "${type:-local}" in
+    local)
+      [[ -n "$uri" ]] || return 1
+      case "$uri" in
+        /*) chemin="$uri" ;;
+        *)  chemin="$depot/$uri" ;;
+      esac ;;
+    git)
+      chemin=$(_clia_extension_cache "$provider") ;;
+    *)
+      return 1 ;;
   esac
   [[ -d "$chemin" ]] || return 1
   (cd -P "$chemin" >/dev/null 2>&1 && pwd)
 }
 
-# _clia_sources <dépôt> — « provider<TAB>type<TAB>uri » pour chaque source
-# déclarée par la carte du dépôt.
+# _clia_sources <dépôt> — « provider<TAB>type<TAB>uri » pour chaque source.
 _clia_sources() {
   local carte
   carte=$(_clia_carte "$1") || return 0
   _clia_bloc_yaml "$carte" sources provider type uri
 }
 
-# _clia_extensions <dépôt> — « provider<TAB>racine » pour chaque source qui
-# est utilisable comme extension : locale, présente, dépôt clia, et portant
-# un répertoire _ressources.
+# _clia_source_nature <dépôt> <provider> <type> <uri> — ce que la source est,
+# constaté et non déclaré :
 #
-# Les autres ne sont pas une erreur ici : elles sont ce qu'elles sont, et
-# c'est « clia src ls » qui en rend compte. Une commande de travail ne doit
-# pas échouer parce qu'un dépôt voisin n'est pas cloné.
+#   extension     dépôt clia portant des ressources
+#   dépôt clia    dépôt clia sans répertoire _ressources
+#   dépôt         présent, sans carte clia
+#   non clonée    déclarée en git, et absente du cache
+#   absente       l'uri locale ne mène à aucun répertoire
+#   type inconnu  un type que clia ne sait pas atteindre
+_clia_source_nature() {
+  local depot="$1" provider="$2" type="$3" uri="$4" racine
+  case "${type:-local}" in
+    local|git) ;;
+    *) printf 'type inconnu\n'; return 0 ;;
+  esac
+  if ! racine=$(_clia_source_racine "$depot" "$type" "$uri" "$provider"); then
+    [[ "$type" == 'git' ]] && { printf 'non clonée\n'; return 0; }
+    printf 'absente\n'; return 0
+  fi
+  if ! _clia_carte_relative "$racine" >/dev/null; then
+    printf 'dépôt\n'; return 0
+  fi
+  if [[ -d "$racine/_ressources" ]] && [[ -n "$(_clia_ressources_de "$racine")" ]]; then
+    printf 'extension\n'
+  else
+    printf 'dépôt clia\n'
+  fi
+}
+
+# _clia_ressources_de <racine> — « nom<TAB>prefixe<TAB>version » pour chaque
+# ressource d'un dépôt, triées par nom.
+#
+# Un répertoire de _ressources/ est une ressource parce qu'il porte sa
+# définition, et pour aucune autre raison. La règle est celle de clia-res(1),
+# et elle n'a qu'une écriture.
+_clia_ressources_de() {
+  local racine="$1" def nom prefixe version
+  for def in "$racine"/_ressources/*/*.yaml; do
+    [[ -f "$def" ]] || continue
+    nom=$(basename "$(dirname "$def")")
+    [[ "$(basename "$def")" == "$nom.yaml" ]] || continue
+    prefixe=$(_clia_champ_yaml "$def" prefixe || printf '')
+    version=$(_clia_champ_yaml "$def" version || printf '')
+    printf '%s\t%s\t%s\n' "$nom" "${prefixe:-—}" "${version:-—}"
+  done | sort
+  return 0
+}
+
+# _clia_extensions <dépôt> — « provider<TAB>racine » pour chaque source
+# utilisable comme extension.
 _clia_extensions() {
   local depot="$1" provider type uri racine
-  while IFS=$'\t' read -r provider type uri; do
+  while IFS="$_CLIA_SEP" read -r provider type uri; do
     [[ -n "$provider" ]] || continue
-    [[ "$type" == 'local' || -z "$type" ]] || continue
-    racine=$(_clia_source_racine "$depot" "$uri") || continue
-    _clia_carte_relative "$racine" >/dev/null || continue
-    [[ -d "$racine/_ressources" ]] || continue
+    [[ "$(_clia_source_nature "$depot" "$provider" "$type" "$uri")" == 'extension' ]] || continue
+    racine=$(_clia_source_racine "$depot" "$type" "$uri" "$provider") || continue
     printf '%s\t%s\n' "$provider" "$racine"
   done < <(_clia_sources "$depot")
+  return 0
+}
+
+# _clia_installees <dépôt> — « identité<TAB>version » de ce que la carte
+# déclare avoir repris d'une extension. L'identité s'écrit
+# <provider>/<PREFIXE>.
+#
+# Les deux orthographes du champ — « resource » et « ressource » — sont lues :
+# la carte de ce dépôt porte les deux, et refuser l'une ferait disparaître ce
+# qu'elle déclare.
+_clia_installees() {
+  local carte a b version
+  carte=$(_clia_carte "$1") || return 0
+  while IFS="$_CLIA_SEP" read -r a b version; do
+    [[ -n "$a$b" ]] || continue
+    printf '%s%s%s\n' "${a:-$b}" "$_CLIA_SEP" "$version"
+  done < <(_clia_sous_bloc_yaml "$carte" use extensions resource ressource version)
   return 0
 }

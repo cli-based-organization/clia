@@ -89,8 +89,8 @@ titre 'La commande est decouverte, et documentee'
 # ==========================================================================
 
 rc 'clia --help liste res' 0 "$CLIA" --help
-dit 'la commande y figure' '^  res$'
-dit 'et ses signatures aussi' 'clia res release major|minor|patch RESSOURCE'
+dit 'la commande y figure, avec ce qu elle fait' '^  res  *Les ressources du dépôt'
+dit 'et sous les ressources' '^Ressources :$'
 
 rc 'clia res --help' 0 "$CLIA" res --help
 dit 'il porte les quatre signatures' 'clia res new PREFIXE NOM \[DESCRIPTION\]'
@@ -308,7 +308,7 @@ vrai 'et le noyau ne le porte plus' \
   test ! -e "$RACINE/_scripts/lib/cmd/res.sh"
 
 rc 'la commande repond quand meme' 0 "$CLIA" --help
-dit 'car elle est decouverte, non listee' '^  res$'
+dit 'car elle est decouverte, non listee' '^  res  '
 
 vrai 'les gabarits d une ressource neuve sont dans la ressource' \
   test -d "$RACINE/_ressources/ressource/gabarits"
@@ -385,8 +385,12 @@ rc 'la ressource est creee dans la source' 0 \
   bash -c "cd '$COPIE' && '$CLIA_COPIE' res new ANL analyse 'Une analyse'"
 
 rc 'sa commande apparait dans l aide' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' --help"
-dit 'son nom y figure' '^  anl$'
-dit 'et sa signature aussi' 'clia anl ls'
+dit 'son nom y figure, avec ce qu elle fait' '^  anl  *La ressource analyse'
+dit 'et sous les ressources' '^Ressources :$'
+
+rc 'sa signature est a son propre niveau' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --help"
+dit 'et elle y est' 'clia anl ls'
+dit 'avec le verbe generique des ressources' 'clia anl deactivate'
 
 rc 'son aide de niveau repond' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --help"
 RESTE=$(cd "$COPIE" && "$CLIA_COPIE" anl --help 2>/dev/null | lignes_de_prose)

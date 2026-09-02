@@ -29,11 +29,17 @@ use:
   - resource: clia.noumanity.com/HRN
     version: 0.1.0
   extensions:
-  - resource: session.clia.noumanity.com/SES
-    version: 0.1.0
-  - resource: session.clia.noumanity.com/LOG
-    version: 0.1.0
   - resource: arhitecture.clia.noumanity.com/DIA
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/SPC
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/FEA
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/REQ
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/NFR
+    version: 0.1.0
+  - resource: arhitecture.clia.noumanity.com/CAS
     version: 0.1.0
   - resource: deeptech.clia.noumanity.com/FND
     version: 0.1.0
@@ -46,6 +52,10 @@ use:
   - resource: methodology.clia.noumanity.com/MTH
     version: 0.1.0
   - resource: methodology.clia.noumanity.com/NON
+    version: 0.1.0
+  - resource: session.clia.noumanity.com/LOG
+    version: 0.1.0
+  - resource: session.clia.noumanity.com/SES
     version: 0.1.0
 
 sources:

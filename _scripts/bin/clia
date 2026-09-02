@@ -78,7 +78,9 @@ _CLIA_DEPOT_COURANT=$(_clia_depot_git "$PWD" 2>/dev/null || printf '')
 # Les commandes, et leurs déclarations
 # --------------------------------------------------------------------------
 
-# Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
+# Sortie : « nom<TAB>fichier<TAB>origine », dans l'ordre de fouille.
+# L'origine vaut « noyau » ou « ressource » — SES-001 tâche 13 sépare les deux
+# dans l'aide, et l'endroit où le fichier a été trouvé suffit à le dire.
 #
 # Trois fouilles, et le noyau d'abord. Une ressource apporte ses automatismes
 # avec elle — c'est ce qui fait qu'ajouter une ressource ajoute ce qu'elle
@@ -86,29 +88,28 @@ _CLIA_DEPOT_COURANT=$(_clia_depot_git "$PWD" 2>/dev/null || printf '')
 # premier trouvé l'emporte, et « version » ne doit pas changer de sens selon
 # les ressources installées.
 #
-# La troisième fouille est celle des extensions : les dépôts que la carte du
-# dépôt de travail déclare en source. Une extension ajoute des ressources,
-# donc des commandes, sans que rien du dépôt source change. C'est le seul
-# chemin par lequel du code étranger devient exécutable, et il passe par une
-# déclaration écrite à la main dans la carte — clia ne fouille pas le disque.
+# La troisième fouille est celle du dépôt de travail. Une ressource y arrive
+# de deux façons : « clia res new » la crée, ou « clia extension install » la
+# reprend d'une extension. Dans les deux cas elle est là, versionnée avec le
+# dépôt, et lisible par qui l'ouvre.
 #
-# Les extensions viennent en dernier : ni le noyau ni les ressources du CLI
-# ne peuvent être masqués par un dépôt voisin.
+# Ce que cela écarte, et volontairement : clia n'exécute rien depuis un dépôt
+# voisin. Déclarer une extension ne rend rien exécutable — il faut l'installer,
+# et l'installation dépose le code ici, où il se relit et se commite. Une
+# source déclarée n'est qu'une provenance. Voir clia-extension(1).
 _clia_fichiers_de_commande() {
-  local f racine
+  local f
   for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh; do
-    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+    [[ -f "$f" ]] && printf '%s\t%s\tnoyau\n' "$(basename "$f" .sh)" "$f"
   done
   for f in "$CLIA_SOURCE_DIR"/_ressources/*/_scripts/*.sh; do
-    [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+    [[ -f "$f" ]] && printf '%s\t%s\tressource\n' "$(basename "$f" .sh)" "$f"
   done
-  [[ -n "$_CLIA_DEPOT_COURANT" ]] || return 0
-  while IFS=$'\t' read -r _ racine; do
-    [[ -n "$racine" && "$racine" != "$CLIA_SOURCE_DIR" ]] || continue
-    for f in "$racine"/_ressources/*/_scripts/*.sh; do
-      [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+  if [[ -n "$_CLIA_DEPOT_COURANT" && "$_CLIA_DEPOT_COURANT" != "$CLIA_SOURCE_DIR" ]]; then
+    for f in "$_CLIA_DEPOT_COURANT"/_ressources/*/_scripts/*.sh; do
+      [[ -f "$f" ]] && printf '%s\t%s\tressource\n' "$(basename "$f" .sh)" "$f"
     done
-  done < <(_clia_extensions "$_CLIA_DEPOT_COURANT")
+  fi
   return 0
 }
 
@@ -120,6 +121,12 @@ _clia_fichiers_de_commande() {
 _clia_fichier_de() {
   _clia_fichiers_de_commande \
     | awk -F'\t' -v n="$1" '$1 == n && !vu { print $2; vu = 1 }'
+}
+
+# L'origine d'une commande — « noyau » ou « ressource ».
+_clia_origine_de() {
+  _clia_fichiers_de_commande \
+    | awk -F'\t' -v n="$1" '$1 == n && !vu { print $3; vu = 1 }'
 }
 
 _clia_description_de() {
@@ -141,9 +148,19 @@ _clia_perimetre_de() {
 # Composée à partir de ce qui a été trouvé : elle ne peut donc pas annoncer
 # une commande qui n'existe pas, ni taire une commande qui existe.
 #
-# Elle ne porte aucune phrase — SES-001 tâche 3. Une ligne y est un titre de
-# bloc ou une entrée indentée de deux espaces, et rien d'autre. Ce qui
-# explique appartient au manuel : clia --man.
+# Deux formes, et la tâche 13 les sépare.
+#
+# Au premier niveau, « clia --help » sert à trouver une commande. Il ne porte
+# donc pas les signatures : elles y étaient une liste de quarante lignes qu'il
+# fallait lire en entier pour découvrir qu'une commande existe. Il porte les
+# commandes et ce que chacune fait, en une ligne — et les ressources à part
+# des commandes du noyau, parce qu'on ne les cherche pas pour la même raison.
+#
+# Aux niveaux suivants, « clia <commande> --help » sert à employer une
+# commande qu'on a déjà trouvée. Il porte donc ses signatures et ses options,
+# et aucune phrase — SES-001 tâche 3. Une ligne y est un titre de bloc ou une
+# entrée indentée de deux espaces, et rien d'autre. Ce qui explique appartient
+# au manuel : clia --man.
 #
 # Le point d'entrée la rend pour tous les niveaux, y compris ceux d'une
 # sous-commande, à partir des seules déclarations des fichiers. Une commande
@@ -151,6 +168,22 @@ _clia_perimetre_de() {
 # découle. C'est la même raison qui fait appliquer la garde de périmètre ici
 # plutôt que dans chaque commande — ce qui est uniforme se tient à un seul
 # endroit.
+
+# Une entrée de l'aide générale : le nom, aligné, puis la description
+# déclarée. La largeur est fixe pour que les descriptions s'alignent ; un nom
+# plus long qu'elle la déborde plutôt que d'être tronqué — un nom tronqué ne
+# désigne plus la commande.
+_CLIA_LARGEUR_NOM=10
+
+_clia_entree_de_commande() {
+  local nom="$1" desc
+  desc=$(_clia_description_de "$2")
+  if [[ -z "$desc" ]]; then
+    printf '%s\n' "$nom"
+  else
+    printf '%-*s %s\n' "$_CLIA_LARGEUR_NOM" "$nom" "$desc"
+  fi
+}
 
 _CLIA_SIGNATURES_GLOBALES=(
   '[-h | --help | --man | -v | --version]'
@@ -161,7 +194,7 @@ _CLIA_SIGNATURES_GLOBALES=(
 _clia_toutes_signatures() {
   local s f nom
   for s in "${_CLIA_SIGNATURES_GLOBALES[@]}"; do printf '%s\n' "$s"; done
-  while IFS=$'\t' read -r nom f; do
+  while IFS=$'\t' read -r nom f _; do
     _clia_signatures_de "$f"
   done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
 }
@@ -172,18 +205,34 @@ _clia_aide() {
   local chemin="${1:-}" f nom commandes=() options=()
 
   if [[ -z "$chemin" ]]; then
-    _clia_toutes_signatures | _clia_lignes_usage '' | sed '1i Usage :'
-    while IFS=$'\t' read -r nom f; do
-      commandes+=("$nom")
+    local origine vu='' ressources=()
+    while IFS=$'\t' read -r nom f origine; do
+      # Le premier trouvé l'emporte, ici comme au dispatch : une commande
+      # masquée ne doit pas paraître deux fois dans l'aide.
+      [[ " $vu " == *" $nom "* ]] && continue
+      vu="$vu $nom"
+      if [[ "$origine" == 'ressource' ]]; then
+        ressources+=("$(_clia_entree_de_commande "$nom" "$f")")
+      else
+        commandes+=("$(_clia_entree_de_commande "$nom" "$f")")
+      fi
     done < <(_clia_fichiers_de_commande | sort -t"$(printf '\t')" -k1,1)
     _clia_bloc 'Commandes' "${commandes[@]}"
+    _clia_bloc 'Ressources' "${ressources[@]}"
     _clia_bloc 'Options' "${_CLIA_OPTIONS_GLOBALES[@]}"
     return 0
   fi
 
   f=$(_clia_fichier_de "${chemin%% *}")
   printf 'Usage :\n'
-  _clia_signatures_de "$f" | _clia_lignes_usage "$chemin"
+  { _clia_signatures_de "$f"
+    # Le verbe générique des ressources n'est déclaré dans aucun fichier :
+    # c'est le point d'entrée qui le tient, pour toutes. Il doit donc être
+    # ajouté ici, sinon l'aide tairait une forme d'appel valide.
+    if [[ "$(_clia_origine_de "${chemin%% *}")" == 'ressource' ]]; then
+      printf '%s deactivate\n' "${chemin%% *}"
+    fi
+  } | _clia_lignes_usage "$chemin"
   mapfile -t options < <(_clia_options_de "$f" | _clia_lignes_options "$chemin")
   options+=("${_CLIA_OPTIONS_UNIVERSELLES[@]}")
   _clia_bloc 'Options' "${options[@]}"
@@ -213,16 +262,19 @@ l'aide et devient invocable, sans qu'aucun fichier du noyau soit
 modifié.
 
 Trois endroits sont fouillés : _scripts/lib/cmd/ pour le noyau,
-_ressources/<nom>/_scripts/ pour ce que chaque ressource apporte, et
-les mêmes répertoires dans chaque extension que la carte du dépôt de
-travail déclare en source. Le noyau l'emporte en cas d'homonymie,
-puis les ressources du CLI, puis les extensions : une ressource
-ajoute, elle ne remplace pas.
+_ressources/<nom>/_scripts/ du dépôt source pour ce que le CLI
+porte, et le même répertoire du dépôt de travail pour ce que
+celui-ci porte. Le noyau l'emporte en cas d'homonymie, puis les
+ressources du CLI : une ressource ajoute, elle ne remplace pas.
 
-Une extension est le seul chemin par lequel du code venu d'un autre
-dépôt devient exécutable, et il passe par une déclaration écrite à
-la main dans la carte. clia ne fouille pas le disque. Voir
-clia-src(1).
+Une ressource arrive dans un dépôt de travail de deux façons : clia
+res new la crée, ou clia extension install la reprend d'une
+extension. Dans les deux cas elle est là, versionnée avec le dépôt.
+
+clia n'exécute rien depuis un dépôt voisin. Déclarer une extension
+dit d'où des ressources peuvent venir ; il faut les installer pour
+qu'elles répondent, et l'installation les dépose ici. Voir
+clia-extension(1) et clia-source(1).
 
 Une commande déclare son périmètre. Celles dont le périmètre est
 « dépôt » n'agissent que dans un dépôt git, et le point d'entrée le
@@ -236,7 +288,7 @@ donc être lue par une autre sans être filtrée.
 
 COMMANDES
 EOF
-    while IFS=$'\t' read -r nom f; do
+    while IFS=$'\t' read -r nom f _; do
       desc=$(_clia_description_de "$f")
       printf '%s\n' "$nom"
       printf '       %s\n' "${desc:-(sans description)}"
@@ -246,9 +298,11 @@ EOF
 
 OPTIONS
 -h, --help
-       L'aide brève du niveau demandé : les signatures valides et les
-       options disponibles, sans aucune prose. Elle est acceptée à tout
-       niveau, y compris celui d'une sous-commande.
+       L'aide brève du niveau demandé. Sans commande, les commandes du
+       noyau et les ressources, chacune avec ce qu'elle fait en une
+       ligne. Avec une commande, ses signatures valides et ses options,
+       sans aucune prose. Elle est acceptée à tout niveau, y compris
+       celui d'une sous-commande.
 
 --man
        Le manuel complet, au format des pages de manuel unix. Sans
@@ -259,6 +313,17 @@ OPTIONS
        CLI est celle du système d'information qu'il outille ; deux
        orthographes du même mot ne doivent pas désigner deux objets.
        Reconnue en première position seulement.
+
+LE VERBE DES RESSOURCES
+deactivate
+       Toute commande de ressource porte « clia <ressource>
+       deactivate », que le point d'entrée tient pour toutes. Il
+       retire la ressource du dépôt de travail, et l'ôte de
+       l'inventaire de la carte.
+
+       Il refuse de retirer ce que le dépôt publie, ce qui n'est pas
+       installé chez lui, et ce que git ne tient pas encore. Voir
+       clia-extension(1).
 
 CODE DE RETOUR
 0
@@ -316,10 +381,9 @@ _ressources/*/_scripts/*.sh
        façon. Toute ressource en expose une, nommée par son préfixe en
        minuscules. Voir clia-res(1) et clia-hrn(1).
 
-<source>/_ressources/*/_scripts/*.sh
-       Les commandes qu'une extension apporte. Les sources sont
-       déclarées dans le bloc « sources: » de la carte du dépôt de
-       travail. Voir clia-src(1).
+~/.cache/clia/extensions/<namespace>
+       Le clone d'une extension distante, propre à cette machine.
+       La carte, elle, ne porte que l'URI. Voir clia-extension(1).
 
 EXEMPLES
 Rendre l'alias de version lisible du dépôt courant :
@@ -332,8 +396,8 @@ Lire le manuel d'une commande :
        $ clia version --man
 
 VOIR AUSSI
-clia-version(1), clia-res(1), clia-src(1), clia-check(1),
-clia-init(1), clia-hrn(1), clia-setup(1), git(1)
+clia-version(1), clia-res(1), clia-extension(1), clia-source(1),
+clia-check(1), clia-init(1), clia-hrn(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
@@ -422,6 +486,38 @@ if (( ! DEMANDE_MAN )) && [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]];
   fi
 
   export CLIA_WORK_DIR
+fi
+
+# Le verbe générique des ressources, tenu ici pour toutes.
+#
+# SES-001 tâche 11 : « ajouter une commande générique à toutes les ressources
+# permettant de désinstaller la ressource ». Retirer une ressource n'est pas
+# ce qu'une ressource sait faire — c'est ce que le dépôt fait d'une ressource
+# — et le geste est le même pour toutes. Une ressource reprise d'une
+# extension le reçoit donc sans avoir eu à l'écrire.
+#
+# Il agit sur un dépôt, quel que soit le périmètre que la ressource déclare
+# pour elle-même : une ressource peut n'avoir besoin d'aucun dépôt pour
+# travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu ici,
+# et son absence refusée ici.
+if [[ "${1:-}" == 'deactivate' && "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]]; then
+  if (( $# > 1 )); then
+    _clia_msg "deactivate ne prend pas d'argument : ${*:2}"
+    exit 2
+  fi
+  if [[ -z "${CLIA_WORK_DIR:-}" ]]; then
+    if [[ -z "$_CLIA_DEPOT_COURANT" ]]; then
+      _clia_msg "le répertoire courant n'est pas dans un dépôt git"
+      _clia_detail "deactivate retire une ressource d'un dépôt ; placez-vous dans l'un d'eux"
+      exit 1
+    fi
+    CLIA_WORK_DIR="$_CLIA_DEPOT_COURANT"
+    export CLIA_WORK_DIR
+  fi
+  # shellcheck source=../lib/ressource.sh
+  . "$CLIA_SOURCE_DIR/_scripts/lib/ressource.sh"
+  _clia_r_desactiver "$COMMANDE" "$FICHIER"
+  exit $?
 fi
 
 exec bash "$FICHIER" "$@"

@@ -111,7 +111,7 @@ LONGUES=$(bash "$SETUP" --man 2>/dev/null | lignes_trop_longues)
 vrai 'et il tient dans la page' test -z "$LONGUES"
 
 rc 'clia --help liste setup' 0 "$CLIA" --help
-dit 'avec ses deux signatures' 'clia setup uninstall'
+dit 'avec ce qu elle fait' 'setup  *L.installation de clia'
 rc 'clia setup --help' 0 "$CLIA" setup --help
 RESTE=$("$CLIA" setup --help 2>/dev/null | lignes_de_prose)
 vrai 'sans prose' test -z "$RESTE"
