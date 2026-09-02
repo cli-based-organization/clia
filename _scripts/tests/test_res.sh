@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 # _scripts/tests/test_res.sh — les ressources, et leur version.
 #
-# Éprouve SES-001 tâche 5.
+# Éprouve SES-001 tâches 5 et 9.
 #
 # Le cas qui compte le plus est celui de la portée : la version d'une
 # ressource ne doit pas bouger quand le dépôt avance ailleurs. C'est ce qui
 # distingue une version de ressource d'une version de dépôt, et c'est la
 # seule chose qu'une lecture littérale de « exactement comme celle du repo »
 # aurait fait manquer.
+#
+# La tâche 9 y ajoute un invariant qui se mesure sur le dépôt réel : toute
+# ressource expose une commande. Le vérifier sur ce qui existe vaut mieux que
+# le vérifier sur une ressource de banc — c'est ici qu'il se romprait.
 
 set -uo pipefail
 
@@ -293,6 +297,125 @@ titre 'Les verbes inconnus'
 rc_dans 'un verbe inconnu est mal forme' 2 "$D" res bidule
 dit 'et il renvoie a l usage' 'clia res --help'
 rc_dans 'res sans verbe est mal forme' 2 "$D" res
+
+# ==========================================================================
+titre 'La commande vit dans la ressource, et le noyau ne la porte plus'
+# ==========================================================================
+
+vrai 'le script de la commande est dans la ressource' \
+  test -f "$RACINE/_ressources/ressource/_scripts/res.sh"
+vrai 'et le noyau ne le porte plus' \
+  test ! -e "$RACINE/_scripts/lib/cmd/res.sh"
+
+rc 'la commande repond quand meme' 0 "$CLIA" --help
+dit 'car elle est decouverte, non listee' '^  res$'
+
+vrai 'les gabarits d une ressource neuve sont dans la ressource' \
+  test -d "$RACINE/_ressources/ressource/gabarits"
+vrai 'un gabarit pour la definition' \
+  test -f "$RACINE/_ressources/ressource/gabarits/definition.yaml"
+vrai 'un gabarit pour la commande' \
+  test -f "$RACINE/_ressources/ressource/gabarits/commande.sh"
+vrai 'le gabarit de commande porte des trous' \
+  grep -q '{{commande}}' "$RACINE/_ressources/ressource/gabarits/commande.sh"
+vrai 'et il declare une signature' \
+  grep -q '^# Signature: {{commande}} ls$' "$RACINE/_ressources/ressource/gabarits/commande.sh"
+
+# L'invariant de la tâche 9, mesuré sur ce que le dépôt porte aujourd'hui.
+MANQUANTES=''
+for DEF in "$RACINE"/_ressources/*/*.yaml; do
+  NOM=$(basename "$(dirname "$DEF")")
+  [[ "$(basename "$DEF")" == "$NOM.yaml" ]] || continue
+  PREF=$(sed -nE 's/^prefixe:[[:space:]]*//p' "$DEF" | head -1)
+  CMD=$(printf '%s' "$PREF" | tr '[:upper:]' '[:lower:]')
+  [[ -f "$RACINE/_ressources/$NOM/_scripts/$CMD.sh" ]] \
+    || MANQUANTES="$MANQUANTES $NOM"
+done
+vrai 'toutes les ressources du depot exposent une commande' test -z "$MANQUANTES"
+[[ -n "$MANQUANTES" ]] && printf '         sans commande :%s\n' "$MANQUANTES"
+
+# ==========================================================================
+titre 'Une ressource neuve recoit sa commande'
+# ==========================================================================
+
+D=$(depot commande)
+rc_dans 'clia res new est satisfaite' 0 "$D" res new ANL analyse "Ce qu un examen etablit"
+dit 'et elle nomme la commande posee' 'clia anl'
+
+SCRIPT="$D/_ressources/analyse/_scripts/anl.sh"
+vrai 'le script est pose sous le prefixe en minuscules' test -f "$SCRIPT"
+vrai 'il est executable' test -x "$SCRIPT"
+vrai 'il declare sa description' grep -q '^# Description: ' "$SCRIPT"
+vrai 'il declare son perimetre' grep -q '^# Périmètre: dépôt$' "$SCRIPT"
+vrai 'il declare sa signature' grep -q '^# Signature: anl ls$' "$SCRIPT"
+vrai 'il nomme la ressource' grep -q "_ressources/analyse" "$SCRIPT"
+LAISSES=$(grep -c '{{' "$SCRIPT" || true)
+vrai 'aucun trou de gabarit n y subsiste' test "$LAISSES" -eq 0
+vrai 'et il est syntaxiquement valide' bash -n "$SCRIPT"
+
+DEF="$D/_ressources/analyse/analyse.yaml"
+LAISSES=$(grep -c '{{' "$DEF" || true)
+vrai 'ni dans la definition' test "$LAISSES" -eq 0
+vrai 'et la definition nomme la commande' grep -q 'clia anl' "$DEF"
+
+rc_dans 'un prefixe qui doublerait le noyau est signale' 0 "$D" res new INIT amorce
+dit 'et clia dit que le noyau l emporte' "déjà une commande du noyau"
+vrai 'le script est pose quand meme' \
+  test -f "$D/_ressources/amorce/_scripts/init.sh"
+
+# ==========================================================================
+titre 'La commande d une ressource neuve repond'
+# ==========================================================================
+#
+# Le bout en bout : une ressource créée dans un dépôt qui est aussi la source
+# du CLI. C'est le seul montage où « toutes les ressources exposent une
+# commande » se constate plutôt que se suppose — la fouille des commandes se
+# fait dans le dépôt source, non dans le dépôt de travail.
+
+COPIE="$BAC/source"
+mkdir -p "$COPIE"
+cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$COPIE/"
+printf 'namespace: exemple.test/source\nversion: 1.0.0\n' > "$COPIE/clia.yaml"
+git -C "$COPIE" init -q
+git -C "$COPIE" config user.email 'banc@example.invalid'
+git -C "$COPIE" config user.name 'banc'
+
+CLIA_COPIE="$COPIE/_scripts/bin/clia"
+rc 'la ressource est creee dans la source' 0 \
+  bash -c "cd '$COPIE' && '$CLIA_COPIE' res new ANL analyse 'Une analyse'"
+
+rc 'sa commande apparait dans l aide' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' --help"
+dit 'son nom y figure' '^  anl$'
+dit 'et sa signature aussi' 'clia anl ls'
+
+rc 'son aide de niveau repond' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --help"
+RESTE=$(cd "$COPIE" && "$CLIA_COPIE" anl --help 2>/dev/null | lignes_de_prose)
+vrai 'et elle ne porte aucune prose' test -z "$RESTE"
+[[ -n "$RESTE" ]] && printf '         ligne fautive : %s\n' "$RESTE"
+
+rc 'son manuel repond' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --man"
+dit 'il porte son nom de page' '^CLIA-ANL(1)'
+for section in NOM SYNOPSIS DESCRIPTION SOUS-COMMANDES SORTIE \
+               'CODE DE RETOUR' FICHIERS 'VOIR AUSSI'; do
+  dit "la section $section y est" "^$section\$"
+done
+LONGUES=$(cd "$COPIE" && "$CLIA_COPIE" anl --man 2>/dev/null | lignes_trop_longues)
+vrai 'aucune ligne de ce manuel ne depasse 80 colonnes' test -z "$LONGUES"
+[[ -n "$LONGUES" ]] && printf '         ligne fautive : %s\n' "$LONGUES"
+
+rc 'la ressource neuve ne porte aucune primitive' 0 \
+  bash -c "cd '$COPIE' && '$CLIA_COPIE' anl ls"
+dit 'et sa commande le dit' 'ne porte aucune primitive'
+
+mkdir -p "$COPIE/_ressources/analyse/primitives"
+printf 'une primitive\n' > "$COPIE/_ressources/analyse/primitives/p.md"
+vrai 'une primitive deposee est listee' \
+  test "$(cd "$COPIE" && "$CLIA_COPIE" anl ls 2>/dev/null)" = '_ressources/analyse/primitives/p.md'
+
+rc 'un verbe inconnu est mal forme' 2 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl bidule"
+rc 'et ls ne prend pas d argument' 2 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl ls trop"
+
+rc 'le noyau garde ses commandes' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' version"
 
 # ==========================================================================
 titre 'Le depot reel n a pas bouge'

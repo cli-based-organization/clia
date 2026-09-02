@@ -7,7 +7,23 @@
 # Signature: res release major|minor|patch RESSOURCE
 # Option: res version --true
 #
-# Implémente SES-001 tâche 5.
+# Implémente SES-001 tâches 5 et 9.
+#
+# Pourquoi cette commande n'est pas dans le noyau
+# -----------------------------------------------
+#
+# SES-001 tâche 9 pose que toutes les ressources exposent une commande. La
+# ressource « ressource » est celle qui dit ce qu'est une ressource ; la
+# commande qui les crée, les liste et les versionne est donc la sienne, et
+# elle vit avec elle.
+#
+# Le point d'entrée trouve les commandes de _scripts/lib/cmd/ et celles que
+# les ressources déposent sous _ressources/<nom>/_scripts/. Rien n'a eu à
+# changer au noyau pour que « res » continue de répondre : c'est ce que ce
+# déplacement éprouve.
+#
+# Le noyau garde ce dont aucune ressource ne répond — version, check, init,
+# setup. Ce qui appartient à une ressource part avec elle.
 #
 # Où vit une ressource
 # --------------------
@@ -20,6 +36,11 @@
 # Un répertoire de _ressources/ est une ressource parce qu'il porte sa
 # définition, et pour aucune autre raison. Le reste est admis, jamais exigé :
 # un répertoire vide oblige à l'ouvrir pour découvrir qu'il n'y a rien.
+#
+# Sauf le script : « clia res new » le pose en même temps que la définition,
+# pour que l'énoncé « toutes les ressources exposent une commande » soit tenu
+# à la création plutôt que rappelé après coup. Il est posé, pas rédigé — ce
+# que la ressource sait faire appartient à qui la crée.
 #
 # Ce qui change par rapport à la génération précédente. Elle rangeait la
 # définition sous schemas/<nom>.yaml. Ce niveau portait plusieurs formats de
@@ -62,9 +83,9 @@
 set -euo pipefail
 
 _CLIA_NOM='clia'
-# shellcheck source=../commun.sh
+# shellcheck source=../../../_scripts/lib/commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
-# shellcheck source=../version.sh
+# shellcheck source=../../../_scripts/lib/version.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/version.sh"
 
 DEPOT="${CLIA_WORK_DIR:-}"
@@ -108,9 +129,20 @@ Une ressource a son propre cycle de vie, donc sa propre version. Son
 identité est celle du dépôt qui la publie, suivie de son préfixe :
 <namespace>/<PREFIXE>.
 
+Toute ressource expose une commande, nommée par son préfixe en
+minuscules : la ressource ressource porte « clia res », harness-ia
+porte « clia hrn ». Elle est posée à la création, à partir d'un
+gabarit ; ce qu'elle sait faire appartient à qui la crée.
+
 SOUS-COMMANDES
 new PREFIXE NOM [DESCRIPTION]
-       Crée _ressources/NOM/NOM.yaml, en version 0.1.0.
+       Crée la ressource : sa définition, en version 0.1.0, et sa
+       commande, dans _ressources/NOM/_scripts/. Les deux sortent
+       des gabarits de la ressource ressource.
+
+       La commande porte le préfixe en minuscules. Un préfixe dont
+       la commande est déjà celle du noyau est accepté, et signalé :
+       le noyau l'emporte, et le script ne serait pas atteint.
 
        PREFIXE s'écrit en deux à cinq majuscules. NOM s'écrit en
        minuscules, chiffres et tirets. Un préfixe déjà porté par une
@@ -173,18 +205,27 @@ _ressources/<nom>/<nom>.yaml
        champ qu'aucune commande ne fait tenir serait une promesse
        que le système ne tient pas.
 
-_ressources/<nom>/primitives/, skills/, _scripts/
-       Ce que la ressource porte. Admis, jamais exigés.
+_ressources/<nom>/_scripts/<commande>.sh
+       Sa commande, posée à la création. Elle vous appartient :
+       clia l'a posée, il ne la régénérera pas. Découverte comme
+       celles du noyau — voir clia(1).
 
-       Un fichier <nom>.sh déposé sous _scripts/ devient une
-       commande de clia, découverte comme celles du noyau. Voir
-       clia(1), et clia-hrn(1) pour celle de harness-ia.
+_ressources/<nom>/primitives/, skills/
+       Le reste de ce que la ressource porte. Admis, jamais exigés.
+
+_ressources/ressource/gabarits/
+       Ce dont une ressource neuve est faite : definition.yaml et
+       commande.sh. Un {{champ}} y est un trou, remplacé au rendu.
 
 EXEMPLES
 Créer une ressource :
 
        $ clia res new ANL analyse "Ce qu'un examen du réel établit"
        créée : _ressources/analyse
+
+Puis appeler la commande qu'elle expose :
+
+       $ clia anl ls
 
 Voir ce que le dépôt porte :
 
@@ -207,6 +248,12 @@ FIN
 # --------------------------------------------------------------------------
 
 RESSOURCES="$DEPOT/_ressources"
+
+# Les gabarits de la ressource « ressource » : ce dont une ressource neuve est
+# faite. Ils vivent dans le dépôt source, avec la ressource qui les porte, et
+# non dans le dépôt de travail — une ressource créée ailleurs sort du même
+# moule que celles d'ici.
+GABARITS="$CLIA_SOURCE_DIR/_ressources/ressource/gabarits"
 
 # « nom<TAB>chemin de la définition, relatif au dépôt », triées par nom.
 inventaire() {
@@ -254,6 +301,13 @@ resoudre() {
 }
 
 def_de()    { printf '_ressources/%s/%s.yaml\n' "$1" "$1"; }
+
+# La commande d'une ressource est son préfixe en minuscules : RES donne
+# « clia res », HRN donne « clia hrn ». Le préfixe est déjà ce qui adresse la
+# ressource, et lui donner une deuxième adresse en ferait deux noms à tenir.
+commande_de() { printf '%s\n' "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"; }
+
+script_de()   { printf '_ressources/%s/_scripts/%s.sh\n' "$1" "$2"; }
 portee_de() { printf '_ressources/%s\n' "$1"; }
 
 namespace_du_depot() {
@@ -419,9 +473,37 @@ publier() {
 # --------------------------------------------------------------------------
 # new
 # --------------------------------------------------------------------------
+#
+# Ce qu'une ressource neuve reçoit est dans gabarits/, pas ici. Un texte
+# écrit à même le code se relit mal et se compare mal : le gabarit se lit tel
+# qu'il sera rendu, et le banc peut le confronter à ce qui a été écrit.
+#
+# La langue du gabarit tient en une forme : {{nom}}, remplacé par la valeur
+# du champ. Pas de section, pas de boucle — un gabarit qui saurait tester
+# porterait la logique du système ailleurs que dans le code.
+
+# rendre <gabarit> — le gabarit sur la sortie standard, ses champs remplacés
+# par CHAMPS. Un trou que la table ne connaît pas fait échouer le rendu : un
+# fichier livré avec « {{...}} » dedans serait un fichier faux, et rien ne
+# distinguerait le trou oublié du texte voulu.
+rendre() {
+  local texte cle reste
+  texte=$(cat "$1")
+  for cle in "${!CHAMPS[@]}"; do
+    texte="${texte//\{\{$cle\}\}/${CHAMPS[$cle]}}"
+  done
+  if [[ "$texte" == *'{{'* ]]; then
+    reste="${texte#*\{\{}"
+    _clia_msg "le gabarit ${1#"$CLIA_SOURCE_DIR"/} porte un champ inconnu : {{${reste%%\}\}*}}}"
+    return 1
+  fi
+  printf '%s\n' "$texte"
+}
 
 creer() {
-  local prefixe="$1" nom="$2" description="${3:-}" dir def titre n d autre
+  local prefixe="$1" nom="$2" description="${3:-}"
+  local dir def script commande n d autre
+  local -A CHAMPS
 
   if [[ ! "$prefixe" =~ ^[A-Z]{2,5}$ ]]; then
     _clia_msg "préfixe invalide : $prefixe"
@@ -462,34 +544,51 @@ creer() {
   fi
   [[ -n "$description" ]] || description='À rédiger.'
 
-  titre="${nom^}"
+  commande=$(commande_de "$prefixe")
+  CHAMPS=(
+    [nom]="$nom"
+    [titre]="${nom^}"
+    [prefixe]="$prefixe"
+    [version]='0.1.0'
+    [description]="$description"
+    [commande]="$commande"
+  )
+
   def="$dir/$nom.yaml"
-  mkdir -p "$dir"
-  cat > "$def" <<FIN
-# La définition de la ressource « $nom ».
-#
-# Elle porte ce que les commandes de clia savent tenir aujourd'hui, et rien
-# de plus : un champ qu'aucune commande n'emploie serait une promesse que le
-# système ne tient pas.
-#
-# Ce qui se range à côté de ce fichier, quand la ressource en a :
-#
-#   primitives/  ce à partir de quoi ses livrables sont produits
-#   skills/      les procédures qu'elle fournit
-#   _scripts/    les automatismes qu'elle fournit — un <nom>.sh y devient
-#                une commande de clia
+  script="$dir/_scripts/$commande.sh"
+  mkdir -p "$dir/_scripts"
 
-nom: $nom
-titre: $titre
-prefixe: $prefixe
-version: 0.1.0
+  # Les deux fichiers sont rendus avant qu'aucun ne soit posé : une ressource
+  # à qui il manquerait son script obligerait à savoir laquelle des deux
+  # écritures a échoué, et l'emplacement resterait occupé.
+  local def_rendu script_rendu
+  def_rendu=$(rendre "$GABARITS/definition.yaml") \
+    && script_rendu=$(rendre "$GABARITS/commande.sh") \
+    || {
+      rm -rf "$dir"
+      _clia_msg "rien n'a été créé"
+      _clia_detail "l'installation de clia est-elle complète ?"
+      return 1
+    }
 
-description: "$description"
-FIN
+  printf '%s\n' "$def_rendu"    > "$def"
+  printf '%s\n' "$script_rendu" > "$script"
+  chmod +x "$script"
 
   _clia_msg "créée : _ressources/$nom"
   _clia_detail "définition : $(def_de "$nom")"
+  _clia_detail "commande   : $(script_de "$nom" "$commande") — clia $commande"
   _clia_detail "préfixe $prefixe, version 0.1.0"
+
+  # Le noyau l'emporte en cas d'homonymie : le script serait déposé, et jamais
+  # atteint. Le dire ici vaut mieux que le laisser découvrir à l'usage.
+  if [[ -f "$CLIA_SOURCE_DIR/_scripts/lib/cmd/$commande.sh" ]]; then
+    _clia_detail ''
+    _clia_msg "« clia $commande » est déjà une commande du noyau, qui l'emporte"
+    _clia_detail "le script est posé, et il ne sera pas atteint"
+    _clia_detail "choisissez un autre préfixe si la commande doit répondre"
+  fi
+
   _clia_detail ''
   _clia_detail "rien n'est commité : créer n'est pas publier"
   _clia_detail "commitez, puis : clia res release patch $nom"

@@ -12,6 +12,13 @@ scripts:
   - name: setup.sh
     provider: clia.noumanity.com
 
+
+provide:
+  - prefix: RES
+    name: ressource
+  - prefix: HRN
+    name: harness-ia
+
 use:
   core:
   - ressource: clia.noumanity.com/RES

@@ -1,4 +1,4 @@
-# La définition de la ressource « harness-ia ».
+# La définition de la ressource « {{nom}} ».
 #
 # Elle porte ce que les commandes de clia savent tenir aujourd'hui, et rien
 # de plus : un champ qu'aucune commande n'emploie serait une promesse que le
@@ -6,14 +6,14 @@
 #
 # Ce qui se range à côté de ce fichier :
 #
-#   _scripts/     les automatismes qu'elle fournit — hrn.sh y porte
-#                 la commande « clia hrn »
+#   _scripts/     les automatismes qu'elle fournit — {{commande}}.sh y porte
+#                 la commande « clia {{commande}} »
 #   primitives/   ce à partir de quoi ses livrables sont produits
 #   skills/       les procédures qu'elle fournit
 
-nom: harness-ia
-titre: Harnais IA
-prefixe: HRN
-version: 0.1.0
+nom: {{nom}}
+titre: {{titre}}
+prefixe: {{prefixe}}
+version: {{version}}
 
-description: "Harnais IA : les instructions qui guident agents et automatismes dans un dépôt clia."
+description: "{{description}}"

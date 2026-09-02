@@ -280,7 +280,8 @@ _scripts/lib/cmd/*.sh
 
 _ressources/*/_scripts/*.sh
        Les commandes qu'une ressource apporte, déclarées de la même
-       façon. Voir clia-hrn(1), celle de la ressource harness-ia.
+       façon. Toute ressource en expose une, nommée par son préfixe en
+       minuscules. Voir clia-res(1) et clia-hrn(1).
 
 EXEMPLES
 Rendre l'alias de version lisible du dépôt courant :
