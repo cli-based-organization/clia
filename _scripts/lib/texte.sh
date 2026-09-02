@@ -14,6 +14,8 @@
 #   <!-- CLIA:FEATURES:END -->
 #   <!-- CLIA:SKILLS:BEGIN -->
 #   <!-- CLIA:SKILLS:END -->
+#   <!-- CLIA:FOCUS:BEGIN -->
+#   <!-- CLIA:FOCUS:END -->
 #
 # Hors de ces marqueurs, le fichier appartient à qui l'écrit : clia n'y touche
 # jamais. Dedans, il n'y a que ce que clia a posé, et lui seul le retire.
@@ -37,12 +39,15 @@ _CLIA_ZONE_FEATURES_DEBUT='<!-- CLIA:FEATURES:BEGIN -->'
 _CLIA_ZONE_FEATURES_FIN='<!-- CLIA:FEATURES:END -->'
 _CLIA_ZONE_SKILLS_DEBUT='<!-- CLIA:SKILLS:BEGIN -->'
 _CLIA_ZONE_SKILLS_FIN='<!-- CLIA:SKILLS:END -->'
+_CLIA_ZONE_FOCUS_DEBUT='<!-- CLIA:FOCUS:BEGIN -->'
+_CLIA_ZONE_FOCUS_FIN='<!-- CLIA:FOCUS:END -->'
 
 # _clia_t_zone <features|skills> — « début<TAB>fin ».
 _clia_t_zone() {
   case "$1" in
     features) printf '%s\t%s\n' "$_CLIA_ZONE_FEATURES_DEBUT" "$_CLIA_ZONE_FEATURES_FIN" ;;
     skills)   printf '%s\t%s\n' "$_CLIA_ZONE_SKILLS_DEBUT"   "$_CLIA_ZONE_SKILLS_FIN" ;;
+    focus)    printf '%s\t%s\n' "$_CLIA_ZONE_FOCUS_DEBUT"    "$_CLIA_ZONE_FOCUS_FIN" ;;
     *)        return 1 ;;
   esac
 }

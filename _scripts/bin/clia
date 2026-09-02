@@ -395,6 +395,11 @@ _ressources/*/_scripts/*.sh
        Le clone d'une extension distante, propre à cette machine.
        La carte, elle, ne porte que l'URI. Voir clia-extension(1).
 
+focus/
+       Des liens vers ce qui compte pour le travail en cours. Hors
+       de l'index de git : le focus est ce que quelqu'un regarde,
+       non ce que le dépôt est. Voir clia-focus(1).
+
 EXEMPLES
 Rendre l'alias de version lisible du dépôt courant :
 
@@ -407,8 +412,9 @@ Lire le manuel d'une commande :
 
 VOIR AUSSI
 clia-version(1), clia-res(1), clia-extension(1), clia-source(1),
-clia-feature(1), clia-skill(1), clia-script(1), clia-check(1),
-clia-init(1), clia-hrn(1), clia-setup(1), git(1)
+clia-feature(1), clia-skill(1), clia-script(1), clia-focus(1),
+clia-unfocus(1), clia-check(1), clia-init(1), clia-hrn(1),
+clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
