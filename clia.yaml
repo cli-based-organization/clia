@@ -19,6 +19,7 @@ provide:
   - prefix: HRN
     name: harness-ia
 
+
 use:
   core:
   - ressource: clia.noumanity.com/RES

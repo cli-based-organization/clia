@@ -185,7 +185,7 @@ titre 'Ajouter une extension locale'
 # ==========================================================================
 
 D=$(depot travail)
-EXT_A=$(extension ext-a SES session 'session.exemple.test/ext-a')
+EXT_A=$(extension ext-a BNC banc 'session.exemple.test/ext-a')
 
 rc_dans 'un depot sans extension le dit' 0 "$D" extension ls
 dit 'et nomme la commande qui en ajoute une' 'clia extension add URI'
@@ -207,7 +207,7 @@ vrai 'la carte ne porte qu une entree' \
 
 SORTIE=$(sortie "$D" extension ls)
 dit 'l en-tete nomme les colonnes' '^EXTENSION *ETAT *RESSOURCES *URI$'
-dit 'l extension y figure, avec ce qu elle offre' 'session.exemple.test/ext-a *extension *SES'
+dit 'l extension y figure, avec ce qu elle offre' 'session.exemple.test/ext-a *extension *BNC'
 
 # ==========================================================================
 titre 'Declarer n installe rien'
@@ -216,8 +216,8 @@ titre 'Declarer n installe rien'
 # C'est ce qui fait que clia n'exécute jamais de code venu d'un dépôt voisin.
 
 SORTIE=$(dans "$D" --help 2>&1)
-ne_dit_pas 'la commande de l extension n est pas encore la' '^  ses '
-rc_dans 'et elle ne repond pas' 2 "$D" ses dis bonjour
+ne_dit_pas 'la commande de l extension n est pas encore la' '^  bnc '
+rc_dans 'et elle ne repond pas' 2 "$D" bnc dis bonjour
 dit 'clia dit qu il ne la connait pas' 'commande inconnue'
 
 # ==========================================================================
@@ -252,7 +252,7 @@ rc_dans 'extension sans verbe est mal forme' 2 "$D" extension
 titre 'Ajouter une extension distante'
 # ==========================================================================
 
-extension ext-b SES session 'b.exemple.test/ext-b' >/dev/null
+extension ext-b BNC banc 'b.exemple.test/ext-b' >/dev/null
 
 DIST=$(extension ext-dist LOG journal 'journal.exemple.test/ext-dist')
 G=$(depot avec-distant)
@@ -278,28 +278,28 @@ titre 'Installer une extension'
 # ==========================================================================
 
 rc_dans 'clia extension install est satisfaite' 0 "$D" extension install session.exemple.test/ext-a
-dit 'et elle nomme ce qu elle a repris' 'reprise : session'
+dit 'et elle nomme ce qu elle a repris' 'reprise : banc'
 dit 'et dit que rien n est commite' "rien n'est commité"
 
-vrai 'la ressource est copiee dans le depot' test -d "$D/_ressources/session"
-vrai 'avec sa definition' test -f "$D/_ressources/session/session.yaml"
-vrai 'et son script' test -f "$D/_ressources/session/_scripts/ses.sh"
+vrai 'la ressource est copiee dans le depot' test -d "$D/_ressources/banc"
+vrai 'avec sa definition' test -f "$D/_ressources/banc/banc.yaml"
+vrai 'et son script' test -f "$D/_ressources/banc/_scripts/bnc.sh"
 vrai 'la sortie standard porte le chemin repris' \
   test "$(sortie "$D" extension ls >/dev/null; true)" = ''
 
 vrai 'l inventaire de la carte l inscrit' \
-  grep -q 'resource: session.exemple.test/ext-a/SES' "$D/clia.yaml"
+  grep -q 'resource: session.exemple.test/ext-a/BNC' "$D/clia.yaml"
 vrai 'avec la version de la ressource, non celle du depot' \
-  test "$(grep -A1 'resource: session.exemple.test/ext-a/SES' "$D/clia.yaml" | tail -1)" = '    version: 0.2.0'
+  test "$(grep -A1 'resource: session.exemple.test/ext-a/BNC' "$D/clia.yaml" | tail -1)" = '    version: 0.2.0'
 
-rc_dans 'et sa commande repond maintenant' 0 "$D" ses dis bonjour
+rc_dans 'et sa commande repond maintenant' 0 "$D" bnc dis bonjour
 dit 'c est bien elle qui a repondu' '^bonjour$'
 
 SORTIE=$(dans "$D" --help 2>&1)
-dit 'elle figure dans l aide, sous les ressources' '^  ses  *Une ressource de banc'
+dit 'elle figure dans l aide, sous les ressources' '^  bnc  *Une ressource de banc'
 
 SORTIE=$(sortie "$D" extension ls)
-dit 'ls marque ce qui a ete repris' '\[SES\]'
+dit 'ls marque ce qui a ete repris' '\[BNC\]'
 
 # ==========================================================================
 titre 'La reprise laisse les primitives de l extension'
@@ -308,17 +308,17 @@ titre 'La reprise laisse les primitives de l extension'
 # SES-001 tâche 14. Le comment appartient à l'extension et se reprend ; les
 # primitives appartiennent au dépôt qui les écrit.
 
-vrai 'le script est repris' test -f "$D/_ressources/session/_scripts/ses.sh"
-vrai 'les gabarits aussi' test -f "$D/_ressources/session/gabarits/g.md"
-vrai 'la definition aussi' test -f "$D/_ressources/session/session.yaml"
-vrai 'mais pas les primitives' test ! -e "$D/_ressources/session/primitives"
-vrai 'elles sont restees dans l extension' test -f "$EXT_A/_ressources/session/primitives/p.md"
+vrai 'le script est repris' test -f "$D/_ressources/banc/_scripts/bnc.sh"
+vrai 'les gabarits aussi' test -f "$D/_ressources/banc/gabarits/g.md"
+vrai 'la definition aussi' test -f "$D/_ressources/banc/banc.yaml"
+vrai 'mais pas les primitives' test ! -e "$D/_ressources/banc/primitives"
+vrai 'elles sont restees dans l extension' test -f "$EXT_A/_ressources/banc/primitives/p.md"
 
 NEUF=$(depot primitives)
 dans "$NEUF" extension add ../ext-a >/dev/null 2>&1
 rc_dans 'et clia le dit en reprenant' 0 "$NEUF" extension install ext-a
 dit 'sans leurs primitives' 'sans leurs primitives'
-vrai 'la reprise n en porte aucune' test ! -e "$NEUF/_ressources/session/primitives"
+vrai 'la reprise n en porte aucune' test ! -e "$NEUF/_ressources/banc/primitives"
 
 # ==========================================================================
 titre 'Les collisions de nom et de prefixe sont refusees'
@@ -328,27 +328,27 @@ rc_dans 'reinstaller heurte le nom deja pris' 1 "$D" extension install session.e
 dit 'et clia nomme le heurt' 'une ressource de ce nom est déjà là'
 dit 'et dit que rien n a ete repris' "rien n'a été repris"
 vrai 'l inventaire ne double pas' \
-  test "$(grep -c 'resource: session.exemple.test/ext-a/SES' "$D/clia.yaml")" -eq 1
+  test "$(grep -c 'resource: session.exemple.test/ext-a/BNC' "$D/clia.yaml")" -eq 1
 
 # Un préfixe déjà pris, sous un autre nom.
-extension ext-pref SES reunion 'pref.exemple.test/ext-pref' >/dev/null
+extension ext-pref BNC reunion 'pref.exemple.test/ext-pref' >/dev/null
 P=$(depot prefixe)
 dans "$P" extension add ../ext-a >/dev/null 2>&1
 dans "$P" extension install ext-a >/dev/null 2>&1
 dans "$P" extension add ../ext-pref >/dev/null 2>&1
 rc_dans 'un prefixe deja pris est refuse' 1 "$P" extension install ext-pref
-dit 'en nommant qui le porte' 'le préfixe SES est déjà celui de session'
+dit 'en nommant qui le porte' 'le préfixe BNC est déjà celui de banc'
 vrai 'et la ressource n a pas ete posee' test ! -e "$P/_ressources/reunion"
 
 # Une seule collision suffit à tout refuser : pas de reprise à moitié.
 ressource_de_plus ext-b LIB libre
 B=$(depot partielle)
 dans "$B" extension add ../ext-b >/dev/null 2>&1
-mkdir -p "$B/_ressources/session"
-printf 'nom: session\ntitre: Session\nprefixe: ZZZ\nversion: 0.1.0\n' \
-  > "$B/_ressources/session/session.yaml"
+mkdir -p "$B/_ressources/banc"
+printf 'nom: banc\ntitre: Banc\nprefixe: ZZZ\nversion: 0.1.0\n' \
+  > "$B/_ressources/banc/banc.yaml"
 rc_dans 'une seule collision refuse toute la reprise' 1 "$B" extension install ext-b
-dit 'en nommant celle qui heurte' 'session : une ressource de ce nom'
+dit 'en nommant celle qui heurte' 'banc : une ressource de ce nom'
 vrai 'et celle qui ne heurtait rien n est pas posee non plus' \
   test ! -e "$B/_ressources/libre"
 
@@ -356,12 +356,12 @@ vrai 'et celle qui ne heurtait rien n est pas posee non plus' \
 # là. L'inventaire ne doit pas la porter deux fois pour autant.
 AVANCE=$(depot inventaire-avance)
 dans "$AVANCE" extension add ../ext-a >/dev/null 2>&1
-printf '\nuse:\n  extensions:\n  - resource: session.exemple.test/ext-a/SES\n    version: 0.1.0\n' \
+printf '\nuse:\n  extensions:\n  - resource: session.exemple.test/ext-a/BNC\n    version: 0.1.0\n' \
   >> "$AVANCE/clia.yaml"
 rc_dans 'installer une ressource deja inscrite est satisfait' 0 "$AVANCE" extension install ext-a
-vrai 'la ressource est bien reprise' test -d "$AVANCE/_ressources/session"
+vrai 'la ressource est bien reprise' test -d "$AVANCE/_ressources/banc"
 vrai 'et l inventaire ne la porte qu une fois' \
-  test "$(grep -c 'session.exemple.test/ext-a/SES' "$AVANCE/clia.yaml")" -eq 1
+  test "$(grep -c 'session.exemple.test/ext-a/BNC' "$AVANCE/clia.yaml")" -eq 1
 
 rc_dans 'une extension inconnue est refusee' 1 "$D" extension install inexistante
 dit 'et clia renvoie a la liste' 'clia extension ls'
@@ -371,26 +371,26 @@ rc_dans 'install sans extension est mal forme' 2 "$D" extension install
 titre 'Le verbe deactivate, que toutes les ressources portent'
 # ==========================================================================
 
-rc_dans 'il figure dans l aide de la ressource' 0 "$D" ses --help
-dit 'sans avoir ete declare par son script' 'clia ses deactivate'
+rc_dans 'il figure dans l aide de la ressource' 0 "$D" bnc --help
+dit 'sans avoir ete declare par son script' 'clia bnc deactivate'
 
-rc_dans 'une ressource non commitee n est pas effacee' 1 "$D" ses deactivate
+rc_dans 'une ressource non commitee n est pas effacee' 1 "$D" bnc deactivate
 dit 'et clia dit pourquoi' "git ne tient pas encore"
-vrai 'elle est toujours la' test -d "$D/_ressources/session"
+vrai 'elle est toujours la' test -d "$D/_ressources/banc"
 
-git_ "$D" add -A >/dev/null; git_ "$D" commit -q -m 'reprend session'
+git_ "$D" add -A >/dev/null; git_ "$D" commit -q -m 'reprend banc'
 
-rc_dans 'une ressource commitee se retire' 0 "$D" ses deactivate
+rc_dans 'une ressource commitee se retire' 0 "$D" bnc deactivate
 dit 'et clia dit ce qu il a retire' 'retirée de ce dépôt'
-vrai 'le repertoire est parti' test ! -e "$D/_ressources/session"
+vrai 'le repertoire est parti' test ! -e "$D/_ressources/banc"
 vrai 'et l inventaire aussi' \
-  test "$(grep -c 'resource: session.exemple.test/ext-a/SES' "$D/clia.yaml")" -eq 0
+  test "$(grep -c 'resource: session.exemple.test/ext-a/BNC' "$D/clia.yaml")" -eq 0
 vrai 'la declaration de la source, elle, reste' \
   grep -q 'provider: session.exemple.test/ext-a' "$D/clia.yaml"
 
-rc_dans 'sa commande ne repond plus' 2 "$D" ses dis bonjour
+rc_dans 'sa commande ne repond plus' 2 "$D" bnc dis bonjour
 rc_dans 'et elle se reprend' 0 "$D" extension install ext-a
-vrai 'la ressource est revenue' test -d "$D/_ressources/session"
+vrai 'la ressource est revenue' test -d "$D/_ressources/banc"
 
 # Ce que le dépôt publie ne se désinstalle pas.
 rc 'une ressource que le depot publie est protegee' 1 "$CLIA" res deactivate
@@ -401,7 +401,7 @@ vrai 'elle est intacte' test -d "$RACINE/_ressources/ressource"
 rc_dans 'une ressource du CLI n est pas installee dans un autre depot' 1 "$D" res deactivate
 dit 'et clia dit d ou elle vient' "n'est pas installée dans ce dépôt"
 
-rc_dans 'deactivate ne prend pas d argument' 2 "$D" ses deactivate trop
+rc_dans 'deactivate ne prend pas d argument' 2 "$D" bnc deactivate trop
 
 # ==========================================================================
 titre 'Desinstaller une extension'
@@ -411,7 +411,7 @@ U=$(depot desinstallation)
 dans "$U" extension add ../ext-b >/dev/null 2>&1
 rc_dans 'une extension a deux ressources est reprise' 0 "$U" extension install ext-b
 vrai 'les deux sont la' \
-  test -d "$U/_ressources/session" -a -d "$U/_ressources/libre"
+  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
 vrai 'et l inventaire les porte' \
   test "$(grep -c 'resource: b.exemple.test/ext-b/' "$U/clia.yaml")" -eq 2
 
@@ -419,26 +419,26 @@ rc_dans 'desinstaller ce qui n est pas commite est refuse' 1 "$U" extension unin
 dit 'et clia dit pourquoi' "git ne tient pas encore"
 dit 'et que rien n a ete retire' "rien n'a été retiré"
 vrai 'les deux sont toujours la' \
-  test -d "$U/_ressources/session" -a -d "$U/_ressources/libre"
+  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
 
 git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'reprend ext-b'
 
 rc_dans 'clia extension uninstall est satisfaite' 0 "$U" extension uninstall ext-b
-dit 'elle nomme ce qu elle retire' 'retirée : session'
+dit 'elle nomme ce qu elle retire' 'retirée : banc'
 dit 'et compte ce qui est parti' '2 ressource(s) retirée(s)'
 dit 'et dit que rien n est commite' "rien n'est commité"
 
 vrai 'les deux repertoires sont partis' \
-  test ! -e "$U/_ressources/session" -a ! -e "$U/_ressources/libre"
+  test ! -e "$U/_ressources/banc" -a ! -e "$U/_ressources/libre"
 vrai 'l inventaire ne les porte plus' \
   test "$(grep -c 'resource: b.exemple.test/ext-b/' "$U/clia.yaml")" -eq 0
 vrai 'la declaration de source, elle, reste' \
   grep -q 'provider: b.exemple.test/ext-b' "$U/clia.yaml"
-rc_dans 'la commande de l extension ne repond plus' 2 "$U" ses dis bonjour
+rc_dans 'la commande de l extension ne repond plus' 2 "$U" bnc dis bonjour
 
 rc_dans 'et elle se reprend' 0 "$U" extension install ext-b
 vrai 'les deux ressources sont revenues' \
-  test -d "$U/_ressources/session" -a -d "$U/_ressources/libre"
+  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
 
 # Une entrée d'inventaire dont la ressource a été retirée à la main.
 git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'reprend a nouveau'
@@ -457,10 +457,10 @@ PUB=$(depot publiee)
 dans "$PUB" extension add ../ext-a >/dev/null 2>&1
 dans "$PUB" extension install ext-a >/dev/null 2>&1
 git_ "$PUB" add -A >/dev/null; git_ "$PUB" commit -q -m 'reprend ext-a'
-printf '\nprovide:\n  - prefix: SES\n    name: session\n' >> "$PUB/clia.yaml"
+printf '\nprovide:\n  - prefix: BNC\n    name: banc\n' >> "$PUB/clia.yaml"
 rc_dans 'une ressource publiee par le depot est protegee' 1 "$PUB" extension uninstall ext-a
 dit 'et clia dit pourquoi' 'que ce dépôt publie'
-vrai 'elle est intacte' test -d "$PUB/_ressources/session"
+vrai 'elle est intacte' test -d "$PUB/_ressources/banc"
 
 rc_dans 'uninstall sans extension est mal forme' 2 "$U" extension uninstall
 rc_dans 'uninstall avec deux extensions est mal forme' 2 "$U" extension uninstall a b

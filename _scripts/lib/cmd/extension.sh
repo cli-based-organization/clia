@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Description: Les extensions — add, ls, install.
+# Description: Les extensions — add, ls, install, uninstall.
 # Périmètre: dépôt
 # Signature: extension add URI
 # Signature: extension ls

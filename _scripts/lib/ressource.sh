@@ -40,6 +40,15 @@
 #   retour. clia demande de la commiter d'abord — après quoi l'historique la
 #   rend.
 
+# Les deux verbes que le point d'entrée tient pour toutes les ressources :
+# « deactivate », qui retire la ressource, et « provide », qui dit ce qu'elle
+# apporte. Le second a besoin de savoir lire les fournitures.
+#
+# shellcheck source=texte.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/texte.sh"
+# shellcheck source=fourniture.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/fourniture.sh"
+
 _clia_r_definition() { printf '%s/_ressources/%s/%s.yaml\n' "$1" "$2" "$2"; }
 
 # Le nom de la ressource que porte un fichier de commande, ou rien.
@@ -164,5 +173,67 @@ _clia_r_desactiver() {
   _clia_detail "la commande « clia $commande » ne répond plus ici"
   _clia_detail "pour la reprendre : clia extension install ${ns:-EXTENSION}"
   _clia_detail "rien n'est commité"
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# provide — ce qu'une ressource apporte
+# --------------------------------------------------------------------------
+#
+# SES-001 tâche 15. Trois natures de fourniture, dans une seule table : la
+# question « qu'est-ce que cette ressource m'apporte » ne se pose pas trois
+# fois, et y répondre en trois commandes obligerait à les appeler toutes pour
+# savoir.
+#
+# Les commandes clia-feature(1), clia-skill(1) et clia-script(1) répondent à
+# l'autre question — « qu'est-ce que tout le dépôt porte de telle nature » —
+# et c'est elles qui activent et désactivent.
+
+# _clia_r_provide <commande> <fichier>
+_clia_r_provide() {
+  local commande="$1" fichier="$2" depot="${CLIA_WORK_DIR:-}" nom prefixe harnais
+  local p item desc sig etat lignes=''
+
+  if ! nom=$(_clia_r_nom_de_fichier "$fichier"); then
+    _clia_msg "clia $commande n'est pas la commande d'une ressource"
+    return 2
+  fi
+
+  prefixe=$(_clia_champ_yaml \
+    "$(_clia_r_racine_de_fichier "$fichier")/_ressources/$nom/$nom.yaml" prefixe || printf '')
+  harnais=$(_clia_f_harnais "$depot")
+
+  while IFS="$_CLIA_SEP" read -r p _ item _ desc; do
+    [[ "$p" == "$prefixe" ]] || continue
+    if _clia_t_pose "$harnais" "$item" feature; then etat='active'; else etat='inactive'; fi
+    lignes+=$(printf 'fonctionnalité\t%s\t%s\t%s' "$item" "$etat" "${desc:-—}")$'\n'
+  done < <(_clia_f_features "$depot")
+
+  while IFS="$_CLIA_SEP" read -r p _ item _ desc; do
+    [[ "$p" == "$prefixe" ]] || continue
+    if [[ -d "$depot/.claude/skills/$item" ]]; then etat='actif'; else etat='inactif'; fi
+    lignes+=$(printf 'skill\t%s\t%s\t%s' "$item" "$etat" "${desc:-—}")$'\n'
+  done < <(_clia_f_skills "$depot")
+
+  while IFS="$_CLIA_SEP" read -r p _ item sig; do
+    [[ "$p" == "$prefixe" ]] || continue
+    if _clia_f_est_desactive "$depot" "$p" "$item"; then etat='désactivé'; else etat='actif'; fi
+    lignes+=$(printf 'script\t%s\t%s\t%s' "$item" "$etat" "$sig")$'\n'
+  done < <(_clia_f_scripts "$depot")
+
+  if [[ -z "$lignes" ]]; then
+    _clia_msg "$nom n'apporte rien pour l'instant"
+    _clia_detail "une ressource apporte des fonctionnalités, des skills et des scripts"
+    _clia_detail "ils se rangent sous features/, skills/ et _scripts/"
+    return 0
+  fi
+
+  { printf 'FOURNITURE\tNOM\tETAT\tDESCRIPTION\n'
+    printf '%s' "$lignes"
+  } | column -t -s $'\t'
+
+  _clia_msg "ressource $nom ($prefixe)"
+  _clia_detail "poser une fonctionnalité : clia feature activate NOM"
+  _clia_detail "poser un skill           : clia skill activate NOM"
   return 0
 }

@@ -226,10 +226,12 @@ _clia_aide() {
   f=$(_clia_fichier_de "${chemin%% *}")
   printf 'Usage :\n'
   { _clia_signatures_de "$f"
-    # Le verbe générique des ressources n'est déclaré dans aucun fichier :
-    # c'est le point d'entrée qui le tient, pour toutes. Il doit donc être
-    # ajouté ici, sinon l'aide tairait une forme d'appel valide.
+    # Les verbes génériques des ressources ne sont déclarés dans aucun
+    # fichier : c'est le point d'entrée qui les tient, pour toutes. Ils
+    # doivent donc être ajoutés ici, sinon l'aide tairait des formes d'appel
+    # valides.
     if [[ "$(_clia_origine_de "${chemin%% *}")" == 'ressource' ]]; then
+      printf '%s provide\n'    "${chemin%% *}"
       printf '%s deactivate\n' "${chemin%% *}"
     fi
   } | _clia_lignes_usage "$chemin"
@@ -314,11 +316,19 @@ OPTIONS
        orthographes du même mot ne doivent pas désigner deux objets.
        Reconnue en première position seulement.
 
-LE VERBE DES RESSOURCES
+LES VERBES DES RESSOURCES
+Deux verbes valent pour toute commande de ressource, et le point
+d'entrée les tient pour toutes. Une ressource reprise d'une
+extension les reçoit sans avoir eu à les écrire.
+
+provide [ls]
+       Ce que la ressource apporte : ses fonctionnalités, ses
+       skills, ses scripts, et l'état de chacun dans ce dépôt. Voir
+       clia-feature(1), clia-skill(1) et clia-script(1), qui
+       posent et retirent.
+
 deactivate
-       Toute commande de ressource porte « clia <ressource>
-       deactivate », que le point d'entrée tient pour toutes. Il
-       retire la ressource du dépôt de travail, et l'ôte de
+       Retire la ressource du dépôt de travail, et l'ôte de
        l'inventaire de la carte.
 
        Il refuse de retirer ce que le dépôt publie, ce qui n'est pas
@@ -397,7 +407,8 @@ Lire le manuel d'une commande :
 
 VOIR AUSSI
 clia-version(1), clia-res(1), clia-extension(1), clia-source(1),
-clia-check(1), clia-init(1), clia-hrn(1), clia-setup(1), git(1)
+clia-feature(1), clia-skill(1), clia-script(1), clia-check(1),
+clia-init(1), clia-hrn(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
@@ -496,28 +507,77 @@ fi
 # — et le geste est le même pour toutes. Une ressource reprise d'une
 # extension le reçoit donc sans avoir eu à l'écrire.
 #
-# Il agit sur un dépôt, quel que soit le périmètre que la ressource déclare
-# pour elle-même : une ressource peut n'avoir besoin d'aucun dépôt pour
-# travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu ici,
-# et son absence refusée ici.
-if [[ "${1:-}" == 'deactivate' && "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]]; then
-  if (( $# > 1 )); then
-    _clia_msg "deactivate ne prend pas d'argument : ${*:2}"
-    exit 2
-  fi
+# Ils agissent sur un dépôt, quel que soit le périmètre que la ressource
+# déclare pour elle-même : une ressource peut n'avoir besoin d'aucun dépôt
+# pour travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu
+# ici, et son absence refusée ici.
+if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
+   && [[ "${1:-}" == 'deactivate' || "${1:-}" == 'provide' ]]; then
+  _CLIA_VERBE="$1"; shift
+
+  case "$_CLIA_VERBE" in
+    deactivate)
+      (( $# == 0 )) || { _clia_msg "deactivate ne prend pas d'argument : $*"; exit 2; } ;;
+    provide)
+      # « provide » et « provide ls » disent la même chose : l'énoncé écrit le
+      # second, et un verbe qui n'a qu'une forme n'a pas à l'exiger.
+      (( $# == 0 )) || [[ "${1:-}" == 'ls' && $# -eq 1 ]] || {
+        _clia_msg "provide n'accepte que « ls » : $*"; exit 2; } ;;
+  esac
+
   if [[ -z "${CLIA_WORK_DIR:-}" ]]; then
     if [[ -z "$_CLIA_DEPOT_COURANT" ]]; then
       _clia_msg "le répertoire courant n'est pas dans un dépôt git"
-      _clia_detail "deactivate retire une ressource d'un dépôt ; placez-vous dans l'un d'eux"
+      _clia_detail "$_CLIA_VERBE agit sur un dépôt ; placez-vous dans l'un d'eux"
       exit 1
     fi
     CLIA_WORK_DIR="$_CLIA_DEPOT_COURANT"
     export CLIA_WORK_DIR
   fi
+
   # shellcheck source=../lib/ressource.sh
   . "$CLIA_SOURCE_DIR/_scripts/lib/ressource.sh"
-  _clia_r_desactiver "$COMMANDE" "$FICHIER"
+  if [[ "$_CLIA_VERBE" == 'deactivate' ]]; then
+    _clia_r_desactiver "$COMMANDE" "$FICHIER"
+  else
+    _clia_r_provide "$COMMANDE" "$FICHIER"
+  fi
   exit $?
+fi
+
+# Un verbe désactivé — SES-001 tâche 15.
+#
+# Le refus vient d'ici, et non de la commande : c'est le même endroit que la
+# garde de périmètre, et pour la même raison. Une ressource n'a rien à écrire
+# pour que ses verbes puissent être refusés, et une ressource reprise d'une
+# extension l'est comme les autres.
+#
+# La lecture n'a lieu que si la carte porte un bloc « desactives: ». L'état
+# ordinaire d'un verbe est de répondre, et il ne doit rien coûter.
+#
+# C'est la carte du dépôt où l'on se trouve qui décide, quel que soit le
+# périmètre que la ressource déclare pour elle-même : une ressource peut
+# n'avoir besoin d'aucun dépôt pour travailler, et son verbe être refusé
+# ici.
+if [[ -n "${1:-}" && "${1:0:1}" != '-' \
+      && "$(_clia_origine_de "$COMMANDE")" == 'ressource' \
+      && -n "$_CLIA_DEPOT_COURANT" ]]; then
+  if _CLIA_CARTE=$(_clia_carte "$_CLIA_DEPOT_COURANT") \
+     && grep -q '^desactives:' "$_CLIA_CARTE" 2>/dev/null; then
+    _CLIA_NOM_RES=$(basename "$(dirname "$(dirname "$FICHIER")")")
+    _CLIA_RACINE_RES=$(dirname "$(dirname "$(dirname "$(dirname "$FICHIER")")")")
+    _CLIA_PREFIXE=$(_clia_champ_yaml \
+      "$_CLIA_RACINE_RES/_ressources/$_CLIA_NOM_RES/$_CLIA_NOM_RES.yaml" prefixe || printf '')
+    if [[ -n "$_CLIA_PREFIXE" ]]; then
+      while IFS="$_CLIA_SEP" read -r _CLIA_ID; do
+        [[ "$_CLIA_ID" == "$_CLIA_PREFIXE/$1" ]] || continue
+        _clia_msg "le script « $1 » est désactivé dans ce dépôt"
+        _clia_detail "inscrit dans ${_CLIA_CARTE#"$_CLIA_DEPOT_COURANT"/}, sous « desactives: »"
+        _clia_detail "pour le rendre : clia script activate $1 $_CLIA_PREFIXE"
+        exit 1
+      done < <(_clia_bloc_yaml "$_CLIA_CARTE" desactives script)
+    fi
+  fi
 fi
 
 exec bash "$FICHIER" "$@"
