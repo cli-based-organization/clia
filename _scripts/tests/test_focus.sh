@@ -13,7 +13,11 @@
 #
 #   hors des marqueurs de zone, le harnais n'est pas touché ;
 #
-#   relâcher le focus ne touche à rien de ce qu'il désignait.
+#   relâcher le focus ne touche à rien de ce qu'il désignait ;
+#
+#   un alias n'est cherché que sous .dev/ — SES-001 tâche 18. Le dépôt porte
+#   des archives et des worktrees qui répètent les mêmes noms, et les y
+#   chercher rendait ambigu un alias qui ne désignait qu'une chose.
 
 set -uo pipefail
 
@@ -69,7 +73,8 @@ rc_dans() {
 
 depot() {
   local d="$BAC/$1"
-  mkdir -p "$d/.dev/logs/SES-002-le-focus" "$d/.dev/reqs" "$d/ailleurs"
+  mkdir -p "$d/.dev/logs/SES-002-le-focus" "$d/.dev/reqs" "$d/ailleurs" \
+           "$d/.past-generations/logs/SES-002-archivee"
   git -C "$d" init -q
   printf 'namespace: exemple.test/%s\nversion: 1.0.0\n' "$1" > "$d/clia.yaml"
   printf '# Conventions\n\nCe paragraphe est à moi, et clia n%sy touche pas.\n' "'" \
@@ -77,6 +82,9 @@ depot() {
   printf 'la session\n' > "$d/.dev/logs/SES-002-le-focus/session.md"
   printf 'le requis\n'  > "$d/.dev/reqs/REQ-004.md"
   printf 'autre chose\n' > "$d/ailleurs/note.md"
+  # Une archive qui répète l'alias : elle ne doit pas entrer en concurrence.
+  printf 'une session archivée\n' > "$d/.past-generations/logs/SES-002-archivee/session.md"
+  printf 'un requis archivé\n'    > "$d/.past-generations/REQ-009.md"
   printf '%s\n' "$d"
 }
 
@@ -207,14 +215,41 @@ rc_dans 'un nom deja pris est refuse' 1 "$D" focus on autre-part/note.md
 dit 'et clia dit ce que le lien designe deja' 'désigne autre chose'
 dit 'et comment le liberer' 'clia unfocus note.md'
 
-mkdir -p "$D/ailleurs/SES-002-bis"
+mkdir -p "$D/.dev/logs/SES-002-bis"
 rc_dans 'un alias ambigu est refuse' 1 "$D" focus on SES-002
-dit 'en nommant les candidates' 'ailleurs/SES-002-bis'
+dit 'en nommant les candidates' '\.dev/logs/SES-002-bis'
 dit 'et en disant comment lever le doute' 'désignez-la par son chemin'
-rm -rf "$D/ailleurs/SES-002-bis"
+rm -rf "$D/.dev/logs/SES-002-bis"
 
 rc_dans 'un alias que rien ne porte est refuse' 1 "$D" focus on ZZZ-999
 dit 'et clia dit ce qu il cherchait' 'ZZZ-999-'
+dit 'et ou il a cherche' 'sous \.dev/'
+
+# ==========================================================================
+titre 'Un alias n est cherche que sous .dev'
+# ==========================================================================
+#
+# SES-001 tâche 18. Le dépôt réel portait le même alias quatre fois : une
+# instance, deux générations archivées et un worktree. L'alias devenait
+# ambigu là où il ne désignait qu'une chose.
+
+ARCH=$(depot archives)
+vrai 'l archive porte pourtant le meme alias' \
+  test -d "$ARCH/.past-generations/logs/SES-002-archivee"
+rc_dans 'et l alias reste sans ambiguite' 0 "$ARCH" focus on SES-002
+dit 'car seule l instance sous .dev est vue' 'désigne \.dev/logs/SES-002-le-focus'
+vrai 'un seul lien est pose' test "$(sortie "$ARCH" focus ls | tail -n +2 | wc -l)" -eq 1
+
+rc_dans 'un alias qui n existe que hors de .dev est introuvable' 1 "$ARCH" focus on REQ-009
+dit 'et clia dit ou il a cherche' 'sous \.dev/'
+dit 'et que le chemin reste possible' 'par son chemin'
+rc_dans 'ce document se met au focus par son chemin' 0 "$ARCH" focus on @.past-generations/REQ-009.md
+vrai 'et le lien est pose' test -L "$ARCH/focus/REQ-009.md"
+
+SANS_DEV=$(depot sans-dev)
+rm -rf "$SANS_DEV/.dev"
+rc_dans 'un depot sans .dev refuse l alias sans echouer autrement' 1 "$SANS_DEV" focus on SES-002
+dit 'et le dit' 'aucune instance'
 rc_dans 'un chemin qui n existe pas est refuse' 1 "$D" focus on @nulle-part.md
 dit 'et clia rappelle les trois formes' 'alias PREFIXE-SEQ'
 

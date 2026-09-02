@@ -77,3 +77,21 @@ clia version --true         l'empreinte exacte
 * **Ce qui est fait se vérifie.** Ne rapportez jamais un succès non constaté.
 * **Ce qui est écrit s'adresse à un lecteur.** Un message dit ce qui s'est
   produit, puis ce que le lecteur peut faire ensuite.
+
+<!-- CLIA:FOCUS:BEGIN -->
+
+<!-- BEGIN focus attention -->
+## Le focus
+
+Ce dépôt porte un focus : le répertoire `focus/` désigne les documents qui
+comptent pour le travail en cours. Par défaut, ne prenez en compte qu'eux.
+
+Ce qui est hors du focus n'est pas interdit — il est hors de la question
+posée. Si le travail demande d'en sortir, dites-le plutôt que de le faire en
+silence.
+
+```sh
+clia focus ls               ce que le focus porte
+```
+<!-- END focus attention -->
+<!-- CLIA:FOCUS:END -->

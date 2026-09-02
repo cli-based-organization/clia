@@ -74,8 +74,16 @@ chemin
 
 PREFIXE-SEQ
        Une instance de ressource — SES-002, REQ-004. clia cherche
-       dans le dépôt un fichier ou un répertoire portant ce nom,
-       seul, suivi d'un tiret, ou suivi d'une extension.
+       sous .dev/ un fichier ou un répertoire portant ce nom, seul,
+       suivi d'un tiret, ou suivi d'une extension.
+
+       Sous .dev/, et nulle part ailleurs. Ce qui est ailleurs dans
+       un dépôt est une archive, un clone ou un livrable — pas une
+       instance de ce dépôt-ci — et les y chercher rendait ambigus
+       des alias qui ne désignaient qu'une chose.
+
+       Un document rangé hors de .dev/ reste désignable par son
+       chemin : c'est l'alias qui est restreint, non le focus.
 
        Un alias que plus d'une information porte est refusé, et
        clia nomme les candidates.
@@ -136,6 +144,9 @@ CODE DE RETOUR
 FICHIERS
 focus/
        Les liens. Rien d'autre n'y a sa place.
+
+.dev/
+       Où les instances vivent, et où un alias est cherché.
 
 .gitignore
        clia y ajoute « /focus/ » une fois, précédé de sa raison.

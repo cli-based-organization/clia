@@ -61,6 +61,22 @@ _clia_fo_dir() { printf '%s/%s\n' "$1" "$_CLIA_FOCUS_REL"; }
 
 _CLIA_FO_ALIAS='^[A-Z]{2,5}-[0-9]+$'
 
+# Où les instances vivent — SES-001 tâche 18.
+#
+# Sous .dev/, et nulle part ailleurs. La recherche portait d'abord sur le
+# dépôt entier, et un même alias s'y trouvait quatre fois : une fois pour
+# l'instance réelle, et trois fois pour des copies qui n'en sont pas — deux
+# générations archivées, et un worktree de travail. Un alias devenait ambigu
+# là où il ne désignait qu'une chose.
+#
+# .dev/ est l'emplacement que ce dépôt tient : la carte peut y vivre, les
+# sessions y vivent, les harnais générés aussi. Ce qui est ailleurs est une
+# archive, un clone ou un livrable — pas une instance de ce dépôt-ci.
+#
+# Un document rangé hors de .dev/ reste désignable par son chemin. C'est
+# l'alias qui est restreint, non le focus.
+_CLIA_FO_INSTANCES_REL='.dev'
+
 # _clia_fo_instances <dépôt> <alias> — les chemins qui portent cet alias.
 #
 # La recherche est celle du nom de fichier : une instance se nomme par son
@@ -68,9 +84,9 @@ _CLIA_FO_ALIAS='^[A-Z]{2,5}-[0-9]+$'
 # n'a à déclarer où vivent ses instances — la règle de nommage suffit, et
 # c'est elle que toutes les générations ont tenue.
 _clia_fo_instances() {
-  local depot="$1" alias="$2"
-  find "$depot" -mindepth 1 \
-    \( -name '.git' -o -path "$(_clia_fo_dir "$depot")" \) -prune -o \
+  local depot="$1" alias="$2" racine="$1/$_CLIA_FO_INSTANCES_REL"
+  [[ -d "$racine" ]] || return 0
+  find "$racine" -mindepth 1 \
     \( -name "$alias" -o -name "$alias-*" -o -name "$alias.*" \) -print \
     2>/dev/null | sort
   return 0
@@ -100,14 +116,16 @@ _clia_fo_cible() {
   candidats=$(_clia_fo_instances "$depot" "$demande")
   if [[ -z "$candidats" ]]; then
     _clia_msg "aucune instance ne porte l'alias $demande"
-    _clia_detail "clia cherche un fichier ou un répertoire nommé $demande, $demande-… ou $demande.…"
+    _clia_detail "clia cherche sous $_CLIA_FO_INSTANCES_REL/ un fichier ou un répertoire"
+    _clia_detail "nommé $demande, $demande-… ou $demande.…"
+    _clia_detail "ce qui est rangé ailleurs se désigne par son chemin"
     return 1
   fi
 
   nb=$(printf '%s\n' "$candidats" | grep -c '')
   if (( nb > 1 )); then
     _clia_msg "alias ambigu : $demande"
-    _clia_detail "plus d'une information le porte :"
+    _clia_detail "plus d'une information le porte, sous $_CLIA_FO_INSTANCES_REL/ :"
     printf '%s\n' "$candidats" | sed "s#^$depot/#      #" >&2
     _clia_detail "désignez-la par son chemin"
     return 1
