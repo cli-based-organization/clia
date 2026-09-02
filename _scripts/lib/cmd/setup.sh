@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
-# Description: L'installation de clia — status, uninstall.
+# Description: L'installation de clia — status, version, uninstall.
 # Périmètre: aucun
 # Signature: setup status
+# Signature: setup version
+# Signature: setup version ls
 # Signature: setup uninstall
 #
-# Implémente SES-001 tâche 7 : « clia fournit les commandes du script setup ».
+# Implémente SES-001 tâches 7 et 17.
+#
+# Pourquoi « setup version » et non « clia version »
+# --------------------------------------------------
+#
+# SES-001 tâche 17 : « clia agit sur le repo dans lequel on se trouve. Donc,
+# clia version donne la version du repo courant. » La version du CLI qui
+# exécute la commande est autre chose, et c'est une propriété de
+# l'installation — d'où sa place ici.
+#
+# Les deux coïncident dans le dépôt source de clia, et divergent partout
+# ailleurs. Les confondre ferait croire qu'un dépôt suit la version de l'outil
+# qui l'instrumente, ce qui est précisément ce que la tâche 17 défait.
 #
 # Lesquelles, et pourquoi pas les autres
 # --------------------------------------
@@ -37,6 +51,10 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 # shellcheck source=../installation.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/installation.sh"
+# shellcheck source=../version.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/version.sh"
+# shellcheck source=../maj.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/maj.sh"
 
 # --------------------------------------------------------------------------
 
@@ -47,6 +65,7 @@ clia-setup - consulter et retirer l'installation de clia
 
 SYNOPSIS
 clia setup status
+clia setup version [ls]
 clia setup uninstall
 
 DESCRIPTION
@@ -72,6 +91,22 @@ status
 
        Rend 1 quand il n'y a aucune installation, pour qu'un script
        puisse en dépendre.
+
+version [ls]
+       Sans argument, la version du CLI qui répond — celle du dépôt
+       source d'où il vient.
+
+       Ce n'est pas la version du dépôt où l'on travaille, que
+       « clia version » rend. Les deux coïncident dans le dépôt
+       source de clia, et divergent partout ailleurs.
+
+       Avec « ls », toutes les versions que l'historique du dépôt
+       source déclare, la plus récente d'abord. Une flèche marque
+       celle du CLI.
+
+       Une version est disponible quand un commit la déclare : il
+       n'y a pas de registre ailleurs, ni d'étiquettes. clia ne peut
+       donc offrir que les versions dont il a l'historique.
 
 uninstall
        Retire l'installation dev : son lien et sa configuration, et
@@ -121,7 +156,7 @@ Retirer l'installation :
        $ clia setup uninstall
 
 VOIR AUSSI
-clia(1), clia-setup(1), clia-check(1)
+clia(1), clia-version(1), clia-upgrade(1), clia-check(1)
 FIN
 }
 
@@ -181,6 +216,76 @@ retirer() {
 # Dispatch
 # --------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------
+# La version du CLI, et celles qu'il porte
+# --------------------------------------------------------------------------
+#
+# Une version est disponible quand un commit du dépôt source la déclare. Il
+# n'y a pas de registre ailleurs, ni d'étiquettes — SES-001 tâche 2 pose que
+# la publication n'en met aucune. clia ne peut donc offrir que les versions
+# dont il a l'historique sous la main, et le dire vaut mieux que promettre
+# celles qu'il n'a pas.
+
+version_du_cli() {
+  local carte resolu commit alias etat court
+
+  carte=$(_clia_carte_relative "$CLIA_SOURCE_DIR") || {
+    _clia_msg "le dépôt source de clia ne porte pas de carte"
+    _clia_detail "source : $CLIA_SOURCE_DIR"
+    return 1
+  }
+
+  if ! resolu=$(_clia_v_resoudre "$CLIA_SOURCE_DIR" '' "$carte"); then
+    _clia_msg "le dépôt source de clia n'a pas de version adossée à un commit"
+    _clia_detail "source : $CLIA_SOURCE_DIR"
+    return 1
+  fi
+  IFS=$'\t' read -r commit alias etat <<<"$resolu"
+  court=$(git -C "$CLIA_SOURCE_DIR" rev-parse --short "$commit")
+
+  _clia_v_alias_affiche "$alias" "$etat" "$court"
+  _clia_msg "le CLI vient de $CLIA_SOURCE_DIR"
+  _clia_detail "la version du dépôt où vous travaillez : clia version"
+  return 0
+}
+
+lister_versions() {
+  local carte courant v c marque lignes=''
+
+  carte=$(_clia_carte_relative "$CLIA_SOURCE_DIR") || {
+    _clia_msg "le dépôt source de clia ne porte pas de carte"
+    return 1
+  }
+  courant=$(_clia_v_alias_disque "$CLIA_SOURCE_DIR/$carte" || printf '')
+
+  # La plus récente d'abord : c'est celle qu'on cherche le plus souvent, et
+  # une liste qui grandit par le bas finirait par la reléguer hors de l'écran.
+  while IFS=$'\t' read -r v c; do
+    [[ -n "$v" ]] || continue
+    if [[ "$v" == "$courant" ]]; then marque='->'; else marque='  '; fi
+    lignes=$(printf '%s\t%s\t%s' \
+      "$marque" "$v" "$(git -C "$CLIA_SOURCE_DIR" rev-parse --short "$c")")$'\n'"$lignes"
+  done < <(_clia_m_versions "$CLIA_SOURCE_DIR" "$carte")
+
+  if [[ -z "$lignes" ]]; then
+    _clia_msg "aucune version publiée dans l'historique du dépôt source"
+    _clia_detail "source : $CLIA_SOURCE_DIR"
+    return 1
+  fi
+
+  { printf '\tVERSION\tCOMMIT\n'
+    printf '%s' "$lignes"
+  } | column -t -s $'\t'
+
+  _clia_msg "la plus récente d'abord ; la flèche marque celle du CLI"
+  _clia_detail "pour y amener un dépôt : clia upgrade [VERSION]"
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# Dispatch
+# --------------------------------------------------------------------------
+
 for _arg in "$@"; do
   [[ "$_arg" == '--man' ]] || continue
   manuel
@@ -196,6 +301,16 @@ case "${1:-}" in
   status)
     [[ $# -eq 1 ]] || { _clia_msg "status ne prend pas d'argument : ${*:2}"; exit 2; }
     _clia_i_rapport ;;
+
+  version)
+    case "${2:-}" in
+      '')   version_du_cli ;;
+      ls)   [[ $# -eq 2 ]] || { _clia_msg "ls ne prend pas d'argument : ${*:3}"; exit 2; }
+            lister_versions ;;
+      *)    _clia_msg "verbe inconnu pour version : $2"
+            _clia_detail "l'usage : clia setup version [ls]"
+            exit 2 ;;
+    esac ;;
 
   uninstall)
     [[ $# -eq 1 ]] || { _clia_msg "uninstall ne prend pas d'argument : ${*:2}"; exit 2; }

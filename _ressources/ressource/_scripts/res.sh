@@ -462,6 +462,17 @@ publier() {
     _clia_detail "une version publiée n'est pas une pré-publication"
   }
 
+  # SES-001 tâche 17 : chaque nouvelle version doit fournir son script de
+  # migration. clia le constate, et ne refuse pas : une version peut ne rien
+  # changer aux instances, et l'auteur est le seul à le savoir. Mais il doit
+  # le savoir en publiant, non le découvrir à la première migration.
+  if [[ ! -f "$DEPOT/_ressources/$nom/migrations/$ancien-$nouveau.sh" ]]; then
+    _clia_msg "aucun script de migration pour $ancien -> $nouveau"
+    _clia_detail "s'il y a des instances à faire évoluer, écrivez-le :"
+    _clia_detail "_ressources/$nom/migrations/$ancien-$nouveau.sh"
+    _clia_detail "sans lui, « clia <ressource> migrate » refusera ce saut"
+  fi
+
   _clia_v_publier "$DEPOT" "$def" "$nouveau" "release $nom $nouveau" || return 1
 
   printf '%s\n' "$nouveau"

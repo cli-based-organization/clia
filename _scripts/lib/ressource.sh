@@ -48,6 +48,12 @@
 . "${CLIA_SOURCE_DIR:-}/_scripts/lib/texte.sh"
 # shellcheck source=fourniture.sh
 . "${CLIA_SOURCE_DIR:-}/_scripts/lib/fourniture.sh"
+# shellcheck source=version.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/version.sh"
+# shellcheck source=maj.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/maj.sh"
+# shellcheck source=mise-a-jour.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/mise-a-jour.sh"
 
 _clia_r_definition() { printf '%s/_ressources/%s/%s.yaml\n' "$1" "$2" "$2"; }
 
@@ -235,5 +241,141 @@ _clia_r_provide() {
   _clia_msg "ressource $nom ($prefixe)"
   _clia_detail "poser une fonctionnalité : clia feature activate NOM"
   _clia_detail "poser un skill           : clia skill activate NOM"
+  return 0
+}
+
+# --------------------------------------------------------------------------
+# upgrade, downgrade et migrate — SES-001 tâche 17
+# --------------------------------------------------------------------------
+#
+# Trois verbes de plus que le point d'entrée tient pour toutes les ressources.
+# Une ressource écrit ses scripts de migration ; elle n'écrit pas le mécanisme
+# qui les appelle, ni la lecture des versions que son extension déclare.
+
+# _clia_r_maj <commande> <fichier> <sens> <arguments…>
+_clia_r_maj() {
+  local commande="$1" fichier="$2" sens="$3"; shift 3
+  local depot="${CLIA_WORK_DIR:-}" nom cible='' force=0 migrer=0 arg
+  local n de vers issue
+
+  if ! nom=$(_clia_r_nom_de_fichier "$fichier"); then
+    _clia_msg "clia $commande n'est pas la commande d'une ressource"
+    return 2
+  fi
+
+  for arg in "$@"; do
+    case "$arg" in
+      --with-instances|--migrate) migrer=1 ;;
+      --force)                    force=1 ;;
+      -*) _clia_msg "option inconnue pour $sens : $arg"
+          _clia_detail "les options : --with-instances (ou --migrate), --force"
+          return 2 ;;
+      *)  if [[ -n "$cible" ]]; then
+            _clia_msg "$sens n'attend qu'une version : $cible et $arg"
+            return 2
+          fi
+          cible="$arg" ;;
+    esac
+  done
+
+  local ligne
+  ligne=$(_clia_mj_ressource "$depot" "$nom" "$sens" "$cible" "$force" "$migrer") || return 1
+  IFS=$'\t' read -r n de vers issue <<<"$ligne"
+
+  case "$issue" in
+    'à jour')
+      _clia_msg "$n est déjà en $vers"
+      _clia_detail "rien n'a été touché" ;;
+    'laissé')
+      _clia_msg "$n a été modifiée depuis sa reprise : elle est laissée telle quelle"
+      _clia_detail "$de -> $vers n'a pas été posée ; --force la poserait"
+      _clia_detail "ce que vous avez écrit ici serait perdu"
+      return 1 ;;
+    'forcé')
+      _clia_msg "$n : $de -> $vers, posée de force"
+      _clia_detail "ce qui avait été modifié sur place est perdu"
+      _clia_detail "rien n'est commité" ;;
+    *)
+      _clia_msg "$n : $de -> $vers"
+      _clia_detail "l'inventaire de la carte est mis à jour"
+      _clia_detail "rien n'est commité" ;;
+  esac
+  return 0
+}
+
+# _clia_r_migrer <commande> <fichier> <arguments…>
+#
+# Sans versions, du numéro que l'inventaire a inscrit à celui que la
+# définition déclare : c'est le cas ordinaire, celui d'une ressource qu'on
+# vient de mettre à jour sans toucher aux instances.
+_clia_r_migrer() {
+  local commande="$1" fichier="$2"; shift 2
+  local depot="${CLIA_WORK_DIR:-}" nom provider inscrite racine def_ext
+  local de="${1:-}" vers="${2:-}" plan
+
+  if ! nom=$(_clia_r_nom_de_fichier "$fichier"); then
+    _clia_msg "clia $commande n'est pas la commande d'une ressource"
+    return 2
+  fi
+  (( $# <= 2 )) || {
+    _clia_msg "migrate n'attend que deux versions : $*"
+    _clia_detail "l'usage : clia $commande migrate [DE VERS]"
+    return 2
+  }
+  [[ -z "$de" || -n "$vers" ]] || {
+    _clia_msg "migrate attend les deux versions, ou aucune"
+    _clia_detail "l'usage : clia $commande migrate [DE VERS]"
+    return 2
+  }
+
+  if ! IFS=$'\t' read -r provider inscrite < <(_clia_mj_provenance "$depot" "$nom"); then
+    _clia_msg "$nom n'a pas été reprise d'une extension"
+    _clia_detail "sans provenance déclarée, clia ne sait pas quelles versions existent"
+    return 1
+  fi
+  if ! racine=$(_clia_mj_racine_extension "$depot" "$provider"); then
+    _clia_msg "$provider n'est pas joignable"
+    _clia_detail "les sauts se lisent dans son historique"
+    return 1
+  fi
+
+  [[ -n "$de" ]]   || de="$inscrite"
+  [[ -n "$vers" ]] || vers=$(_clia_champ_yaml "$depot/_ressources/$nom/$nom.yaml" version || printf '')
+
+  if [[ -z "$de" || -z "$vers" ]]; then
+    _clia_msg "$nom : les versions de départ et d'arrivée ne sont pas toutes deux connues"
+    _clia_detail "donnez-les : clia $commande migrate DE VERS"
+    return 1
+  fi
+  if [[ "$(_clia_m_comparer "$de" "$vers")" == '0' ]]; then
+    _clia_msg "$nom est en $vers, et l'inventaire dit la même chose"
+    _clia_detail "il n'y a aucun saut à franchir"
+    return 0
+  fi
+
+  def_ext="_ressources/$nom/$nom.yaml"
+  local dir_mig
+  dir_mig=$(_clia_mj_migrations_de "$racine" "$nom" || printf '')
+  plan=$(_clia_mj_plan_migration "$racine" "$def_ext" "$dir_mig" "$de" "$vers") || {
+    [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
+    _clia_msg "$nom : rien n'a été migré"
+    _clia_detail "chaque nouvelle version doit fournir son script de migration"
+    _clia_detail "ils se rangent sous _ressources/$nom/migrations/<de>-<vers>.sh"
+    return 1
+  }
+
+  if [[ -z "$plan" ]]; then
+    [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
+    _clia_msg "$nom : aucun saut entre $de et $vers"
+    return 0
+  fi
+
+  _clia_mj_migrer "$depot" "$nom" "$plan" "$de" || {
+    [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
+    return 1
+  }
+  [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
+  _clia_msg "$nom : instances migrées, $de -> $vers"
+  _clia_detail "rien n'est commité"
   return 0
 }

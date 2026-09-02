@@ -231,8 +231,11 @@ _clia_aide() {
     # doivent donc être ajoutés ici, sinon l'aide tairait des formes d'appel
     # valides.
     if [[ "$(_clia_origine_de "${chemin%% *}")" == 'ressource' ]]; then
-      printf '%s provide\n'    "${chemin%% *}"
-      printf '%s deactivate\n' "${chemin%% *}"
+      printf '%s provide\n'                                     "${chemin%% *}"
+      printf '%s upgrade [--migrate] [VERSION]\n'                "${chemin%% *}"
+      printf '%s downgrade [--migrate] [VERSION]\n'              "${chemin%% *}"
+      printf '%s migrate [DE VERS]\n'                            "${chemin%% *}"
+      printf '%s deactivate\n'                                   "${chemin%% *}"
     fi
   } | _clia_lignes_usage "$chemin"
   mapfile -t options < <(_clia_options_de "$f" | _clia_lignes_options "$chemin")
@@ -317,7 +320,7 @@ OPTIONS
        Reconnue en première position seulement.
 
 LES VERBES DES RESSOURCES
-Deux verbes valent pour toute commande de ressource, et le point
+Cinq verbes valent pour toute commande de ressource, et le point
 d'entrée les tient pour toutes. Une ressource reprise d'une
 extension les reçoit sans avoir eu à les écrire.
 
@@ -326,6 +329,21 @@ provide [ls]
        skills, ses scripts, et l'état de chacun dans ce dépôt. Voir
        clia-feature(1), clia-skill(1) et clia-script(1), qui
        posent et retirent.
+
+upgrade [--with-instances | --migrate] [--force] [VERSION]
+downgrade [--with-instances | --migrate] [--force] [VERSION]
+       Reprend la ressource à une autre version, depuis l'extension
+       dont elle vient. Sans version, la plus récente que cette
+       extension déclare.
+
+       « upgrade » exige une cible supérieure, « downgrade » une
+       cible inférieure. Voir clia-upgrade(1).
+
+migrate [DE VERS]
+       Fait franchir à ses instances les sauts de version, en
+       lançant les scripts que la ressource porte sous
+       migrations/. Sans versions, du numéro que l'inventaire a
+       inscrit à celui que la définition déclare.
 
 deactivate
        Retire la ressource du dépôt de travail, et l'ôte de
@@ -382,6 +400,9 @@ clia.yaml, .clia.yaml, .dev/clia.yaml
        d'ailleurs. Les trois emplacements sont cherchés dans cet
        ordre, et le premier trouvé l'emporte.
 
+       Son champ « clia-version: » dit quelle version de clia le
+       dépôt suit. Voir clia-upgrade(1).
+
 _scripts/lib/cmd/*.sh
        Les commandes du noyau. Chaque fichier porte ses déclarations
        en tête : Description, Périmètre, Signature et Option.
@@ -413,8 +434,8 @@ Lire le manuel d'une commande :
 VOIR AUSSI
 clia-version(1), clia-res(1), clia-extension(1), clia-source(1),
 clia-feature(1), clia-skill(1), clia-script(1), clia-focus(1),
-clia-unfocus(1), clia-check(1), clia-init(1), clia-hrn(1),
-clia-setup(1), git(1)
+clia-unfocus(1), clia-upgrade(1), clia-downgrade(1), clia-check(1),
+clia-init(1), clia-hrn(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
@@ -518,7 +539,7 @@ fi
 # pour travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu
 # ici, et son absence refusée ici.
 if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
-   && [[ "${1:-}" == 'deactivate' || "${1:-}" == 'provide' ]]; then
+   && [[ "${1:-}" =~ ^(deactivate|provide|upgrade|downgrade|migrate)$ ]]; then
   _CLIA_VERBE="$1"; shift
 
   case "$_CLIA_VERBE" in
@@ -543,11 +564,12 @@ if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
 
   # shellcheck source=../lib/ressource.sh
   . "$CLIA_SOURCE_DIR/_scripts/lib/ressource.sh"
-  if [[ "$_CLIA_VERBE" == 'deactivate' ]]; then
-    _clia_r_desactiver "$COMMANDE" "$FICHIER"
-  else
-    _clia_r_provide "$COMMANDE" "$FICHIER"
-  fi
+  case "$_CLIA_VERBE" in
+    deactivate)          _clia_r_desactiver "$COMMANDE" "$FICHIER" ;;
+    provide)             _clia_r_provide    "$COMMANDE" "$FICHIER" ;;
+    upgrade|downgrade)   _clia_r_maj        "$COMMANDE" "$FICHIER" "$_CLIA_VERBE" "$@" ;;
+    migrate)             _clia_r_migrer     "$COMMANDE" "$FICHIER" "$@" ;;
+  esac
   exit $?
 fi
 
