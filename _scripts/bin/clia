@@ -232,6 +232,7 @@ _clia_aide() {
     # valides.
     if [[ "$(_clia_origine_de "${chemin%% *}")" == 'ressource' ]]; then
       printf '%s provide\n'                                     "${chemin%% *}"
+      printf '%s check [--explain]\n'                            "${chemin%% *}"
       printf '%s upgrade [--migrate] [VERSION]\n'                "${chemin%% *}"
       printf '%s downgrade [--migrate] [VERSION]\n'              "${chemin%% *}"
       printf '%s migrate [DE VERS]\n'                            "${chemin%% *}"
@@ -320,9 +321,20 @@ OPTIONS
        Reconnue en première position seulement.
 
 LES VERBES DES RESSOURCES
-Cinq verbes valent pour toute commande de ressource, et le point
+Six verbes valent pour toute commande de ressource, et le point
 d'entrée les tient pour toutes. Une ressource reprise d'une
 extension les reçoit sans avoir eu à les écrire.
+
+check [--explain]
+       La conformité de la ressource : ses zones, la forme de sa
+       définition, les primitives que sa livraison déclare, les
+       scripts de migration que son historique appelle, et la
+       version en place au regard de la dernière disponible.
+
+       « --explain » ajoute, sous chaque verdict, ce que le
+       contrôle vérifie et pourquoi.
+
+       Rien n'est écrit : constater n'est pas réparer.
 
 provide [ls]
        Ce que la ressource apporte : ses fonctionnalités, ses
@@ -385,6 +397,11 @@ CLIA_ZONE_RESSOURCE
        Où le dépôt écrit ses ressources : une instance par
        répertoire, sous <PREFIXE>-<SEQ>-<SLUG>/. Par défaut
        .dev/ressources.
+
+CLIA_POLICY_ROLLING_RESSOURCE
+       À « true », une ressource qui n'est pas à la dernière version
+       disponible devient un écart bloquant pour « clia <ressource>
+       check ». Par défaut « false » : c'est un signalement.
 
 CLIA_ZONE_RESSOURCE_LIVREE
        Où le dépôt tient les ressources qu'il a installées. Par
@@ -549,7 +566,7 @@ fi
 # pour travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu
 # ici, et son absence refusée ici.
 if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
-   && [[ "${1:-}" =~ ^(deactivate|provide|upgrade|downgrade|migrate)$ ]]; then
+   && [[ "${1:-}" =~ ^(deactivate|provide|check|upgrade|downgrade|migrate)$ ]]; then
   _CLIA_VERBE="$1"; shift
 
   case "$_CLIA_VERBE" in
@@ -577,6 +594,10 @@ if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
   case "$_CLIA_VERBE" in
     deactivate)          _clia_r_desactiver "$COMMANDE" "$FICHIER" ;;
     provide)             _clia_r_provide    "$COMMANDE" "$FICHIER" ;;
+    check)
+      # shellcheck source=../lib/conformite.sh
+      . "$CLIA_SOURCE_DIR/_scripts/lib/conformite.sh"
+      _clia_c_verifier "$COMMANDE" "$FICHIER" "$@" ;;
     upgrade|downgrade)   _clia_r_maj        "$COMMANDE" "$FICHIER" "$_CLIA_VERBE" "$@" ;;
     migrate)             _clia_r_migrer     "$COMMANDE" "$FICHIER" "$@" ;;
   esac
