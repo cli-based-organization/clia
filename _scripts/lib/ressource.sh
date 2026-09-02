@@ -55,22 +55,31 @@
 # shellcheck source=mise-a-jour.sh
 . "${CLIA_SOURCE_DIR:-}/_scripts/lib/mise-a-jour.sh"
 
-_clia_r_definition() { printf '%s/_ressources/%s/%s.yaml\n' "$1" "$2" "$2"; }
+_clia_r_definition() { printf '%s/%s/%s/%s.yaml\n' "$1" "$(_clia_zone_livree)" "$2" "$2"; }
+
+# Le répertoire d'une ressource installée.
+_clia_r_dir() { printf '%s/%s/%s\n' "$1" "$(_clia_zone_livree)" "$2"; }
+
+# Le chemin d'un fichier de commande est <racine>/<zone livrée>/<nom>/
+# _scripts/<commande>.sh. La zone peut compter plusieurs segments — depuis
+# SES-001 tâche 19, elle en compte deux — et les deux lectures ci-dessous la
+# retirent par son nom plutôt qu'en comptant des répertoires. Compter aurait
+# lié ces fonctions à la profondeur d'un chemin réglable.
 
 # Le nom de la ressource que porte un fichier de commande, ou rien.
-# Le chemin est <racine>/_ressources/<nom>/_scripts/<commande>.sh.
 _clia_r_nom_de_fichier() {
-  local dir
-  dir=$(dirname "$(dirname "$1")")
-  [[ "$(basename "$(dirname "$dir")")" == '_ressources' ]] || return 1
-  basename "$dir"
+  local f="$1" zone reste
+  zone=$(_clia_zone_livree)
+  [[ "$f" == */"$zone"/* ]] || return 1
+  reste="${f#*/"$zone"/}"
+  printf '%s\n' "${reste%%/*}"
 }
 
 # La racine du dépôt d'où vient un fichier de commande.
 _clia_r_racine_de_fichier() {
-  local dir
-  dir=$(dirname "$(dirname "$(dirname "$(dirname "$1")")")")
-  printf '%s\n' "$dir"
+  local f="$1" zone
+  zone=$(_clia_zone_livree)
+  printf '%s\n' "${f%/"$zone"/*}"
 }
 
 # Vrai si la carte du dépôt déclare publier cette ressource.
@@ -112,7 +121,7 @@ _clia_r_nom_du_prefixe() {
 _clia_r_verifier_retrait() {
   local depot="$1" nom="$2" sale
 
-  if [[ ! -d "$depot/_ressources/$nom" ]]; then
+  if [[ ! -d "$(_clia_r_dir "$depot" "$nom")" ]]; then
     _clia_msg "$nom n'est pas installée dans ce dépôt"
     return 1
   fi
@@ -125,7 +134,7 @@ _clia_r_verifier_retrait() {
   fi
 
   # Ce que git ne tient pas encore disparaîtrait sans retour.
-  sale=$(git -C "$depot" status --porcelain -- "_ressources/$nom" 2>/dev/null || printf '')
+  sale=$(git -C "$depot" status --porcelain -- "$(_clia_zone_livree)/$nom" 2>/dev/null || printf '')
   if [[ -n "$sale" ]]; then
     _clia_msg "$nom porte des changements que git ne tient pas encore"
     _clia_detail "elle serait effacée sans retour ; commitez-la d'abord"
@@ -146,7 +155,7 @@ _clia_r_retirer() {
       || _clia_carte_retirer "$carte" use.extensions ressource "$id" \
       || true
   fi
-  rm -rf "${depot:?}/_ressources/$nom"
+  rm -rf "${depot:?}/$(_clia_zone_livree)/$nom"
   return 0
 }
 
@@ -174,7 +183,7 @@ _clia_r_desactiver() {
   id=$(_clia_r_identite "$depot" "$nom") && ns="${id%/*}"
   _clia_r_retirer "$depot" "$nom"
 
-  _clia_msg "$nom retirée de ce dépôt : _ressources/$nom"
+  _clia_msg "$nom retirée de ce dépôt : $(_clia_zone_livree)/$nom"
   [[ -n "$ns" ]] && _clia_detail "et de l'inventaire de la carte"
   _clia_detail "la commande « clia $commande » ne répond plus ici"
   _clia_detail "pour la reprendre : clia extension install ${ns:-EXTENSION}"
@@ -206,7 +215,7 @@ _clia_r_provide() {
   fi
 
   prefixe=$(_clia_champ_yaml \
-    "$(_clia_r_racine_de_fichier "$fichier")/_ressources/$nom/$nom.yaml" prefixe || printf '')
+    "$(_clia_r_definition "$(_clia_r_racine_de_fichier "$fichier")" "$nom")" prefixe || printf '')
   harnais=$(_clia_f_harnais "$depot")
 
   while IFS="$_CLIA_SEP" read -r p _ item _ desc; do
@@ -340,7 +349,7 @@ _clia_r_migrer() {
   fi
 
   [[ -n "$de" ]]   || de="$inscrite"
-  [[ -n "$vers" ]] || vers=$(_clia_champ_yaml "$depot/_ressources/$nom/$nom.yaml" version || printf '')
+  [[ -n "$vers" ]] || vers=$(_clia_champ_yaml "$(_clia_r_definition "$depot" "$nom")" version || printf '')
 
   if [[ -z "$de" || -z "$vers" ]]; then
     _clia_msg "$nom : les versions de départ et d'arrivée ne sont pas toutes deux connues"
@@ -353,14 +362,14 @@ _clia_r_migrer() {
     return 0
   fi
 
-  def_ext="_ressources/$nom/$nom.yaml"
+  def_ext=$(_clia_mj_def_offerte "$racine" "$nom") || return 1
   local dir_mig
   dir_mig=$(_clia_mj_migrations_de "$racine" "$nom" || printf '')
   plan=$(_clia_mj_plan_migration "$racine" "$def_ext" "$dir_mig" "$de" "$vers") || {
     [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
     _clia_msg "$nom : rien n'a été migré"
     _clia_detail "chaque nouvelle version doit fournir son script de migration"
-    _clia_detail "ils se rangent sous _ressources/$nom/migrations/<de>-<vers>.sh"
+    _clia_detail "ils se rangent sous <instance>/livrables/migrations/<de>-<vers>.sh"
     return 1
   }
 

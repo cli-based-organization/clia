@@ -37,6 +37,10 @@ trap 'rm -rf "$BAC"' EXIT
 
 export XDG_CACHE_HOME="$BAC/cache"
 
+# Les deux zones de SES-001 tâche 19.
+INST='.dev/ressources'
+LIVREE='.clia/ressources'
+
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
 
 # --------------------------------------------------------------------------
@@ -80,10 +84,11 @@ depot() {
 extension() {
   local d="$BAC/$1" prefixe="$2" nom="$3" ns="$4" commande
   commande=$(printf '%s' "$prefixe" | tr '[:upper:]' '[:lower:]')
-  mkdir -p "$d/_ressources/$nom/_scripts"
+  local liv="$d/$INST/RES-001-$nom/livrables"
+  mkdir -p "$liv/_scripts" "$d/$INST/RES-001-$nom/primitive-1"
   git -C "$d" init -q
   printf 'namespace: %s\nversion: 0.1.0\n' "$ns" > "$d/clia.yaml"
-  cat > "$d/_ressources/$nom/$nom.yaml" <<YAML
+  cat > "$liv/$nom.yaml" <<YAML
 nom: $nom
 titre: ${nom^}
 prefixe: $prefixe
@@ -91,10 +96,11 @@ version: 0.2.0
 
 description: "Une ressource de banc."
 YAML
-  mkdir -p "$d/_ressources/$nom/gabarits" "$d/_ressources/$nom/primitives"
-  printf 'un gabarit\n'   > "$d/_ressources/$nom/gabarits/g.md"
-  printf 'une primitive\n' > "$d/_ressources/$nom/primitives/p.md"
-  cat > "$d/_ressources/$nom/_scripts/$commande.sh" <<SH
+  mkdir -p "$liv/gabarits"
+  printf 'un gabarit\n'   > "$liv/gabarits/g.md"
+  # Une primitive de l'instance : elle vit hors du livrable, et ne voyage pas.
+  printf 'une primitive\n' > "$d/$INST/RES-001-$nom/primitive-1/p.md"
+  cat > "$liv/_scripts/$commande.sh" <<SH
 #!/usr/bin/env bash
 # Description: Une ressource de banc, apportee par une extension.
 # Périmètre: aucun
@@ -110,8 +116,8 @@ SH
 # Ajoute une ressource à une extension déjà fabriquée.
 ressource_de_plus() {
   local d="$BAC/$1" prefixe="$2" nom="$3"
-  mkdir -p "$d/_ressources/$nom"
-  cat > "$d/_ressources/$nom/$nom.yaml" <<YAML
+  mkdir -p "$d/$INST/RES-002-$nom/livrables"
+  cat > "$d/$INST/RES-002-$nom/livrables/$nom.yaml" <<YAML
 nom: $nom
 titre: ${nom^}
 prefixe: $prefixe
@@ -234,7 +240,7 @@ dit 'et clia renvoie vers source add' 'clia source add'
 
 INVITE="$BAC/invite"; mkdir -p "$INVITE"; git -C "$INVITE" init -q
 printf 'namespace: <publisher>/invite\nversion: 0.1.0\n' > "$INVITE/clia.yaml"
-mkdir -p "$INVITE/_ressources"
+mkdir -p "$INVITE/$INST/RES-001-x/livrables"
 rc_dans 'un namespace resté une invite est refuse' 1 "$D" extension add ../invite
 dit 'et clia dit ce qui manque' 'namespace'
 
@@ -264,7 +270,7 @@ vrai 'le clone est dans le cache, hors du depot' \
 vrai 'la carte porte le type git' grep -q '    type: git' "$G/clia.yaml"
 vrai 'et l uri distante, non le chemin du cache' grep -q "uri: file://$DIST" "$G/clia.yaml"
 vrai 'rien du clone n entre dans le depot' \
-  test ! -e "$G/.clia" -a ! -e "$G/_ressources"
+  test ! -e "$G/$LIVREE" -a ! -e "$G/$INST"
 
 SORTIE=$(sortie "$G" extension ls)
 dit 'ls la voit par son clone' 'journal.exemple.test/ext-dist *extension *LOG'
@@ -281,9 +287,9 @@ rc_dans 'clia extension install est satisfaite' 0 "$D" extension install session
 dit 'et elle nomme ce qu elle a repris' 'reprise : banc'
 dit 'et dit que rien n est commite' "rien n'est commité"
 
-vrai 'la ressource est copiee dans le depot' test -d "$D/_ressources/banc"
-vrai 'avec sa definition' test -f "$D/_ressources/banc/banc.yaml"
-vrai 'et son script' test -f "$D/_ressources/banc/_scripts/bnc.sh"
+vrai 'la ressource est copiee dans le depot' test -d "$D/$LIVREE/banc"
+vrai 'avec sa definition' test -f "$D/$LIVREE/banc/banc.yaml"
+vrai 'et son script' test -f "$D/$LIVREE/banc/_scripts/bnc.sh"
 vrai 'la sortie standard porte le chemin repris' \
   test "$(sortie "$D" extension ls >/dev/null; true)" = ''
 
@@ -302,23 +308,23 @@ SORTIE=$(sortie "$D" extension ls)
 dit 'ls marque ce qui a ete repris' '\[BNC\]'
 
 # ==========================================================================
-titre 'La reprise laisse les primitives de l extension'
+titre 'La reprise ne porte que le livrable'
 # ==========================================================================
 #
 # SES-001 tâche 14. Le comment appartient à l'extension et se reprend ; les
 # primitives appartiennent au dépôt qui les écrit.
 
-vrai 'le script est repris' test -f "$D/_ressources/banc/_scripts/bnc.sh"
-vrai 'les gabarits aussi' test -f "$D/_ressources/banc/gabarits/g.md"
-vrai 'la definition aussi' test -f "$D/_ressources/banc/banc.yaml"
-vrai 'mais pas les primitives' test ! -e "$D/_ressources/banc/primitives"
-vrai 'elles sont restees dans l extension' test -f "$EXT_A/_ressources/banc/primitives/p.md"
+vrai 'le script est repris' test -f "$D/$LIVREE/banc/_scripts/bnc.sh"
+vrai 'les gabarits aussi' test -f "$D/$LIVREE/banc/gabarits/g.md"
+vrai 'la definition aussi' test -f "$D/$LIVREE/banc/banc.yaml"
+vrai 'et aucune primitive de l instance ne voyage' test ! -e "$D/$LIVREE/banc/primitive-1"
+vrai 'elles sont restees dans l extension' test -f "$EXT_A/$INST/RES-001-banc/primitive-1/p.md"
 
 NEUF=$(depot primitives)
 dans "$NEUF" extension add ../ext-a >/dev/null 2>&1
 rc_dans 'et clia le dit en reprenant' 0 "$NEUF" extension install ext-a
-dit 'sans leurs primitives' 'sans leurs primitives'
-vrai 'la reprise n en porte aucune' test ! -e "$NEUF/_ressources/banc/primitives"
+dit 'et compte ce qui est repris' 'ressource(s) reprise(s)'
+vrai 'la reprise n en porte aucune' test ! -e "$NEUF/$LIVREE/banc/primitive-1"
 
 # ==========================================================================
 titre 'Les collisions de nom et de prefixe sont refusees'
@@ -338,19 +344,19 @@ dans "$P" extension install ext-a >/dev/null 2>&1
 dans "$P" extension add ../ext-pref >/dev/null 2>&1
 rc_dans 'un prefixe deja pris est refuse' 1 "$P" extension install ext-pref
 dit 'en nommant qui le porte' 'le préfixe BNC est déjà celui de banc'
-vrai 'et la ressource n a pas ete posee' test ! -e "$P/_ressources/reunion"
+vrai 'et la ressource n a pas ete posee' test ! -e "$P/$LIVREE/reunion"
 
 # Une seule collision suffit à tout refuser : pas de reprise à moitié.
 ressource_de_plus ext-b LIB libre
 B=$(depot partielle)
 dans "$B" extension add ../ext-b >/dev/null 2>&1
-mkdir -p "$B/_ressources/banc"
+mkdir -p "$B/$LIVREE/banc"
 printf 'nom: banc\ntitre: Banc\nprefixe: ZZZ\nversion: 0.1.0\n' \
-  > "$B/_ressources/banc/banc.yaml"
+  > "$B/$LIVREE/banc/banc.yaml"
 rc_dans 'une seule collision refuse toute la reprise' 1 "$B" extension install ext-b
 dit 'en nommant celle qui heurte' 'banc : une ressource de ce nom'
 vrai 'et celle qui ne heurtait rien n est pas posee non plus' \
-  test ! -e "$B/_ressources/libre"
+  test ! -e "$B/$LIVREE/libre"
 
 # Une carte écrite à la main déclare parfois la ressource avant qu'elle soit
 # là. L'inventaire ne doit pas la porter deux fois pour autant.
@@ -359,7 +365,7 @@ dans "$AVANCE" extension add ../ext-a >/dev/null 2>&1
 printf '\nuse:\n  extensions:\n  - resource: session.exemple.test/ext-a/BNC\n    version: 0.1.0\n' \
   >> "$AVANCE/clia.yaml"
 rc_dans 'installer une ressource deja inscrite est satisfait' 0 "$AVANCE" extension install ext-a
-vrai 'la ressource est bien reprise' test -d "$AVANCE/_ressources/banc"
+vrai 'la ressource est bien reprise' test -d "$AVANCE/$LIVREE/banc"
 vrai 'et l inventaire ne la porte qu une fois' \
   test "$(grep -c 'session.exemple.test/ext-a/BNC' "$AVANCE/clia.yaml")" -eq 1
 
@@ -376,13 +382,13 @@ dit 'sans avoir ete declare par son script' 'clia bnc deactivate'
 
 rc_dans 'une ressource non commitee n est pas effacee' 1 "$D" bnc deactivate
 dit 'et clia dit pourquoi' "git ne tient pas encore"
-vrai 'elle est toujours la' test -d "$D/_ressources/banc"
+vrai 'elle est toujours la' test -d "$D/$LIVREE/banc"
 
 git_ "$D" add -A >/dev/null; git_ "$D" commit -q -m 'reprend banc'
 
 rc_dans 'une ressource commitee se retire' 0 "$D" bnc deactivate
 dit 'et clia dit ce qu il a retire' 'retirée de ce dépôt'
-vrai 'le repertoire est parti' test ! -e "$D/_ressources/banc"
+vrai 'le repertoire est parti' test ! -e "$D/$LIVREE/banc"
 vrai 'et l inventaire aussi' \
   test "$(grep -c 'resource: session.exemple.test/ext-a/BNC' "$D/clia.yaml")" -eq 0
 vrai 'la declaration de la source, elle, reste' \
@@ -390,12 +396,12 @@ vrai 'la declaration de la source, elle, reste' \
 
 rc_dans 'sa commande ne repond plus' 2 "$D" bnc dis bonjour
 rc_dans 'et elle se reprend' 0 "$D" extension install ext-a
-vrai 'la ressource est revenue' test -d "$D/_ressources/banc"
+vrai 'la ressource est revenue' test -d "$D/$LIVREE/banc"
 
 # Ce que le dépôt publie ne se désinstalle pas.
 rc 'une ressource que le depot publie est protegee' 1 "$CLIA" res deactivate
 dit 'et clia dit pourquoi' 'que ce dépôt publie'
-vrai 'elle est intacte' test -d "$RACINE/_ressources/ressource"
+vrai 'elle est intacte' test -d "$RACINE/$LIVREE/ressource"
 
 # Une ressource du dépôt source de clia n'est installée nulle part ailleurs.
 rc_dans 'une ressource du CLI n est pas installee dans un autre depot' 1 "$D" res deactivate
@@ -411,7 +417,7 @@ U=$(depot desinstallation)
 dans "$U" extension add ../ext-b >/dev/null 2>&1
 rc_dans 'une extension a deux ressources est reprise' 0 "$U" extension install ext-b
 vrai 'les deux sont la' \
-  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
+  test -d "$U/$LIVREE/banc" -a -d "$U/$LIVREE/libre"
 vrai 'et l inventaire les porte' \
   test "$(grep -c 'resource: b.exemple.test/ext-b/' "$U/clia.yaml")" -eq 2
 
@@ -419,7 +425,7 @@ rc_dans 'desinstaller ce qui n est pas commite est refuse' 1 "$U" extension unin
 dit 'et clia dit pourquoi' "git ne tient pas encore"
 dit 'et que rien n a ete retire' "rien n'a été retiré"
 vrai 'les deux sont toujours la' \
-  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
+  test -d "$U/$LIVREE/banc" -a -d "$U/$LIVREE/libre"
 
 git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'reprend ext-b'
 
@@ -429,7 +435,7 @@ dit 'et compte ce qui est parti' '2 ressource(s) retirée(s)'
 dit 'et dit que rien n est commite' "rien n'est commité"
 
 vrai 'les deux repertoires sont partis' \
-  test ! -e "$U/_ressources/banc" -a ! -e "$U/_ressources/libre"
+  test ! -e "$U/$LIVREE/banc" -a ! -e "$U/$LIVREE/libre"
 vrai 'l inventaire ne les porte plus' \
   test "$(grep -c 'resource: b.exemple.test/ext-b/' "$U/clia.yaml")" -eq 0
 vrai 'la declaration de source, elle, reste' \
@@ -438,11 +444,11 @@ rc_dans 'la commande de l extension ne repond plus' 2 "$U" bnc dis bonjour
 
 rc_dans 'et elle se reprend' 0 "$U" extension install ext-b
 vrai 'les deux ressources sont revenues' \
-  test -d "$U/_ressources/banc" -a -d "$U/_ressources/libre"
+  test -d "$U/$LIVREE/banc" -a -d "$U/$LIVREE/libre"
 
 # Une entrée d'inventaire dont la ressource a été retirée à la main.
 git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'reprend a nouveau'
-rm -rf "$U/_ressources/libre"
+rm -rf "$U/$LIVREE/libre"
 git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'retire libre a la main'
 rc_dans 'une entree orpheline est retiree et signalee' 0 "$U" extension uninstall ext-b
 dit 'clia dit que sa ressource n etait plus la' "était à l'inventaire"
@@ -460,7 +466,7 @@ git_ "$PUB" add -A >/dev/null; git_ "$PUB" commit -q -m 'reprend ext-a'
 printf '\nprovide:\n  - prefix: BNC\n    name: banc\n' >> "$PUB/clia.yaml"
 rc_dans 'une ressource publiee par le depot est protegee' 1 "$PUB" extension uninstall ext-a
 dit 'et clia dit pourquoi' 'que ce dépôt publie'
-vrai 'elle est intacte' test -d "$PUB/_ressources/banc"
+vrai 'elle est intacte' test -d "$PUB/$LIVREE/banc"
 
 rc_dans 'uninstall sans extension est mal forme' 2 "$U" extension uninstall
 rc_dans 'uninstall avec deux extensions est mal forme' 2 "$U" extension uninstall a b
@@ -471,7 +477,7 @@ titre 'Une ressource reprise ne masque ni le noyau, ni le CLI'
 # ==========================================================================
 
 USURPE=$(extension ext-usurpe VER version 'usurpe.exemple.test/ext-usurpe')
-cat > "$USURPE/_ressources/version/_scripts/version.sh" <<'SH'
+cat > "$USURPE/$INST/RES-001-version/livrables/_scripts/version.sh" <<'SH'
 #!/usr/bin/env bash
 # Description: Une ressource qui tente de masquer le noyau.
 # Périmètre: aucun
@@ -484,7 +490,7 @@ git_ "$USURPE" add -A >/dev/null; git_ "$USURPE" commit -q -m 'usurpation'
 M=$(depot masque)
 dans "$M" extension add ../ext-usurpe >/dev/null 2>&1
 dans "$M" extension install usurpe.exemple.test/ext-usurpe >/dev/null 2>&1
-vrai 'la ressource a bien ete reprise' test -d "$M/_ressources/version"
+vrai 'la ressource a bien ete reprise' test -d "$M/$LIVREE/version"
 SORTIE=$(dans "$M" version 2>&1)
 ne_dit_pas 'et pourtant le noyau repond' '^usurpee$'
 

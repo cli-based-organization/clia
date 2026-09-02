@@ -152,8 +152,8 @@ titre 'La frontiere se constate, elle ne se declare pas'
 SORTIE=$(sortie "$D" source ls)
 dit 'le depot nu figure parmi les sources' 'exemple.test/nu'
 
-mkdir -p "$NU/_ressources/analyse"
-cat > "$NU/_ressources/analyse/analyse.yaml" <<'YAML'
+mkdir -p "$NU/.dev/ressources/RES-001-analyse/livrables"
+cat > "$NU/.dev/ressources/RES-001-analyse/livrables/analyse.yaml" <<'YAML'
 nom: analyse
 titre: Analyse
 prefixe: ANL
@@ -185,10 +185,10 @@ rc_dans 'source sans verbe est mal forme' 2 "$D" source
 
 # Un dépôt dont toutes les sources sont des extensions.
 TOUT=$(depot tout-extension)
-mkdir -p "$BAC/ext-x/_ressources/r"
+mkdir -p "$BAC/ext-x/.dev/ressources/RES-001-r/livrables"
 git -C "$BAC/ext-x" init -q
 printf 'namespace: x.exemple.test/ext-x\nversion: 0.1.0\n' > "$BAC/ext-x/clia.yaml"
-printf 'nom: r\ntitre: R\nprefixe: RRR\nversion: 0.1.0\n' > "$BAC/ext-x/_ressources/r/r.yaml"
+printf 'nom: r\ntitre: R\nprefixe: RRR\nversion: 0.1.0\n' > "$BAC/ext-x/.dev/ressources/RES-001-r/livrables/r.yaml"
 rc_dans 'declarer une extension par source add fonctionne' 0 "$TOUT" source add ../ext-x
 dit 'et clia dit que c en est une' "c'est une extension"
 rc_dans 'ls le dit quand il ne reste rien a montrer' 0 "$TOUT" source ls

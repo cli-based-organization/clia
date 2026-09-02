@@ -137,10 +137,12 @@ _clia_mj_identiques() {
 # scripts, que l'appelant retire. Rien si l'extension n'en offre aucun.
 _clia_mj_migrations_de() {
   local racine="$1" nom="$2" commit tmp
-  commit=$(git -C "$racine" log -1 --format=%H -- "_ressources/$nom" 2>/dev/null) || return 1
+  local livrable
+  livrable=$(_clia_mj_livrable_rel "$racine" "$nom") || return 1
+  commit=$(git -C "$racine" log -1 --format=%H -- "$livrable" 2>/dev/null) || return 1
   [[ -n "$commit" ]] || return 1
   tmp=$(mktemp -d)/migrations
-  _clia_m_extraire "$racine" "$commit" "_ressources/$nom/migrations" "$tmp" 2>/dev/null || {
+  _clia_m_extraire "$racine" "$commit" "$livrable/migrations" "$tmp" 2>/dev/null || {
     rm -rf "$(dirname "$tmp")"
     return 1
   }
@@ -205,6 +207,28 @@ _clia_mj_migrer() {
 # et CONSTITUTION.md R2 lui interdit de le deviner.
 
 # _clia_mj_racine_extension <dépôt> <provider> — la racine de l'extension.
+# _clia_mj_def_offerte <racine> <nom> — le chemin, relatif à la racine, de la
+# définition que l'extension publie pour cette ressource.
+#
+# C'est ce chemin que l'historique suit : les versions disponibles se lisent
+# sur lui, et sur lui seul.
+_clia_mj_def_offerte() {
+  local racine="$1" cible="$2" id nom
+  while IFS=$'\t' read -r id nom _ _; do
+    [[ "$nom" == "$cible" ]] || continue
+    printf '%s/%s/livrables/%s.yaml\n' "$(_clia_zone_ressource)" "$id" "$nom"
+    return 0
+  done < <(_clia_instances_de "$racine")
+  return 1
+}
+
+# _clia_mj_livrable_rel <racine> <nom> — le chemin du livrable, relatif.
+_clia_mj_livrable_rel() {
+  local def
+  def=$(_clia_mj_def_offerte "$1" "$2") || return 1
+  printf '%s\n' "${def%/*}"
+}
+
 _clia_mj_racine_extension() {
   local depot="$1" cible="$2" provider racine
   while IFS=$'\t' read -r provider racine; do
@@ -216,7 +240,7 @@ _clia_mj_racine_extension() {
 # _clia_mj_provenance <dépôt> <nom> — « provider<TAB>version inscrite ».
 _clia_mj_provenance() {
   local depot="$1" nom="$2" prefixe id v
-  prefixe=$(_clia_champ_yaml "$depot/_ressources/$nom/$nom.yaml" prefixe || printf '')
+  prefixe=$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" prefixe || printf '')
   [[ -n "$prefixe" ]] || return 1
   while IFS="$_CLIA_SEP" read -r id v; do
     [[ "$id" == */"$prefixe" ]] || continue
@@ -226,11 +250,14 @@ _clia_mj_provenance() {
   return 1
 }
 
-# Extrait une ressource d'une extension à un commit, sans ses primitives.
+# Extrait d'une extension, à un commit, le livrable d'une ressource.
+#
+# Rien n'est filtré : les primitives de l'instance sont hors du livrable
+# depuis SES-001 tâche 19, et ce qui est extrait est exactement ce qui
+# s'installe.
 _clia_mj_extraire_ressource() {
-  local racine="$1" commit="$2" nom="$3" dest="$4"
-  _clia_m_extraire "$racine" "$commit" "_ressources/$nom" "$dest" || return 1
-  rm -rf "$dest/primitives"
+  local racine="$1" commit="$2" livrable="$3" dest="$4"
+  _clia_m_extraire "$racine" "$commit" "$livrable" "$dest" || return 1
   return 0
 }
 
@@ -242,7 +269,7 @@ _clia_mj_ressource() {
   local def provider racine def_ext courant commit_cible commit_courant
   local tmp ref='' issue plan attendu
 
-  def="$depot/_ressources/$nom/$nom.yaml"
+  def="$depot/$(_clia_zone_livree)/$nom/$nom.yaml"
   if [[ ! -f "$def" ]]; then
     _clia_msg "$nom n'est pas une ressource de ce dépôt"
     return 1
@@ -263,7 +290,12 @@ _clia_mj_ressource() {
     return 1
   fi
 
-  def_ext="_ressources/$nom/$nom.yaml"
+  if ! def_ext=$(_clia_mj_def_offerte "$racine" "$nom"); then
+    _clia_msg "$provider ne publie pas $nom"
+    _clia_detail "son instance a-t-elle été retirée ?"
+    return 1
+  fi
+  local livrable_rel="${def_ext%/*}"
   if [[ -z "$cible" ]]; then
     if ! cible=$(_clia_m_derniere "$racine" "$def_ext"); then
       _clia_msg "$provider ne déclare aucune version de $nom dans son historique"
@@ -315,17 +347,17 @@ _clia_mj_ressource() {
   fi
 
   tmp=$(mktemp -d)/ressource
-  _clia_mj_extraire_ressource "$racine" "$commit_cible" "$nom" "$tmp" || {
+  _clia_mj_extraire_ressource "$racine" "$commit_cible" "$livrable_rel" "$tmp" || {
     _clia_msg "$nom : l'extraction de $cible a échoué"
     return 1
   }
 
   if commit_courant=$(_clia_m_commit_de "$racine" "$def_ext" "$courant"); then
     ref=$(mktemp -d)/reference
-    _clia_mj_extraire_ressource "$racine" "$commit_courant" "$nom" "$ref" || ref=''
+    _clia_mj_extraire_ressource "$racine" "$commit_courant" "$livrable_rel" "$ref" || ref=''
   fi
 
-  issue=$(_clia_mj_poser "$tmp" "$depot/_ressources/$nom" "$ref" "$force")
+  issue=$(_clia_mj_poser "$tmp" "$depot/$(_clia_zone_livree)/$nom" "$ref" "$force")
   rm -rf "$(dirname "$tmp")" "${ref:+$(dirname "$ref")}"
 
   if [[ "$issue" == 'laissé' ]]; then
@@ -352,7 +384,7 @@ _clia_mj_ressource() {
 _clia_mj_inscrire_ressource() {
   local depot="$1" nom="$2" provider="$3" version="$4" carte prefixe
   carte=$(_clia_carte "$depot") || return 1
-  prefixe=$(_clia_champ_yaml "$depot/_ressources/$nom/$nom.yaml" prefixe || printf '')
+  prefixe=$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" prefixe || printf '')
   [[ -n "$prefixe" ]] || return 1
   _clia_carte_retirer "$carte" use.extensions resource  "$provider/$prefixe" \
     || _clia_carte_retirer "$carte" use.extensions ressource "$provider/$prefixe" \
@@ -382,9 +414,21 @@ _clia_mj_namespace_source() {
 }
 
 # Les primitives de harness-ia à un commit du dépôt source.
+#
+# Trois emplacements sont essayés, parce que la disposition a changé au fil
+# des versions et qu'un downgrade lit forcément une disposition ancienne. Le
+# premier qui répond l'emporte ; aucun ne répond quand la version visée
+# n'avait pas de harnais, et clia le dit.
 _clia_mj_primitives_au_commit() {
-  git -C "$CLIA_SOURCE_DIR" ls-tree --name-only "$1" \
-    '_ressources/harness-ia/primitives/' 2>/dev/null
+  local commit="$1" chemin sortie
+  for chemin in \
+      "$(_clia_zone_ressource)/RES-002-harness-ia/livrables/primitives/" \
+      "$(_clia_zone_livree)/harness-ia/primitives/" \
+      '_ressources/harness-ia/primitives/'; do
+    sortie=$(git -C "$CLIA_SOURCE_DIR" ls-tree --name-only "$commit" "$chemin" 2>/dev/null)
+    [[ -n "$sortie" ]] && { printf '%s\n' "$sortie"; return 0; }
+  done
+  return 0
 }
 
 # Repose dans le harnais les fonctionnalités actives d'une ressource, et sous
@@ -396,7 +440,7 @@ _clia_mj_reposer() {
   local harnais="$depot/CLAUDE.md"
   local f n src dest issue nb=0
 
-  for f in "$depot/_ressources/$nom/features"/*.md; do
+  for f in "$depot/$(_clia_zone_livree)/$nom/features"/*.md; do
     [[ -f "$f" ]] || continue
     n=$(basename "$f" .md)
     _clia_t_pose "$harnais" "$n" feature || continue
@@ -414,7 +458,7 @@ _clia_mj_reposer() {
     nb=$((nb + 1))
   done
 
-  for src in "$depot/_ressources/$nom/skills"/*; do
+  for src in "$depot/$(_clia_zone_livree)/$nom/skills"/*; do
     [[ -e "$src" ]] || continue
     if [[ -d "$src" ]]; then n=$(basename "$src"); else n=$(basename "$src" .md); fi
     dest="$depot/.claude/skills/$n"
@@ -569,13 +613,15 @@ _clia_mj_depot() {
 
     version_ressource=''
     if (( de_clia )); then
-      version_ressource=$(_clia_m_fichier_au_commit "$CLIA_SOURCE_DIR" "$commit_cible" \
-        "_ressources/$nom_res/$nom_res.yaml" | grep -m1 -E '^version:[[:space:]]' \
-        | sed -E 's/^version:[[:space:]]*//' || printf '')
+      local def_src
+      def_src=$(_clia_mj_def_offerte "$CLIA_SOURCE_DIR" "$nom_res" || printf '')
+      [[ -n "$def_src" ]] && version_ressource=$(_clia_m_fichier_au_commit \
+        "$CLIA_SOURCE_DIR" "$commit_cible" "$def_src" \
+        | grep -m1 -E '^version:[[:space:]]' | sed -E 's/^version:[[:space:]]*//' || printf '')
     fi
 
     avant=$(mktemp -d)/avant
-    cp -r "$depot/_ressources/$nom_res" "$avant" 2>/dev/null || avant=''
+    cp -r "$depot/$(_clia_zone_livree)/$nom_res" "$avant" 2>/dev/null || avant=''
 
     if ligne=$(_clia_mj_ressource "$depot" "$nom_res" "$sens" "$version_ressource" "$force" "$migrer"); then
       local n de vers issue_r

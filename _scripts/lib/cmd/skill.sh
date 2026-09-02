@@ -71,7 +71,7 @@ l'invocation. Ce qui doit valoir tout le temps est une
 fonctionnalité ; ce qui ne sert qu'à l'occasion est un skill.
 
 Un skill vit sous la ressource qui le donne, dans
-_ressources/<ressource>/skills/. Deux formes sont admises : un
+<zone livrée>/<ressource>/skills/. Deux formes sont admises : un
 répertoire portant SKILL.md, qui laisse le skill emporter ses
 propres fichiers, ou un fichier seul pour un skill qui tient en une
 page. L'activation les ramène toutes deux à la première.
@@ -128,7 +128,7 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/<ressource>/skills/<nom>/SKILL.md
+<zone livrée>/<ressource>/skills/<nom>/SKILL.md
        Un skill, et ce qu'il emporte.
 
 .claude/skills/<nom>/
@@ -172,7 +172,7 @@ lister() {
 
   if [[ -z "$(_clia_f_skills "$DEPOT")" ]]; then
     _clia_msg "aucune ressource de ce dépôt n'offre de skill"
-    _clia_detail "ils se rangent sous _ressources/<ressource>/skills/"
+    _clia_detail "ils se rangent sous $(_clia_zone_livree)/<ressource>/skills/"
     _clia_detail "ce que le dépôt porte : clia res ls"
     return 0
   fi
@@ -290,7 +290,7 @@ desactiver() {
   _clia_msg "$n retiré de ce dépôt"
   (( copie ))     && _clia_detail "la copie de $SKILLS_REL/$n est effacée"
   (( directive )) && _clia_detail "sa directive est ôtée de CLAUDE.md"
-  _clia_detail "le skill reste sous _ressources/$nom/skills"
+  _clia_detail "le skill reste sous $(_clia_zone_livree)/$nom/skills"
   _clia_detail "rien n'est commité"
   return 0
 }

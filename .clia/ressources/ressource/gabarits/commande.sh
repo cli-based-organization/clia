@@ -6,12 +6,12 @@
 # La commande de la ressource « {{nom}} ».
 #
 # Ce fichier a été posé par « clia res new », à partir du gabarit
-# _ressources/ressource/gabarits/commande.sh. Il vous appartient : clia l'a
+# <zone livrée>/ressource/gabarits/commande.sh. Il vous appartient : clia l'a
 # posé, il ne l'a pas rédigé, et il ne le régénérera pas.
 #
 # Pourquoi il est ici plutôt que dans le noyau. Le point d'entrée trouve les
 # commandes de _scripts/lib/cmd/ et celles que les ressources déposent sous
-# _ressources/<nom>/_scripts/. Une ressource apporte donc ses automatismes
+# la zone des ressources livrées. Une ressource apporte donc ses automatismes
 # avec elle, et le noyau n'a pas à savoir qu'elle existe.
 #
 # Ce qu'il faut savoir pour l'étendre :
@@ -33,7 +33,7 @@ _CLIA_NOM='clia'
 
 DEPOT="${CLIA_WORK_DIR:-}"
 
-RESSOURCE_REL='_ressources/{{nom}}'
+RESSOURCE_REL="$(_clia_zone_livree)/{{nom}}"
 RESSOURCE="$DEPOT/$RESSOURCE_REL"
 PRIMITIVES="$RESSOURCE/primitives"
 
@@ -78,13 +78,13 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/{{nom}}/{{nom}}.yaml
+<zone livrée>/{{nom}}/{{nom}}.yaml
        La définition de la ressource.
 
-_ressources/{{nom}}/primitives/
+<zone livrée>/{{nom}}/primitives/
        Ce à partir de quoi ses livrables sont produits.
 
-_ressources/{{nom}}/_scripts/{{commande}}.sh
+<zone livrée>/{{nom}}/_scripts/{{commande}}.sh
        Ce fichier.
 
 VOIR AUSSI

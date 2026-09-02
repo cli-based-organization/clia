@@ -112,7 +112,7 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/<ressource>/_scripts/<commande>.sh
+<zone livrée>/<ressource>/_scripts/<commande>.sh
        La commande d'une ressource. Ses lignes « # Signature: »
        font ses scripts.
 

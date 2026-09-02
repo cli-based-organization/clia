@@ -266,14 +266,19 @@ _clia_man() {
 # C'est la règle qui vaut déjà pour les commandes : le noyau trouve, il
 # n'énumère pas.
 
-_CLIA_HARNAIS_PRIMITIVES='_ressources/harness-ia/primitives'
+# Les primitives du harnais voyagent avec la ressource installée : un dépôt
+# qui installe harness-ia doit pouvoir en tirer ses fichiers, et il n'a pas
+# l'instance qui les écrit.
+_clia_harnais_primitives() {
+  printf '%s/harness-ia/primitives\n' "$(_clia_zone_livree)"
+}
 
 # « nom<TAB>chemin de la primitive », triés par nom.
 _clia_harnais_offerts() {
   local f
-  for f in "${CLIA_SOURCE_DIR:-}/$_CLIA_HARNAIS_PRIMITIVES"/*; do
+  for f in "${CLIA_SOURCE_DIR:-}/$(_clia_harnais_primitives)"/*; do
     [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f")" "$f"
-  done | sort
+  done | LC_ALL=C sort
   return 0
 }
 
@@ -538,6 +543,114 @@ _clia_carte_retirer() {
 }
 
 # --------------------------------------------------------------------------
+# Les deux zones de ressources
+# --------------------------------------------------------------------------
+#
+# SES-001 tâche 19, et .dev/ressources/RES-001-ressource/primitive-2/
+# SPC-001-ontologie.md, qui en tire l'ontologie.
+#
+#   $CLIA_ZONE_RESSOURCE        ce que le dépôt écrit    (.dev/ressources)
+#   $CLIA_ZONE_RESSOURCE_LIVREE ce qu'il a installé      (.clia/ressources)
+#
+# La séparation n'est pas un rangement : elle sépare ce qu'on écrit de ce
+# qu'on emploie. Ce qu'on écrit change, se discute, se reprend ; ce qu'on
+# emploie est figé, et sa version est un fait. Les confondre revenait à ce
+# qu'une ressource change sous les pieds de ce qui s'en sert.
+#
+# Le CLI ne trouve ses ressources que dans la zone livrée. Une ressource
+# qu'un dépôt écrit sans l'avoir installée ne répond pas — et c'est ce qui
+# fait de l'installation un geste, donc une trace.
+#
+# Les deux emplacements se règlent par l'environnement, ce qui permet de
+# ranger la zone livrée hors de l'index de git si on le veut.
+
+_CLIA_ZONE_RESSOURCE_DEFAUT='.dev/ressources'
+_CLIA_ZONE_LIVREE_DEFAUT='.clia/ressources'
+
+_clia_zone_ressource() { printf '%s\n' "${CLIA_ZONE_RESSOURCE:-$_CLIA_ZONE_RESSOURCE_DEFAUT}"; }
+_clia_zone_livree()    { printf '%s\n' "${CLIA_ZONE_RESSOURCE_LIVREE:-$_CLIA_ZONE_LIVREE_DEFAUT}"; }
+
+# --------------------------------------------------------------------------
+# Ce qu'un dépôt porte
+# --------------------------------------------------------------------------
+#
+# Trois lectures, et elles ne disent pas la même chose :
+#
+#   _clia_ressources_de  ce qui est installé, et donc utilisable
+#   _clia_instances_de   ce que le dépôt écrit, sous forme d'instances
+#   _clia_offertes_de    ce qu'il publie, tiré des livrables de ses instances
+#
+# Un répertoire est une ressource installée parce qu'il porte sa définition,
+# et pour aucune autre raison. Une instance en est une parce que son nom
+# porte un préfixe, une séquence et un slug.
+
+# _clia_ressources_de <racine> — « nom<TAB>prefixe<TAB>version » des
+# ressources installées, triées par nom.
+_clia_ressources_de() {
+  local racine="$1" zone def nom prefixe version
+  zone=$(_clia_zone_livree)
+  for def in "$racine/$zone"/*/*.yaml; do
+    [[ -f "$def" ]] || continue
+    nom=$(basename "$(dirname "$def")")
+    [[ "$(basename "$def")" == "$nom.yaml" ]] || continue
+    prefixe=$(_clia_champ_yaml "$def" prefixe || printf '')
+    version=$(_clia_champ_yaml "$def" version || printf '')
+    printf '%s\t%s\t%s\n' "$nom" "${prefixe:-—}" "${version:-—}"
+  done | LC_ALL=C sort
+  return 0
+}
+
+_CLIA_INSTANCE='^[A-Z]{2,5}-[0-9]{3,}-'
+
+# _clia_instances_de <racine> — « id<TAB>nom<TAB>prefixe<TAB>version » pour
+# chaque instance dont le livrable porte une définition de ressource.
+#
+# L'identifiant est le nom du répertoire — PREFIXE-SEQ-SLUG. Le nom et le
+# préfixe sont ceux que le livrable déclare : le répertoire les répète pour
+# un lecteur, la définition les tient pour la machine.
+_clia_instances_de() {
+  local racine="$1" zone dir id def nom prefixe version
+  zone=$(_clia_zone_ressource)
+  for dir in "$racine/$zone"/*/; do
+    [[ -d "$dir" ]] || continue
+    id=$(basename "$dir")
+    [[ "$id" =~ $_CLIA_INSTANCE ]] || continue
+    for def in "$dir"livrables/*.yaml; do
+      [[ -f "$def" ]] || continue
+      nom=$(_clia_champ_yaml "$def" nom || printf '')
+      [[ -n "$nom" && "$(basename "$def")" == "$nom.yaml" ]] || continue
+      prefixe=$(_clia_champ_yaml "$def" prefixe || printf '')
+      version=$(_clia_champ_yaml "$def" version || printf '')
+      printf '%s\t%s\t%s\t%s\n' "$id" "$nom" "${prefixe:-—}" "${version:-—}"
+    done
+  done | LC_ALL=C sort
+  return 0
+}
+
+# _clia_offertes_de <racine> — « nom<TAB>prefixe<TAB>version<TAB>livrable »
+# pour ce qu'un dépôt publie. C'est ce qu'une extension offre à installer.
+_clia_offertes_de() {
+  local racine="$1" zone id nom prefixe version
+  zone=$(_clia_zone_ressource)
+  while IFS=$'\t' read -r id nom prefixe version; do
+    [[ -n "$nom" ]] || continue
+    printf '%s\t%s\t%s\t%s\n' \
+      "$nom" "$prefixe" "$version" "$racine/$zone/$id/livrables"
+  done < <(_clia_instances_de "$racine")
+  return 0
+}
+
+# _clia_instance_de <racine> <nom> — l'identifiant de l'instance qui publie
+# cette ressource, ou rien.
+_clia_instance_de() {
+  local cible="$2" id nom
+  while IFS=$'\t' read -r id nom _ _; do
+    [[ "$nom" == "$cible" ]] && { printf '%s\n' "$id"; return 0; }
+  done < <(_clia_instances_de "$1")
+  return 1
+}
+
+# --------------------------------------------------------------------------
 # Les sources
 # --------------------------------------------------------------------------
 #
@@ -600,7 +713,7 @@ _clia_sources() {
 # constaté et non déclaré :
 #
 #   extension     dépôt clia portant des ressources
-#   dépôt clia    dépôt clia sans répertoire _ressources
+#   dépôt clia    dépôt clia qui ne publie aucune ressource
 #   dépôt         présent, sans carte clia
 #   non clonée    déclarée en git, et absente du cache
 #   absente       l'uri locale ne mène à aucun répertoire
@@ -618,30 +731,11 @@ _clia_source_nature() {
   if ! _clia_carte_relative "$racine" >/dev/null; then
     printf 'dépôt\n'; return 0
   fi
-  if [[ -d "$racine/_ressources" ]] && [[ -n "$(_clia_ressources_de "$racine")" ]]; then
+  if [[ -n "$(_clia_offertes_de "$racine")" ]]; then
     printf 'extension\n'
   else
     printf 'dépôt clia\n'
   fi
-}
-
-# _clia_ressources_de <racine> — « nom<TAB>prefixe<TAB>version » pour chaque
-# ressource d'un dépôt, triées par nom.
-#
-# Un répertoire de _ressources/ est une ressource parce qu'il porte sa
-# définition, et pour aucune autre raison. La règle est celle de clia-res(1),
-# et elle n'a qu'une écriture.
-_clia_ressources_de() {
-  local racine="$1" def nom prefixe version
-  for def in "$racine"/_ressources/*/*.yaml; do
-    [[ -f "$def" ]] || continue
-    nom=$(basename "$(dirname "$def")")
-    [[ "$(basename "$def")" == "$nom.yaml" ]] || continue
-    prefixe=$(_clia_champ_yaml "$def" prefixe || printf '')
-    version=$(_clia_champ_yaml "$def" version || printf '')
-    printf '%s\t%s\t%s\n' "$nom" "${prefixe:-—}" "${version:-—}"
-  done | sort
-  return 0
 }
 
 # _clia_extensions <dépôt> — « provider<TAB>racine » pour chaque source

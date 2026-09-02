@@ -8,8 +8,10 @@
 #
 #   _scripts/     les automatismes qu'elle fournit — ses.sh y porte
 #                 la commande « clia ses »
+#   gabarits/     la forme que clia pose, et ne rédige pas
+#   features/     ce qu'elle ajoute au harnais IA, toujours dans le contexte
+#   skills/       les procédures qu'elle fournit, chargées à l'invocation
 #   primitives/   ce à partir de quoi ses livrables sont produits
-#   skills/       les procédures qu'elle fournit
 
 nom: session
 titre: Session

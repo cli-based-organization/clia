@@ -70,7 +70,9 @@ _clia_m_versions() {
     [[ -n "$alias" && "$alias" != "$precedent" ]] || { precedent="$alias"; continue; }
     printf '%s\t%s\n' "$alias" "$commit"
     precedent="$alias"
-  done < <(git -C "$racine" log --reverse --format=%H -- "$def" 2>/dev/null)
+    # « --follow » : la disposition des ressources a changé, et sans lui
+    # l'historique d'une définition s'arrêterait à son déplacement.
+  done < <(git -C "$racine" log --follow --reverse --format=%H -- "$def" 2>/dev/null)
   return 0
 }
 
@@ -132,7 +134,7 @@ _clia_m_fichier_au_commit() {
 # SES-001 tâche 17 : toute ressource porte un verbe « migrate », et chaque
 # nouvelle version doit fournir son script de migration.
 #
-#   _ressources/<nom>/migrations/<de>-<vers>.sh
+#   <instance>/livrables/migrations/<de>-<vers>.sh
 #
 # Un script par saut, et non un par couple de versions éloignées : aller de
 # 0.1.0 à 0.4.0 enchaîne les sauts que l'historique déclare. C'est ce qui

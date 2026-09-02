@@ -24,9 +24,13 @@ CLIA="$RACINE/_scripts/bin/clia"
 BAC=$(mktemp -d)
 trap 'rm -rf "$BAC"' EXIT
 
+# Les deux zones de SES-001 tâche 19.
+INST='.dev/ressources'
+LIVREE='.clia/ressources'
+
 REEL_HEAD=$(git -C "$RACINE" rev-parse HEAD)
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
-REEL_RESSOURCES=$(ls "$RACINE/_ressources" 2>/dev/null | sort)
+REEL_RESSOURCES=$(ls "$RACINE/$INST" "$RACINE/$LIVREE" 2>/dev/null | sort)
 
 # --------------------------------------------------------------------------
 # Outils
@@ -121,10 +125,10 @@ titre 'Creer une ressource'
 
 D=$(depot creation)
 rc_dans 'clia res new est satisfaite' 0 "$D" res new ANL analyse "Ce qu un examen etablit"
-dit 'et elle dit ou la ressource a ete creee' '_ressources/analyse'
+dit 'et elle dit ou l instance a ete creee' '\.dev/ressources/RES-001-analyse'
 dit 'et que rien n est commite' "créer n'est pas publier"
 
-DEF="$D/_ressources/analyse/analyse.yaml"
+DEF="$D/$INST/RES-001-analyse/livrables/analyse.yaml"
 vrai 'la definition est posee a son emplacement' test -f "$DEF"
 vrai 'elle declare le nom' grep -q '^nom: analyse$' "$DEF"
 vrai 'elle declare le titre' grep -q '^titre: Analyse$' "$DEF"
@@ -136,12 +140,12 @@ vrai 'la creation ne commite rien' \
   test -n "$(git -C "$D" status --porcelain)"
 
 rc_dans 'une description omise laisse une invite' 0 "$D" res new FND fondation
-vrai 'et la definition le dit' grep -q 'À rédiger' "$D/_ressources/fondation/fondation.yaml"
+vrai 'et la definition le dit' grep -q 'À rédiger' "$D/$INST/RES-002-fondation/livrables/fondation.yaml"
 
 rc_dans 'une guillemet dans la description est remplacee' 0 "$D" res new PLN plan 'un "plan" borne'
 dit 'et le remplacement est annonce' 'remplacés par des apostrophes'
 vrai 'la definition reste lisible' \
-  grep -q "^description: \"un 'plan' borne\"\$" "$D/_ressources/plan/plan.yaml"
+  grep -q "^description: \"un 'plan' borne\"\$" "$D/$INST/RES-003-plan/livrables/plan.yaml"
 
 # ==========================================================================
 titre 'Ce que la creation refuse'
@@ -158,7 +162,7 @@ rc_dans 'un emplacement occupe est refuse' 1 "$D" res new XYZ analyse
 dit 'et rien n est cree' "rien n'a été créé"
 rc_dans 'un prefixe deja pris est refuse' 1 "$D" res new ANL autre
 dit 'en nommant qui le porte' 'déjà celui de analyse'
-vrai 'et la ressource n a pas ete creee' test ! -e "$D/_ressources/autre"
+vrai 'et la ressource n a pas ete creee' test -z "$(ls -d "$D/$INST"/*autre 2>/dev/null)"
 
 rc_dans 'new sans argument est mal forme' 2 "$D" res new
 rc_dans 'new avec un seul argument est mal forme' 2 "$D" res new ANL
@@ -174,7 +178,7 @@ dit 'et nomme la commande qui en cree une' 'clia res new PREFIXE NOM'
 
 commit "$D" 'ajoute les ressources'
 SORTIE=$(sortie "$D" res ls)
-dit 'l en-tete nomme les colonnes' '^PREFIXE  *NOM  *VERSION  *IDENTITE  *DESCRIPTION$'
+dit 'l en-tete nomme les colonnes' '^PREFIXE  *NOM  *VERSION  *ETAT  *IDENTITE  *DESCRIPTION$'
 dit 'chaque ressource y figure' '^ANL  *analyse  *0.1.0'
 dit 'l identite est le namespace du depot suivi du prefixe' 'exemple.test/creation/ANL'
 vrai 'les ressources sont triees par nom' \
@@ -206,7 +210,7 @@ vrai 'et sa version exacte est le commit qui l a introduite' \
 # Le cas central : la portée.
 printf 'ailleurs\n' > "$D/ailleurs.txt"
 commit "$D" 'du travail qui ne concerne pas la ressource'
-COMMIT_RES=$(git -C "$D" log -1 --format=%H -- _ressources/analyse)
+COMMIT_RES=$(git -C "$D" log -1 --format=%H -- "$INST/RES-001-analyse")
 
 vrai 'un commit ailleurs ne change pas la version de la ressource' \
   test "$(sortie "$D" res version analyse)" = '0.1.0'
@@ -218,8 +222,7 @@ vrai 'alors que la version du depot, elle, a bouge' \
   test "$(sortie "$D" version)" = "1.0.0+$(git -C "$D" rev-parse --short HEAD)"
 
 # La ressource avance sans être publiée.
-mkdir -p "$D/_ressources/analyse/primitives"
-printf 'une primitive\n' > "$D/_ressources/analyse/primitives/p.md"
+printf 'une primitive\n' > "$D/$INST/RES-001-analyse/primitive-1/p.md"
 commit "$D" 'une primitive pour analyse'
 COURT=$(git -C "$D" rev-parse --short HEAD)
 vrai 'une ressource qui avance sans publier est une version de travail' \
@@ -252,7 +255,7 @@ vrai 'qui est une version publiee, sans suffixe de travail' \
 vrai 'le message de commit nomme la ressource et sa version' \
   test "$(git -C "$D" log -1 --format=%s)" = 'release analyse 0.1.1'
 vrai 'le commit ne porte que la definition' \
-  test "$(git -C "$D" show --name-only --format= HEAD | tr -d '[:space:]')" = '_ressources/analyse/analyse.yaml'
+  test "$(git -C "$D" show --name-only --format= HEAD | tr -d '[:space:]')" = "$INST/RES-001-analyse/livrables/analyse.yaml"
 vrai 'aucune etiquette n est posee' test "$(git -C "$D" tag -l | wc -l)" -eq 0
 vrai 'le depot est propre apres la publication' \
   test -z "$(git -C "$D" status --porcelain)"
@@ -283,7 +286,7 @@ rc_dans 'release sur une ressource inconnue est refuse' 1 "$D" res release patch
 # Un alias non incrémentable.
 D=$(depot alias-casse)
 dans "$D" res new ANL analyse "x" >/dev/null 2>&1
-sed -i 's/^version: 0.1.0$/version: tout-neuf/' "$D/_ressources/analyse/analyse.yaml"
+sed -i 's/^version: 0.1.0$/version: tout-neuf/' "$D/$INST/RES-001-analyse/livrables/analyse.yaml"
 commit "$D" 'un alias non semantique'
 rc_dans 'un alias non semantique n est pas incrementable' 1 "$D" res release patch analyse
 dit 'et clia dit ce qu il faut corriger' "n'est pas incrémentable"
@@ -303,7 +306,7 @@ titre 'La commande vit dans la ressource, et le noyau ne la porte plus'
 # ==========================================================================
 
 vrai 'le script de la commande est dans la ressource' \
-  test -f "$RACINE/_ressources/ressource/_scripts/res.sh"
+  test -f "$RACINE/$LIVREE/ressource/_scripts/res.sh"
 vrai 'et le noyau ne le porte plus' \
   test ! -e "$RACINE/_scripts/lib/cmd/res.sh"
 
@@ -311,24 +314,24 @@ rc 'la commande repond quand meme' 0 "$CLIA" --help
 dit 'car elle est decouverte, non listee' '^  res  '
 
 vrai 'les gabarits d une ressource neuve sont dans la ressource' \
-  test -d "$RACINE/_ressources/ressource/gabarits"
+  test -d "$RACINE/$LIVREE/ressource/gabarits"
 vrai 'un gabarit pour la definition' \
-  test -f "$RACINE/_ressources/ressource/gabarits/definition.yaml"
+  test -f "$RACINE/$LIVREE/ressource/gabarits/definition.yaml"
 vrai 'un gabarit pour la commande' \
-  test -f "$RACINE/_ressources/ressource/gabarits/commande.sh"
+  test -f "$RACINE/$LIVREE/ressource/gabarits/commande.sh"
 vrai 'le gabarit de commande porte des trous' \
-  grep -q '{{commande}}' "$RACINE/_ressources/ressource/gabarits/commande.sh"
+  grep -q '{{commande}}' "$RACINE/$LIVREE/ressource/gabarits/commande.sh"
 vrai 'et il declare une signature' \
-  grep -q '^# Signature: {{commande}} ls$' "$RACINE/_ressources/ressource/gabarits/commande.sh"
+  grep -q '^# Signature: {{commande}} ls$' "$RACINE/$LIVREE/ressource/gabarits/commande.sh"
 
 # L'invariant de la tâche 9, mesuré sur ce que le dépôt porte aujourd'hui.
 MANQUANTES=''
-for DEF in "$RACINE"/_ressources/*/*.yaml; do
+for DEF in "$RACINE/$LIVREE"/*/*.yaml; do
   NOM=$(basename "$(dirname "$DEF")")
   [[ "$(basename "$DEF")" == "$NOM.yaml" ]] || continue
   PREF=$(sed -nE 's/^prefixe:[[:space:]]*//p' "$DEF" | head -1)
   CMD=$(printf '%s' "$PREF" | tr '[:upper:]' '[:lower:]')
-  [[ -f "$RACINE/_ressources/$NOM/_scripts/$CMD.sh" ]] \
+  [[ -f "$RACINE/$LIVREE/$NOM/_scripts/$CMD.sh" ]] \
     || MANQUANTES="$MANQUANTES $NOM"
 done
 vrai 'toutes les ressources du depot exposent une commande' test -z "$MANQUANTES"
@@ -342,18 +345,18 @@ D=$(depot commande)
 rc_dans 'clia res new est satisfaite' 0 "$D" res new ANL analyse "Ce qu un examen etablit"
 dit 'et elle nomme la commande posee' 'clia anl'
 
-SCRIPT="$D/_ressources/analyse/_scripts/anl.sh"
+SCRIPT="$D/$INST/RES-001-analyse/livrables/_scripts/anl.sh"
 vrai 'le script est pose sous le prefixe en minuscules' test -f "$SCRIPT"
 vrai 'il est executable' test -x "$SCRIPT"
 vrai 'il declare sa description' grep -q '^# Description: ' "$SCRIPT"
 vrai 'il declare son perimetre' grep -q '^# Périmètre: dépôt$' "$SCRIPT"
 vrai 'il declare sa signature' grep -q '^# Signature: anl ls$' "$SCRIPT"
-vrai 'il nomme la ressource' grep -q "_ressources/analyse" "$SCRIPT"
+vrai 'il nomme la ressource' grep -q '/analyse"' "$SCRIPT"
 LAISSES=$(grep -c '{{' "$SCRIPT" || true)
 vrai 'aucun trou de gabarit n y subsiste' test "$LAISSES" -eq 0
 vrai 'et il est syntaxiquement valide' bash -n "$SCRIPT"
 
-DEF="$D/_ressources/analyse/analyse.yaml"
+DEF="$D/$INST/RES-001-analyse/livrables/analyse.yaml"
 LAISSES=$(grep -c '{{' "$DEF" || true)
 vrai 'ni dans la definition' test "$LAISSES" -eq 0
 vrai 'et la definition nomme la commande' grep -q 'clia anl' "$DEF"
@@ -361,20 +364,20 @@ vrai 'et la definition nomme la commande' grep -q 'clia anl' "$DEF"
 rc_dans 'un prefixe qui doublerait le noyau est signale' 0 "$D" res new INIT amorce
 dit 'et clia dit que le noyau l emporte' "déjà une commande du noyau"
 vrai 'le script est pose quand meme' \
-  test -f "$D/_ressources/amorce/_scripts/init.sh"
+  test -n "$(ls "$D/$INST"/*amorce/livrables/_scripts/init.sh 2>/dev/null)"
 
 # ==========================================================================
-titre 'La commande d une ressource neuve repond'
+titre 'Une ressource neuve est ecrite, non installee'
 # ==========================================================================
 #
-# Le bout en bout : une ressource créée dans un dépôt qui est aussi la source
-# du CLI. C'est le seul montage où « toutes les ressources exposent une
-# commande » se constate plutôt que se suppose — la fouille des commandes se
-# fait dans le dépôt source, non dans le dépôt de travail.
+# SES-001 tâche 19 : seules les ressources livrées sont accessibles par le
+# CLI. « clia res new » écrit une instance ; tant qu'elle n'est pas installée,
+# sa commande ne répond pas. C'est ce qui fait de l'installation un geste.
 
 COPIE="$BAC/source"
-mkdir -p "$COPIE"
-cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$COPIE/"
+mkdir -p "$COPIE/$LIVREE"
+cp -r "$RACINE/_scripts" "$COPIE/"
+cp -r "$RACINE/$LIVREE/." "$COPIE/$LIVREE/"
 printf 'namespace: exemple.test/source\nversion: 1.0.0\n' > "$COPIE/clia.yaml"
 git -C "$COPIE" init -q
 git -C "$COPIE" config user.email 'banc@example.invalid'
@@ -383,6 +386,31 @@ git -C "$COPIE" config user.name 'banc'
 CLIA_COPIE="$COPIE/_scripts/bin/clia"
 rc 'la ressource est creee dans la source' 0 \
   bash -c "cd '$COPIE' && '$CLIA_COPIE' res new ANL analyse 'Une analyse'"
+dit 'et clia dit qu elle n est pas encore installee' "ne répond pas encore"
+dit 'et comment l installer' 'clia extension install'
+
+vrai 'son instance est posee' test -d "$COPIE/$INST/RES-001-analyse"
+vrai 'avec son livrable' test -f "$COPIE/$INST/RES-001-analyse/livrables/analyse.yaml"
+vrai 'et rien n est pose dans la zone livree' test ! -e "$COPIE/$LIVREE/analyse"
+
+SORTIE=$(cd "$COPIE" && "$CLIA_COPIE" --help 2>&1)
+ne_dit_pas 'sa commande ne repond pas encore' '^  anl '
+rc 'et elle est inconnue' 2 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl ls"
+
+SORTIE=$(cd "$COPIE" && "$CLIA_COPIE" res ls 2>&1)
+dit 'res ls la dit ecrite' 'ANL  *analyse  *0.1.0  *écrite'
+
+# ==========================================================================
+titre 'Installee, elle repond'
+# ==========================================================================
+
+rc 'le depot se declare sa propre extension' 0 \
+  bash -c "cd '$COPIE' && '$CLIA_COPIE' extension add ."
+rc 'et l installe' 0 \
+  bash -c "cd '$COPIE' && '$CLIA_COPIE' extension install exemple.test/source"
+
+vrai 'la ressource est dans la zone livree' test -d "$COPIE/$LIVREE/analyse"
+vrai 'avec son script' test -f "$COPIE/$LIVREE/analyse/_scripts/anl.sh"
 
 rc 'sa commande apparait dans l aide' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' --help"
 dit 'son nom y figure, avec ce qu elle fait' '^  anl  *La ressource analyse'
@@ -392,11 +420,6 @@ rc 'sa signature est a son propre niveau' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE
 dit 'et elle y est' 'clia anl ls'
 dit 'avec le verbe generique des ressources' 'clia anl deactivate'
 
-rc 'son aide de niveau repond' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --help"
-RESTE=$(cd "$COPIE" && "$CLIA_COPIE" anl --help 2>/dev/null | lignes_de_prose)
-vrai 'et elle ne porte aucune prose' test -z "$RESTE"
-[[ -n "$RESTE" ]] && printf '         ligne fautive : %s\n' "$RESTE"
-
 rc 'son manuel repond' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl --man"
 dit 'il porte son nom de page' '^CLIA-ANL(1)'
 for section in NOM SYNOPSIS DESCRIPTION SOUS-COMMANDES SORTIE \
@@ -405,21 +428,23 @@ for section in NOM SYNOPSIS DESCRIPTION SOUS-COMMANDES SORTIE \
 done
 LONGUES=$(cd "$COPIE" && "$CLIA_COPIE" anl --man 2>/dev/null | lignes_trop_longues)
 vrai 'aucune ligne de ce manuel ne depasse 80 colonnes' test -z "$LONGUES"
-[[ -n "$LONGUES" ]] && printf '         ligne fautive : %s\n' "$LONGUES"
 
 rc 'la ressource neuve ne porte aucune primitive' 0 \
   bash -c "cd '$COPIE' && '$CLIA_COPIE' anl ls"
 dit 'et sa commande le dit' 'ne porte aucune primitive'
 
-mkdir -p "$COPIE/_ressources/analyse/primitives"
-printf 'une primitive\n' > "$COPIE/_ressources/analyse/primitives/p.md"
+mkdir -p "$COPIE/$LIVREE/analyse/primitives"
+printf 'une primitive\n' > "$COPIE/$LIVREE/analyse/primitives/p.md"
 vrai 'une primitive deposee est listee' \
-  test "$(cd "$COPIE" && "$CLIA_COPIE" anl ls 2>/dev/null)" = '_ressources/analyse/primitives/p.md'
+  test "$(cd "$COPIE" && "$CLIA_COPIE" anl ls 2>/dev/null)" = "$LIVREE/analyse/primitives/p.md"
 
 rc 'un verbe inconnu est mal forme' 2 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl bidule"
 rc 'et ls ne prend pas d argument' 2 bash -c "cd '$COPIE' && '$CLIA_COPIE' anl ls trop"
 
 rc 'le noyau garde ses commandes' 0 bash -c "cd '$COPIE' && '$CLIA_COPIE' version"
+
+SORTIE=$(cd "$COPIE" && "$CLIA_COPIE" res ls 2>&1)
+dit 'et res ls la dit toujours ecrite, non installee' 'ANL  *analyse  *0.1.0  *écrite'
 
 # ==========================================================================
 titre 'Le depot reel n a pas bouge'
@@ -430,6 +455,6 @@ vrai 'HEAD est le meme qu au depart' \
 vrai 'et son etat de travail aussi' \
   test "$(git -C "$RACINE" status --porcelain | sort)" = "$REEL_ETAT"
 vrai 'et son inventaire de ressources est inchange' \
-  test "$(ls "$RACINE/_ressources" 2>/dev/null | sort)" = "$REEL_RESSOURCES"
+  test "$(ls "$RACINE/$INST" "$RACINE/$LIVREE" 2>/dev/null | sort)" = "$REEL_RESSOURCES"
 
 bilan

@@ -29,6 +29,10 @@ CLIA="$RACINE/_scripts/bin/clia"
 BAC=$(mktemp -d)
 trap 'rm -rf "$BAC"' EXIT
 
+# La zone des ressources livrées — SES-001 tâche 19. Une ressource ne fournit
+# rien tant qu'elle n'y est pas : c'est là que le CLI regarde.
+LIVREE='.clia/ressources'
+
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
 
 # --------------------------------------------------------------------------
@@ -82,7 +86,7 @@ depot() {
 Ce paragraphe est à moi, et clia n'y touche pas.
 MD
 
-  r="$d/_ressources/fourni"
+  r="$d/$LIVREE/fourni"
   mkdir -p "$r/_scripts" "$r/features" "$r/skills/interroger"
   cat > "$r/fourni.yaml" <<'YAML'
 nom: fourni
@@ -240,7 +244,7 @@ vrai 'son corps est parti' \
   test "$(grep -c 'Le corps de la deuxième' "$D/CLAUDE.md")" -eq 0
 vrai 'l autre est restee' grep -q '^## Fonctionnalité : journal-continu$' "$D/CLAUDE.md"
 vrai 'et son fichier reste sous la ressource' \
-  test -f "$D/_ressources/fourni/features/deuxieme.md"
+  test -f "$D/$LIVREE/fourni/features/deuxieme.md"
 
 rc_dans 'la retirer deux fois ne fait rien' 0 "$D" feature deactivate deuxieme
 dit 'et clia le dit' "n'est pas posée"
@@ -304,7 +308,7 @@ rc_dans 'clia skill deactivate est satisfaite' 0 "$D" skill deactivate court
 vrai 'la copie est effacee' test ! -e "$D/.claude/skills/court"
 vrai 'la directive est otee' test "$(grep -c '^## Skill : court$' "$D/CLAUDE.md")" -eq 0
 vrai 'et le skill reste sous sa ressource' \
-  test -f "$D/_ressources/fourni/skills/court.md"
+  test -f "$D/$LIVREE/fourni/skills/court.md"
 
 # Une copie modifiée porte un travail que clia ne sait pas rendre.
 printf 'une note ajoutee sur place\n' >> "$D/.claude/skills/interroger/SKILL.md"
@@ -336,7 +340,7 @@ dit 'et c est bien lui qui a repondu' '^bonjour$'
 rc_dans 'clia script deactivate est satisfaite' 0 "$D" script deactivate dis FRN
 dit 'et clia dit ce qui est desormais refuse' 'clia frn dis'
 vrai 'la carte l inscrit' grep -q '  - script: FRN/dis' "$D/clia.yaml"
-vrai 'et rien n est efface' test -f "$D/_ressources/fourni/_scripts/frn.sh"
+vrai 'et rien n est efface' test -f "$D/$LIVREE/fourni/_scripts/frn.sh"
 
 SORTIE=$(sortie "$D" script ls)
 dit 'ls le dit desactive' 'fourni *dis *désactivé'

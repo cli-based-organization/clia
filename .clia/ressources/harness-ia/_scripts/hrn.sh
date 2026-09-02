@@ -9,7 +9,7 @@
 #
 # Cette commande n'est pas dans le noyau : elle est dans la ressource qui la
 # justifie. Le point d'entrée trouve les commandes de _scripts/lib/cmd/ et
-# celles que les ressources déposent sous _ressources/<nom>/_scripts/. Une
+# celles que les ressources livrées déposent sous leur zone. Une
 # ressource apporte donc ses automatismes avec elle, et le noyau n'a pas à
 # savoir qu'elle existe.
 #
@@ -20,8 +20,8 @@
 # Le gabarit, le schéma, les données
 # ----------------------------------
 #
-#   _ressources/harness-ia/gabarits/CLAUDE.md      le gabarit
-#   _ressources/harness-ia/gabarits/CLAUDE.yaml    son schéma
+#   <zone livrée>/harness-ia/gabarits/CLAUDE.md    le gabarit
+#   <zone livrée>/harness-ia/gabarits/CLAUDE.yaml  son schéma
 #   .dev/harnais-ia/hrn.yaml                       les données du dépôt
 #   .dev/harnais-ia/CLAUDE.md                      le livrable, généré
 #
@@ -56,7 +56,7 @@ _CLIA_NOM='clia'
 
 DEPOT="${CLIA_WORK_DIR:-}"
 
-RESSOURCE="$CLIA_SOURCE_DIR/_ressources/harness-ia"
+RESSOURCE="$CLIA_SOURCE_DIR/$(_clia_zone_livree)/harness-ia"
 GABARITS="$RESSOURCE/gabarits"
 
 # SES-001 tâche 8 nomme cet emplacement. Une instance de la ressource y vit :
@@ -155,10 +155,10 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/harness-ia/gabarits/<HARNAIS>.md
+<zone livrée>/harness-ia/gabarits/<HARNAIS>.md
        Le gabarit : le texte, et ses trous.
 
-_ressources/harness-ia/gabarits/<HARNAIS>.yaml
+<zone livrée>/harness-ia/gabarits/<HARNAIS>.yaml
        Son schéma : les champs et les sections qui se configurent,
        leurs valeurs par défaut, et ce que chacun commande.
 

@@ -88,25 +88,25 @@ _CLIA_DEPOT_COURANT=$(_clia_depot_git "$PWD" 2>/dev/null || printf '')
 # premier trouvé l'emporte, et « version » ne doit pas changer de sens selon
 # les ressources installées.
 #
-# La troisième fouille est celle du dépôt de travail. Une ressource y arrive
-# de deux façons : « clia res new » la crée, ou « clia extension install » la
-# reprend d'une extension. Dans les deux cas elle est là, versionnée avec le
-# dépôt, et lisible par qui l'ouvre.
+# Les deux dernières fouillent la zone des ressources livrées — celle que
+# $CLIA_ZONE_RESSOURCE_LIVREE désigne, .clia/ressources par défaut. SES-001
+# tâche 19 : seules les ressources installées sont accessibles par le CLI.
 #
-# Ce que cela écarte, et volontairement : clia n'exécute rien depuis un dépôt
-# voisin. Déclarer une extension ne rend rien exécutable — il faut l'installer,
-# et l'installation dépose le code ici, où il se relit et se commite. Une
-# source déclarée n'est qu'une provenance. Voir clia-extension(1).
+# Ce que cela écarte, et volontairement : ni un dépôt voisin, ni ce que le
+# dépôt écrit sans l'avoir installé. Une ressource en cours d'écriture, sous
+# $CLIA_ZONE_RESSOURCE, ne répond pas — l'installer est un geste, donc une
+# trace. Voir clia-extension(1) et SPC-001-ontologie.
 _clia_fichiers_de_commande() {
-  local f
+  local f zone
+  zone=$(_clia_zone_livree)
   for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\tnoyau\n' "$(basename "$f" .sh)" "$f"
   done
-  for f in "$CLIA_SOURCE_DIR"/_ressources/*/_scripts/*.sh; do
+  for f in "$CLIA_SOURCE_DIR/$zone"/*/_scripts/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\tressource\n' "$(basename "$f" .sh)" "$f"
   done
   if [[ -n "$_CLIA_DEPOT_COURANT" && "$_CLIA_DEPOT_COURANT" != "$CLIA_SOURCE_DIR" ]]; then
-    for f in "$_CLIA_DEPOT_COURANT"/_ressources/*/_scripts/*.sh; do
+    for f in "$_CLIA_DEPOT_COURANT/$zone"/*/_scripts/*.sh; do
       [[ -f "$f" ]] && printf '%s\t%s\tressource\n' "$(basename "$f" .sh)" "$f"
     done
   fi
@@ -381,6 +381,17 @@ CLIA_INSTALLATION
        absence signifie que clia est appelé par son chemin, hors de
        toute installation.
 
+CLIA_ZONE_RESSOURCE
+       Où le dépôt écrit ses ressources : une instance par
+       répertoire, sous <PREFIXE>-<SEQ>-<SLUG>/. Par défaut
+       .dev/ressources.
+
+CLIA_ZONE_RESSOURCE_LIVREE
+       Où le dépôt tient les ressources qu'il a installées. Par
+       défaut .clia/ressources. C'est la seule zone où le CLI
+       cherche ses commandes : une ressource écrite et non
+       installée ne répond pas.
+
 CLIA_PORTEE
        Le seul dépôt sur lequel l'installation permet de travailler.
        Une commande de périmètre « dépôt » lancée ailleurs est
@@ -407,10 +418,9 @@ _scripts/lib/cmd/*.sh
        Les commandes du noyau. Chaque fichier porte ses déclarations
        en tête : Description, Périmètre, Signature et Option.
 
-_ressources/*/_scripts/*.sh
-       Les commandes qu'une ressource apporte, déclarées de la même
-       façon. Toute ressource en expose une, nommée par son préfixe en
-       minuscules. Voir clia-res(1) et clia-hrn(1).
+
+<zone livrée>/*/_scripts/*.sh
+       Les commandes que les ressources installées apportent.
 
 ~/.cache/clia/extensions/<namespace>
        Le clone d'une extension distante, propre à cette machine.
@@ -592,10 +602,14 @@ if [[ -n "${1:-}" && "${1:0:1}" != '-' \
       && -n "$_CLIA_DEPOT_COURANT" ]]; then
   if _CLIA_CARTE=$(_clia_carte "$_CLIA_DEPOT_COURANT") \
      && grep -q '^desactives:' "$_CLIA_CARTE" 2>/dev/null; then
-    _CLIA_NOM_RES=$(basename "$(dirname "$(dirname "$FICHIER")")")
-    _CLIA_RACINE_RES=$(dirname "$(dirname "$(dirname "$(dirname "$FICHIER")")")")
+    # La zone livrée compte plusieurs segments : elle est retirée par son
+    # nom, non en comptant des répertoires. Compter aurait lié ce calcul à
+    # la profondeur d'un chemin que l'environnement règle.
+    _CLIA_ZONE_LIV=$(_clia_zone_livree)
+    _CLIA_NOM_RES="${FICHIER#*/"$_CLIA_ZONE_LIV"/}"; _CLIA_NOM_RES="${_CLIA_NOM_RES%%/*}"
+    _CLIA_RACINE_RES="${FICHIER%/"$_CLIA_ZONE_LIV"/*}"
     _CLIA_PREFIXE=$(_clia_champ_yaml \
-      "$_CLIA_RACINE_RES/_ressources/$_CLIA_NOM_RES/$_CLIA_NOM_RES.yaml" prefixe || printf '')
+      "$_CLIA_RACINE_RES/$_CLIA_ZONE_LIV/$_CLIA_NOM_RES/$_CLIA_NOM_RES.yaml" prefixe || printf '')
     if [[ -n "$_CLIA_PREFIXE" ]]; then
       while IFS="$_CLIA_SEP" read -r _CLIA_ID; do
         [[ "$_CLIA_ID" == "$_CLIA_PREFIXE/$1" ]] || continue

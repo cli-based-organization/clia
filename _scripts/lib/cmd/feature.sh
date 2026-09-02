@@ -58,7 +58,7 @@ qui doit valoir tout le temps est une fonctionnalité, ce qui ne sert
 qu'à l'occasion est un skill.
 
 Une fonctionnalité vit sous la ressource qui la donne, dans
-_ressources/<ressource>/features/<nom>.md. Il n'y a pas de
+<zone livrée>/<ressource>/features/<nom>.md. Il n'y a pas de
 catalogue : clia trouve ce qui est là.
 
 clia pose le corps du fichier, sous un titre qu'il écrit lui-même —
@@ -112,9 +112,10 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/<ressource>/features/<nom>.md
+<zone livrée>/<ressource>/features/<nom>.md
        Une fonctionnalité : un frontmatter qui la décrit, puis le
-       corps que clia pose.
+       corps que clia pose. La zone livrée est .clia/ressources par
+       défaut ; $CLIA_ZONE_RESSOURCE_LIVREE la déplace.
 
 CLAUDE.md
        Le harnais IA du dépôt, et la zone gérée qu'il porte.
@@ -146,7 +147,7 @@ lister() {
 
   if [[ -z "$(_clia_f_features "$DEPOT")" ]]; then
     _clia_msg "aucune ressource de ce dépôt n'offre de fonctionnalité"
-    _clia_detail "elles se rangent sous _ressources/<ressource>/features/"
+    _clia_detail "elles se rangent sous $(_clia_zone_livree)/<ressource>/features/"
     _clia_detail "ce que le dépôt porte : clia res ls"
     return 0
   fi
@@ -221,7 +222,7 @@ desactiver() {
 
   _clia_t_retirer "$HARNAIS" "$n" feature
   _clia_msg "$n retirée de CLAUDE.md"
-  _clia_detail "son fichier reste sous _ressources/$nom/features"
+  _clia_detail "son fichier reste sous $(_clia_zone_livree)/$nom/features"
   _clia_detail "rien n'est commité"
   return 0
 }

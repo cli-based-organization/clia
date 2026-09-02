@@ -32,6 +32,10 @@ BAC=$(mktemp -d)
 trap 'rm -rf "$BAC"' EXIT
 
 export XDG_CACHE_HOME="$BAC/cache"
+
+# Les deux zones de SES-001 tâche 19.
+INST='.dev/ressources'
+LIVREE='.clia/ressources'
 REEL_ETAT=$(git -C "$RACINE" status --porcelain | sort)
 
 # --------------------------------------------------------------------------
@@ -82,7 +86,7 @@ rc_dans() {
 # 0.3.0  le script dit « trois », et le saut n'en porte aucun
 extension() {
   local d="$BAC/ext"
-  local r="$d/_ressources/outil"
+  local r="$d/$INST/RES-001-outil/livrables"
   mkdir -p "$r/_scripts" "$r/migrations"
   git -C "$d" init -q
   printf 'namespace: outil.exemple.test/ext\nversion: 0.1.0\n' > "$d/clia.yaml"
@@ -208,14 +212,14 @@ titre 'Mettre a jour une ressource'
 
 D=$(depot travail)
 vrai 'la ressource est en 0.1.0' \
-  grep -q '^version: 0.1.0$' "$D/_ressources/outil/outil.yaml"
+  grep -q '^version: 0.1.0$' "$D/$LIVREE/outil/outil.yaml"
 rc_dans 'et son script dit ce que 0.1.0 disait' 0 "$D" out dis
 dit 'un' '^un$'
 
 rc_dans 'clia RESSOURCE upgrade prend la derniere' 0 "$D" out upgrade
 dit 'et nomme le saut' '0.1.0 -> 0.3.0'
 vrai 'la definition porte la nouvelle version' \
-  grep -q '^version: 0.3.0$' "$D/_ressources/outil/outil.yaml"
+  grep -q '^version: 0.3.0$' "$D/$LIVREE/outil/outil.yaml"
 rc_dans 'et le script est celui de 0.3.0' 0 "$D" out dis
 dit 'trois' '^trois$'
 vrai 'l inventaire suit' \
@@ -241,10 +245,10 @@ dit 'et clia le dit' 'ne déclare pas la version 9.9.9'
 rc_dans 'une option inconnue est mal formee' 2 "$D" out upgrade --bidule
 
 # Une ressource que l'inventaire ne connaît pas n'a pas de provenance.
-mkdir -p "$D/_ressources/local/_scripts"
-printf 'nom: local\ntitre: Local\nprefixe: LOC\nversion: 0.1.0\n' > "$D/_ressources/local/local.yaml"
+mkdir -p "$D/$LIVREE/local/_scripts"
+printf 'nom: local\ntitre: Local\nprefixe: LOC\nversion: 0.1.0\n' > "$D/$LIVREE/local/local.yaml"
 printf '#!/usr/bin/env bash\n# Description: locale.\n# Périmètre: aucun\n# Signature: loc ls\nexit 0\n' \
-  > "$D/_ressources/local/_scripts/loc.sh"
+  > "$D/$LIVREE/local/_scripts/loc.sh"
 rc_dans 'une ressource sans provenance n est pas mise a jour' 1 "$D" loc upgrade
 dit 'et clia refuse de deviner' "ne devine pas une provenance"
 
@@ -253,16 +257,16 @@ titre 'La regle des copies editees'
 # ==========================================================================
 
 E=$(depot editee)
-printf '\nune ligne ajoutee sur place\n' >> "$E/_ressources/outil/_scripts/out.sh"
+printf '\nune ligne ajoutee sur place\n' >> "$E/$LIVREE/outil/_scripts/out.sh"
 rc_dans 'une ressource modifiee sur place est laissee' 1 "$E" out upgrade
 dit 'et clia dit ce qui serait perdu' 'serait perdu'
-vrai 'elle est intacte' grep -q 'une ligne ajoutee sur place' "$E/_ressources/outil/_scripts/out.sh"
-vrai 'et sa version n a pas bouge' grep -q '^version: 0.1.0$' "$E/_ressources/outil/outil.yaml"
+vrai 'elle est intacte' grep -q 'une ligne ajoutee sur place' "$E/$LIVREE/outil/_scripts/out.sh"
+vrai 'et sa version n a pas bouge' grep -q '^version: 0.1.0$' "$E/$LIVREE/outil/outil.yaml"
 
 rc_dans 'avec --force elle est remplacee' 0 "$E" out upgrade --force
 dit 'et clia dit ce qui est perdu' 'posée de force'
 vrai 'la ligne ajoutee est partie' \
-  test "$(grep -c 'une ligne ajoutee sur place' "$E/_ressources/outil/_scripts/out.sh")" -eq 0
+  test "$(grep -c 'une ligne ajoutee sur place' "$E/$LIVREE/outil/_scripts/out.sh")" -eq 0
 
 # ==========================================================================
 titre 'Migrer les instances'
@@ -278,11 +282,11 @@ rm -f "$M/.migration-faite"
 rc_dans 'un saut sans script refuse la mise a jour' 1 "$M" out upgrade --migrate
 dit 'en nommant le saut qui manque' 'aucun script de migration pour 0.2.0 -> 0.3.0'
 dit 'et en disant la regle' 'doit fournir son script de migration'
-vrai 'et rien n a ete pose' grep -q '^version: 0.2.0$' "$M/_ressources/outil/outil.yaml"
+vrai 'et rien n a ete pose' grep -q '^version: 0.2.0$' "$M/$LIVREE/outil/outil.yaml"
 vrai 'ni migre' test ! -e "$M/.migration-faite"
 
 rc_dans 'sans --migrate le meme saut passe' 0 "$M" out upgrade
-vrai 'la ressource est montee' grep -q '^version: 0.3.0$' "$M/_ressources/outil/outil.yaml"
+vrai 'la ressource est montee' grep -q '^version: 0.3.0$' "$M/$LIVREE/outil/outil.yaml"
 vrai 'et rien n a ete migre' test ! -e "$M/.migration-faite"
 
 # clia RESSOURCE migrate, explicitement.
@@ -347,18 +351,24 @@ dit 'le compte rendu nomme chaque fichier' 'CLAUDE.md'
 A=$(depot toutes)
 dans "$A" upgrade >/dev/null 2>&1
 vrai 'sans --all la ressource de l extension reste ou elle est' \
-  grep -q '^version: 0.1.0$' "$A/_ressources/outil/outil.yaml"
+  grep -q '^version: 0.1.0$' "$A/$LIVREE/outil/outil.yaml"
 rc_dans 'avec --all elle monte' 0 "$A" upgrade --all
 vrai 'a la derniere que son extension declare' \
-  grep -q '^version: 0.3.0$' "$A/_ressources/outil/outil.yaml"
+  grep -q '^version: 0.3.0$' "$A/$LIVREE/outil/outil.yaml"
 
 # ==========================================================================
 titre 'La publication signale le script de migration manquant'
 # ==========================================================================
 
+# Une ressource installée ne se publie pas : sa version est figée. La
+# publication porte sur ce que le dépôt écrit — SES-001 tâche 19.
 P=$(depot publication)
+rc_dans 'publier une ressource installee est refuse' 1 "$P" res release patch outil
+dit 'car sa version est figee' 'est figée'
+
+dans "$P" res new PUB publiable "Une ressource écrite ici" >/dev/null 2>&1
 git_ "$P" add -A >/dev/null; git_ "$P" commit -q -m 'etat de depart'
-rc_dans 'clia res release est satisfaite' 0 "$P" res release patch outil
+rc_dans 'clia res release est satisfaite' 0 "$P" res release patch publiable
 dit 'et clia signale le script absent' 'aucun script de migration pour'
 dit 'en disant ou le ranger' 'migrations/'
 

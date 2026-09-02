@@ -14,7 +14,8 @@ set -uo pipefail
 
 RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 CLIA="$RACINE/_scripts/bin/clia"
-PRIMITIVES="$RACINE/_ressources/harness-ia/primitives"
+LIVREE='.clia/ressources'
+PRIMITIVES="$RACINE/$LIVREE/harness-ia/primitives"
 
 # shellcheck source=banc.sh
 . "$RACINE/_scripts/tests/banc.sh"
@@ -77,9 +78,9 @@ titre 'La ressource harnais'
 # ==========================================================================
 
 vrai 'la ressource harness-ia porte sa definition' \
-  test -f "$RACINE/_ressources/harness-ia/harness-ia.yaml"
+  test -f "$RACINE/$LIVREE/harness-ia/harness-ia.yaml"
 vrai 'son prefixe est HRN' \
-  grep -q '^prefixe: HRN$' "$RACINE/_ressources/harness-ia/harness-ia.yaml"
+  grep -q '^prefixe: HRN$' "$RACINE/$LIVREE/harness-ia/harness-ia.yaml"
 
 rc 'clia res ls la montre' 0 bash -c "cd '$RACINE' && '$CLIA' res ls"
 dit 'avec son prefixe' '^HRN '

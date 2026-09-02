@@ -18,7 +18,7 @@
 # elle vit avec elle.
 #
 # Le point d'entrée trouve les commandes de _scripts/lib/cmd/ et celles que
-# les ressources déposent sous _ressources/<nom>/_scripts/. Rien n'a eu à
+# les ressources livrées déposent sous <zone livrée>/<nom>/_scripts/. Rien n'a eu à
 # changer au noyau pour que « res » continue de répondre : c'est ce que ce
 # déplacement éprouve.
 #
@@ -28,12 +28,19 @@
 # Où vit une ressource
 # --------------------
 #
-#   _ressources/<nom>/<nom>.yaml     sa définition — ce qui en fait une
-#   _ressources/<nom>/primitives/    ce à partir de quoi ses livrables sont produits
-#   _ressources/<nom>/skills/        les procédures qu'elle fournit
-#   _ressources/<nom>/_scripts/      les automatismes qu'elle fournit
+# Depuis SES-001 tâche 19, deux zones — voir SPC-001-ontologie :
 #
-# Un répertoire de _ressources/ est une ressource parce qu'il porte sa
+#   $CLIA_ZONE_RESSOURCE/<PREFIXE>-<SEQ>-<SLUG>/   ce que le dépôt écrit
+#       primitive-1/   ce que seul un humain écrit
+#       primitive-2/   ce qui est mixte
+#       livrables/     la ressource, prête à installer
+#
+#   $CLIA_ZONE_RESSOURCE_LIVREE/<nom>/             ce qu'il a installé
+#       <nom>.yaml   sa définition — ce qui en fait une
+#       skills/      les procédures qu'elle fournit
+#       _scripts/    les automatismes qu'elle fournit
+#
+# Un répertoire de la zone livrée est une ressource parce qu'il porte sa
 # définition, et pour aucune autre raison. Le reste est admis, jamais exigé :
 # un répertoire vide oblige à l'ouvrir pour découvrir qu'il n'y a rien.
 #
@@ -118,8 +125,8 @@ soit là : un livrable reproductible est un livrable dont toutes les
 entrées sont dans le dépôt.
 
 Une ressource vit dans un répertoire qui porte son nom, sous
-_ressources/. Ce répertoire est une ressource parce qu'il porte sa
-définition, et pour aucune autre raison.
+la zone des ressources. Ce répertoire est une ressource parce qu'il
+porte sa définition, et pour aucune autre raison.
 
 Chaque ressource a un nom et un préfixe. Le nom sert de chemin ; le
 préfixe sert d'adresse à ses instances, et doit rester distinctif
@@ -137,8 +144,11 @@ gabarit ; ce qu'elle sait faire appartient à qui la crée.
 SOUS-COMMANDES
 new PREFIXE NOM [DESCRIPTION]
        Crée la ressource : sa définition, en version 0.1.0, et sa
-       commande, dans _ressources/NOM/_scripts/. Les deux sortent
-       des gabarits de la ressource ressource.
+       commande, dans une instance sous $CLIA_ZONE_RESSOURCE. Les
+       deux sortent des gabarits de la ressource ressource.
+
+       La ressource est alors écrite, non installée : le CLI ne la
+       trouve pas encore. Voir SPC-001-ontologie.
 
        La commande porte le préfixe en minuscules. Un préfixe dont
        la commande est déjà celle du noyau est accepté, et signalé :
@@ -199,21 +209,21 @@ CODE DE RETOUR
        Demande mal formée.
 
 FICHIERS
-_ressources/<nom>/<nom>.yaml
+<instance>/livrables/<nom>.yaml
        La définition. Elle déclare nom, titre, prefixe, version et
        description — exactement ce que les commandes emploient. Un
        champ qu'aucune commande ne fait tenir serait une promesse
        que le système ne tient pas.
 
-_ressources/<nom>/_scripts/<commande>.sh
+<zone livrée>/<nom>/_scripts/<commande>.sh
        Sa commande, posée à la création. Elle vous appartient :
        clia l'a posée, il ne la régénérera pas. Découverte comme
        celles du noyau — voir clia(1).
 
-_ressources/<nom>/primitives/, skills/
+<instance>/primitive-1/, primitive-2/
        Le reste de ce que la ressource porte. Admis, jamais exigés.
 
-_ressources/ressource/gabarits/
+<zone livrée>/ressource/gabarits/
        Ce dont une ressource neuve est faite : definition.yaml et
        commande.sh. Un {{champ}} y est un trou, remplacé au rendu.
 
@@ -221,7 +231,7 @@ EXEMPLES
 Créer une ressource :
 
        $ clia res new ANL analyse "Ce qu'un examen du réel établit"
-       créée : _ressources/analyse
+       créée : .dev/ressources/RES-003-analyse
 
 Puis appeler la commande qu'elle expose :
 
@@ -247,26 +257,41 @@ FIN
 # Trouver les ressources
 # --------------------------------------------------------------------------
 
-RESSOURCES="$DEPOT/_ressources"
+ZONE_INST=$(_clia_zone_ressource)
+ZONE_LIV=$(_clia_zone_livree)
 
 # Les gabarits de la ressource « ressource » : ce dont une ressource neuve est
 # faite. Ils vivent dans le dépôt source, avec la ressource qui les porte, et
 # non dans le dépôt de travail — une ressource créée ailleurs sort du même
 # moule que celles d'ici.
-GABARITS="$CLIA_SOURCE_DIR/_ressources/ressource/gabarits"
+GABARITS="$CLIA_SOURCE_DIR/$ZONE_LIV/ressource/gabarits"
 
 # « nom<TAB>chemin de la définition, relatif au dépôt », triées par nom.
+#
+# Ce que le dépôt écrit d'abord, ce qu'il a seulement installé ensuite. Une
+# ressource qu'il écrit ET qu'il a installée n'apparaît qu'une fois, et c'est
+# l'instance qui l'emporte : c'est elle qu'on version et qu'on publie, la
+# copie installée étant figée par construction.
 inventaire() {
-  local dir nom def
-  for dir in "$RESSOURCES"/*/; do
-    [[ -d "$dir" ]] || continue
-    nom=$(basename "$dir")
-    def="_ressources/$nom/$nom.yaml"
+  local id nom def vus=''
+  while IFS=$'\t' read -r id nom _ _; do
+    [[ -n "$nom" ]] || continue
+    vus="$vus $nom"
+    printf '%s\t%s/%s/livrables/%s.yaml\n' "$nom" "$ZONE_INST" "$id" "$nom"
+  done < <(_clia_instances_de "$DEPOT")
+  while IFS=$'\t' read -r nom _ _; do
+    [[ -n "$nom" ]] || continue
+    [[ " $vus " == *" $nom "* ]] && continue
+    def="$ZONE_LIV/$nom/$nom.yaml"
     [[ -f "$DEPOT/$def" ]] || continue
     printf '%s\t%s\n' "$nom" "$def"
-  done | sort
+  done < <(_clia_ressources_de "$DEPOT")
   return 0
 }
+
+# Vrai si le dépôt écrit cette ressource, plutôt que de l'avoir seulement
+# installée. Seule une ressource qu'il écrit se version et se publie.
+ecrite_ici() { _clia_instance_de "$DEPOT" "$1" >/dev/null; }
 
 # _nom_de <désignation> — le nom de la ressource désignée par son nom ou par
 # son préfixe, ou rien. Les deux ne peuvent pas se confondre : un nom est en
@@ -300,15 +325,30 @@ resoudre() {
   return 1
 }
 
-def_de()    { printf '_ressources/%s/%s.yaml\n' "$1" "$1"; }
+def_de() {
+  local cible="$1" nom def
+  while IFS=$'\t' read -r nom def; do
+    [[ "$nom" == "$cible" ]] && { printf '%s\n' "$def"; return 0; }
+  done < <(inventaire)
+  return 1
+}
 
 # La commande d'une ressource est son préfixe en minuscules : RES donne
 # « clia res », HRN donne « clia hrn ». Le préfixe est déjà ce qui adresse la
 # ressource, et lui donner une deuxième adresse en ferait deux noms à tenir.
 commande_de() { printf '%s\n' "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"; }
 
-script_de()   { printf '_ressources/%s/_scripts/%s.sh\n' "$1" "$2"; }
-portee_de() { printf '_ressources/%s\n' "$1"; }
+script_de()   { printf '%s/%s/_scripts/%s.sh\n' "$ZONE_LIV" "$1" "$2"; }
+# La portée d'une ressource : son instance quand le dépôt l'écrit, sa copie
+# installée sinon. C'est cette portée dont l'historique décide de sa version.
+portee_de() {
+  local nom="$1" id
+  if id=$(_clia_instance_de "$DEPOT" "$nom"); then
+    printf '%s/%s\n' "$ZONE_INST" "$id"
+  else
+    printf '%s/%s\n' "$ZONE_LIV" "$nom"
+  fi
+}
 
 namespace_du_depot() {
   local carte
@@ -321,7 +361,7 @@ namespace_du_depot() {
 # --------------------------------------------------------------------------
 
 lister() {
-  local nom def ns prefixe version description lignes=''
+  local nom def ns prefixe version etat description lignes=''
 
   if [[ -z "$(inventaire)" ]]; then
     _clia_msg "ce dépôt ne porte aucune ressource"
@@ -337,11 +377,12 @@ lister() {
     prefixe=$(_clia_champ_yaml "$DEPOT/$def" prefixe || printf '—')
     version=$(_clia_v_alias_disque "$DEPOT/$def" || printf '—')
     description=$(_clia_champ_yaml "$DEPOT/$def" description || printf '')
-    lignes+=$(printf '%s\t%s\t%s\t%s/%s\t%s' \
-      "$prefixe" "$nom" "$version" "$ns" "$prefixe" "$description")$'\n'
+    if ecrite_ici "$nom"; then etat='écrite'; else etat='installée'; fi
+    lignes+=$(printf '%s\t%s\t%s\t%s\t%s/%s\t%s' \
+      "$prefixe" "$nom" "$version" "$etat" "$ns" "$prefixe" "$description")$'\n'
   done < <(inventaire)
 
-  { printf 'PREFIXE\tNOM\tVERSION\tIDENTITE\tDESCRIPTION\n'
+  { printf 'PREFIXE\tNOM\tVERSION\tETAT\tIDENTITE\tDESCRIPTION\n'
     printf '%s' "$lignes"
   } | column -t -s $'\t'
   return 0
@@ -436,6 +477,13 @@ publier() {
        return 2 ;;
   esac
 
+  if ! ecrite_ici "$nom"; then
+    _clia_msg "$nom est installée dans ce dépôt, elle n'y est pas écrite"
+    _clia_detail "la version d'une ressource installée est figée : on ne la publie pas"
+    _clia_detail "elle se publie là où son instance vit ; ici, clia <ressource> upgrade"
+    return 1
+  fi
+
   if ! _clia_v_depot_propre "$DEPOT"; then
     _clia_msg "le dépôt n'est pas propre : la publication est refusée"
     _clia_detail "un commit de publication ne porte que le changement de version"
@@ -466,10 +514,10 @@ publier() {
   # migration. clia le constate, et ne refuse pas : une version peut ne rien
   # changer aux instances, et l'auteur est le seul à le savoir. Mais il doit
   # le savoir en publiant, non le découvrir à la première migration.
-  if [[ ! -f "$DEPOT/_ressources/$nom/migrations/$ancien-$nouveau.sh" ]]; then
+  if [[ ! -f "$DEPOT/${def%/*}/migrations/$ancien-$nouveau.sh" ]]; then
     _clia_msg "aucun script de migration pour $ancien -> $nouveau"
     _clia_detail "s'il y a des instances à faire évoluer, écrivez-le :"
-    _clia_detail "_ressources/$nom/migrations/$ancien-$nouveau.sh"
+    _clia_detail "${def%/*}/migrations/$ancien-$nouveau.sh"
     _clia_detail "sans lui, « clia <ressource> migrate » refusera ce saut"
   fi
 
@@ -494,9 +542,20 @@ publier() {
 # session s'en sert aussi, et une deuxième écriture du même awk finirait par
 # diverger de la première.
 
+# La séquence suivante d'une instance de ressource : le plus grand numéro
+# déjà pris, plus un. La séquence est propre au préfixe — RES-001 et SES-001
+# coexistent — comme les générations précédentes la tenaient.
+sequence_suivante() {
+  local max
+  max=$(find "$DEPOT/$ZONE_INST" -mindepth 1 -maxdepth 1 -type d -name 'RES-*' 2>/dev/null \
+        | sed -E 's#.*/RES-([0-9]{3}).*#\1#' | grep -E '^[0-9]{3}$' \
+        | sort -n | tail -1)
+  printf '%03d\n' $(( 10#${max:-0} + 1 ))
+}
+
 creer() {
   local prefixe="$1" nom="$2" description="${3:-}"
-  local dir def script commande val n d autre
+  local id dir livrables def script commande val n d autre
 
   if [[ ! "$prefixe" =~ ^[A-Z]{2,5}$ ]]; then
     _clia_msg "préfixe invalide : $prefixe"
@@ -509,9 +568,17 @@ creer() {
     return 2
   fi
 
-  dir="$RESSOURCES/$nom"
+  if [[ -n "$(def_de "$nom" 2>/dev/null)" ]]; then
+    _clia_msg "ce dépôt porte déjà une ressource nommée $nom"
+    _clia_detail "rien n'a été créé"
+    return 1
+  fi
+
+  id="RES-$(sequence_suivante)-$nom"
+  dir="$DEPOT/$ZONE_INST/$id"
+  livrables="$dir/livrables"
   if [[ -e "$dir" ]]; then
-    _clia_msg "l'emplacement est déjà occupé : _ressources/$nom"
+    _clia_msg "l'emplacement est déjà occupé : $ZONE_INST/$id"
     _clia_detail "rien n'a été créé"
     return 1
   fi
@@ -550,9 +617,9 @@ creer() {
     printf 'commande\t%s\n'    "$commande"
   } > "$val"
 
-  def="$dir/$nom.yaml"
-  script="$dir/_scripts/$commande.sh"
-  mkdir -p "$dir/_scripts"
+  def="$livrables/$nom.yaml"
+  script="$livrables/_scripts/$commande.sh"
+  mkdir -p "$livrables/_scripts" "$dir/primitive-1" "$dir/primitive-2"
 
   # Les deux fichiers sont rendus avant qu'aucun ne soit posé : une ressource
   # à qui il manquerait son script obligerait à savoir laquelle des deux
@@ -571,10 +638,15 @@ creer() {
   printf '%s\n' "$script_rendu" > "$script"
   chmod +x "$script"
 
-  _clia_msg "créée : _ressources/$nom"
-  _clia_detail "définition : $(def_de "$nom")"
-  _clia_detail "commande   : $(script_de "$nom" "$commande") — clia $commande"
+  _clia_msg "créée : $ZONE_INST/$id"
+  _clia_detail "définition : $ZONE_INST/$id/livrables/$nom.yaml"
+  _clia_detail "commande   : $ZONE_INST/$id/livrables/_scripts/$commande.sh"
+  _clia_detail "primitives : $ZONE_INST/$id/primitive-1, primitive-2"
   _clia_detail "préfixe $prefixe, version 0.1.0"
+  _clia_detail ''
+  _clia_msg "elle est écrite, non installée : « clia $commande » ne répond pas encore"
+  _clia_detail "seules les ressources livrées sont accessibles par le CLI"
+  _clia_detail "pour l'employer ici : clia extension install $(namespace_du_depot || printf 'CE-DEPOT')"
 
   # Le noyau l'emporte en cas d'homonymie : le script serait déposé, et jamais
   # atteint. Le dire ici vaut mieux que le laisser découvrir à l'usage.

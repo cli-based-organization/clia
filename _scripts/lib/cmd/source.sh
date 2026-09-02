@@ -202,7 +202,7 @@ ajouter() {
   _clia_msg "source déclarée : $ns"
   _clia_detail "dans ${carte#"$DEPOT"/}, en source $type"
   _clia_detail "ce que le dépôt déclare : clia source ls"
-  if [[ -n "$racine" && -n "$(_clia_ressources_de "$racine")" ]]; then
+  if [[ -n "$racine" && -n "$(_clia_offertes_de "$racine")" ]]; then
     _clia_detail ''
     _clia_msg "cette source porte des ressources : c'est une extension"
     _clia_detail "pour les reprendre : clia extension install $ns"

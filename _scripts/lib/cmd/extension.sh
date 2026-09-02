@@ -12,7 +12,7 @@
 # -----------------------
 #
 # Un dépôt git qui est un dépôt clia — il porte une carte déclarant un
-# namespace — et qui porte des ressources sous _ressources/. Les deux
+# namespace — et qui publie des ressources depuis ses instances. Les deux
 # conditions sont exigées : sans carte, les ressources n'ont pas de
 # provenance déclarée, et CONSTITUTION.md R2 interdit à l'automatisme d'en
 # deviner une.
@@ -101,14 +101,14 @@ déclaration va dans la carte du dépôt, elle est versionnée, et elle
 le suit. Rien n'en devient exécutable.
 
 Installer une extension reprend ses ressources dans le dépôt :
-elles y sont copiées sous _ressources/, versionnées avec lui, et
+elles y sont copiées dans sa zone livrée, versionnées avec lui, et
 lisibles par qui l'ouvre. C'est à ce moment que leurs commandes
 répondent. Désinstaller les en retire.
 
-Tout est repris, sauf les primitives. Une ressource dit comment
-produire des livrables, et porte les primitives à partir desquelles
-ils sont produits. Le comment appartient à l'extension et se
-reprend ; les primitives appartiennent au dépôt qui les écrit.
+Ce qui est repris est le livrable d'une instance, et lui seul. Les
+primitives d'une instance vivent à côté de son livrable, non
+dedans : elles restent chez qui les écrit, et rien n'a à les
+filtrer. Voir SPC-001-ontologie.
 
 clia n'exécute donc jamais de code depuis un dépôt voisin. Ce qui
 tourne est ce que le dépôt porte, ou ce que le CLI porte.
@@ -147,9 +147,8 @@ ls
        qui sont déjà dans le dépôt y figurent entre crochets.
 
 install EXTENSION
-       Reprend dans le dépôt toutes les ressources de l'extension,
-       sans leurs primitives, et les inscrit à l'inventaire de la
-       carte.
+       Reprend dans le dépôt toutes les ressources que l'extension
+       publie, et les inscrit à l'inventaire de la carte.
 
        Les collisions ne sont pas gérées : si une ressource du
        dépôt porte déjà le nom ou le préfixe de l'une d'elles, la
@@ -208,8 +207,9 @@ clia.yaml, .clia.yaml, .dev/clia.yaml
 ~/.cache/clia/extensions/<namespace>
        Le clone d'une source distante, propre à cette machine.
 
-_ressources/<nom>/
-       Une ressource reprise, sans son répertoire primitives/. Elle
+<zone livrée>/<nom>/
+       Une ressource reprise. La zone livrée est .clia/ressources
+       par défaut ; $CLIA_ZONE_RESSOURCE_LIVREE la déplace. Elle
        appartient au dépôt dès lors : clia ne la régénère pas, et
        « clia <ressource> deactivate » en retire une, « clia
        extension uninstall » toutes celles d'une extension.
@@ -308,8 +308,8 @@ verifier_extension() {
     _clia_detail "une ressource sans provenance déclarée n'est pas identifiable"
     return 1
   fi
-  if [[ -z "$(_clia_ressources_de "$racine")" ]]; then
-    _clia_msg "$quoi ne porte aucune ressource"
+  if [[ -z "$(_clia_offertes_de "$racine")" ]]; then
+    _clia_msg "$quoi ne publie aucune ressource"
     _clia_detail "une extension apporte des ressources ; celui-ci n'en a pas"
     _clia_detail "pour le déclarer comme source de données : clia source add"
     return 1
@@ -439,15 +439,15 @@ lister() {
     offertes=''
     reprises=0
     if [[ -n "$racine" ]]; then
-      while IFS=$'\t' read -r nom prefixe version; do
+      while IFS=$'\t' read -r nom prefixe version _; do
         [[ -n "$nom" ]] || continue
-        if [[ -d "$DEPOT/_ressources/$nom" ]]; then
+        if [[ -d "$DEPOT/$(_clia_zone_livree)/$nom" ]]; then
           offertes="${offertes:+$offertes }[$prefixe]"
           reprises=$((reprises + 1))
         else
           offertes="${offertes:+$offertes }$prefixe"
         fi
-      done < <(_clia_ressources_de "$racine")
+      done < <(_clia_offertes_de "$racine")
     fi
     lignes+=$(printf '%s\t%s\t%s\t%s' \
       "$provider" \
@@ -477,15 +477,17 @@ racine_de() {
   return 1
 }
 
-# Copie une ressource sans ses primitives — SES-001 tâche 14.
+# Copie un livrable dans la zone livrée.
+#
+# Rien n'est filtré, et ce n'est plus nécessaire : depuis SES-001 tâche 19,
+# les primitives d'une instance vivent hors de son livrable — sous
+# primitive-1/ et primitive-2/ — et ce qui reste dans livrables/ est
+# exactement ce qui doit voyager. La tâche 14 exigeait un filtre parce que
+# les deux étaient mêlés ; la structure le tient désormais.
 copier_ressource() {
-  local src="$1" dst="$2" f
+  local src="$1" dst="$2"
   mkdir -p "$dst"
-  for f in "$src"/* "$src"/.[!.]*; do
-    [[ -e "$f" ]] || continue
-    [[ "$(basename "$f")" == 'primitives' ]] && continue
-    cp -r "$f" "$dst/"
-  done
+  cp -r "$src/." "$dst/"
   return 0
 }
 
@@ -495,21 +497,21 @@ copier_ressource() {
 # moitié reprise obligerait à savoir laquelle des moitiés est là.
 collisions() {
   local racine="$1" nom prefixe autre
-  while IFS=$'\t' read -r nom prefixe _; do
+  while IFS=$'\t' read -r nom prefixe _ _; do
     [[ -n "$nom" ]] || continue
-    if [[ -e "$DEPOT/_ressources/$nom" ]]; then
+    if [[ -e "$DEPOT/$(_clia_zone_livree)/$nom" ]]; then
       printf '%s\t%s\n' "$nom" "une ressource de ce nom est déjà là"
       continue
     fi
     if autre=$(_clia_r_nom_du_prefixe "$DEPOT" "$prefixe"); then
       printf '%s\t%s\n' "$nom" "le préfixe $prefixe est déjà celui de $autre"
     fi
-  done < <(_clia_ressources_de "$racine")
+  done < <(_clia_offertes_de "$racine")
   return 0
 }
 
 installer() {
-  local demande="$1" carte provider racine nom prefixe version quoi
+  local demande="$1" carte provider racine nom prefixe version livrable quoi
   local reprises=0
 
   carte=$(carte_du_depot) || return 1
@@ -541,11 +543,11 @@ installer() {
     return 1
   fi
 
-  while IFS=$'\t' read -r nom prefixe version; do
+  while IFS=$'\t' read -r nom prefixe version livrable; do
     [[ -n "$nom" ]] || continue
 
-    mkdir -p "$DEPOT/_ressources"
-    copier_ressource "$racine/_ressources/$nom" "$DEPOT/_ressources/$nom"
+    mkdir -p "$DEPOT/$(_clia_zone_livree)"
+    copier_ressource "$livrable" "$DEPOT/$(_clia_zone_livree)/$nom"
 
     # L'inventaire peut déjà porter cette identité — une carte écrite à la
     # main la déclare parfois avant que la ressource soit là. L'y remettre
@@ -562,17 +564,17 @@ installer() {
         "    version: $version"
     fi
 
-    printf '_ressources/%s\n' "$nom"
+    printf '%s/%s\n' "$(_clia_zone_livree)" "$nom"
     _clia_detail "reprise : $nom ($prefixe $version)"
     reprises=$((reprises + 1))
-  done < <(_clia_ressources_de "$racine")
+  done < <(_clia_offertes_de "$racine")
 
   if (( reprises == 0 )); then
     _clia_msg "$provider ne porte aucune ressource"
     return 0
   fi
 
-  _clia_msg "$provider : $reprises ressource(s) reprise(s), sans leurs primitives"
+  _clia_msg "$provider : $reprises ressource(s) reprise(s)"
   _clia_detail "inscrites à l'inventaire de ${carte#"$DEPOT"/}"
   _clia_detail "ce que le dépôt porte : clia res ls"
   _clia_detail "pour tout retirer     : clia extension uninstall $provider"

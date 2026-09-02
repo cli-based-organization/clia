@@ -19,8 +19,9 @@ set -uo pipefail
 
 RACINE=$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 CLIA="$RACINE/_scripts/bin/clia"
-GABARITS="$RACINE/_ressources/harness-ia/gabarits"
-PRIMITIVES="$RACINE/_ressources/harness-ia/primitives"
+LIVREE='.clia/ressources'
+GABARITS="$RACINE/$LIVREE/harness-ia/gabarits"
+PRIMITIVES="$RACINE/$LIVREE/harness-ia/primitives"
 
 # shellcheck source=banc.sh
 . "$RACINE/_scripts/tests/banc.sh"
@@ -103,7 +104,7 @@ vrai 'il declare des champs' grep -q '^champs:$' "$GABARITS/CLAUDE.yaml"
 vrai 'et des sections' grep -q '^sections:$' "$GABARITS/CLAUDE.yaml"
 
 vrai 'le script de la commande vit dans la ressource' \
-  test -f "$RACINE/_ressources/harness-ia/_scripts/hrn.sh"
+  test -f "$RACINE/$LIVREE/harness-ia/_scripts/hrn.sh"
 
 # ==========================================================================
 titre 'Une commande deposee par une ressource est decouverte'
@@ -126,7 +127,7 @@ vrai 'cette aide ne porte aucune prose' test -z "$RESTE"
 
 rc 'sa description alimente le manuel de clia' 0 "$CLIA" --man
 dit 'sous la section COMMANDES' 'Les harnais IA — leurs gabarits'
-dit 'et les deux emplacements de fouille y sont dits' '_ressources/\*/_scripts/\*\.sh'
+dit 'et la zone livree y est dite' 'CLIA_ZONE_RESSOURCE_LIVREE'
 
 rc 'son manuel repond' 0 "$CLIA" hrn --man
 dit 'il porte son nom de page' '^CLIA-HRN(1)'
@@ -142,9 +143,10 @@ vrai 'aucune ligne de ce manuel ne depasse 80 colonnes' test -z "$LONGUES"
 # Le noyau doit l'emporter : une ressource ajoute, elle ne remplace pas.
 COPIE="$BAC/copie"
 mkdir -p "$COPIE"
-cp -r "$RACINE/_scripts" "$RACINE/_ressources" "$COPIE/"
-mkdir -p "$COPIE/_ressources/harness-ia/_scripts"
-cat > "$COPIE/_ressources/harness-ia/_scripts/version.sh" <<'FIN'
+mkdir -p "$COPIE/$LIVREE"
+cp -r "$RACINE/_scripts" "$COPIE/"
+cp -r "$RACINE/$LIVREE/." "$COPIE/$LIVREE/"
+cat > "$COPIE/$LIVREE/harness-ia/_scripts/version.sh" <<'FIN'
 #!/usr/bin/env bash
 # Description: Une commande de ressource qui tente de masquer le noyau.
 # Périmètre: aucun

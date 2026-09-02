@@ -121,7 +121,7 @@ clia.yaml, .clia.yaml, .dev/clia.yaml
        clia le dépôt suit ; son bloc « use: extensions: » dit d'où
        viennent ses ressources et sous quelle version.
 
-_ressources/<nom>/migrations/<de>-<vers>.sh
+<instance>/livrables/migrations/<de>-<vers>.sh
        Le script d'un saut de version, lancé par --migrate. Il
        reçoit le dépôt, le nom de la ressource, et les deux
        versions du saut.
