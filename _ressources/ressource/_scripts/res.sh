@@ -479,31 +479,13 @@ publier() {
 # qu'il sera rendu, et le banc peut le confronter à ce qui a été écrit.
 #
 # La langue du gabarit tient en une forme : {{nom}}, remplacé par la valeur
-# du champ. Pas de section, pas de boucle — un gabarit qui saurait tester
-# porterait la logique du système ailleurs que dans le code.
-
-# rendre <gabarit> — le gabarit sur la sortie standard, ses champs remplacés
-# par CHAMPS. Un trou que la table ne connaît pas fait échouer le rendu : un
-# fichier livré avec « {{...}} » dedans serait un fichier faux, et rien ne
-# distinguerait le trou oublié du texte voulu.
-rendre() {
-  local texte cle reste
-  texte=$(cat "$1")
-  for cle in "${!CHAMPS[@]}"; do
-    texte="${texte//\{\{$cle\}\}/${CHAMPS[$cle]}}"
-  done
-  if [[ "$texte" == *'{{'* ]]; then
-    reste="${texte#*\{\{}"
-    _clia_msg "le gabarit ${1#"$CLIA_SOURCE_DIR"/} porte un champ inconnu : {{${reste%%\}\}*}}}"
-    return 1
-  fi
-  printf '%s\n' "$texte"
-}
+# du champ. Le rendu lui-même est dans _scripts/lib/commun.sh — la ressource
+# session s'en sert aussi, et une deuxième écriture du même awk finirait par
+# diverger de la première.
 
 creer() {
   local prefixe="$1" nom="$2" description="${3:-}"
-  local dir def script commande n d autre
-  local -A CHAMPS
+  local dir def script commande val n d autre
 
   if [[ ! "$prefixe" =~ ^[A-Z]{2,5}$ ]]; then
     _clia_msg "préfixe invalide : $prefixe"
@@ -545,14 +527,17 @@ creer() {
   [[ -n "$description" ]] || description='À rédiger.'
 
   commande=$(commande_de "$prefixe")
-  CHAMPS=(
-    [nom]="$nom"
-    [titre]="${nom^}"
-    [prefixe]="$prefixe"
-    [version]='0.1.0'
-    [description]="$description"
-    [commande]="$commande"
-  )
+
+  val=$(mktemp)
+  # shellcheck disable=SC2064
+  trap "rm -f '$val'" RETURN
+  { printf 'nom\t%s\n'         "$nom"
+    printf 'titre\t%s\n'       "${nom^}"
+    printf 'prefixe\t%s\n'     "$prefixe"
+    printf 'version\t%s\n'     '0.1.0'
+    printf 'description\t%s\n' "$description"
+    printf 'commande\t%s\n'    "$commande"
+  } > "$val"
 
   def="$dir/$nom.yaml"
   script="$dir/_scripts/$commande.sh"
@@ -562,8 +547,8 @@ creer() {
   # à qui il manquerait son script obligerait à savoir laquelle des deux
   # écritures a échoué, et l'emplacement resterait occupé.
   local def_rendu script_rendu
-  def_rendu=$(rendre "$GABARITS/definition.yaml") \
-    && script_rendu=$(rendre "$GABARITS/commande.sh") \
+  def_rendu=$(_clia_rendre "$GABARITS/definition.yaml" "$val") \
+    && script_rendu=$(_clia_rendre "$GABARITS/commande.sh" "$val") \
     || {
       rm -rf "$dir"
       _clia_msg "rien n'a été créé"

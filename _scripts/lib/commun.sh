@@ -276,3 +276,160 @@ _clia_harnais_offerts() {
   done | sort
   return 0
 }
+
+# --------------------------------------------------------------------------
+# Lecture d'une liste de mappings
+# --------------------------------------------------------------------------
+#
+# La carte porte des listes dont chaque entrée est un mapping :
+#
+#   sources:
+#     - provider: session.clia.noumanity.com
+#       type: local
+#       uri: ../clia-session
+#
+# Le même esprit que _clia_champ_yaml : la forme exacte que ce dépôt écrit et
+# relit, non le YAML entier. Une entrée commence au tiret, et se poursuit tant
+# que les lignes sont indentées ; une ligne en colonne zéro referme le bloc.
+#
+# Les champs demandés sont rendus dans l'ordre demandé, séparés par des
+# tabulations. Un champ absent rend une valeur vide plutôt que de décaler les
+# colonnes : l'appelant lit toujours le même nombre de champs.
+
+# _clia_bloc_yaml <fichier> <bloc> <champ…> — une ligne par entrée.
+_clia_bloc_yaml() {
+  local fichier="$1" bloc="$2"; shift 2
+  [[ -f "$fichier" ]] || return 0
+  awk -v bloc="$bloc" -v demandes="$*" '
+    function valeur(l,   s) {
+      s = l
+      sub(/^[^:]*:[[:space:]]*/, "", s)
+      sub(/[[:space:]]*#.*$/, "", s)
+      sub(/[[:space:]]+$/, "", s)
+      if (substr(s, 1, 1) == "\"" && substr(s, length(s), 1) == "\"")
+        s = substr(s, 2, length(s) - 2)
+      if (substr(s, 1, 1) == "'"'"'" && substr(s, length(s), 1) == "'"'"'")
+        s = substr(s, 2, length(s) - 2)
+      return s
+    }
+    function cle(l,   s) {
+      s = l
+      sub(/^[[:space:]]*-?[[:space:]]*/, "", s)
+      sub(/:.*$/, "", s)
+      return s
+    }
+    function vider(   i, ligne) {
+      if (!ouvert) return
+      ligne = ""
+      for (i = 1; i <= nb; i++)
+        ligne = ligne (i > 1 ? "\t" : "") (champ[demande[i]] "")
+      print ligne
+      delete champ
+      ouvert = 0
+    }
+    BEGIN { nb = split(demandes, demande, " ") }
+    /^[[:space:]]*#/  { next }
+    /^[[:space:]]*$/  { next }
+    /^[^[:space:]]/   { vider(); dans = ($0 ~ "^" bloc ":[[:space:]]*$"); next }
+    !dans             { next }
+    /^[[:space:]]*-[[:space:]]/ { vider(); ouvert = 1; champ[cle($0)] = valeur($0); next }
+    ouvert && /^[[:space:]]+[A-Za-z]/ { champ[cle($0)] = valeur($0); next }
+    END { vider() }
+  ' "$fichier"
+}
+
+# --------------------------------------------------------------------------
+# Le rendu d'un gabarit
+# --------------------------------------------------------------------------
+#
+# Une seule forme : {{nom}}, remplacé par la valeur du champ. Pas de section,
+# pas de boucle — un gabarit qui saurait tester porterait la logique du
+# système ailleurs que dans le code. La ressource harness-ia, elle, en a
+# besoin ; elle porte sa propre langue, plus riche, dans son script.
+#
+# Un trou que la table ne connaît pas fait échouer le rendu : un fichier
+# livré avec « {{…}} » dedans serait un fichier faux, et rien n'y
+# distinguerait le trou oublié du texte voulu.
+
+# _clia_rendre <gabarit> <valeurs> — le gabarit sur la sortie standard.
+# <valeurs> est un fichier de lignes « nom<TAB>valeur ».
+_clia_rendre() {
+  local gabarit="$1" valeurs="$2" texte nom val reste
+  [[ -f "$gabarit" ]] || { _clia_msg "gabarit introuvable : $gabarit"; return 1; }
+  texte=$(cat "$gabarit")
+  while IFS=$'\t' read -r nom val; do
+    [[ -n "$nom" ]] || continue
+    texte="${texte//\{\{$nom\}\}/$val}"
+  done < "$valeurs"
+  if [[ "$texte" == *'{{'* ]]; then
+    reste="${texte#*\{\{}"
+    _clia_msg "le gabarit ${gabarit##*/} porte un champ inconnu : {{${reste%%\}\}*}}}"
+    return 1
+  fi
+  printf '%s\n' "$texte"
+}
+
+# --------------------------------------------------------------------------
+# Les sources
+# --------------------------------------------------------------------------
+#
+# Une source est un dépôt d'où viennent des ressources. La carte du dépôt de
+# travail les déclare, et rien d'autre ne les déclare : clia ne fouille pas le
+# disque à la recherche de dépôts, et n'exécute donc que ce qu'un humain a
+# nommé dans la carte de son propre dépôt.
+#
+#   sources:
+#     - provider: session.clia.noumanity.com
+#       type: local
+#       uri: ../clia-session
+#
+# Une source est soit un dépôt clia — elle porte une carte — soit un dépôt
+# ordinaire. Une extension doit être un dépôt clia : c'est sa carte qui dit
+# quel namespace ses ressources portent, et une ressource sans provenance
+# déclarée n'est pas identifiable.
+#
+# Le type « local » est le seul que clia tienne aujourd'hui. Un type qu'il ne
+# connaît pas est signalé et laissé de côté : mieux vaut le dire que faire
+# comme si la source n'avait pas été déclarée.
+
+# _clia_source_racine <dépôt> <uri> — le chemin absolu d'une source locale,
+# l'uri étant relative à la racine du dépôt qui la déclare. Rien si le
+# répertoire n'existe pas.
+_clia_source_racine() {
+  local depot="$1" uri="$2" chemin
+  [[ -n "$uri" ]] || return 1
+  case "$uri" in
+    /*) chemin="$uri" ;;
+    *)  chemin="$depot/$uri" ;;
+  esac
+  [[ -d "$chemin" ]] || return 1
+  (cd -P "$chemin" >/dev/null 2>&1 && pwd)
+}
+
+# _clia_sources <dépôt> — « provider<TAB>type<TAB>uri » pour chaque source
+# déclarée par la carte du dépôt.
+_clia_sources() {
+  local carte
+  carte=$(_clia_carte "$1") || return 0
+  _clia_bloc_yaml "$carte" sources provider type uri
+}
+
+# _clia_extensions <dépôt> — « provider<TAB>racine » pour chaque source qui
+# est utilisable comme extension : locale, présente, dépôt clia, et portant
+# un répertoire _ressources.
+#
+# Les autres ne sont pas une erreur ici : elles sont ce qu'elles sont, et
+# c'est « clia src ls » qui en rend compte. Une commande de travail ne doit
+# pas échouer parce qu'un dépôt voisin n'est pas cloné.
+_clia_extensions() {
+  local depot="$1" provider type uri racine
+  while IFS=$'\t' read -r provider type uri; do
+    [[ -n "$provider" ]] || continue
+    [[ "$type" == 'local' || -z "$type" ]] || continue
+    racine=$(_clia_source_racine "$depot" "$uri") || continue
+    _clia_carte_relative "$racine" >/dev/null || continue
+    [[ -d "$racine/_ressources" ]] || continue
+    printf '%s\t%s\n' "$provider" "$racine"
+  done < <(_clia_sources "$depot")
+  return 0
+}

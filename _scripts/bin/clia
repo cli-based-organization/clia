@@ -2,8 +2,9 @@
 # _scripts/bin/clia — le CLI du système d'information clia.
 #
 # Ce fichier ne porte aucune commande : il les trouve. Une commande est un
-# fichier <nom>.sh déposé sous _scripts/lib/cmd/, ou sous les _scripts/ d'une
-# ressource, portant ses déclarations en tête :
+# fichier <nom>.sh déposé sous _scripts/lib/cmd/, sous les _scripts/ d'une
+# ressource, ou sous ceux d'une ressource qu'une extension apporte, portant
+# ses déclarations en tête :
 #
 #   # Description: ce que la commande fait, en une ligne
 #   # Périmètre:   dépôt | aucun
@@ -64,25 +65,50 @@ fi
 # shellcheck source=../lib/commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
+# Le dépôt d'où l'on appelle, résolu une fois et sans exiger qu'il existe.
+#
+# Il est résolu ici, avant la fouille des commandes, parce que sa carte
+# déclare les extensions — et les commandes qu'elles apportent doivent
+# figurer dans l'aide au même titre que les autres. Hors d'un dépôt, la
+# variable reste vide : la fouille se réduit alors au noyau et aux ressources
+# du dépôt source, et la documentation répond quand même.
+_CLIA_DEPOT_COURANT=$(_clia_depot_git "$PWD" 2>/dev/null || printf '')
+
 # --------------------------------------------------------------------------
 # Les commandes, et leurs déclarations
 # --------------------------------------------------------------------------
 
 # Sortie : « nom<TAB>fichier », dans l'ordre de fouille.
 #
-# Deux fouilles, et le noyau d'abord. Une ressource apporte ses automatismes
+# Trois fouilles, et le noyau d'abord. Une ressource apporte ses automatismes
 # avec elle — c'est ce qui fait qu'ajouter une ressource ajoute ce qu'elle
 # sait faire — mais elle ne peut pas masquer une commande du noyau : le
 # premier trouvé l'emporte, et « version » ne doit pas changer de sens selon
 # les ressources installées.
+#
+# La troisième fouille est celle des extensions : les dépôts que la carte du
+# dépôt de travail déclare en source. Une extension ajoute des ressources,
+# donc des commandes, sans que rien du dépôt source change. C'est le seul
+# chemin par lequel du code étranger devient exécutable, et il passe par une
+# déclaration écrite à la main dans la carte — clia ne fouille pas le disque.
+#
+# Les extensions viennent en dernier : ni le noyau ni les ressources du CLI
+# ne peuvent être masqués par un dépôt voisin.
 _clia_fichiers_de_commande() {
-  local f
+  local f racine
   for f in "$CLIA_SOURCE_DIR"/_scripts/lib/cmd/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
   done
   for f in "$CLIA_SOURCE_DIR"/_ressources/*/_scripts/*.sh; do
     [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
   done
+  [[ -n "$_CLIA_DEPOT_COURANT" ]] || return 0
+  while IFS=$'\t' read -r _ racine; do
+    [[ -n "$racine" && "$racine" != "$CLIA_SOURCE_DIR" ]] || continue
+    for f in "$racine"/_ressources/*/_scripts/*.sh; do
+      [[ -f "$f" ]] && printf '%s\t%s\n' "$(basename "$f" .sh)" "$f"
+    done
+  done < <(_clia_extensions "$_CLIA_DEPOT_COURANT")
   return 0
 }
 
@@ -186,10 +212,17 @@ trouve. Un fichier portant ses déclarations en tête apparaît dans
 l'aide et devient invocable, sans qu'aucun fichier du noyau soit
 modifié.
 
-Deux endroits sont fouillés : _scripts/lib/cmd/ pour le noyau, et
-_ressources/<nom>/_scripts/ pour ce que chaque ressource apporte.
-Le noyau l'emporte en cas d'homonymie ; une ressource ajoute, elle
-ne remplace pas.
+Trois endroits sont fouillés : _scripts/lib/cmd/ pour le noyau,
+_ressources/<nom>/_scripts/ pour ce que chaque ressource apporte, et
+les mêmes répertoires dans chaque extension que la carte du dépôt de
+travail déclare en source. Le noyau l'emporte en cas d'homonymie,
+puis les ressources du CLI, puis les extensions : une ressource
+ajoute, elle ne remplace pas.
+
+Une extension est le seul chemin par lequel du code venu d'un autre
+dépôt devient exécutable, et il passe par une déclaration écrite à
+la main dans la carte. clia ne fouille pas le disque. Voir
+clia-src(1).
 
 Une commande déclare son périmètre. Celles dont le périmètre est
 « dépôt » n'agissent que dans un dépôt git, et le point d'entrée le
@@ -283,6 +316,11 @@ _ressources/*/_scripts/*.sh
        façon. Toute ressource en expose une, nommée par son préfixe en
        minuscules. Voir clia-res(1) et clia-hrn(1).
 
+<source>/_ressources/*/_scripts/*.sh
+       Les commandes qu'une extension apporte. Les sources sont
+       déclarées dans le bloc « sources: » de la carte du dépôt de
+       travail. Voir clia-src(1).
+
 EXEMPLES
 Rendre l'alias de version lisible du dépôt courant :
 
@@ -294,8 +332,8 @@ Lire le manuel d'une commande :
        $ clia version --man
 
 VOIR AUSSI
-clia-version(1), clia-res(1), clia-check(1), clia-init(1),
-clia-hrn(1), clia-setup(1), git(1)
+clia-version(1), clia-res(1), clia-src(1), clia-check(1),
+clia-init(1), clia-hrn(1), clia-setup(1), git(1)
 EOF
   } | _clia_man clia 1 "Manuel de l'utilisateur clia"
 }
@@ -361,7 +399,8 @@ fi
 # d'être dans un dépôt git pour lire une page de manuel rendrait inaccessible
 # ce que la tâche 3 veut justement accessible partout.
 if (( ! DEMANDE_MAN )) && [[ "$(_clia_perimetre_de "$FICHIER")" == 'dépôt' ]]; then
-  if ! CLIA_WORK_DIR=$(_clia_depot_git "$PWD"); then
+  CLIA_WORK_DIR="$_CLIA_DEPOT_COURANT"
+  if [[ -z "$CLIA_WORK_DIR" ]]; then
     _clia_msg "le répertoire courant n'est pas dans un dépôt git"
     _clia_detail "clia $COMMANDE agit sur un dépôt ; placez-vous dans l'un d'eux"
     exit 1
