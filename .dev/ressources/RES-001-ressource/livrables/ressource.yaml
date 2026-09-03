@@ -15,7 +15,7 @@ nom: ressource
 id: clia:c8ce0ac6-0608-443c-b255-be9fb5419d95
 titre: Ressource
 prefixe: RES
-version: 0.1.0
+version: 0.2.0
 
 description: "Ressource clia, l'élément fondamental de ce système d'information."
 
