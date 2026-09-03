@@ -140,7 +140,10 @@ dit 'la zone livree y est' '^zone .*CLIA_ZONE_RESSOURCE_LIVREE .*\.clia/ressourc
 dit 'la zone des instances aussi' '^zone .*CLIA_ZONE_RESSOURCE .*\.dev/ressources$'
 dit 'la politique de conformite y est' '^politique .*CLIA_POLICY_ROLLING_RESSOURCE .*false$'
 dit 'et ce que clia pose lui-meme' '^posée .*CLIA_SOURCE_DIR .*clia '
-dit 'sans ressource, les zones viennent du noyau' 'CLIA_ZONE_RESSOURCE .*défaut .*noyau'
+# La ressource « ressource » que le CLI porte déclare la zone des instances :
+# c'est elle qui la fournit, même dans un dépôt qui n'a rien installé.
+dit 'la zone des instances vient de la ressource qui la declare' \
+  'CLIA_ZONE_RESSOURCE  *défaut  *ressource'
 
 rc_dans 'clia config ls --explain est satisfaite' 0 "$D" config ls --explain
 dit 'chaque variable dit ce qu elle regle' '^       règle    '

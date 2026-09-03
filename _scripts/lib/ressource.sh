@@ -265,7 +265,6 @@ _clia_r_provide() {
 _clia_r_maj() {
   local commande="$1" fichier="$2" sens="$3"; shift 3
   local depot="${CLIA_WORK_DIR:-}" nom cible='' force=0 migrer=0 arg
-  local n de vers issue
 
   if ! nom=$(_clia_r_nom_de_fichier "$fichier"); then
     _clia_msg "clia $commande n'est pas la commande d'une ressource"
@@ -289,27 +288,7 @@ _clia_r_maj() {
 
   local ligne
   ligne=$(_clia_mj_ressource "$depot" "$nom" "$sens" "$cible" "$force" "$migrer") || return 1
-  IFS=$'\t' read -r n de vers issue <<<"$ligne"
-
-  case "$issue" in
-    'à jour')
-      _clia_msg "$n est déjà en $vers"
-      _clia_detail "rien n'a été touché" ;;
-    'laissé')
-      _clia_msg "$n a été modifiée depuis sa reprise : elle est laissée telle quelle"
-      _clia_detail "$de -> $vers n'a pas été posée ; --force la poserait"
-      _clia_detail "ce que vous avez écrit ici serait perdu"
-      return 1 ;;
-    'forcé')
-      _clia_msg "$n : $de -> $vers, posée de force"
-      _clia_detail "ce qui avait été modifié sur place est perdu"
-      _clia_detail "rien n'est commité" ;;
-    *)
-      _clia_msg "$n : $de -> $vers"
-      _clia_detail "l'inventaire de la carte est mis à jour"
-      _clia_detail "rien n'est commité" ;;
-  esac
-  return 0
+  _clia_mj_rapport_ressource "$ligne"
 }
 
 # _clia_r_migrer <commande> <fichier> <arguments…>

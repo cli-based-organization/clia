@@ -12,8 +12,22 @@
 #   skills/       les procédures qu'elle fournit
 
 nom: {{nom}}
+
+# L'identité absolue — SES-001 tâche 24. Elle est posée une fois, à la
+# création, et ne change plus : c'est ce qui atteste que cette ressource est
+# celle-ci et pas une autre, quel que soit le dépôt qui la porte.
+id: {{id}}
 titre: {{titre}}
 prefixe: {{prefixe}}
 version: {{version}}
 
 description: "{{description}}"
+
+# Les zones que cette ressource contrôle, s'il y en a. Une zone est
+# l'endroit où elle écrit ; la variable qui la déplace se déduit du nom —
+# « journal » se règle par $CLIA_ZONE_JOURNAL. Voir clia-config(1).
+#
+# zones:
+#   - nom: {{nom}}
+#     defaut: .dev/{{nom}}
+#     description: "où le dépôt écrit ses ..."

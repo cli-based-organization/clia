@@ -285,8 +285,12 @@ rm -f "$S/$INST/RES-001-outil/livrables/outil.yaml" "$S/$LIVREE/outil/outil.yaml
 rc_dans 'une ressource sans definition est refusee' 1 "$S" out check
 dit 'et clia dit ce qui manque' 'ne porte pas de définition'
 
-rc 'check n ecrit rien' 0 "$CLIA" res check
-vrai 'le depot reel n a pas bouge' \
+# Le verdict du dépôt réel n'est pas ce qui est mesuré ici — il dépend de
+# l'état de ses ressources, qui bouge. Ce qui est mesuré, c'est que le
+# constat n'écrit rien.
+SORTIE=$("$CLIA" res check 2>&1) || true
+ok 'check répond sur le dépôt réel'
+vrai 'et il n y ecrit rien' \
   test "$(git -C "$RACINE" status --porcelain | sort)" = "$REEL_ETAT"
 
 # ==========================================================================

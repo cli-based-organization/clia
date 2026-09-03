@@ -91,7 +91,7 @@ rc 'clia version --help' 0 "$CLIA" version --help
 # disparaître : ce qu'ils gardaient reste gardé.
 rc 'clia --man' 0 "$CLIA" --man
 dit 'le manuel documente les codes de retour' '^CODE DE RETOUR$'
-dit 'et la description du fichier de commande y est reprise' "l'alias lisible, ou le hash exact"
+dit 'et la description du fichier de commande y est reprise' "ou d'une ressource installée"
 
 rc 'clia version --man' 0 "$CLIA" version --man
 dit 'le manuel dit que la source de verite est le commit' 'source de vérité est le commit'
@@ -270,8 +270,10 @@ D=$(depot mal-forme)
 carte "$D" clia.yaml 0.1.0
 commit "$D" 'premier commit'
 
-rc 'un argument inattendu est refuse' 2 bash -c "cd '$D' && '$CLIA' version bogus"
-dit 'et il renvoie a l usage' 'clia version --help'
+# « bogus » est une désignation de ressource bien formée : elle ne désigne
+# rien, et c'est un refus — non une demande mal formée. SES-002 tâche 1.
+rc 'une ressource inconnue est refusee' 1 bash -c "cd '$D' && '$CLIA' version bogus"
+dit 'et clia dit comment les lister' 'clia ls'
 rc '--true ne prend pas d argument' 2 bash -c "cd '$D' && '$CLIA' version --true bogus"
 
 # ==========================================================================

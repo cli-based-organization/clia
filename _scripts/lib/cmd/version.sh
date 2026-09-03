@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Description: La version du dépôt — l'alias lisible, ou le hash exact.
+# Description: La version du dépôt, ou d'une ressource installée.
 # Périmètre: dépôt
 # Signature: version
 # Signature: version --true
 # Signature: version release major|minor|patch
+# Signature: version RESSOURCE
 # Option: version --true
 #
 # Implémente SES-001 tâches 1 et 2. L'aide brève n'est pas écrite ici : elle
@@ -55,6 +56,14 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 # shellcheck source=../version.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/version.sh"
+# shellcheck source=../identite.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/identite.sh"
+# shellcheck source=../maj.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/maj.sh"
+# shellcheck source=../mise-a-jour.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/mise-a-jour.sh"
+# shellcheck source=../parc.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/parc.sh"
 
 # Le point d'entrée pose CLIA_WORK_DIR pour toute invocation qui travaille, et
 # ne le pose pas pour une demande de manuel : une page de manuel ne dépend
@@ -357,6 +366,44 @@ publier() {
 }
 
 # --------------------------------------------------------------------------
+# La version d'une ressource installée — SES-002 tâche 1
+# --------------------------------------------------------------------------
+#
+# Celle qui est posée dans ce dépôt, et rien d'autre : une ressource
+# installée est figée, et sa version est un fait — SPC-001 §1.9.
+#
+# Ce vers quoi elle pourrait aller est une autre question, et une autre
+# commande : clia update RESSOURCE.
+
+version_de_ressource() {
+  local quoi="$1" depot="${CLIA_WORK_DIR:-}" nom posee etat
+
+  nom=$(_clia_pc_resoudre "$depot" "$quoi") || return 1
+  posee=$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" version || printf '')
+  if [[ -z "$posee" ]]; then
+    _clia_msg "$nom ne déclare pas de version"
+    _clia_detail "sa définition : $(_clia_zone_livree)/$nom/$nom.yaml"
+    return 1
+  fi
+  printf '%s\n' "$posee"
+
+  etat=$(_clia_pc_etat "$depot" "$nom" "$posee")
+  case "$etat" in
+    'à jour')
+      _clia_msg "$nom : $posee, la dernière que $(_clia_pc_source "$depot" "$nom") déclare" ;;
+    'en retard')
+      _clia_msg "$nom : $posee, alors que $(_clia_pc_derniere "$depot" "$nom") est disponible"
+      _clia_detail "pour l'y amener : clia upgrade $nom" ;;
+    'en avance')
+      _clia_msg "$nom : $posee, au-delà de ce que sa source déclare" ;;
+    *)
+      _clia_msg "$nom : $posee ; sa source n'a pas été jointe" ;;
+  esac
+  _clia_detail "les versions disponibles : clia update $nom"
+  return 0
+}
+
+# --------------------------------------------------------------------------
 # Dispatch
 # --------------------------------------------------------------------------
 
@@ -390,7 +437,16 @@ case "${1:-}" in
   # -h et --help n'apparaissent pas ici : le point d'entrée les intercepte à
   # toute profondeur et rend l'aide brève à partir des déclarations de tête.
   # Une commande n'écrit pas son aide, elle déclare ses signatures.
-  *)             _clia_msg "argument inattendu : $1"
+  # Un argument qui n'est ni une option ni un verbe désigne une ressource
+  # installée — SES-002 tâche 1. « clia version » dit où en est le dépôt ;
+  # « clia version RESSOURCE » dit où en est ce qu'il a installé.
+  -*)            _clia_msg "option inconnue : $1"
                  _clia_detail "l'usage : clia version --help"
                  exit 2 ;;
+  *)             [[ $# -eq 1 ]] || {
+                   _clia_msg "clia version n'attend qu'une ressource : $*"
+                   _clia_detail "l'usage : clia version RESSOURCE"
+                   exit 2
+                 }
+                 version_de_ressource "$1" ;;
 esac

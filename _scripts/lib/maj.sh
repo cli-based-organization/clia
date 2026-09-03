@@ -72,7 +72,12 @@ _clia_m_versions() {
     precedent="$alias"
     # « --follow » : la disposition des ressources a changé, et sans lui
     # l'historique d'une définition s'arrêterait à son déplacement.
-  done < <(git -C "$racine" log --follow --reverse --format=%H -- "$def" 2>/dev/null)
+    #
+    # L'ordre est retourné par tac, et non par « --reverse ». Les deux
+    # options ne se combinent pas : « git log --follow --reverse » ne rend
+    # qu'un seul commit, et l'historique d'une ressource paraissait alors
+    # s'arrêter à sa première version. Constaté le 2026-09-03 sur git 2.39.
+  done < <(git -C "$racine" log --follow --format=%H -- "$def" 2>/dev/null | tac)
   return 0
 }
 

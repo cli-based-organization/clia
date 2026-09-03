@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Description: Les ressources du dépôt — new, ls, version, release.
+# Description: Les ressources du dépôt — new, ls, version, release, iie.
 # Périmètre: dépôt
 # Signature: res new PREFIXE NOM [DESCRIPTION]
 # Signature: res ls
 # Signature: res version [--true] RESSOURCE
 # Signature: res release major|minor|patch RESSOURCE
+# Signature: res iie ls
+# Signature: res iie check [FICHIER…]
 # Option: res version --true
 #
 # Implémente SES-001 tâches 5 et 9.
@@ -94,6 +96,8 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 # shellcheck source=../../../_scripts/lib/version.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/version.sh"
+# shellcheck source=/dev/null
+. "$CLIA_SOURCE_DIR/_scripts/lib/identite.sh"
 
 DEPOT="${CLIA_WORK_DIR:-}"
 
@@ -555,7 +559,7 @@ sequence_suivante() {
 
 creer() {
   local prefixe="$1" nom="$2" description="${3:-}"
-  local id dir livrables def script commande val n d autre
+  local id dir livrables def script commande val n d autre identite
 
   if [[ ! "$prefixe" =~ ^[A-Z]{2,5}$ ]]; then
     _clia_msg "préfixe invalide : $prefixe"
@@ -606,10 +610,21 @@ creer() {
 
   commande=$(commande_de "$prefixe")
 
+  # L'identité absolue est posée à la création, et jamais après : un uuid ne
+  # se déduit de rien, et une ressource sans identité n'en est pas une —
+  # SES-001 tâche 24.
+  if ! identite=$(_clia_id_neuve); then
+    _clia_msg "aucune identité absolue ne peut être fabriquée sur cette machine"
+    _clia_detail "ni /proc/sys/kernel/random/uuid, ni uuidgen"
+    _clia_detail "rien n'a été créé"
+    return 1
+  fi
+
   val=$(mktemp)
   # shellcheck disable=SC2064
   trap "rm -f '$val'" RETURN
   { printf 'nom\t%s\n'         "$nom"
+    printf 'id\t%s\n'          "$identite"
     printf 'titre\t%s\n'       "${nom^}"
     printf 'prefixe\t%s\n'     "$prefixe"
     printf 'version\t%s\n'     '0.1.0'
@@ -661,6 +676,77 @@ creer() {
   _clia_detail "rien n'est commité : créer n'est pas publier"
   _clia_detail "commitez, puis : clia res release patch $nom"
   return 0
+}
+
+
+# --------------------------------------------------------------------------
+# iie — SES-001 tâche 24
+# --------------------------------------------------------------------------
+#
+# Une ressource clia est reconnaissable à une seule chose : elle porte des
+# informations d'identification et d'essentialisation. La ressource
+# « ressource » est celle qui dit ce qu'est une ressource ; lire et juger les
+# IIE du dépôt lui revient donc, comme le reste.
+#
+# Deux verbes, et ils ne font pas la même chose :
+#
+#   ls     ce que le dépôt porte comme identités, où qu'elles soient
+#   check  la forme de chacune, jugée contre schemas/iie.cue par cue
+#
+# La présence d'une identité se vérifie sans cue — c'est C0 de
+# « clia <ressource> check », et il est en bash pour répondre partout. Ici,
+# c'est la forme entière qui est jugée.
+
+# Les outils de la ressource vivent à côté d'elle, où qu'elle soit installée
+# — et non dans le dépôt source, comme les gabarits : un gabarit sert à créer
+# ailleurs, un outil sert à juger ici.
+OUTILS="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/outils"
+
+iie_ls() {
+  local portee chemin id relative lignes=''
+  while IFS="$_CLIA_SEP" read -r portee chemin id relative; do
+    [[ -n "$portee" ]] || continue
+    lignes+=$(printf '%s\t%s\t%s\t%s' "$portee" "${relative:-—}" "$id" "$chemin")$'\n'
+  done < <(_clia_id_toutes "$DEPOT")
+
+  if [[ -z "$lignes" ]]; then
+    _clia_msg "ce dépôt ne porte aucune identité"
+    _clia_detail "une ressource en porte une : clia res --man"
+    return 0
+  fi
+
+  { printf 'PORTEE\tRELATIVE\tABSOLUE\tOU\n'
+    printf '%s' "$lignes"
+  } | column -t -s $'\t'
+
+  _clia_msg "la forme partageable préfixe la relative du namespace du dépôt"
+  _clia_detail "pour juger leur forme : clia res iie check"
+  return 0
+}
+
+# iie_check [fichier…] — sans fichier, toutes les définitions du dépôt.
+iie_check() {
+  local fichiers=("$@") nom def
+
+  if (( ${#fichiers[@]} == 0 )); then
+    while IFS=$'\t' read -r nom def; do
+      [[ -n "$nom" ]] || continue
+      fichiers+=("$DEPOT/$def")
+    done < <(inventaire)
+  fi
+
+  if (( ${#fichiers[@]} == 0 )); then
+    _clia_msg "ce dépôt ne porte aucune ressource à juger"
+    return 0
+  fi
+
+  if [[ ! -x "$OUTILS/valider-iie.sh" ]]; then
+    _clia_msg "l'outil de validation est introuvable"
+    _clia_detail "attendu : ${OUTILS#"$CLIA_SOURCE_DIR"/}/valider-iie.sh"
+    return 1
+  fi
+
+  bash "$OUTILS/valider-iie.sh" "${fichiers[@]}"
 }
 
 # --------------------------------------------------------------------------
@@ -733,6 +819,16 @@ case "$VERBE" in
     NIVEAU=$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')
     NOM=$(resoudre "$2") || exit 1
     publier "$NIVEAU" "$NOM" ;;
+
+  iie)
+    case "${1:-ls}" in
+      ls)    (( $# <= 1 )) || { _clia_msg "iie ls ne prend pas d'argument : ${*:2}"; exit 2; }
+             iie_ls ;;
+      check) shift; iie_check "$@" ;;
+      *)     _clia_msg "iie n'accepte que « ls » ou « check » : $1"
+             _clia_detail "l'usage : clia res --help"
+             exit 2 ;;
+    esac ;;
 
   *)
     _clia_msg "verbe inconnu : $VERBE"

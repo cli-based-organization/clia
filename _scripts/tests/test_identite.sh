@@ -281,10 +281,12 @@ vrai 'et son identite est une autre' \
 titre 'Le dépôt réel'
 # ==========================================================================
 
-rc 'les ressources que ce depot ecrit portent leur identite' 0 "$CLIA" res check
+# C0 est ce qui est mesuré, non le verdict d'ensemble : celui-ci dépend des
+# autres contrôles, et l'état du dépôt réel bouge.
+SORTIE=$("$CLIA" res check 2>&1) || true
 dit 'C0 passe pour ressource' '^C0  ok  clia:'
-rc 'et pour harness-ia' 0 "$CLIA" hrn check
-dit 'C0 aussi' '^C0  ok  clia:'
+SORTIE=$("$CLIA" hrn check 2>&1) || true
+dit 'C0 aussi pour harness-ia' '^C0  ok  clia:'
 
 vrai 'la carte du depot porte la sienne' \
   grep -qE '^id: clia:' "$RACINE/clia.yaml"

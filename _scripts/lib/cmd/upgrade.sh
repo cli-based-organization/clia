@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Description: Amène le dépôt à une version plus récente de clia.
+# Description: Amène le dépôt, ou une ressource, à une version plus récente.
 # Périmètre: dépôt
 # Signature: upgrade [--with-instances | --migrate] [--all] [--force] [VERSION]
+# Signature: upgrade RESSOURCE [VERSION]
 # Option: upgrade --with-instances
 # Option: upgrade --migrate
 # Option: upgrade --all
@@ -27,6 +28,10 @@ _CLIA_NOM='clia'
 . "$CLIA_SOURCE_DIR/_scripts/lib/maj.sh"
 # shellcheck source=../mise-a-jour.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/mise-a-jour.sh"
+# shellcheck source=../identite.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/identite.sh"
+# shellcheck source=../parc.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/parc.sh"
 
 # --------------------------------------------------------------------------
 
@@ -153,5 +158,25 @@ for _arg in "$@"; do
   manuel
   exit 0
 done
+
+# Deux niveaux sous un même verbe — SES-002 tâche 1.
+#
+# Sans argument positionnel, ou avec une version, c'est le dépôt qu'on
+# déplace : « clia upgrade », « clia upgrade 0.12.0 ». Avec un nom qui n'est
+# pas une version, c'est une ressource : « clia upgrade session ».
+#
+# Les deux ne se confondent pas — une version a la forme X.Y.Z, un nom de
+# ressource ne l'a jamais — et clia n'a donc pas à choisir entre les deux
+# lectures.
+_CLIA_PREMIER=''
+for _arg in "$@"; do
+  [[ "${_arg:0:1}" == '-' ]] && continue
+  _CLIA_PREMIER="$_arg"; break
+done
+
+if [[ -n "$_CLIA_PREMIER" ]] && ! _clia_v_est_semantique "$_CLIA_PREMIER"; then
+  _clia_pc_maj upgrade "$@"
+  exit $?
+fi
 
 _clia_mj_depot upgrade "$@"

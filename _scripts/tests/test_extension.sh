@@ -154,8 +154,11 @@ dit 'source non plus n est plus src' '^  source  *Les sources de données'
 
 # SES-001 tâche 12 : les commandes à trois lettres sont celles des
 # ressources, et elles seules.
+#
+# Exactement trois : une commande du noyau plus courte ne prend la place
+# d'aucune ressource — « clia ls », posée par SES-002, en est une.
 COURTS=$("$CLIA" --help 2>/dev/null \
-  | sed -n '/^Commandes :$/,/^$/p' | sed -nE 's/^  ([a-z-]{1,3}) .*/\1/p')
+  | sed -n '/^Commandes :$/,/^$/p' | sed -nE 's/^  ([a-z-]{3}) .*/\1/p')
 vrai 'aucune commande du noyau ne tient en trois lettres' test -z "$COURTS"
 [[ -n "$COURTS" ]] && printf '         commande fautive : %s\n' "$COURTS"
 

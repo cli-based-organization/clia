@@ -237,6 +237,22 @@ _clia_mj_racine_extension() {
   return 1
 }
 
+# _clia_mj_publiee_ici <dépôt> <nom> — vrai si la carte déclare que ce dépôt
+# publie cette ressource.
+#
+# Un dépôt qui publie une ressource en est la source. Ce qu'il en écrit sous
+# son instance est ce vers quoi sa copie installée peut monter — c'est le
+# va-et-vient d'un dépôt qui développe ce dont il se sert, et il se fait par
+# les mêmes commandes que le reste.
+_clia_mj_publiee_ici() {
+  local depot="$1" cible="$2" carte nom
+  carte=$(_clia_carte "$depot") || return 1
+  while IFS="$_CLIA_SEP" read -r nom; do
+    [[ "$nom" == "$cible" ]] && return 0
+  done < <(_clia_bloc_yaml "$carte" provide name)
+  return 1
+}
+
 # _clia_mj_provenance <dépôt> <nom> — « provider<TAB>version inscrite ».
 _clia_mj_provenance() {
   local depot="$1" nom="$2" prefixe id v
@@ -276,14 +292,20 @@ _clia_mj_ressource() {
   fi
   courant=$(_clia_champ_yaml "$def" version || printf '')
 
-  if ! IFS=$'\t' read -r provider _ < <(_clia_mj_provenance "$depot" "$nom"); then
-    _clia_msg "$nom n'a pas été reprise d'une extension"
+  # Deux sources possibles, et la carte les départage. Un dépôt qui publie
+  # la ressource en est la source : sa copie installée monte vers ce que son
+  # instance déclare. Sinon, la source est l'extension d'où elle vient.
+  local publiee_ici=0 origine='extension'
+  if _clia_mj_publiee_ici "$depot" "$nom"; then
+    publiee_ici=1; origine='ici'
+    provider=$(_clia_champ_yaml "$(_clia_carte "$depot")" namespace || printf 'ce dépôt')
+    racine="$depot"
+  elif ! IFS=$'\t' read -r provider _ < <(_clia_mj_provenance "$depot" "$nom"); then
+    _clia_msg "$nom n'a pas été reprise d'une extension, et ce dépôt ne la publie pas"
     _clia_detail "l'inventaire de la carte ne dit pas d'où elle vient"
     _clia_detail "clia ne devine pas une provenance : voir clia-extension(1)"
     return 1
-  fi
-
-  if ! racine=$(_clia_mj_racine_extension "$depot" "$provider"); then
+  elif ! racine=$(_clia_mj_racine_extension "$depot" "$provider"); then
     _clia_msg "$provider n'est pas joignable"
     _clia_detail "une source locale absente, ou une source distante non clonée"
     _clia_detail "pour rétablir le clone : clia extension add <URI>"
@@ -310,7 +332,7 @@ _clia_mj_ressource() {
   fi
 
   if [[ "$(_clia_m_comparer "$courant" "$cible")" == '0' ]]; then
-    printf '%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" 'à jour'
+    printf '%s\t%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" 'à jour' "$origine"
     return 0
   fi
 
@@ -362,11 +384,13 @@ _clia_mj_ressource() {
 
   if [[ "$issue" == 'laissé' ]]; then
     [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
-    printf '%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" 'laissé'
+    printf '%s\t%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" 'laissé' "$origine"
     return 0
   fi
 
-  _clia_mj_inscrire_ressource "$depot" "$nom" "$provider" "$cible"
+  # L'inventaire dit ce que le dépôt a repris ailleurs. Une ressource qu'il
+  # publie lui-même n'y a pas sa place : c'est son instance qui fait foi.
+  (( publiee_ici )) || _clia_mj_inscrire_ressource "$depot" "$nom" "$provider" "$cible"
 
   if [[ "$migrer" == '1' && -n "${plan:-}" ]]; then
     _clia_mj_migrer "$depot" "$nom" "$plan" "$courant" || {
@@ -376,7 +400,44 @@ _clia_mj_ressource() {
   fi
   [[ -n "$dir_mig" ]] && rm -rf "$(dirname "$dir_mig")"
 
-  printf '%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" "$issue"
+  printf '%s\t%s\t%s\t%s\t%s\n' "$nom" "$courant" "$cible" "$issue" "$origine"
+  return 0
+}
+
+# _clia_mj_rapport_ressource <ligne rendue par _clia_mj_ressource>
+#
+# Le compte rendu d'une mise à jour de ressource, tenu une fois pour les deux
+# chemins qui y mènent : « clia <ressource> upgrade », verbe générique, et
+# « clia upgrade RESSOURCE », commande du premier niveau — SES-002 tâche 1.
+#
+# Deux écritures auraient fini par dire deux choses différentes du même
+# geste.
+_clia_mj_rapport_ressource() {
+  local n de vers issue origine suite
+  IFS=$'\t' read -r n de vers issue origine <<<"$1"
+  if [[ "$origine" == 'ici' ]]; then
+    suite="ce dépôt la publie : la copie installée suit son instance"
+  else
+    suite="l'inventaire de la carte est mis à jour"
+  fi
+  case "$issue" in
+    'à jour')
+      _clia_msg "$n est déjà en $vers"
+      _clia_detail "rien n'a été touché" ;;
+    'laissé')
+      _clia_msg "$n a été modifiée depuis sa reprise : elle est laissée telle quelle"
+      _clia_detail "$de -> $vers n'a pas été posée ; --force la poserait"
+      _clia_detail "ce que vous avez écrit ici serait perdu"
+      return 1 ;;
+    'forcé')
+      _clia_msg "$n : $de -> $vers, posée de force"
+      _clia_detail "ce qui avait été modifié sur place est perdu"
+      _clia_detail "rien n'est commité" ;;
+    *)
+      _clia_msg "$n : $de -> $vers"
+      _clia_detail "$suite"
+      _clia_detail "rien n'est commité" ;;
+  esac
   return 0
 }
 
