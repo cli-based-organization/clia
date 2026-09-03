@@ -38,3 +38,4 @@ primitives:
   - fichier: primitive-2/REQ-003-skill-linux.md
   - fichier: primitive-2/REQ-004-conformity-linux.md
   - fichier: primitive-2/REQ-005-zone-linux.md
+  - fichier: primitive-2/REQ-006-generation-linux.md

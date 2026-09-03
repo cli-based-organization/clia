@@ -39,22 +39,26 @@ lequel — mais un stade est un rôle, pas un emplacement.
 **Ce qui est construit à partir des primitives.**
 
 Il vit sous `genere/`, dans l'instance, et il est le seul de ses répertoires
-que clia écrit. Les règles qui le construisent sont dans un `Makefile`, à la
-racine de l'instance, et `clia <ressource> make` les lance.
+que clia écrit. Les recettes qui le construisent vivent dans
+`generation.yaml`, à la racine de l'instance, et `clia <ressource> make` les
+applique.
 
-**Décision — la construction est déléguée à make(1).** L'énoncé demande de
-« répliquer le fonctionnement d'un makefile » ; l'humain a tranché le
-2026-09-03 pour la délégation plutôt que la réplique. Un graphe de
-dépendances, un calcul de péremption et un ordre d'exécution sont trois
-choses que make tient depuis cinquante ans.
+**Décision — clia s'inspire de make(1), et ne l'emploie pas.** SES-001
+tâche 22 avait d'abord été comprise comme une délégation ; la tâche 23
+corrige, et la raison est de domaine.
 
-Ce que cela coûte, et il faut le dire : clia ne connaît ni les cibles, ni les
-sources, ni les règles. `make --check` demande à make si le stade est à jour
-et croit sa réponse. Un contrôle de conformité du stade généré demanderait
-que clia lise le graphe, donc qu'il cesse de déléguer.
+make connaît des sources, une compilation, des cibles. clia connaît des
+primitives obtenues par une collaboration entre humains, automatismes et
+agents, et des livrables qui en sont tirés. Une primitive est un peu comme un
+fichier source, la génération un peu comme la compilation, un livrable un peu
+comme une cible — et « un peu comme » n'est pas « pareil » :
 
-REQ-002 §4 dit pourquoi un script de ressource est du bash ; le `Makefile`
-est l'exception, et il est lu par make, non par clia.
+* une dépendance peut être **une ressource** plutôt qu'un fichier, et une
+  ressource a une version que le système sait lire ;
+* un fichier compte par **son contenu**, non par sa date : un clone remet
+  toutes les dates à la même.
+
+Rien de cela n'a de sens pour make. REQ-006 dit comment c'est implémenté.
 
 ### 1.3 Livrée
 
@@ -157,9 +161,9 @@ autre éditeur qu'humain. Elle contredit alors sa propre zone.
 
 ## 6. Ce que ce document ne tranche pas
 
-**Ce que le stade généré garantit.** Rien ne vérifie que `genere/` contient
-ce que les règles disent produire, ni qu'il ne contient que cela. C'est la
-contrepartie de la délégation, et §1.2 la nomme.
+**Ce que le stade généré contient.** Rien ne vérifie que `genere/` ne porte
+que des cibles déclarées. Un fichier qu'aucune recette ne produit y survit —
+REQ-006 §8.
 
 **Ce qu'une primitive non porteuse déclarerait.** Un fichier voisin —
 `<ID>.clia.yaml` — serait le seul recours. Il n'est pas construit, parce

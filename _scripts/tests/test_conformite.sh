@@ -110,7 +110,7 @@ dit 'et dans celle d une autre, sans qu elle l ait declare' 'clia hrn check \[--
 
 rc 'le manuel de clia le decrit' 0 "$CLIA" --man
 dit 'sous les verbes des ressources' 'check \[--explain\]'
-dit 'et il compte huit verbes' 'Huit verbes valent pour toute commande'
+dit 'et il compte neuf verbes' 'Neuf verbes valent pour toute commande'
 dit 'la politique y est declaree' 'CLIA_POLICY_ROLLING_RESSOURCE'
 
 # ==========================================================================

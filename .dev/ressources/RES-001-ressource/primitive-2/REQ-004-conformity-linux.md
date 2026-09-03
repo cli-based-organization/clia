@@ -56,8 +56,12 @@ n'a donc pas de conformité à mesurer.
 ### C1 — les zones sont respectées
 
 Une instance porte un répertoire par stade — `primitive-1/`, `primitive-2/`,
-`genere/`, `livrables/` — plus un `Makefile` quand il y a quelque chose à
-construire. Toute autre entrée du répertoire est un écart bloquant, nommée.
+`genere/`, `livrables/` — plus un `generation.yaml` quand il y a quelque
+chose à construire. Toute autre entrée du répertoire est un écart bloquant,
+nommée.
+
+Les fichiers cachés ne sont pas contrôlés : `.empreintes.yaml`, que clia
+écrit à chaque construction, y échappe donc — REQ-006 §4.1.
 
 `livrables/` n'est pas exigé ici : un répertoire qui n'en porte pas n'est pas
 reconnu comme une instance — `_clia_instances_de` l'omet — et il n'y a alors

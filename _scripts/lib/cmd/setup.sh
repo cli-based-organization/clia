@@ -4,6 +4,8 @@
 # Signature: setup status
 # Signature: setup version
 # Signature: setup version ls
+# Signature: setup config ls
+# Signature: setup config set CLE VALEUR
 # Signature: setup uninstall
 #
 # Implémente SES-001 tâches 7 et 17.
@@ -49,6 +51,8 @@ set -euo pipefail
 _CLIA_NOM='clia'
 # shellcheck source=../commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
+# shellcheck source=../generation.sh
+. "$CLIA_SOURCE_DIR/_scripts/lib/generation.sh"
 # shellcheck source=../installation.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/installation.sh"
 # shellcheck source=../version.sh
@@ -213,6 +217,76 @@ retirer() {
 }
 
 # --------------------------------------------------------------------------
+# La configuration de l'utilisateur — SES-001 tâche 23
+# --------------------------------------------------------------------------
+#
+# Le niveau le plus lointain des quatre qui règlent une génération. Il
+# appartient à l'utilisateur, non au dépôt : il suit la personne d'un dépôt à
+# l'autre, et n'est donc pas versionné.
+#
+#   ${XDG_CONFIG_HOME:-~/.config}/clia/config.yaml
+#
+# Les clés y sont écrites en clair, telles que l'énoncé les nomme :
+# « make.policy.ressource.version ». Ce qui est rangé dessous est le même
+# bloc que dans une carte de dépôt — « make-politiques: » — pour qu'un seul
+# lecteur serve les quatre niveaux.
+
+CONFIG_PREFIXE='make.policy.'
+
+config_fichier() { _clia_g_config_utilisateur; }
+
+config_ls() {
+  local fichier nom valeur
+  fichier=$(config_fichier)
+  { printf 'CLE%sVALEUR\n' "$_CLIA_SEP"
+    while IFS="$_CLIA_SEP" read -r nom valeur; do
+      [[ -n "$nom" ]] || continue
+      printf '%s%s%s%s\n' "$CONFIG_PREFIXE" "$nom" "$_CLIA_SEP" "$valeur"
+    done < <(_clia_bloc_yaml "$fichier" 'make-politiques' nom valeur)
+  } | column -t -s "$_CLIA_SEP"
+
+  if [[ -f "$fichier" ]]; then
+    _clia_msg "lu dans $fichier"
+  else
+    _clia_msg "aucune configuration d'utilisateur : $fichier"
+    _clia_detail "elle sera posée à la première écriture"
+  fi
+  _clia_detail "ce qui s'applique vraiment : clia make policy ls"
+  return 0
+}
+
+config_set() {
+  local cle="$1" valeur="$2" fichier nom
+  fichier=$(config_fichier)
+
+  if [[ "$cle" != "$CONFIG_PREFIXE"* ]]; then
+    _clia_msg "clé inconnue : $cle"
+    _clia_detail "les clés de configuration commencent par « $CONFIG_PREFIXE »"
+    _clia_detail "celles qui existent : ${CONFIG_PREFIXE}ressource.version"
+    return 2
+  fi
+  nom="${cle#"$CONFIG_PREFIXE"}"
+
+  if [[ " $_CLIA_G_POLITIQUES " != *" $nom "* ]]; then
+    _clia_msg "politique inconnue : $nom"
+    _clia_detail "celles qui existent : $_CLIA_G_POLITIQUES"
+    return 2
+  fi
+  if ! _clia_g_valeur_admise "$nom" "$valeur"; then
+    _clia_msg "valeur inconnue pour $nom : $valeur"
+    _clia_detail "valeurs admises : $_CLIA_G_VERSION_VALEURS"
+    return 2
+  fi
+
+  mkdir -p "$(dirname "$fichier")"
+  _clia_g_politique_poser "$fichier" "$nom" "$valeur" || return 1
+  _clia_msg "$cle = $valeur, pour cet utilisateur"
+  _clia_detail "inscrit dans $fichier"
+  _clia_detail "un dépôt ou une ressource peut en poser une autre, et elle l'emporte"
+  return 0
+}
+
+# --------------------------------------------------------------------------
 # Dispatch
 # --------------------------------------------------------------------------
 
@@ -310,6 +384,19 @@ case "${1:-}" in
       *)    _clia_msg "verbe inconnu pour version : $2"
             _clia_detail "l'usage : clia setup version [ls]"
             exit 2 ;;
+    esac ;;
+
+  config)
+    case "${2:-ls}" in
+      ls)  [[ $# -le 2 ]] || { _clia_msg "config ls ne prend pas d'argument : ${*:3}"; exit 2; }
+           config_ls ;;
+      set) [[ $# -eq 4 ]] || {
+             _clia_msg "config set attend une clé et une valeur"
+             _clia_detail "l'usage : clia setup config set CLE VALEUR"; exit 2; }
+           config_set "$3" "$4" ;;
+      *)   _clia_msg "config n'accepte que « ls » ou « set » : $2"
+           _clia_detail "l'usage : clia setup --help"
+           exit 2 ;;
     esac ;;
 
   uninstall)

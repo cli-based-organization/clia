@@ -249,6 +249,8 @@ _clia_aide() {
       printf '%s make [CIBLE…]\n'                                "${chemin%% *}"
       printf '%s make ls\n'                                      "${chemin%% *}"
       printf '%s make config ls\n'                               "${chemin%% *}"
+      printf '%s make policy ls\n'                               "${chemin%% *}"
+      printf '%s make policy set CLE VALEUR\n'                   "${chemin%% *}"
       printf '%s make [--check | --explain | --man]\n'           "${chemin%% *}"
       printf '%s upgrade [--migrate] [VERSION]\n'                "${chemin%% *}"
       printf '%s downgrade [--migrate] [VERSION]\n'              "${chemin%% *}"
@@ -338,7 +340,7 @@ OPTIONS
        Reconnue en première position seulement.
 
 LES VERBES DES RESSOURCES
-Huit verbes valent pour toute commande de ressource, et le point
+Neuf verbes valent pour toute commande de ressource, et le point
 d'entrée les tient pour toutes. Une ressource reprise d'une
 extension les reçoit sans avoir eu à les écrire.
 
@@ -373,13 +375,27 @@ zone ls [--ressource | --generated | --delivered] [IDENTIFIANT]
 make [CIBLE…]
 make ls
 make config ls
+make policy ls
+make policy set CLE VALEUR
 make [--check | --explain | --man]
-       Construire le stade généré à partir des primitives.
+       Construire ce qui se génère à partir des primitives, et ne
+       refaire que ce qui a changé.
 
-       clia ne construit rien lui-même : il lance make(1) dans
-       l'instance, dont le Makefile porte les règles et dont
-       genere/ reçoit ce qu'elles produisent. « ls » rend ce qui
-       serait fait, « --check » demande à make si c'est à jour.
+       Les recettes vivent dans l'instance, sous generation.yaml :
+       chacune dit ce qu'elle produit, de quoi — fichiers ou
+       ressources — et par quel script. Une cible peut en nommer
+       une autre : c'est ce qui fait le graphe.
+
+       Une cible est refaite quand ce qu'elle a vu a changé. Un
+       fichier compte par son contenu ; une ressource, par sa
+       version, ou aussi par son contenu selon la politique
+       ressource.version. « ls » rend le graphe et l'état,
+       « --check » dit s'il reste à faire, et ni l'un ni l'autre
+       n'écrit.
+
+       clia n'emploie pas make(1) : il s'en inspire. Voir
+       clia <ressource> make --explain, et clia-make(1) pour la
+       politique du dépôt.
 
        « generate » nomme le même verbe. L'énoncé de SES-001
        tâche 22 proposait aussi « gen » ; il n'est pas repris,

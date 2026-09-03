@@ -54,8 +54,9 @@ Une instance porte un répertoire par stade, et rien d'autre n'y a sa place :
     genere/        ce qui en est construit
     livrables/     ce qui en est produit
 
-Plus un `Makefile`, quand il y a quelque chose à construire : il porte les
-règles qui font `genere/` à partir des primitives — SPC-002 §1.2.
+Plus un `generation.yaml`, quand il y a quelque chose à construire : il porte
+les recettes qui font `genere/` à partir des primitives — SPC-002 §1.2 et
+REQ-006.
 
 **Décision.** Les livrables vivent dans l'instance, à côté des primitives.
 L'énoncé de SES-001 tâche 19 s'interrompait sur ce point ; l'humain a tranché
@@ -141,6 +142,22 @@ fonctionnalités, ses skills et ses gabarits.
 seule. `livrables/` porte donc son contenu directement, sans niveau
 intermédiaire : le nom de la ressource est déclaré dans sa définition, et le
 répéter dans un chemin en ferait deux endroits à tenir d'accord.
+
+**Une ressource livrée est de l'une de deux natures — SES-001 tâche 23 :**
+
+* **une ressource clia** — elle porte sa définition, ses scripts, ses
+  fonctionnalités, ses skills, et le CLI sait l'installer ;
+* **un artéfact** — un objet utilisable en soi, que rien n'installe.
+  `CLAUDE.md` en est un : c'est ce que la ressource harness-ia produit, et ce
+  n'est pas une ressource.
+
+La distinction porte sur ce qu'on peut en faire, non sur la façon dont on
+l'obtient : les deux sont produits, et un seul se reprend ailleurs.
+
+Elle a une conséquence en chaîne. `CLAUDE.md` est un artéfact de HRN ; HRN est
+une ressource livrée par RES ; une modification de RES devrait donc se
+répercuter sur HRN, puis sur `CLAUDE.md`. C'est ce que la politique
+`ressource.version` règle — REQ-006 §5 — et c'est pourquoi elle existe.
 
 ### 1.9 Ressource installée
 

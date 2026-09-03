@@ -106,12 +106,15 @@ seul endroit.
 
 ## 5. Les verbes que le point d'entrée retient
 
-Huit verbes ne sont déclarés dans aucun fichier de ressource, et valent
+Neuf verbes ne sont déclarés dans aucun fichier de ressource, et valent
 pourtant pour toutes :
 
 ```
-deactivate  provide  check  prim  zone  upgrade  downgrade  migrate
+deactivate  provide  check  prim  zone  make
+upgrade     downgrade  migrate
 ```
+
+`primitive` et `generate` en sont des alias.
 
 Le point d'entrée les intercepte **avant** d'exécuter le script. Une
 ressource reprise d'une extension les reçoit donc sans avoir eu à les

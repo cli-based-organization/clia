@@ -121,7 +121,7 @@ SORTIE=$("$CLIA" hrn --help 2>/dev/null)
 dit 'et dans celle d une autre, sans qu elle l ait declare' 'clia hrn prim check'
 
 rc 'le manuel de clia les decrit' 0 "$CLIA" --man
-dit 'il compte huit verbes' 'Huit verbes valent pour toute commande'
+dit 'il compte neuf verbes' 'Neuf verbes valent pour toute commande'
 dit 'il dit ce qui se declare' 'origine.*depot, externe'
 dit 'et ce qui se deduit' 'se déduisent du fichier'
 
