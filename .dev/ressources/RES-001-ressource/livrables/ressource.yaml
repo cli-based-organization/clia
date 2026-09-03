@@ -17,3 +17,23 @@ prefixe: RES
 version: 0.1.0
 
 description: "Ressource clia, l'élément fondamental de ce système d'information."
+
+# La zone où le dépôt écrit ses instances de ressource — SES-001 tâche 21.
+#
+# La zone livrée, elle, n'est pas déclarée ici : il faut la connaître pour
+# trouver ce fichier. Le noyau la tient, et clia config ls la dit.
+zones:
+  - nom: ressource
+    defaut: .dev/ressources
+    description: "ce que le dépôt écrit d'une ressource — une instance par répertoire"
+
+# Ce à partir de quoi cette ressource est produite — SES-001 tâche 20, C3.
+# Les chemins sont relatifs à l'instance, non au livrable : ces primitives
+# restent chez qui les écrit, et ne voyagent pas.
+primitives:
+  - fichier: primitive-2/SPC-001-ontologie.md
+  - fichier: primitive-2/REQ-001-feature-linux.md
+  - fichier: primitive-2/REQ-002-script-linux.md
+  - fichier: primitive-2/REQ-003-skill-linux.md
+  - fichier: primitive-2/REQ-004-conformity-linux.md
+  - fichier: primitive-2/REQ-005-zone-linux.md

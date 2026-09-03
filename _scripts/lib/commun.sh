@@ -543,32 +543,209 @@ _clia_carte_retirer() {
 }
 
 # --------------------------------------------------------------------------
-# Les deux zones de ressources
+# Les zones
 # --------------------------------------------------------------------------
 #
-# SES-001 tâche 19, et .dev/ressources/RES-001-ressource/primitive-2/
-# SPC-001-ontologie.md, qui en tire l'ontologie.
+# SES-001 tâches 19 et 21, et .dev/ressources/RES-001-ressource/primitive-2/
+# SPC-001-ontologie.md et REQ-005-zone-linux.md, qui en tirent l'ontologie et
+# l'implémentation.
 #
-#   $CLIA_ZONE_RESSOURCE        ce que le dépôt écrit    (.dev/ressources)
-#   $CLIA_ZONE_RESSOURCE_LIVREE ce qu'il a installé      (.clia/ressources)
+# Une zone est un endroit où vit ce qu'une ressource écrit. Elle a un nom, un
+# emplacement par défaut, et une variable d'environnement qui le déplace :
 #
-# La séparation n'est pas un rangement : elle sépare ce qu'on écrit de ce
-# qu'on emploie. Ce qu'on écrit change, se discute, se reprend ; ce qu'on
-# emploie est figé, et sa version est un fait. Les confondre revenait à ce
-# qu'une ressource change sous les pieds de ce qui s'en sert.
+#   ressource         $CLIA_ZONE_RESSOURCE         .dev/ressources
+#   ressource-livree  $CLIA_ZONE_RESSOURCE_LIVREE  .clia/ressources
+#   harnais           $CLIA_ZONE_HARNAIS           .dev/harnais-ia
 #
-# Le CLI ne trouve ses ressources que dans la zone livrée. Une ressource
-# qu'un dépôt écrit sans l'avoir installée ne répond pas — et c'est ce qui
-# fait de l'installation un geste, donc une trace.
+# La variable se déduit du nom : CLIA_ZONE_, puis le nom en majuscules, les
+# tirets changés en soulignés. Elle ne se déclare pas — deux endroits à tenir
+# d'accord auraient fini par se contredire.
 #
-# Les deux emplacements se règlent par l'environnement, ce qui permet de
-# ranger la zone livrée hors de l'index de git si on le veut.
+# Qui déclare une zone — SES-001 tâche 21
+# ---------------------------------------
+#
+# La ressource qui écrit dedans, dans sa définition :
+#
+#   zones:
+#     - nom: harnais
+#       defaut: .dev/harnais-ia
+#       description: "où le dépôt écrit ses harnais IA"
+#
+# Une zone arrive donc avec la ressource, comme ses scripts et ses skills —
+# SES-001 tâche 15. Le noyau ne tient aucune liste : il lit ce que les
+# ressources installées déclarent, et une ressource contrôle ainsi l'endroit
+# où elle génère.
+#
+# L'amorce, et pourquoi elle existe
+# ---------------------------------
+#
+# Pour lire la déclaration d'une ressource, il faut d'abord la trouver ; pour
+# la trouver, il faut connaître la zone livrée. La zone livrée ne peut donc
+# pas être déclarée par une ressource, et le noyau la tient :
+#
+#   ressource-livree  .clia/ressources
+#
+# Le noyau tient aussi un dernier recours pour la zone des instances, pour un
+# dépôt qui n'a pas installé la ressource « ressource ». Ce n'est pas une
+# déclaration concurrente : c'est ce qui reste quand aucune ressource ne
+# déclare, et « clia config ls » dit laquelle des deux répond.
+#
+# La séparation des deux zones de ressources n'est pas un rangement : elle
+# sépare ce qu'on écrit de ce qu'on emploie. Ce qu'on écrit change, se
+# discute, se reprend ; ce qu'on emploie est figé, et sa version est un fait.
+# Les confondre revenait à ce qu'une ressource change sous les pieds de ce
+# qui s'en sert.
 
-_CLIA_ZONE_RESSOURCE_DEFAUT='.dev/ressources'
-_CLIA_ZONE_LIVREE_DEFAUT='.clia/ressources'
+_CLIA_ZONE_AMORCE_LIVREE='.clia/ressources'
+_CLIA_ZONE_AMORCE_RESSOURCE='.dev/ressources'
 
-_clia_zone_ressource() { printf '%s\n' "${CLIA_ZONE_RESSOURCE:-$_CLIA_ZONE_RESSOURCE_DEFAUT}"; }
-_clia_zone_livree()    { printf '%s\n' "${CLIA_ZONE_RESSOURCE_LIVREE:-$_CLIA_ZONE_LIVREE_DEFAUT}"; }
+# _clia_zone_variable <nom> — la variable d'environnement qui déplace la zone.
+_clia_zone_variable() {
+  printf 'CLIA_ZONE_%s\n' "$(printf '%s' "$1" | tr '[:lower:]-' '[:upper:]_')"
+}
+
+# La zone livrée : l'environnement, sinon l'amorce. Elle ne passe pas par le
+# registre — c'est elle qui rend le registre lisible.
+_clia_zone_livree() { printf '%s\n' "${CLIA_ZONE_RESSOURCE_LIVREE:-$_CLIA_ZONE_AMORCE_LIVREE}"; }
+
+# _clia_zones_declarees [dépôt] — « nom SEP defaut SEP ressource SEP
+# description », une par zone, dans l'ordre où elles ont été trouvées.
+#
+# Les ressources sont lues comme les commandes le sont : celles du dépôt
+# source de clia, puis celles du dépôt de travail, et la première trouvée
+# l'emporte. Deux ressources qui déclareraient une zone du même nom ne se
+# mélangent pas : la première déclaration tient, et « clia config ls » nomme
+# celle qui la porte.
+#
+# Le registre est lu une fois par invocation. Le point d'entrée le calcule et
+# l'exporte, et ce qui suit s'en sert — la zone des instances est demandée
+# des dizaines de fois par commande, et parcourir les définitions à chaque
+# fois triplait le temps de réponse.
+#
+# Ce que le mémo coûte : une ressource installée pendant l'exécution ne
+# déclare ses zones qu'à l'invocation suivante. Installer est un geste, et il
+# se termine.
+_clia_zones_declarees() {
+  if [[ "${_CLIA_ZONES_DEPOT-|}" == "${1:-${CLIA_WORK_DIR:-}}" ]]; then
+    [[ -n "${_CLIA_ZONES_MEMO:-}" ]] && printf '%s\n' "$_CLIA_ZONES_MEMO"
+    return 0
+  fi
+  local depot="${1:-${CLIA_WORK_DIR:-}}" racine nom def zn zd zdesc
+  # « ressource-livree » est retenue d'avance : c'est l'amorce, et une
+  # ressource ne peut pas déclarer la zone qu'il faut connaître pour la
+  # trouver. Une déclaration de ce nom est donc ignorée, non honorée à
+  # moitié.
+  local vues_r='' vues_z=' ressource-livree ' zone_livree
+  zone_livree=$(_clia_zone_livree)
+  for racine in "${CLIA_SOURCE_DIR:-}" "$depot"; do
+    [[ -n "$racine" && -d "$racine/$zone_livree" ]] || continue
+    while IFS=$'\t' read -r nom _ _; do
+      [[ -n "$nom" ]] || continue
+      [[ " $vues_r " == *" $nom "* ]] && continue
+      vues_r="$vues_r $nom"
+      def="$racine/$zone_livree/$nom/$nom.yaml"
+      while IFS="$_CLIA_SEP" read -r zn zd zdesc; do
+        [[ -n "$zn" && -n "$zd" ]] || continue
+        [[ " $vues_z " == *" $zn "* ]] && continue
+        vues_z="$vues_z $zn"
+        printf '%s%s%s%s%s%s%s\n' \
+          "$zn" "$_CLIA_SEP" "$zd" "$_CLIA_SEP" "$nom" "$_CLIA_SEP" "$zdesc"
+      done < <(_clia_bloc_yaml "$def" zones nom defaut description)
+    done < <(_clia_ressources_de "$racine")
+  done
+  return 0
+}
+
+# _clia_memoriser_zones [dépôt] — calcule le registre et l'exporte.
+#
+# Appelé une fois par le point d'entrée. Une commande qui n'en vient pas —
+# un banc, un shell — s'en passe : le registre se recalcule alors à la
+# demande, plus lentement, et rend la même chose.
+_clia_memoriser_zones() {
+  local depot="${1:-${CLIA_WORK_DIR:-}}"
+  _CLIA_ZONES_MEMO=$(_clia_zones_declarees "$depot")
+  _CLIA_ZONES_DEPOT="$depot"
+  export _CLIA_ZONES_MEMO _CLIA_ZONES_DEPOT
+  return 0
+}
+
+# _clia_zone <nom> [dépôt] — l'emplacement d'une zone, relatif au dépôt.
+#
+# Trois sources, dans cet ordre : la variable d'environnement, la déclaration
+# de la ressource, l'amorce du noyau. Rend 1 si le nom n'est déclaré nulle
+# part — une zone inconnue est une erreur de programme, non une valeur vide.
+_clia_zone() {
+  local nom="$1" depot="${2:-${CLIA_WORK_DIR:-}}" variable valeur zn zd
+  variable=$(_clia_zone_variable "$nom")
+  valeur="${!variable:-}"
+  if [[ -n "$valeur" ]]; then printf '%s\n' "$valeur"; return 0; fi
+
+  while IFS="$_CLIA_SEP" read -r zn zd _; do
+    [[ "$zn" == "$nom" ]] || continue
+    printf '%s\n' "$zd"; return 0
+  done < <(_clia_zones_declarees "$depot")
+
+  case "$nom" in
+    ressource-livree) printf '%s\n' "$_CLIA_ZONE_AMORCE_LIVREE"; return 0 ;;
+    ressource)        printf '%s\n' "$_CLIA_ZONE_AMORCE_RESSOURCE"; return 0 ;;
+  esac
+  return 1
+}
+
+# La zone des instances. Elle passe par le registre : la ressource
+# « ressource » la déclare, et le noyau n'a le dernier mot qu'en son absence.
+_clia_zone_ressource() { _clia_zone ressource; }
+
+# --------------------------------------------------------------------------
+# Les politiques
+# --------------------------------------------------------------------------
+#
+# SES-001 tâche 21. Une politique est une variable d'environnement qui change
+# une décision du système sans changer ce qu'il sait faire. Elle a un nom, une
+# valeur par défaut, et ce qu'elle règle.
+#
+# Elles sont déclarées ici, et lues ici. Ce qui les emploie passe par
+# _clia_politique : la valeur par défaut n'est donc écrite qu'une fois, et
+# « clia config ls » la rend sans avoir à la redire.
+
+# « variable SEP defaut SEP description », une par politique.
+_clia_politiques_noyau() {
+  printf '%s\n' \
+    "CLIA_POLICY_ROLLING_RESSOURCE${_CLIA_SEP}false${_CLIA_SEP}à « true », une ressource qui n'est pas à la dernière version disponible devient un écart bloquant"
+  return 0
+}
+
+# _clia_politique <variable> — sa valeur : l'environnement, sinon le défaut.
+_clia_politique() {
+  local cible="$1" v defaut
+  while IFS="$_CLIA_SEP" read -r v defaut _; do
+    [[ "$v" == "$cible" ]] || continue
+    printf '%s\n' "${!cible:-$defaut}"
+    return 0
+  done < <(_clia_politiques_noyau)
+  return 1
+}
+
+# --------------------------------------------------------------------------
+# Ce que clia pose lui-même
+# --------------------------------------------------------------------------
+#
+# Ces variables ne se règlent pas : le point d'entrée et setup.sh les
+# écrivent, et les commandes les lisent. Les nommer ici sert à « clia config
+# ls », qui doit pouvoir dire ce qui est posé aussi bien que ce qui est
+# réglable — une variable qu'on croit pouvoir changer et qui sera réécrite
+# est un piège.
+
+# « variable SEP description », une par ligne.
+_clia_variables_posees() {
+  printf '%s\n' \
+    "CLIA_SOURCE_DIR${_CLIA_SEP}le dépôt d'où vient le code exécuté" \
+    "CLIA_WORK_DIR${_CLIA_SEP}le dépôt sur lequel la commande travaille" \
+    "CLIA_EXECUTABLE${_CLIA_SEP}le chemin par lequel clia a été appelé" \
+    "CLIA_INSTALLATION${_CLIA_SEP}la nature de l'installation en place, posée par setup.sh" \
+    "CLIA_PORTEE${_CLIA_SEP}le seul dépôt sur lequel l'installation permet de travailler"
+  return 0
+}
 
 # --------------------------------------------------------------------------
 # Ce qu'un dépôt porte

@@ -17,3 +17,12 @@ prefixe: {{prefixe}}
 version: {{version}}
 
 description: "{{description}}"
+
+# Les zones que cette ressource contrôle, s'il y en a. Une zone est
+# l'endroit où elle écrit ; la variable qui la déplace se déduit du nom —
+# « journal » se règle par $CLIA_ZONE_JOURNAL. Voir clia-config(1).
+#
+# zones:
+#   - nom: {{nom}}
+#     defaut: .dev/{{nom}}
+#     description: "où le dépôt écrit ses ..."

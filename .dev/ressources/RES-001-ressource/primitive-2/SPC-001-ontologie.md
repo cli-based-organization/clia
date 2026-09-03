@@ -171,6 +171,17 @@ sous les pieds de ce qui s'en sert.
 C'est aussi ce qui rend l'installation un geste : passer d'une zone à l'autre
 demande une commande, et cette commande est traçable.
 
+**Depuis SES-001 tâche 21, une zone est une notion, non une paire de
+constantes.** Une zone est un endroit où vit ce qu'une ressource écrit, et
+c'est la ressource qui la déclare, dans sa définition. Le noyau n'en tient
+plus la liste : il lit ce que les ressources installées déclarent, et
+`clia config ls` rend l'état réel.
+
+Les deux zones ci-dessus restent, et l'une d'elles fait exception : pour lire
+la déclaration d'une ressource, il faut d'abord la trouver, et pour la
+trouver il faut connaître la zone livrée. Elle appartient donc au noyau.
+REQ-005-zone-linux le détaille.
+
 ## 3. Qui a le droit de quoi
 
 ### 3.1 Sur les ressources installées

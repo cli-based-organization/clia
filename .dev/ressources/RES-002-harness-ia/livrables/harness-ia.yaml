@@ -17,3 +17,9 @@ prefixe: HRN
 version: 0.1.0
 
 description: "Harnais IA : les instructions qui guident agents et automatismes dans un dépôt clia."
+
+# La zone où le dépôt écrit ses harnais — SES-001 tâche 21.
+zones:
+  - nom: harnais
+    defaut: .dev/harnais-ia
+    description: "les données des harnais IA du dépôt, et ce qui en est généré"

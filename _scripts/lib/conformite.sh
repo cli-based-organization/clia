@@ -32,7 +32,7 @@ _CLIA_C_BLOQUANTS=0
 _CLIA_C_SIGNALEMENTS=0
 _CLIA_C_EXPLIQUER=0
 
-_clia_c_rolling() { [[ "${CLIA_POLICY_ROLLING_RESSOURCE:-false}" == 'true' ]]; }
+_clia_c_rolling() { [[ "$(_clia_politique CLIA_POLICY_ROLLING_RESSOURCE)" == 'true' ]]; }
 
 # _clia_c_verdict <id> <ok|bloquant|signalement> <ce qu'il dit>
 _clia_c_verdict() {

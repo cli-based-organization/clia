@@ -74,6 +74,14 @@ fi
 # du dépôt source, et la documentation répond quand même.
 _CLIA_DEPOT_COURANT=$(_clia_depot_git "$PWD" 2>/dev/null || printf '')
 
+# Les zones que les ressources déclarent, lues une fois et exportées.
+#
+# Elles sont lues ici pour la même raison que le dépôt : la fouille des
+# commandes s'en sert, et la relire à chaque appel triplait le temps de
+# réponse. Voir _clia_memoriser_zones, et clia-config(1) pour ce qu'une zone
+# est. SES-001 tâche 21.
+_clia_memoriser_zones "$_CLIA_DEPOT_COURANT"
+
 # --------------------------------------------------------------------------
 # Les commandes, et leurs déclarations
 # --------------------------------------------------------------------------
@@ -377,6 +385,22 @@ CODE DE RETOUR
        Demande mal formée. L'appelant doit reformuler.
 
 ENVIRONNEMENT
+clia se règle par l'environnement, et par rien d'autre. Ce qui
+suit nomme ce que le noyau tient ; « clia config ls » rend l'état
+réel, y compris les zones que les ressources installées
+déclarent. Voir clia-config(1).
+
+CLIA_ZONE_<NOM>
+       L'emplacement d'une zone — l'endroit où une ressource écrit.
+       La ressource la déclare dans sa définition, et la variable
+       se déduit du nom : CLIA_ZONE_, puis le nom en majuscules,
+       les tirets changés en soulignés.
+
+       Une zone arrive donc avec la ressource qui écrit dedans,
+       comme ses scripts et ses skills. Deux exceptions : la zone
+       livrée, qu'il faut connaître pour trouver une ressource, et
+       la zone des instances en dernier recours.
+
 CLIA_SOURCE_DIR
        Le dépôt d'où vient le code exécuté. Résolu par le point d'entrée,
        les liens symboliques suivis, et exporté vers la commande.
