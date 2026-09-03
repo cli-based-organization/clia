@@ -4,6 +4,7 @@ id: REQ-001
 titre: "Une fonctionnalité de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21
+editeur: agent
 ---
 
 # REQ-001 — Une fonctionnalité de ressource, sur Linux

@@ -241,6 +241,15 @@ _clia_aide() {
     if [[ "$(_clia_origine_de "${chemin%% *}")" == 'ressource' ]]; then
       printf '%s provide\n'                                     "${chemin%% *}"
       printf '%s check [--explain]\n'                            "${chemin%% *}"
+      printf '%s prim ls [-1 | -2]\n'                            "${chemin%% *}"
+      printf '%s prim check [IDENTIFIANT]\n'                     "${chemin%% *}"
+      printf '%s prim IDENTIFIANT ls\n'                          "${chemin%% *}"
+      printf '%s prim IDENTIFIANT set CLE VALEUR\n'              "${chemin%% *}"
+      printf '%s zone ls [--ressource | --generated | --delivered] [IDENTIFIANT]\n' "${chemin%% *}"
+      printf '%s make [CIBLE…]\n'                                "${chemin%% *}"
+      printf '%s make ls\n'                                      "${chemin%% *}"
+      printf '%s make config ls\n'                               "${chemin%% *}"
+      printf '%s make [--check | --explain | --man]\n'           "${chemin%% *}"
       printf '%s upgrade [--migrate] [VERSION]\n'                "${chemin%% *}"
       printf '%s downgrade [--migrate] [VERSION]\n'              "${chemin%% *}"
       printf '%s migrate [DE VERS]\n'                            "${chemin%% *}"
@@ -329,9 +338,56 @@ OPTIONS
        Reconnue en première position seulement.
 
 LES VERBES DES RESSOURCES
-Six verbes valent pour toute commande de ressource, et le point
+Huit verbes valent pour toute commande de ressource, et le point
 d'entrée les tient pour toutes. Une ressource reprise d'une
 extension les reçoit sans avoir eu à les écrire.
+
+prim ls [-1 | -2]
+prim check [IDENTIFIANT]
+prim IDENTIFIANT ls
+prim IDENTIFIANT set CLE VALEUR
+       Les primitives de l'instance que ce dépôt écrit — ce à
+       partir de quoi la ressource est produite. SES-001 tâche 22.
+
+       « ls » les liste avec leur ordre, leur structure, leur
+       origine et qui les édite ; « -1 » et « -2 » restreignent à
+       un ordre. « check » vérifie ce qui se vérifie d'elles.
+
+       Une primitive porte un identifiant PREFIXE-SEQ, de la même
+       forme qu'une instance : une primitive est une ressource, à
+       un stade. « prim IDENTIFIANT ls » dit ce qu'elle déclare, et
+       « set » le pose dans le fichier lui-même.
+
+       Deux clés se déclarent : « origine » (depot, externe) et
+       « editeur » (humain, agent, automatisme). L'identifiant,
+       l'ordre et la structure se déduisent du fichier, et ne se
+       déclarent donc pas.
+
+zone ls [--ressource | --generated | --delivered] [IDENTIFIANT]
+       Où chaque stade de la ressource vit dans ce dépôt :
+       l'instance et ses primitives, ce qui est généré, ce qui est
+       livré, et la copie installée.
+
+       Avec un identifiant, la zone de cette primitive-là.
+
+make [CIBLE…]
+make ls
+make config ls
+make [--check | --explain | --man]
+       Construire le stade généré à partir des primitives.
+
+       clia ne construit rien lui-même : il lance make(1) dans
+       l'instance, dont le Makefile porte les règles et dont
+       genere/ reçoit ce qu'elles produisent. « ls » rend ce qui
+       serait fait, « --check » demande à make si c'est à jour.
+
+       « generate » nomme le même verbe. L'énoncé de SES-001
+       tâche 22 proposait aussi « gen » ; il n'est pas repris,
+       parce que « clia hrn gen » existe déjà et désigne autre
+       chose — un verbe générique qui masquerait un verbe de
+       ressource ferait disparaître une commande sans le dire.
+
+       Le manuel complet : clia <ressource> make --man.
 
 check [--explain]
        La conformité de la ressource : ses zones, la forme de sa
@@ -590,7 +646,7 @@ fi
 # pour travailler, et être installée dans l'un d'eux. Le dépôt est donc résolu
 # ici, et son absence refusée ici.
 if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
-   && [[ "${1:-}" =~ ^(deactivate|provide|check|upgrade|downgrade|migrate)$ ]]; then
+   && [[ "${1:-}" =~ ^(deactivate|provide|check|prim|primitive|zone|make|generate|upgrade|downgrade|migrate)$ ]]; then
   _CLIA_VERBE="$1"; shift
 
   case "$_CLIA_VERBE" in
@@ -622,6 +678,18 @@ if [[ "$(_clia_origine_de "$COMMANDE")" == 'ressource' ]] \
       # shellcheck source=../lib/conformite.sh
       . "$CLIA_SOURCE_DIR/_scripts/lib/conformite.sh"
       _clia_c_verifier "$COMMANDE" "$FICHIER" "$@" ;;
+    prim|primitive)
+      # shellcheck source=../lib/stade.sh
+      . "$CLIA_SOURCE_DIR/_scripts/lib/stade.sh"
+      _clia_s_prim "$COMMANDE" "$FICHIER" "$@" ;;
+    zone)
+      # shellcheck source=../lib/stade.sh
+      . "$CLIA_SOURCE_DIR/_scripts/lib/stade.sh"
+      _clia_s_zone "$COMMANDE" "$FICHIER" "$@" ;;
+    make|generate)
+      # shellcheck source=../lib/generation.sh
+      . "$CLIA_SOURCE_DIR/_scripts/lib/generation.sh"
+      _clia_g_make "$COMMANDE" "$FICHIER" "$@" ;;
     upgrade|downgrade)   _clia_r_maj        "$COMMANDE" "$FICHIER" "$_CLIA_VERBE" "$@" ;;
     migrate)             _clia_r_migrer     "$COMMANDE" "$FICHIER" "$@" ;;
   esac

@@ -71,7 +71,8 @@ _clia_c1_zones() {
     for entree in "$dir"/*; do
       [[ -e "$entree" ]] || continue
       case "$(basename "$entree")" in
-        primitive-1|primitive-2|livrables) ;;
+        primitive-1|primitive-2|genere|livrables) ;;
+        Makefile|makefile|GNUmakefile) ;;
         *) intrus="${intrus:+$intrus }$(basename "$entree")" ;;
       esac
     done
@@ -96,8 +97,12 @@ _clia_c1_zones() {
   fi
 
   _clia_c_explique \
-    "C1 — une instance porte primitive-1/, primitive-2/ et livrables/, et" \
-    "rien d'autre. primitive-2/ est au besoin." \
+    "C1 — une instance porte un répertoire par stade, et rien d'autre :" \
+    "primitive-1/, primitive-2/, genere/ et livrables/. Les trois premiers" \
+    "sont au besoin — SPC-002 pour ce qu'est un stade." \
+    "" \
+    "Un Makefile y est admis : c'est lui qui construit genere/ à partir des" \
+    "primitives, et « clia <ressource> make » le lance." \
     "" \
     "livrables/ n'est pas contrôlé ici : un répertoire qui n'en porte pas" \
     "n'est pas reconnu comme une instance, et « clia res ls » l'omet." \

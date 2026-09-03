@@ -32,6 +32,7 @@ zones:
 # restent chez qui les écrit, et ne voyagent pas.
 primitives:
   - fichier: primitive-2/SPC-001-ontologie.md
+  - fichier: primitive-2/SPC-002-stades.md
   - fichier: primitive-2/REQ-001-feature-linux.md
   - fichier: primitive-2/REQ-002-script-linux.md
   - fichier: primitive-2/REQ-003-skill-linux.md

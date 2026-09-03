@@ -4,6 +4,7 @@ id: REQ-003
 titre: "Un skill de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21
+editeur: agent
 ---
 
 # REQ-003 — Un skill de ressource, sur Linux

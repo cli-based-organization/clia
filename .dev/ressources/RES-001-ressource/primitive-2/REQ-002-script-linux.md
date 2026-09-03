@@ -4,6 +4,7 @@ id: REQ-002
 titre: "Un script de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21
+editeur: agent
 ---
 
 # REQ-002 — Un script de ressource, sur Linux
@@ -105,11 +106,11 @@ seul endroit.
 
 ## 5. Les verbes que le point d'entrée retient
 
-Six verbes ne sont déclarés dans aucun fichier de ressource, et valent
+Huit verbes ne sont déclarés dans aucun fichier de ressource, et valent
 pourtant pour toutes :
 
 ```
-deactivate  provide  check  upgrade  downgrade  migrate
+deactivate  provide  check  prim  zone  upgrade  downgrade  migrate
 ```
 
 Le point d'entrée les intercepte **avant** d'exécuter le script. Une

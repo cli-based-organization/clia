@@ -4,6 +4,7 @@ id: SPC-001
 titre: "Ontologie de la ressource"
 ordre: 2
 source: SES-001 tâche 19
+editeur: agent
 ---
 
 # SPC-001 — Ontologie de la ressource
@@ -46,11 +47,15 @@ Une ressource clia a un nom, un préfixe, et sa propre version.
 Le préfixe est celui de la ressource dont elle est une instance ; la séquence
 la numérote dans le dépôt ; le slug la nomme pour un lecteur.
 
-Une instance porte trois choses, et rien d'autre n'y a sa place :
+Une instance porte un répertoire par stade, et rien d'autre n'y a sa place :
 
     primitive-1/   ce à partir de quoi elle est produite, côté humain
     primitive-2/   ce à partir de quoi elle est produite, côté mixte
+    genere/        ce qui en est construit
     livrables/     ce qui en est produit
+
+Plus un `Makefile`, quand il y a quelque chose à construire : il porte les
+règles qui font `genere/` à partir des primitives — SPC-002 §1.2.
 
 **Décision.** Les livrables vivent dans l'instance, à côté des primitives.
 L'énoncé de SES-001 tâche 19 s'interrompait sur ce point ; l'humain a tranché

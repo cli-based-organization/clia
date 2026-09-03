@@ -4,6 +4,7 @@ id: REQ-004
 titre: "La conformité d'une ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21
+editeur: agent
 ---
 
 # REQ-004 — La conformité d'une ressource, sur Linux
@@ -54,8 +55,9 @@ n'a donc pas de conformité à mesurer.
 
 ### C1 — les zones sont respectées
 
-Une instance porte `primitive-1/`, `primitive-2/` et `livrables/`, et rien
-d'autre. Toute autre entrée du répertoire est un écart bloquant, nommée.
+Une instance porte un répertoire par stade — `primitive-1/`, `primitive-2/`,
+`genere/`, `livrables/` — plus un `Makefile` quand il y a quelque chose à
+construire. Toute autre entrée du répertoire est un écart bloquant, nommée.
 
 `livrables/` n'est pas exigé ici : un répertoire qui n'en porte pas n'est pas
 reconnu comme une instance — `_clia_instances_de` l'omet — et il n'y a alors

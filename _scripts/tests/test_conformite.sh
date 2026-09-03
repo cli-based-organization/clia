@@ -110,7 +110,7 @@ dit 'et dans celle d une autre, sans qu elle l ait declare' 'clia hrn check \[--
 
 rc 'le manuel de clia le decrit' 0 "$CLIA" --man
 dit 'sous les verbes des ressources' 'check \[--explain\]'
-dit 'et il compte six verbes' 'Six verbes valent pour toute commande'
+dit 'et il compte huit verbes' 'Huit verbes valent pour toute commande'
 dit 'la politique y est declaree' 'CLIA_POLICY_ROLLING_RESSOURCE'
 
 # ==========================================================================
@@ -132,7 +132,7 @@ dit 'et le verdict compte les signalements' 'conforme, avec 1 signalement'
 dit 'et renvoie vers --explain' 'clia out check --explain'
 
 rc_dans 'clia RESSOURCE check --explain est satisfaite' 0 "$D" out check --explain
-dit 'chaque controle est explique' 'C1 — une instance porte primitive-1/'
+dit 'chaque controle est explique' 'C1 — une instance porte un répertoire par stade'
 dit 'C2 aussi' 'C2 — la définition déclare nom, titre'
 dit 'C3 aussi' 'C3 — un livrable reproductible'
 dit 'C4 aussi' 'C4 — SES-001 tâche 17'
