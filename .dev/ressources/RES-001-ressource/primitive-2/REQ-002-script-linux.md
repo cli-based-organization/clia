@@ -1,6 +1,6 @@
 ---
 type: requis
-id: REQ-002
+id: clia:b16c852b-7a4b-4865-b9fc-a1c805f1f49d
 titre: "Un script de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21

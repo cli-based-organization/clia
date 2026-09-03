@@ -1,6 +1,6 @@
 ---
 type: requis
-id: REQ-001
+id: clia:57a0d628-3f71-4639-b88d-af4d8125c8ea
 titre: "Une fonctionnalité de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21

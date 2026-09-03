@@ -1,6 +1,6 @@
 ---
 type: requis
-id: REQ-004
+id: clia:eb0972f4-0f5a-4c5c-820e-aac90d60c705
 titre: "La conformité d'une ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21
@@ -51,7 +51,27 @@ Une ressource sans définition est **refusée** avant tout contrôle, code 1 :
 un répertoire qui ne porte pas sa définition n'est pas une ressource, et
 n'a donc pas de conformité à mesurer.
 
-## 3. Les cinq contrôles
+## 3. Les six contrôles
+
+### C0 — l'IIE est là, et bien formée
+
+**C'est le premier, et c'est le seul qui décide si l'objet jugé est une
+ressource.** Les cinq autres jugent une ressource ; celui-ci juge qu'il y en
+a une — SES-001 tâche 24, et SPC-003.
+
+Trois écarts, tous bloquants :
+
+```
+aucune identité déclarée        « id: » manque
+« id: … » n'a pas la forme      elle n'est pas clia:<uuid>
+elle pointe vers ce qui n'est   une IIE externe dont la representation
+pas là                          est absente
+```
+
+Seule la présence et la forme absolue sont vérifiées ici, en bash : ce
+contrôle doit répondre là où cue n'est pas installé. La forme entière est
+jugée par `clia res iie check`, contre `schemas/iie.cue`.
+
 
 ### C1 — les zones sont respectées
 

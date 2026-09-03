@@ -1,6 +1,6 @@
 ---
 type: specification
-id: SPC-001
+id: clia:3598fdca-4b1d-469c-b1e5-fe7c6974018a
 titre: "Ontologie de la ressource"
 ordre: 2
 source: SES-001 tâche 19

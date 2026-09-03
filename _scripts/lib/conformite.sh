@@ -3,10 +3,11 @@
 #
 # Implémente SES-001 tâche 20.
 #
-# Cinq contrôles, et ils portent sur deux choses à la fois : l'instance que le
+# Six contrôles, et ils portent sur deux choses à la fois : l'instance que le
 # dépôt écrit, quand il en écrit une, et la copie qu'il a installée. Une
 # ressource peut être l'une, l'autre, ou les deux — voir SPC-001-ontologie.
 #
+#   C0  l'IIE est là, et bien formée
 #   C1  les zones sont respectées
 #   C2  les données structurées ont la forme voulue
 #   C3  les primitives que la livraison déclare sont là
@@ -27,6 +28,9 @@
 # qui veut suivre au plus près.
 #
 # Constater n'est pas réparer. Cette commande n'écrit rien.
+
+# shellcheck source=identite.sh
+. "${CLIA_SOURCE_DIR:-}/_scripts/lib/identite.sh"
 
 _CLIA_C_BLOQUANTS=0
 _CLIA_C_SIGNALEMENTS=0
@@ -55,6 +59,60 @@ _clia_c_explique() {
     if [[ -z "$ligne" ]]; then printf '\n'; else printf '       %s\n' "$ligne"; fi
   done
   printf '\n'
+}
+
+# --------------------------------------------------------------------------
+# C0 — l'IIE
+# --------------------------------------------------------------------------
+#
+# SES-001 tâche 24 : « la présence d'un IIE est le premier critère de
+# conformité ». C'est le premier parce que c'est le seul qui décide si l'objet
+# jugé est une ressource. Les quatre autres jugent une ressource ; celui-ci
+# juge qu'il y en a une.
+
+_clia_c0_identite() {
+  local def="$1" depot="$2" id representation
+
+  id=$(_clia_id_champ "$def" id)
+
+  if [[ -z "$id" ]]; then
+    _clia_c_verdict C0 bloquant "aucune identité déclarée : « id: » manque"
+  elif ! _clia_id_est_absolue "$id"; then
+    _clia_c_verdict C0 bloquant "« id: $id » n'a pas la forme clia:<uuid>"
+  elif _clia_id_externe "$def"; then
+    representation=$(_clia_id_champ "$def" representation)
+    # Le chemin est relatif au fichier qui porte l'IIE : c'est de là qu'elle
+    # pointe. Une URI, elle, est absolue par nature.
+    if [[ "$representation" == *://* ]] || [[ -e "$(dirname "$def")/$representation" ]]; then
+      _clia_c_verdict C0 ok "identité externe, vers $representation"
+    else
+      _clia_c_verdict C0 bloquant "elle pointe vers ce qui n'est pas là : $representation"
+    fi
+  else
+    _clia_c_verdict C0 ok "$id"
+  fi
+
+  _clia_c_explique \
+    "C0 — une ressource clia est reconnaissable à une seule chose : elle" \
+    "porte des informations d'identification et d'essentialisation." \
+    "" \
+    "L'identité absolue est déclarée, parce qu'un uuid ne se déduit de" \
+    "rien :" \
+    "" \
+    "    id: clia:0f9a1b2c-3d4e-5f60-8192-a3b4c5d6e7f8" \
+    "" \
+    "Les deux autres formes s'en dérivent — <PREFIXE>-<SEQ> dans un dépôt," \
+    "<NAMESPACE>/<PREFIXE>-<SEQ> entre dépôts. Elles ne se déclarent donc" \
+    "pas : la séquence vient du nom de l'instance, le namespace de la carte." \
+    "" \
+    "Une IIE externe — qui identifie autre chose que le fichier qui la" \
+    "porte — doit dire vers quoi elle pointe, sous « representation: »." \
+    "Sans cela elle n'identifie rien. Le chemin y est relatif au fichier qui" \
+    "porte l'IIE ; une URI, elle, est absolue." \
+    "" \
+    "C'est le premier contrôle parce que c'est le seul qui décide si l'objet" \
+    "jugé est une ressource. Les autres jugent une ressource ; celui-ci juge" \
+    "qu'il y en a une. Voir SPC-003-identite."
 }
 
 # --------------------------------------------------------------------------
@@ -351,8 +409,23 @@ _clia_c_verifier() {
   else
     printf 'état       installée, venue de %s\n' "${provider:-(provenance non déclarée)}"
   fi
-  printf 'version    %s\n\n' "${courante:-—}"
+  printf 'version    %s\n' "${courante:-—}"
+  # La forme partageable de la ressource, non de son instance : c'est la
+  # définition qui porte l'IIE, et une définition n'a pas de séquence.
+  #
+  # L'autorité est celle qui publie la ressource, non celle du dépôt qui la
+  # lit : une ressource reprise d'une extension garde le namespace de son
+  # éditeur, sans quoi deux dépôts la nommeraient différemment.
+  local prefixe_def autorite
+  prefixe_def=$(_clia_champ_yaml "$def" prefixe || printf '')
+  if [[ -z "$id" && -n "${provider:-}" ]]; then
+    printf 'identité   %s/%s\n\n' "$provider" "${prefixe_def:-—}"
+  else
+    autorite=$(_clia_id_partageable "$depot" "$prefixe_def")
+    printf 'identité   %s\n\n' "$autorite"
+  fi
 
+  _clia_c0_identite   "$def" "$depot"
   _clia_c1_zones      "$depot" "$nom" "$id"
   _clia_c2_format     "$def" "$nom" "$id"
   _clia_c3_primitives "$depot" "$id" "$def"

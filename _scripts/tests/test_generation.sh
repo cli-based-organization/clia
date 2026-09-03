@@ -83,6 +83,7 @@ depot() {
   printf 'namespace: exemple.test/%s\nversion: 1.0.0\n' "$1" > "$d/clia.yaml"
   cat > "$d/$INST/$ID/livrables/outil.yaml" <<'YAML'
 nom: outil
+id: clia:0f9a1b2c-3d4e-5f60-8192-a3b4c5d6e7f8
 titre: Outil
 prefixe: OUT
 version: 0.1.0

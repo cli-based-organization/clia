@@ -1,6 +1,6 @@
 ---
 type: requis
-id: REQ-003
+id: clia:9aac4636-03aa-4e71-832a-d9a17327e13b
 titre: "Un skill de ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 21

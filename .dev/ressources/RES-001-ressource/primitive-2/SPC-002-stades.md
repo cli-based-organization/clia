@@ -1,6 +1,6 @@
 ---
 type: specification
-id: SPC-002
+id: clia:0f1f1bd0-69c2-4971-8a97-e4aa103a5b19
 titre: "Les stades d'une ressource"
 ordre: 2
 source: SES-001 tâche 22

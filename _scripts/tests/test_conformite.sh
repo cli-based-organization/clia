@@ -67,6 +67,7 @@ ecrire_outil() {
   mkdir -p "$liv/_scripts"
   cat > "$liv/outil.yaml" <<YAML
 nom: outil
+id: clia:0f9a1b2c-3d4e-5f60-8192-a3b4c5d6e7f8
 titre: Outil
 prefixe: OUT
 version: $version

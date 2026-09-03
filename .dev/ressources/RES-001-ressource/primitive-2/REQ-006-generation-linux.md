@@ -1,6 +1,6 @@
 ---
 type: requis
-id: REQ-006
+id: clia:f08757c2-7145-4386-991c-df6bb86bc822
 titre: "La génération d'une ressource, sur Linux"
 ordre: 2
 source: SES-001 tâche 23

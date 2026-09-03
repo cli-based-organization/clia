@@ -12,6 +12,7 @@
 #   skills/       les procédures qu'elle fournit
 
 nom: ressource
+id: clia:c8ce0ac6-0608-443c-b255-be9fb5419d95
 titre: Ressource
 prefixe: RES
 version: 0.1.0
@@ -33,6 +34,7 @@ zones:
 primitives:
   - fichier: primitive-2/SPC-001-ontologie.md
   - fichier: primitive-2/SPC-002-stades.md
+  - fichier: primitive-2/SPC-003-identite.md
   - fichier: primitive-2/REQ-001-feature-linux.md
   - fichier: primitive-2/REQ-002-script-linux.md
   - fichier: primitive-2/REQ-003-skill-linux.md
