@@ -387,17 +387,17 @@ version_de_ressource() {
   fi
   printf '%s\n' "$posee"
 
-  etat=$(_clia_pc_etat "$depot" "$nom" "$posee")
+  local pourquoi
+  IFS="$_CLIA_SEP" read -r etat pourquoi < <(_clia_pc_etat "$depot" "$nom" "$posee")
   case "$etat" in
     'à jour')
       _clia_msg "$nom : $posee, la dernière que $(_clia_pc_source "$depot" "$nom") déclare" ;;
     'en retard')
-      _clia_msg "$nom : $posee, alors que $(_clia_pc_derniere "$depot" "$nom") est disponible"
+      _clia_msg "$nom : $posee, alors que $pourquoi"
       _clia_detail "pour l'y amener : clia upgrade $nom" ;;
-    'en avance')
-      _clia_msg "$nom : $posee, au-delà de ce que sa source déclare" ;;
     *)
-      _clia_msg "$nom : $posee ; sa source n'a pas été jointe" ;;
+      _clia_msg "$nom : $posee, et elle est brisée — $pourquoi"
+      _clia_detail "brisée, elle est inactive : clia ne sert pas « clia $(printf '%s' "$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" prefixe)" | tr '[:upper:]' '[:lower:]') »" ;;
   esac
   _clia_detail "les versions disponibles : clia update $nom"
   return 0

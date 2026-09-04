@@ -368,6 +368,22 @@ _clia_mj_ressource() {
     }
   fi
 
+  # Ce qui est posé vient d'un commit. Quand le dépôt est sa propre source,
+  # son instance peut porter du travail non commité — et ce travail-là n'est
+  # dans aucun commit à extraire : le poser l'effacerait sans retour.
+  #
+  # Le refus est ici, avant qu'un fichier soit touché. --force passe outre,
+  # pour qui sait ce qu'il abandonne.
+  if (( publiee_ici )) && [[ "$force" != '1' ]]; then
+    if [[ -n "$(git -C "$racine" status --porcelain -- "$livrable_rel" 2>/dev/null)" ]]; then
+      _clia_msg "$nom : son instance porte du travail non commité"
+      _clia_detail "ce qui serait posé vient de l'historique ; ce travail n'y est pas"
+      _clia_detail "commitez $livrable_rel, puis relancez"
+      _clia_detail "--force passe outre, et ce travail est alors perdu"
+      return 1
+    fi
+  fi
+
   tmp=$(mktemp -d)/ressource
   _clia_mj_extraire_ressource "$racine" "$commit_cible" "$livrable_rel" "$tmp" || {
     _clia_msg "$nom : l'extraction de $cible a échoué"

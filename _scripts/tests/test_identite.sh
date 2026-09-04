@@ -102,7 +102,11 @@ depot() {
   mkdir -p "$d/$INST/$ID/primitive-1" "$d/$INST/$ID/primitive-2" \
            "$d/$INST/$ID/livrables/_scripts" "$d/$LIVREE"
   git -C "$d" init -q
-  printf 'namespace: exemple.test/%s\nversion: 1.0.0\n' "$1" > "$d/clia.yaml"
+  # Le dépôt publie la ressource qu'il installe : sans provenance déclarée,
+  # « clia ls » la dirait brisée — SES-002 tâche 2.
+  { printf 'namespace: exemple.test/%s\nversion: 1.0.0\n\n' "$1"
+    printf 'provide:\n  - prefix: OUT\n    name: outil\n'
+  } > "$d/clia.yaml"
   { printf 'nom: outil\n'
     [[ "$iie" != 'sans' ]] && printf 'id: %s\n' "$iie"
     printf 'titre: Outil\nprefixe: OUT\nversion: 0.1.0\n\n'

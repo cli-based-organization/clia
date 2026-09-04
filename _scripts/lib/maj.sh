@@ -82,8 +82,22 @@ _clia_m_versions() {
 }
 
 # _clia_m_derniere <racine> <def> — la version la plus récemment déclarée.
+#
+# C'est celle que porte le fichier au dernier commit qui l'a touché, donc
+# celle qu'il porte à HEAD. La lire là coûte un « git show » ; la déduire du
+# parcours complet en coûte un par commit, et rend la même chose.
+#
+# Le parcours reste, pour le cas où le fichier n'est pas à HEAD : déplacé,
+# retiré, ou jamais commité à cet emplacement. Il rend alors ce que
+# l'historique déclare encore, ou rien.
 _clia_m_derniere() {
   local v c derniere=''
+  if derniere=$(_clia_v_alias_au_commit "$1" HEAD "$2" 2>/dev/null) \
+     && [[ -n "$derniere" ]]; then
+    printf '%s\n' "$derniere"
+    return 0
+  fi
+  derniere=''
   while IFS=$'\t' read -r v c; do
     [[ -n "$v" ]] && derniere="$v"
   done < <(_clia_m_versions "$1" "$2")

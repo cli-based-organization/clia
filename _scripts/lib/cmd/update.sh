@@ -90,18 +90,17 @@ Une ressource à jour n'apparaît pas dans la liste sans argument :
 la question posée est « qu'est-ce qui est en retard », et une
 réponse qui listerait aussi ce qui va bien ne se lirait plus.
 
-Une ressource dont la source n'est pas joignable n'y apparaît pas
-non plus, et clia le dit à part : il ne peut pas affirmer qu'elle
-est en retard, ni qu'elle ne l'est pas. Voir clia-ls(1), qui la
-rend « inconnu ».
+Une ressource brisée n'y apparaît pas non plus, et clia la nomme à
+part avec ce qui la brise : aucune mise à jour ne la concerne tant
+que clia ne sait pas d'où elle vient. Voir clia-ls(1).
 
 CODE DE RETOUR
 0
        La liste a été rendue, même vide.
 
 1
-       La ressource nommée n'existe pas, ou sa source n'est pas
-       joignable.
+       La ressource nommée n'existe pas, ou clia ne trouve pas le
+       dépôt qui la publie.
 
 2
        Demande mal formée.
@@ -129,15 +128,15 @@ FIN
 # --------------------------------------------------------------------------
 
 en_retard() {
-  local prefixe nom source version etat lignes='' inconnues=''
+  local prefixe nom source version etat lignes='' brisees='' pourquoi
 
-  while IFS="$_CLIA_SEP" read -r prefixe nom source version etat _ _; do
+  while IFS="$_CLIA_SEP" read -r prefixe nom source version etat pourquoi _ _; do
     [[ -n "$nom" ]] || continue
     case "$etat" in
       'en retard')
         lignes+=$(printf '%s\t%s\t%s\t%s\t%s' "$prefixe" "$nom" "$source" \
           "$version" "$(_clia_pc_derniere "$DEPOT" "$nom")")$'\n' ;;
-      'inconnu') inconnues="${inconnues:+$inconnues }$nom" ;;
+      'brisée')  brisees+=$(printf '%s\t%s' "$nom" "$pourquoi")$'\n' ;;
     esac
   done < <(_clia_pc_parc "$DEPOT")
 
@@ -150,8 +149,12 @@ en_retard() {
     _clia_msg "aucune ressource installée n'est en retard"
   fi
 
-  if [[ -n "$inconnues" ]]; then
-    _clia_detail "source non jointe, donc rien à en dire : $inconnues"
+  if [[ -n "$brisees" ]]; then
+    _clia_msg "et $(printf '%s' "$brisees" | grep -c .) ressource(s) brisée(s), qu'aucune mise à jour ne concerne :"
+    while IFS=$'\t' read -r nom pourquoi; do
+      [[ -n "$nom" ]] || continue
+      _clia_detail "$nom : $pourquoi"
+    done <<<"$brisees"
     _clia_detail "les sources déclarées : clia extension ls"
   fi
   return 0
@@ -169,8 +172,8 @@ versions_de() {
   done < <(_clia_pc_versions "$DEPOT" "$nom")
 
   if [[ -z "$lignes" ]]; then
-    _clia_msg "$nom : sa source ne déclare aucune version"
-    _clia_detail "soit elle n'est pas joignable, soit rien n'y a été commité"
+    _clia_msg "$nom : le dépôt qui la publie ne déclare aucune version d'elle"
+    _clia_detail "soit clia ne le trouve pas, soit rien n'y a été commité"
     _clia_detail "d'où elle vient : clia ls"
     return 1
   fi

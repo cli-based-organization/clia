@@ -65,6 +65,40 @@ fi
 # shellcheck source=../lib/commun.sh
 . "$CLIA_SOURCE_DIR/_scripts/lib/commun.sh"
 
+# -C ROOT_PATH — SES-002 tâche 3
+#
+# clia agit sur le dépôt d'où on l'appelle. Cette option dit d'où on l'appelle,
+# sans avoir à s'y déplacer : « clia -C ../autre ls » répond exactement comme
+# « cd ../autre && clia ls ».
+#
+# Elle est lue ici, avant que le dépôt courant soit résolu, parce que c'est
+# elle qui décide lequel. Elle vient donc avant la commande, comme dans
+# « setup.sh -C ROOT_PATH activate » — et comme dans git, tar et make, qui
+# emploient la même lettre pour la même chose.
+#
+# Le déplacement est un vrai « cd » : ce qui suit — la résolution du dépôt,
+# les chemins relatifs qu'une commande recevrait — voit le même monde que si
+# l'appel venait de là. Une demi-mesure aurait laissé des chemins relatifs
+# pointer ailleurs que le reste.
+if [[ "${1:-}" == '-C' ]]; then
+  shift
+  if (( $# == 0 )); then
+    _clia_msg '-C attend un répertoire'
+    _clia_detail "l'usage : clia -C ROOT_PATH COMMANDE…"
+    exit 2
+  fi
+  _CLIA_RACINE_APPEL="$1"; shift
+  if [[ ! -d "$_CLIA_RACINE_APPEL" ]]; then
+    _clia_msg "-C : ce n'est pas un répertoire — $_CLIA_RACINE_APPEL"
+    exit 1
+  fi
+  # Le chemin par lequel clia a été appelé peut être relatif : il doit rester
+  # valable après le déplacement.
+  [[ "$CLIA_EXECUTABLE" == /* ]] || CLIA_EXECUTABLE="$PWD/$CLIA_EXECUTABLE"
+  export CLIA_EXECUTABLE
+  cd -- "$_CLIA_RACINE_APPEL" || exit 1
+fi
+
 # Le dépôt d'où l'on appelle, résolu une fois et sans exiger qu'il existe.
 #
 # Il est résolu ici, avant la fouille des commandes, parce que sa carte
@@ -195,7 +229,7 @@ _clia_entree_de_commande() {
 
 _CLIA_SIGNATURES_GLOBALES=(
   '[-h | --help | --man | -v | --version]'
-  '<commande> [-h | --help | --man]'
+  '[-C ROOT_PATH] <commande> [-h | --help | --man]'
 )
 
 # Toutes les signatures déclarées, celles du CLI puis celles des commandes.
@@ -338,6 +372,15 @@ OPTIONS
        CLI est celle du système d'information qu'il outille ; deux
        orthographes du même mot ne doivent pas désigner deux objets.
        Reconnue en première position seulement.
+
+-C ROOT_PATH
+       Agir comme si l'appel venait de ROOT_PATH. « clia -C ../autre
+       ls » répond exactement comme « cd ../autre && clia ls ».
+
+       Elle se place avant la commande, parce que c'est elle qui
+       décide sur quel dépôt la commande travaille. C'est la même
+       lettre, au même endroit et pour la même chose que dans git,
+       tar et make.
 
 LES VERBES DES RESSOURCES
 Neuf verbes valent pour toute commande de ressource, et le point

@@ -26,8 +26,8 @@
 #            installée est figée — SPC-001 §1.9
 #
 #   ETAT     « à jour » ou « en retard » par rapport à ce que sa source
-#            déclare aujourd'hui. « inconnu » quand la source n'est pas
-#            joignable : c'est une information, non son absence
+#            déclare aujourd'hui. « brisée » quand ce n'est ni l'un ni
+#            l'autre — SES-002 tâche 2
 #
 #   ACTIF    sa commande est-elle réellement servie par elle. Rien n'est
 #            déclaré : l'état se lit là où le point d'entrée regarde, et il
@@ -97,16 +97,27 @@ STATE
        à jour     la version posée est la dernière que sa source
                   déclare
        en retard  sa source en déclare une plus récente
-       en avance  la copie dépasse ce que sa source déclare — le
-                  cas d'un dépôt qui écrit une ressource et ne l'a
-                  pas encore réinstallée
-       inconnu    la source n'a pas été jointe
+       brisée     tout le reste
+
+       Deux états sont sains, et un seul ne l'est pas. Une
+       ressource brisée est une ressource dont clia ne peut dire ni
+       d'où elle vient ni où elle en est : le dépôt qui la publie
+       est introuvable, il ne déclare aucune version d'elle, sa
+       version ne se lit pas, ou la copie posée dépasse ce que sa
+       source déclare.
+
+       Ce dernier cas n'est pas une avance : c'est une copie dont
+       l'origine ne se retrouve pas.
 
 ACTIVE
        actif      sa commande est servie par elle
-       inactif    elle ne porte pas de script, ou son nom de
-                  commande est pris par le noyau ou par une autre
-                  ressource
+       inactif    elle est brisée, elle ne porte pas de script, ou
+                  son nom de commande est pris par le noyau ou par
+                  une autre ressource
+
+       Une ressource brisée n'est jamais rendue active : clia ne
+       peut pas dire d'où elle vient, et s'en remettre à elle
+       reviendrait à s'en remettre à ce qu'on ne sait pas.
 
        Rien n'est déclaré : l'état se lit là où le point d'entrée
        cherche ses commandes.
@@ -143,7 +154,7 @@ FIN
 lister() {
   local prefixe nom source version etat actif raison lignes='' inactives=0
 
-  while IFS="$_CLIA_SEP" read -r prefixe nom source version etat actif raison; do
+  while IFS="$_CLIA_SEP" read -r prefixe nom source version etat _ actif raison; do
     [[ -n "$nom" ]] || continue
     [[ "$actif" == 'inactif' ]] && inactives=$((inactives + 1))
     lignes+=$(printf '%s\t%s\t%s\t%s\t%s\t%s' \
@@ -162,8 +173,8 @@ lister() {
   } | column -t -s $'\t'
 
   if (( inactives > 0 )); then
-    _clia_msg "$inactives ressource(s) inactive(s) : leur commande n'est pas servie par elles"
-    while IFS="$_CLIA_SEP" read -r _ nom _ _ _ actif raison; do
+    _clia_msg "$inactives ressource(s) inactive(s) : clia ne sert pas leur commande"
+    while IFS="$_CLIA_SEP" read -r _ nom _ _ _ _ actif raison; do
       [[ "$actif" == 'inactif' ]] || continue
       _clia_detail "$nom : $raison"
     done < <(_clia_pc_parc "$DEPOT")

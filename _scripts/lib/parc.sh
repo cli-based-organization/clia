@@ -127,20 +127,67 @@ _clia_pc_versions() {
   _clia_m_versions "$racine" "$def"
 }
 
-# _clia_pc_etat <dépôt> <nom> <version posée> — « à jour », « en retard », ou
-# « en avance » quand la copie dépasse ce que sa source déclare.
+# _clia_pc_etat <dépôt> <nom> <version posée> — « état SEP raison ».
 #
-# « inconnu » n'est pas un jugement mis par défaut : il dit que la source n'a
-# pas été jointe, et c'est une information, non une absence d'information.
+# Trois états, et deux seulement sont sains — SES-002 tâche 2 :
+#
+#   à jour     la version posée est la dernière que sa source déclare
+#   en retard  sa source en déclare une plus récente
+#   brisée     tout le reste
+#
+# Une ressource brisée est une ressource dont clia ne peut pas dire d'où elle
+# vient ni où elle en est. Ce n'est pas une absence d'information : c'est une
+# information, et elle est mauvaise. Quatre causes, et chacune se nomme —
+# « inconnu » n'en nommait aucune.
+#
+# Le cas « au-delà de sa source » en fait partie : une copie installée plus
+# récente que ce que sa source déclare n'a pas d'origine vérifiable. Elle
+# vient d'un état que personne ne peut retrouver.
 _clia_pc_etat() {
-  local depot="$1" nom="$2" posee="$3" derniere
-  derniere=$(_clia_pc_derniere "$depot" "$nom") || { printf 'inconnu\n'; return 0; }
+  local depot="$1" nom="$2" posee="$3" derniere racine
+
+  if ! _clia_v_est_semantique "$posee"; then
+    printf 'brisée%ssa définition déclare « %s », qui n%sa pas la forme X.Y.Z\n' \
+      "$_CLIA_SEP" "${posee:-—}" "'"
+    return 0
+  fi
+
+  if ! IFS="$_CLIA_SEP" read -r racine _ < <(_clia_pc_racine_et_def "$depot" "$nom"); then
+    printf 'brisée%sclia ne trouve pas le dépôt qui la publie\n' "$_CLIA_SEP"
+    return 0
+  fi
+
+  if ! derniere=$(_clia_pc_derniere "$depot" "$nom"); then
+    printf 'brisée%sle dépôt qui la publie ne déclare aucune version d%selle\n' \
+      "$_CLIA_SEP" "'"
+    return 0
+  fi
+
   case "$(_clia_m_comparer "$posee" "$derniere" 2>/dev/null)" in
-    '0')  printf 'à jour\n' ;;
-    '-1') printf 'en retard\n' ;;
-    '1')  printf 'en avance\n' ;;
-    *)    printf 'inconnu\n' ;;
+    '0')  printf 'à jour%s—\n'    "$_CLIA_SEP" ;;
+    '-1') printf 'en retard%s%s est disponible\n' "$_CLIA_SEP" "$derniere" ;;
+    '1')  printf 'brisée%selle dépasse %s, la dernière que sa source déclare\n' \
+            "$_CLIA_SEP" "$derniere" ;;
+    *)    printf 'brisée%s%s et %s ne se comparent pas\n' \
+            "$_CLIA_SEP" "$posee" "$derniere" ;;
   esac
+  return 0
+}
+
+# _clia_pc_brisee <dépôt> <nom> — vrai si la ressource est brisée.
+_clia_pc_brisee() {
+  local depot="$1" nom="$2" posee etat
+  posee=$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" version || printf '')
+  IFS="$_CLIA_SEP" read -r etat _ < <(_clia_pc_etat "$depot" "$nom" "$posee")
+  [[ "$etat" == 'brisée' ]]
+}
+
+# _clia_pc_raison <dépôt> <nom> — pourquoi elle est brisée, ou rien.
+_clia_pc_raison() {
+  local depot="$1" nom="$2" posee etat raison
+  posee=$(_clia_champ_yaml "$depot/$(_clia_zone_livree)/$nom/$nom.yaml" version || printf '')
+  IFS="$_CLIA_SEP" read -r etat raison < <(_clia_pc_etat "$depot" "$nom" "$posee")
+  [[ "$etat" == 'brisée' ]] && printf '%s\n' "$raison"
   return 0
 }
 
@@ -162,10 +209,19 @@ _clia_pc_etat() {
 # _clia_pc_commande <prefixe> — le nom de commande d'une ressource.
 _clia_pc_commande() { printf '%s\n' "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')"; }
 
-# _clia_pc_actif <dépôt> <nom> <prefixe> — « actif SEP raison ».
+# _clia_pc_actif <dépôt> <nom> <prefixe> [état] — « actif SEP raison ».
+#
+# Une ressource brisée est inactive, quoi qu'elle porte — SES-002 tâche 2.
+# C'est le premier motif examiné : servir une ressource dont on ne peut pas
+# dire d'où elle vient reviendrait à s'en remettre à ce qu'on ne sait pas.
 _clia_pc_actif() {
-  local depot="$1" nom="$2" prefixe="$3" commande racine autre autre_prefixe
+  local depot="$1" nom="$2" prefixe="$3" etat="${4:-}" commande racine autre autre_prefixe
   commande=$(_clia_pc_commande "$prefixe")
+
+  if [[ "$etat" == 'brisée' ]]; then
+    printf 'inactif%selle est brisée : %s\n' "$_CLIA_SEP" "$(_clia_pc_raison "$depot" "$nom")"
+    return 0
+  fi
 
   if [[ -f "${CLIA_SOURCE_DIR:-}/_scripts/lib/cmd/$commande.sh" ]]; then
     printf 'inactif%s« clia %s » est une commande du noyau\n' "$_CLIA_SEP" "$commande"
@@ -200,17 +256,21 @@ _clia_pc_actif() {
 # --------------------------------------------------------------------------
 
 # _clia_pc_parc <dépôt> — une ligne par ressource installée :
-# « prefixe SEP nom SEP source SEP version SEP etat SEP actif SEP raison ».
+# « prefixe SEP nom SEP source SEP version SEP etat SEP pourquoi SEP actif
+# SEP raison » — « pourquoi » dit ce qui brise la ressource, « raison » ce qui
+# la rend inactive. Les deux sont rendues ici pour que ce qui les lit n'ait
+# pas à les recalculer : chacune coûte un journal git.
 _clia_pc_parc() {
-  local depot="$1" nom prefixe version etat actif raison
+  local depot="$1" nom prefixe version etat pourquoi actif raison
   while IFS=$'\t' read -r nom prefixe version; do
     [[ -n "$nom" ]] || continue
-    etat=$(_clia_pc_etat "$depot" "$nom" "$version")
-    IFS="$_CLIA_SEP" read -r actif raison < <(_clia_pc_actif "$depot" "$nom" "$prefixe")
-    printf '%s%s%s%s%s%s%s%s%s%s%s%s%s\n' \
+    IFS="$_CLIA_SEP" read -r etat pourquoi < <(_clia_pc_etat "$depot" "$nom" "$version")
+    IFS="$_CLIA_SEP" read -r actif raison < <(_clia_pc_actif "$depot" "$nom" "$prefixe" "$etat")
+    printf '%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n' \
       "$prefixe" "$_CLIA_SEP" "$nom" "$_CLIA_SEP" \
       "$(_clia_pc_source "$depot" "$nom")" "$_CLIA_SEP" \
-      "$version" "$_CLIA_SEP" "$etat" "$_CLIA_SEP" "$actif" "$_CLIA_SEP" "$raison"
+      "$version" "$_CLIA_SEP" "$etat" "$_CLIA_SEP" "$pourquoi" "$_CLIA_SEP" \
+      "$actif" "$_CLIA_SEP" "$raison"
   done < <(_clia_ressources_de "$depot")
   return 0
 }

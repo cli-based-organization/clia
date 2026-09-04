@@ -115,7 +115,30 @@ clia -C ROOT_PATH CMD...
 
 l'option `-C ROOT_PATH` permet d'exécuter clia en utilisant ROOT_PATH comme répertoire d'exécution.
 
-### 4. [enhancement] status d'un repo cli
+
+### 4. [enhancement] améliore la lisibilité des listes pour les humains et pour les automatismes
+
+Utiliser le même gabarit pour toutes les listes.
+
+Seul le header et le contenu des colonnes est autorisé.
+
+N'ajouter **aucun autre commentaire** dans les listes.
+
+Le header est envoyé dans le canal 2 (stderr) afin qu'il ne soit pas transférer via un pipe. 
+
+La première colone du tableau est toujours un identifiant utilisable.
+
+Les détails de **tout élément de la liste** sont consultables avec la commande `... ls LINE_IDENTIFIANT`
+
+
+TODO =>
+
+- Documenter ceci dans des fichier SPC, REQ et NFR de @primitive-2/
+- implémenter
+
+
+
+### 6. [enhancement] status d'un repo cli
 
 ```sh
 clia status

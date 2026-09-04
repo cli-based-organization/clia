@@ -120,6 +120,8 @@ dit 'update aussi' '^  update  *Ce qui est à mettre à jour'
 rc 'le manuel de ls repond' 0 "$CLIA" ls --man
 dit 'il nomme les colonnes' 'ACTIVE'
 dit 'et dit ce que STATE veut dire' 'en retard  sa source en déclare une plus récente'
+dit 'et ce qu est une ressource brisee' 'brisée     tout le reste'
+dit 'et qu elle n est jamais dite active' "Une ressource brisée n'est jamais rendue active"
 
 rc 'le manuel de update repond' 0 "$CLIA" update --man
 dit 'il dit qu il n ecrit rien' "C'est clia upgrade qui déplace"
@@ -169,21 +171,49 @@ dit 'l historique porte les deux versions' '^0\.1\.0 '
 dit 'et la seconde aussi' '^0\.2\.0 '
 dit 'la version posee est marquee' '^0\.1\.0 .*posée ici'
 
+# SES-002 tâche 2 : deux états sont sains, et tout le reste est « brisée ».
+# « inconnu » n'existe plus.
 A=$(depot avance)
 sed -i 's/^version: 0.1.0$/version: 0.9.0/' "$A/$LIVREE/outil/outil.yaml"
-SORTIE=$(sortie "$A" ls)
-dit 'une copie qui depasse sa source est en avance' 'en avance'
+rc_dans 'une copie qui depasse sa source est brisee' 0 "$A" ls
+dit 'la colonne le dit' 'brisée'
+dit 'et clia dit pourquoi' 'elle dépasse 0\.1\.0, la dernière que sa source déclare'
+ne_dit_pas 'aucun etat « en avance »' 'en avance'
 
-I=$(depot inconnue)
-python3 - "$I/clia.yaml" <<'PY'
+I=$(depot sans-source)
+python3 - "$I/clia.yaml" <<'PYEOF'
 import sys
 p = sys.argv[1]
 s = open(p, encoding='utf-8').read().replace('provide:\n  - prefix: OUT\n    name: outil\n', '')
 open(p, 'w', encoding='utf-8').write(s)
-PY
-SORTIE=$(sortie "$I" ls)
-dit 'sans source declaree, l etat est inconnu' 'inconnu'
-dit 'et la source aussi' '^OUT  *outil  *—'
+PYEOF
+rc_dans 'sans source declaree, la ressource est brisee' 0 "$I" ls
+dit 'la colonne le dit' 'brisée'
+dit 'et clia nomme la cause' 'clia ne trouve pas le dépôt qui la publie'
+dit 'et la source vaut tiret' '^OUT  *outil  *—'
+ne_dit_pas 'aucun etat « inconnu »' 'inconnu'
+
+W=$(depot version-illisible)
+sed -i 's/^version: 0.1.0$/version: toute-neuve/' "$W/$LIVREE/outil/outil.yaml"
+rc_dans 'une version illisible brise la ressource' 0 "$W" ls
+dit 'et clia rappelle la forme' "n'a pas la forme X.Y.Z"
+
+# ==========================================================================
+titre 'Une ressource brisée n est pas servie'
+# ==========================================================================
+
+rc_dans 'brisee, elle est inactive' 0 "$I" ls
+dit 'la colonne ACTIVE le dit' 'inactif'
+dit 'et clia le rattache a ce qui la brise' 'elle est brisée :'
+
+# SES-002 tâche 2 dit qu'une ressource brisée « ne DOIT PAS être actif ».
+# clia le rend partout où il rapporte un état ; il ne refuse pas de servir sa
+# commande pour autant — voir le compte rendu de la tâche.
+rc_dans 'sa commande repond encore' 0 "$I" out dis
+dit 'et c est bien elle qui repond' '^un$'
+
+rc_dans 'une ressource saine est servie' 0 "$D" out dis
+dit 'et elle repond' '^un$'
 
 # ==========================================================================
 titre 'ACTIVE — la commande est-elle servie'
@@ -214,8 +244,9 @@ dit 'et dit comment y aller' 'clia upgrade RESSOURCE'
 rc_dans 'a jour, update ne liste rien' 0 "$D" update
 dit 'et le dit' "aucune ressource installée n'est en retard"
 
-rc_dans 'une source non jointe est dite a part' 0 "$I" update
-dit 'et clia la nomme' 'source non jointe, donc rien à en dire : outil'
+rc_dans 'une ressource brisee est dite a part' 0 "$I" update
+dit 'et clia la nomme' 'brisée'
+dit 'avec ce qui la brise' 'outil : clia ne trouve pas le dépôt qui la publie'
 
 rc_dans 'update sur une ressource inconnue est refuse' 1 "$D" update bidule
 dit 'et clia renvoie vers la liste' 'clia ls'
@@ -239,6 +270,9 @@ ne_dit_pas 'et ne parle pas d une ressource' 'les versions disponibles'
 rc_dans 'en retard, version dit vers quoi aller' 0 "$R" version outil
 dit 'et clia nomme la version disponible' 'alors que 0\.2\.0 est disponible'
 
+rc_dans 'brisee, version le dit' 0 "$I" version outil
+dit 'et clia dit qu elle est inactive' 'elle est inactive'
+
 # ==========================================================================
 titre 'clia upgrade et clia downgrade'
 # ==========================================================================
@@ -258,6 +292,15 @@ rc_dans 'downgrade la ramene' 0 "$U" downgrade outil 0.1.0
 vrai 'la copie installee est revenue' \
   grep -q '^version: 0.1.0$' "$U/$LIVREE/outil/outil.yaml"
 
+# Ce qui est posé vient d'un commit : du travail non commité dans l'instance
+# n'y est pas, et le poser l'effacerait.
+printf '\n# du travail en cours\n' >> "$U/$INST/$ID/livrables/outil.yaml"
+rc_dans 'une instance non commitee arrete la mise a jour' 1 "$U" upgrade outil
+dit 'et clia dit ce qui serait perdu' 'porte du travail non commité'
+dit 'et comment passer outre' '\-\-force passe outre'
+git_ "$U" add -A >/dev/null; git_ "$U" commit -q -m 'le travail en cours'
+rc_dans 'commitee, elle repart' 0 "$U" upgrade outil
+
 rc_dans 'downgrade sans version est mal forme' 2 "$U" downgrade outil
 dit 'et clia dit ou les voir' 'clia update outil'
 
@@ -267,6 +310,42 @@ rc_dans 'upgrade sur une ressource inconnue est refuse' 1 "$U" upgrade bidule
 # Une version en première position vise toujours le dépôt, non une ressource.
 rc_dans 'une version seule vise le depot' 1 "$U" upgrade 9.9.9
 ne_dit_pas 'et non une ressource' 'aucune ressource installée'
+
+# ==========================================================================
+titre 'clia -C ROOT_PATH — SES-002 tâche 3'
+# ==========================================================================
+
+SORTIE=$("$CLIA" --help 2>/dev/null)
+dit 'l option figure dans l aide' '^  -C ROOT_PATH$'
+rc 'le manuel la decrit' 0 "$CLIA" --man
+dit 'et dit ce qu elle fait' 'Agir comme si l.appel venait de ROOT_PATH'
+dit 'et la place avant la commande' '\[-C ROOT_PATH\] <commande>'
+
+# Le même dépôt, vu de deux endroits : les deux réponses doivent coïncider.
+DEDANS=$( ( cd "$R" && "$CLIA" ls ) 2>&1 )
+DEHORS=$( ( cd "$BAC" && "$CLIA" -C "$R" ls ) 2>&1 )
+vrai 'clia -C repond comme si l appel venait de la' test "$DEDANS" = "$DEHORS"
+
+DEDANS_V=$( ( cd "$R" && "$CLIA" version outil ) 2>&1 )
+DEHORS_V=$( ( cd "$BAC" && "$CLIA" -C "$R" version outil ) 2>&1 )
+vrai 'et pour une ressource aussi' test "$DEDANS_V" = "$DEHORS_V"
+
+# Un chemin relatif est résolu depuis là où l'appel a lieu.
+RELATIF=$( ( cd "$BAC" && "$CLIA" -C "$(basename "$R")" ls ) 2>&1 )
+vrai 'un chemin relatif repond de meme' test "$RELATIF" = "$DEHORS"
+
+rc '-C sans repertoire est mal forme' 2 "$CLIA" -C
+dit 'et clia dit l usage' 'clia -C ROOT_PATH COMMANDE'
+
+rc '-C vers ce qui n est pas un repertoire est refuse' 1 "$CLIA" -C "$BAC/nexiste-pas" ls
+dit 'et clia le nomme' "ce n'est pas un répertoire"
+
+# Hors d'un dépôt git, une commande de périmètre « dépôt » est refusée — et
+# -C sert justement à en désigner un.
+HORS="$BAC/hors-depot"; mkdir -p "$HORS"
+rc 'sans -C, hors d un depot, ls est refuse' 1 bash -c "cd '$HORS' && '$CLIA' ls"
+dit 'et clia le dit' "n'est pas dans un dépôt git"
+rc 'avec -C, il repond' 0 bash -c "cd '$HORS' && '$CLIA' -C '$R' ls"
 
 # ==========================================================================
 titre 'Ce que ces commandes n écrivent pas'

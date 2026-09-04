@@ -146,7 +146,7 @@ _clia_options_de()    { _clia_declarations "$1" 'Option'; }
 # Celles que le point d'entrée traite lui-même. --version n'est reconnue qu'en
 # première position — « clia version --version » n'a pas de sens — alors que
 # l'aide et le manuel répondent à toute profondeur.
-_CLIA_OPTIONS_GLOBALES=('-h, --help' '--man' '-v, --version')
+_CLIA_OPTIONS_GLOBALES=('-h, --help' '--man' '-v, --version' '-C ROOT_PATH')
 _CLIA_OPTIONS_UNIVERSELLES=('-h, --help' '--man')
 
 # _clia_lignes_options <chemin> — lit des déclarations d'option sur l'entrée
